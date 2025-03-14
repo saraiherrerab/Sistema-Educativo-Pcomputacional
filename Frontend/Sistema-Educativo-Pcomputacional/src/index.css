@@ -13,16 +13,12 @@
 
 #root {
   padding: 0 !important; 
-  margin: 0 auto!important;
-  width: 100vw !important;
-  height: 100vh !important;
+  margin: 0 auto !important;
 }
 
 #game {
   padding: 0 !important; 
   margin: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
 }
 html,
 body {

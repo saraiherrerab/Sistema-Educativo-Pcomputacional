@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import "./App.css";
 import kaplay from "kaplay";
 
 
@@ -18,36 +17,39 @@ function App() {
   const TILED_MAP__WIDTH_NUMBER: number = 20
   const TILED_MAP_HEIGTH_NUMBER: number = 15
 
-  const TILED_WIDTH: number = window.innerWidth / TILED_MAP__WIDTH_NUMBER
-  const TILED_HEIGTH: number = window.innerHeight / TILED_MAP_HEIGTH_NUMBER
+  const TILED_WIDTH: number = 1920 / TILED_MAP__WIDTH_NUMBER
+  const TILED_HEIGTH: number = 1080 / TILED_MAP_HEIGTH_NUMBER
 
   console.log(TILED_WIDTH)
   console.log(TILED_HEIGTH)
 
   useEffect(() => {
 
-    /*
+    
     const resizeCanvas = () => {
+      console.log("APLICANDO RESIZE")
+      console.log(juegoKaplayRef.current.center().y)
       const canvas = document.getElementById("game") as HTMLCanvasElement;
       if (canvas) {
         canvas.width = window.innerWidth //TILED_PIXEL_DIMENSION * MAX_TILED_PIXEL_WIDTH;
         canvas.height = window.innerHeight //TILED_PIXEL_DIMENSION * MAX_TILED_PIXEL_HEIGTH;
       }
     };
-    */
+    
     
     // Inicializar Kaplay solo si no está creado
     if (!juegoKaplayRef.current) {
       console.log(window.innerWidth)
       console.log(window.innerHeight)
       juegoKaplayRef.current = kaplay({
-        width:  window.innerWidth,//TILED_PIXEL_DIMENSION * MAX_TILED_PIXEL_WIDTH,*/ // Ancho dinámico
-        height: window.innerHeight,/*TILED_PIXEL_DIMENSION * 15, */// Alto dinámico
+        width:  1920,//TILED_PIXEL_DIMENSION * MAX_TILED_PIXEL_WIDTH,*/ // Ancho dinámico
+        height: 1080,/*TILED_PIXEL_DIMENSION * 15, */// Alto dinámico
         letterbox: true,
         global: false,
         debug: true, // Cambiar a false en producción
         debugKey: "f1",
-        pixelDensity: window.devicePixelRatio || 1,
+        canvas: document.getElementById("game") as HTMLCanvasElement,
+        pixelDensity: 1,
       });
 
       const juegoKaplay = juegoKaplayRef.current;
@@ -202,7 +204,7 @@ function App() {
             // Flechas
             const arrows = {
               up: juegoKaplay.add([
-                juegoKaplay.pos(0, (juegoKaplay.center().y)/6),
+                juegoKaplay.pos(0, (juegoKaplay.center().y)/8),
                 juegoKaplay.sprite("up"),
                 juegoKaplay.scale(2),
                 juegoKaplay.area(),
@@ -271,17 +273,19 @@ function App() {
       });
     }
 
-
+    const handleResize = () => {
+      juegoKaplayRef.current.setSize(window.innerWidth, window.innerHeight);
+    };
     // Ajustar el canvas cuando cambie el tamaño de la ventana
-    //window.addEventListener("resize", resizeCanvas);
+    window.addEventListener("resize", handleResize);
   
-   //resizeCanvas(); // Ajustar en la carga inicial
+   resizeCanvas(); // Ajustar en la carga inicial
 
-   /*
+   
     return () => {
       window.removeEventListener("resize", resizeCanvas);
     };
-    */
+    
     
   }, []);
 
