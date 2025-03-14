@@ -178,8 +178,9 @@ function App() {
             });
 
             // Jugador
+            console.log(juegoKaplay.center())
             const player = juegoKaplay.add([
-              juegoKaplay.pos(120, 80),
+              juegoKaplay.pos((juegoKaplay.center().x)/4,(juegoKaplay.center().y)/4 ),
               juegoKaplay.sprite("robot"),
               juegoKaplay.scale(4),
               juegoKaplay.body(),
@@ -190,7 +191,7 @@ function App() {
 
             // Enemigo
             const enemy = juegoKaplay.add([
-              juegoKaplay.pos(500, 600),
+              juegoKaplay.pos(juegoKaplay.center()),
               juegoKaplay.sprite("enemy"),
               juegoKaplay.scale(4),
               juegoKaplay.area(),
@@ -201,27 +202,27 @@ function App() {
             // Flechas
             const arrows = {
               up: juegoKaplay.add([
-                juegoKaplay.pos(30, 710),
+                juegoKaplay.pos(0, (juegoKaplay.center().y)/6),
                 juegoKaplay.sprite("up"),
-                juegoKaplay.scale(10),
+                juegoKaplay.scale(2),
                 juegoKaplay.area(),
               ]),
               down: juegoKaplay.add([
-                juegoKaplay.pos(0, 500),
+                juegoKaplay.pos(0 ,(juegoKaplay.center().y)/4),
                 juegoKaplay.sprite("down"),
-                juegoKaplay.scale(10),
+                juegoKaplay.scale(2),
                 juegoKaplay.area(),
               ]),
               left: juegoKaplay.add([
-                juegoKaplay.pos(0, 130),
+                juegoKaplay.pos(0,(juegoKaplay.center().y)/2),
                 juegoKaplay.sprite("left"),
-                juegoKaplay.scale(10),
+                juegoKaplay.scale(2),
                 juegoKaplay.area(),
               ]),
               right: juegoKaplay.add([
-                juegoKaplay.pos(0, 300),
+                juegoKaplay.pos(0,(juegoKaplay.center().y)),
                 juegoKaplay.sprite("right"),
-                juegoKaplay.scale(10),
+                juegoKaplay.scale(2),
                 juegoKaplay.area(),
               ]),
             };
