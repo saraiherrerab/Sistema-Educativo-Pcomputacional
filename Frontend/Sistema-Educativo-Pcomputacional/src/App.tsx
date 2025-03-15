@@ -20,6 +20,7 @@ const generarEsquemaMapa = async (
   )
   .then(
     (worldJson:any) => {
+      
       console.log(worldJson)
       console.log("urlTexturas", urlTexturas)
       contextoKaplay.loadSprite("tiles", urlTexturas, {
@@ -47,7 +48,7 @@ const generarEsquemaMapa = async (
     
       nivelGenerado.data.forEach( (tileNumber: number, index: number) => {
         const numero: number = tileNumber
-        console.log(numero)
+        //console.log(numero)
         if(valoresProhibidos.includes(contador)){
           console.log("Valor prohibido encontrado!", contador)
           contador++
@@ -58,7 +59,7 @@ const generarEsquemaMapa = async (
 
             //validar valores prohibidos aqui
 
-            console.log("Evaluando:", tileNumber)
+            //console.log("Evaluando:", tileNumber)
             tileMap[String.fromCharCode(contador)] = tileNumber as number;
             worldJson.layers[0].data[index] = String.fromCharCode(contador);
             contador++;
@@ -114,14 +115,12 @@ const generarEsquemaMapa = async (
     
       console.log(mapaGenerado)
     
-      contextoKaplay.addLevel(mapaGenerado, {
+      return contextoKaplay.addLevel(mapaGenerado, {
         tileWidth: anchoCuadrado,
         tileHeight: altoCuadrado,
         pos: configuracionMapa.pos,
         tiles: { ...tileMapping },
       })
-
-      return "Todo salio excelente"
     }
 
     
@@ -134,6 +133,34 @@ const generarEsquemaMapa = async (
   
 }
 
+function detectaBorde(player: any, redRoom: any): boolean {
+  const margen = 2; // Aumentamos el margen para mayor precisión
+
+  // Obtenemos el área del jugador y de la habitación en caso de que width/height no existan
+  const playerWidth = player.width || (player.area ? player.area.width : 0);
+  const playerHeight = player.height || (player.area ? player.area.height : 0);
+  const roomWidth = redRoom.width || (redRoom.area ? redRoom.area.width : 0);
+  const roomHeight = redRoom.height || (redRoom.area ? redRoom.area.height : 0);
+
+  // Coordenadas del jugador
+  const playerBottom = player.pos.y + playerHeight;
+  const playerTop = player.pos.y;
+  const playerLeft = player.pos.x;
+  const playerRight = player.pos.x + playerWidth;
+
+  // Coordenadas de la habitación
+  const roomBottom = redRoom.pos.y + roomHeight;
+  const roomTop = redRoom.pos.y;
+  const roomLeft = redRoom.pos.x;
+  const roomRight = redRoom.pos.x + roomWidth;
+
+  return (
+    (Math.abs(playerBottom - roomTop) <= margen && playerRight > roomLeft && playerLeft < roomRight) || // Toca el borde superior
+    (Math.abs(playerTop - roomBottom) <= margen && playerRight > roomLeft && playerLeft < roomRight) || // Toca el borde inferior
+    (Math.abs(playerRight - roomLeft) <= margen && playerBottom > roomTop && playerTop < roomBottom) || // Toca el borde izquierdo
+    (Math.abs(playerLeft - roomRight) <= margen && playerBottom > roomTop && playerTop < roomBottom)    // Toca el borde derecho
+  );
+}
 function App() {
   // Referencia persistente para almacenar la instancia de Kaplay
   const juegoKaplayRef = useRef<any>(null);
@@ -318,7 +345,7 @@ function App() {
 
           
 
-          generarEsquemaMapa(
+          const nivelPrincipal = generarEsquemaMapa(
             juegoKaplay,
             {
               tileWidth: TILED_WIDTH,
@@ -333,94 +360,162 @@ function App() {
             (resultado: any) => {
               console.log(resultado)
               // Jugador
-          console.log(juegoKaplay.center())
-          const player = juegoKaplay.add([
-            juegoKaplay.pos((juegoKaplay.center().x)/4,(juegoKaplay.center().y)/4 ),
-            juegoKaplay.sprite("robot"),
-            juegoKaplay.scale(4),
-            juegoKaplay.body(),
-            juegoKaplay.area(),
-            juegoKaplay.health(5),
-            "player",
-          ]);
+              
+              /*
+              juegoKaplay.add([
+                juegoKaplay.rect(1920, 1080),
+                juegoKaplay.area(),
+                juegoKaplay.color(0, 0, 255),
+                juegoKaplay.pos(1920,0),
+                "blueRoom"
+              ])
+              */
+              const nivelSiguiente = generarEsquemaMapa(
+                juegoKaplay,
+                {
+                  tileWidth: TILED_WIDTH,
+                  tileHeight: TILED_HEIGTH,
+                  pos: juegoKaplay.vec2(1920, 0),
+                },
+                `./world-20x15-con-numeros.json`,
+                "Dungeon_Tileset.png",
+                10,
+                10
+              )
+              console.log(juegoKaplay.center())
+              const player = juegoKaplay.add([
+                juegoKaplay.pos((juegoKaplay.center().x)/4,(juegoKaplay.center().y)/4 ),
+                juegoKaplay.sprite("robot"),
+                juegoKaplay.scale(4),
+                juegoKaplay.body(),
+                juegoKaplay.area(),
+                juegoKaplay.health(5),
+                "player",
+              ]);
+              const redRoom = juegoKaplay.add([
+                juegoKaplay.rect(200, 500),
+                juegoKaplay.area(),
+                juegoKaplay.color(255, 0, 0),
+                juegoKaplay.pos(1920 - 200,juegoKaplay.center().y - 250),
+                "redRoom"
+              ])
+              // Enemigo
+              const enemy = juegoKaplay.add([
+                juegoKaplay.pos(juegoKaplay.center()),
+                juegoKaplay.sprite("enemy"),
+                juegoKaplay.scale(4),
+                juegoKaplay.area(),
+                juegoKaplay.body(),
+                "enemy",
+              ]);
 
-          // Enemigo
-          const enemy = juegoKaplay.add([
-            juegoKaplay.pos(juegoKaplay.center()),
-            juegoKaplay.sprite("enemy"),
-            juegoKaplay.scale(4),
-            juegoKaplay.area(),
-            juegoKaplay.body(),
-            "enemy",
-          ]);
+              // Flechas
+              const arrows = {
+                up: juegoKaplay.add([
+                  juegoKaplay.pos(0, (juegoKaplay.center().y)/8),
+                  juegoKaplay.sprite("up"),
+                  juegoKaplay.scale(2),
+                  juegoKaplay.area(),
+                ]),
+                down: juegoKaplay.add([
+                  juegoKaplay.pos(0 ,(juegoKaplay.center().y)/4),
+                  juegoKaplay.sprite("down"),
+                  juegoKaplay.scale(2),
+                  juegoKaplay.area(),
+                ]),
+                left: juegoKaplay.add([
+                  juegoKaplay.pos(0,(juegoKaplay.center().y)/2),
+                  juegoKaplay.sprite("left"),
+                  juegoKaplay.scale(2),
+                  juegoKaplay.area(),
+                ]),
+                right: juegoKaplay.add([
+                  juegoKaplay.pos(0,(juegoKaplay.center().y)),
+                  juegoKaplay.sprite("right"),
+                  juegoKaplay.scale(2),
+                  juegoKaplay.area(),
+                ]),
+              };
 
-          // Flechas
-          const arrows = {
-            up: juegoKaplay.add([
-              juegoKaplay.pos(0, (juegoKaplay.center().y)/8),
-              juegoKaplay.sprite("up"),
-              juegoKaplay.scale(2),
-              juegoKaplay.area(),
-            ]),
-            down: juegoKaplay.add([
-              juegoKaplay.pos(0 ,(juegoKaplay.center().y)/4),
-              juegoKaplay.sprite("down"),
-              juegoKaplay.scale(2),
-              juegoKaplay.area(),
-            ]),
-            left: juegoKaplay.add([
-              juegoKaplay.pos(0,(juegoKaplay.center().y)/2),
-              juegoKaplay.sprite("left"),
-              juegoKaplay.scale(2),
-              juegoKaplay.area(),
-            ]),
-            right: juegoKaplay.add([
-              juegoKaplay.pos(0,(juegoKaplay.center().y)),
-              juegoKaplay.sprite("right"),
-              juegoKaplay.scale(2),
-              juegoKaplay.area(),
-            ]),
-          };
+              const velocidad = 1000;
 
-          const velocidad = 1000;
+              // Movimiento con teclado
+              juegoKaplay.onKeyDown("w", () => {
+                player.move(0, -velocidad);
+              });
+              juegoKaplay.onKeyDown("s", () => {
+                player.move(0, velocidad);
+              });
+              juegoKaplay.onKeyDown("a", () => {
+                player.move(-velocidad, 0);
+              });
+              juegoKaplay.onKeyDown("d", () => {
+                player.move(velocidad, 0);
+              });
 
-          // Movimiento con teclado
-          juegoKaplay.onKeyDown("w", () => {
-            player.move(0, -velocidad);
-          });
-          juegoKaplay.onKeyDown("s", () => {
-            player.move(0, velocidad);
-          });
-          juegoKaplay.onKeyDown("a", () => {
-            player.move(-velocidad, 0);
-          });
-          juegoKaplay.onKeyDown("d", () => {
-            player.move(velocidad, 0);
-          });
+              // Movimiento con clic
+              arrows.up.onClick(() => {
+                player.move(0, -velocidad);
+                player.play("up");
+              });
+              arrows.down.onClick(() => {
+                player.move(0, velocidad);
+                player.play("down");
+              });
+              arrows.left.onClick(() => {
+                player.move(-velocidad, 0);
+                player.play("left");
+              });
+              arrows.right.onClick(() => {
+                player.move(velocidad, 0);
+                player.play("right");
+              });
 
-          // Movimiento con clic
-          arrows.up.onClick(() => {
-            player.move(0, -velocidad);
-            player.play("up");
-          });
-          arrows.down.onClick(() => {
-            player.move(0, velocidad);
-            player.play("down");
-          });
-          arrows.left.onClick(() => {
-            player.move(-velocidad, 0);
-            player.play("left");
-          });
-          arrows.right.onClick(() => {
-            player.move(velocidad, 0);
-            player.play("right");
-          });
+              // Colisión con el enemigo
+              enemy.onCollide("player", (jugador: any) => {
+                jugador.destroy();
+                juegoKaplay.debug.log("¡Has perdido!");
+              });
+              
+              console.log("IMPRIMIENDO COORDENADAS DE BORDE")
+              console.log({
+                1: {x: redRoom.pos.x, y: 0},
+                2: {x: redRoom.pos.x + redRoom.width, y: 0},
+                3: {x:0,y:redRoom.pos.y + redRoom.height},
+                4: {x: redRoom.pos.x + redRoom.width, y: redRoom.pos.y + redRoom.height}
+              })
 
-          // Colisión con el enemigo
-          enemy.onCollide("player", (jugador: any) => {
-            jugador.destroy();
-            juegoKaplay.debug.log("¡Has perdido!");
-          });
+              console.log("IMPRIMIENDO COORDENADAS DE JUGADOR")
+              console.log({
+                1: {x: player.pos.x, y: 0},
+                2: {x: player.pos.x + player.width, y: 0},
+                3: {x:0,y:player.pos.y + player.height},
+                4: {x: player.pos.x + player.width, y: player.pos.y + player.height}
+              })
+              
+              player.onCollide("redRoom", (redRoom:any) => {
+                console.log("SIGUIENTE NIVEl")
+                
+                juegoKaplay.tween(
+                  juegoKaplay.camPos().x, 
+                      redRoom.pos.x + redRoom.width + 1920/ 2, 
+                      1, 
+                      (value:any) => juegoKaplay.camPos(value, juegoKaplay.camPos().y), 
+                      juegoKaplay.easings.linear
+                )
+                
+              })
+              /*
+              player.onCollide("blueRoom", (blueRoom:any) => {
+                juegoKaplay.tween(
+                  juegoKaplay.camPos().x, 
+                      blueRoom.pos.x, 
+                      1, 
+                      (value:any) => juegoKaplay.camPos(value, juegoKaplay.camPos().y), 
+                      juegoKaplay.easings.linear
+                )
+              })
+              */
             }
           )
 
