@@ -1,7 +1,138 @@
 import { useEffect, useRef } from "react";
-import kaplay from "kaplay";
+import kaplay, { GameObj, KAPLAYCtx, LevelOpt, Vec2 } from "kaplay";
 
 
+const generarEsquemaMapa = async (
+
+  contextoKaplay: KAPLAYCtx<{},never>,
+  configuracionMapa: { tileWidth: number,tileHeight: number,pos: Vec2,},
+  urlMapa: string,
+  urlTexturas: string, 
+  dimensionTexturasX: number,
+  dimensionTexturasY: number
+
+) : Promise<any> => {
+
+  let mapaGenerado: string[] = []
+
+  const resultado = fetch(urlMapa).then(
+    (res) => res.json()
+  )
+  .then(
+    (worldJson:any) => {
+      console.log(worldJson)
+      console.log("urlTexturas", urlTexturas)
+      contextoKaplay.loadSprite("tiles", urlTexturas, {
+        sliceX: dimensionTexturasX,
+        sliceY: dimensionTexturasY,
+      });
+
+      const anchoCuadrado: number = 1920 / worldJson.width
+      const altoCuadrado: number = 1080 / worldJson.height
+
+      console.log("Dimensiones recibidas" , {
+        "ancho": anchoCuadrado,
+        "alto": altoCuadrado
+      })
+    
+      const nivelGenerado = worldJson?.layers[0]
+
+      console.log(nivelGenerado)
+    
+      const tileMap: { [key: string] : number} = {}
+    
+      let contador = 36;
+
+      const valoresProhibidos: number[] = [39,48,49,50,51,52,53,54,55,56,57]
+    
+      nivelGenerado.data.forEach( (tileNumber: number, index: number) => {
+        const numero: number = tileNumber
+        console.log(numero)
+        if(valoresProhibidos.includes(contador)){
+          console.log("Valor prohibido encontrado!", contador)
+          contador++
+        }
+
+        if(Object.values(tileMap).includes(tileNumber) === false){
+          if(tileNumber.toString().length > 1 && contador >= 33 && contador <=165 ){
+
+            //validar valores prohibidos aqui
+
+            console.log("Evaluando:", tileNumber)
+            tileMap[String.fromCharCode(contador)] = tileNumber as number;
+            worldJson.layers[0].data[index] = String.fromCharCode(contador);
+            contador++;
+          }else if(contador > 165){
+            throw new Error("La cantidad de cuadros a superado el limite establecido");
+          }else {
+            tileMap[tileNumber.toString() as string] = tileNumber as number
+          }
+        }else{
+          console.log("El valor ya ha sido mapeado", tileNumber, String.fromCharCode(contador))
+          const keyEncontrada = Object.entries(tileMap).find(([_, value]) => value === tileNumber)?.[0];
+          worldJson.layers[0].data[index] = keyEncontrada
+        }
+  
+      });
+    
+      console.log(worldJson.layers[0].data)
+      console.table(tileMap) 
+    
+      type TileComponent = ReturnType<typeof contextoKaplay.sprite> | ReturnType<typeof contextoKaplay.scale>;
+    
+      const tileMapping: Record<string, () => TileComponent[]> = {}
+    
+      Object.keys(tileMap).forEach((key) => {
+
+        const frame = tileMap[key]; // Obtener el frame correcto del tileMap
+
+        console.log(`Al valor ${key} se le asignó ${frame as number}`)
+        tileMapping[key] = () => [
+          contextoKaplay.sprite("tiles", { frame: (frame as number) - 1, width: anchoCuadrado, height: altoCuadrado }),
+          contextoKaplay.scale(1)
+        ]
+      });
+
+      console.log(tileMapping)
+    
+      worldJson.layers.forEach((layer: any) => {
+        if (layer.type === "tilelayer") {
+          const { data, width } = layer;
+    
+          const mapa = [];
+          for (let i = 0; i < width; i++) {
+            mapa.push(data.slice(i * width, (i + 1) * width));
+          }
+    
+          const resultadoMapeo = mapa.map((fila: any) =>
+            fila.map((cell: any) => cell.toString()).join("")
+          );
+    
+          mapaGenerado = [...resultadoMapeo]
+        }
+      })
+    
+      console.log(mapaGenerado)
+    
+      contextoKaplay.addLevel(mapaGenerado, {
+        tileWidth: anchoCuadrado,
+        tileHeight: altoCuadrado,
+        pos: configuracionMapa.pos,
+        tiles: { ...tileMapping },
+      })
+
+      return "Todo salio excelente"
+    }
+
+    
+  )
+  .catch( (error: any) => {
+    console.error(error)
+  });
+
+  return resultado
+  
+}
 
 function App() {
   // Referencia persistente para almacenar la instancia de Kaplay
@@ -85,14 +216,18 @@ function App() {
         juegoKaplay.loadSprite(dir, `sprites/${dir}-arrow.png`);
       });
 
+      /*
       juegoKaplay.loadSprite("tiles", "Dungeon_Tileset.png", {
         sliceX: 10,
         sliceY: 10,
       });
+      */
 
       juegoKaplay.loadSprite("redbox", "red-border-box.png");
 
       juegoKaplay.onLoad(async () => {
+
+        /*
         console.log(`./world-${TILED_MAP__WIDTH_NUMBER}x${TILED_MAP__WIDTH_NUMBER}.json`)
         const worldJson = await fetch(`./world-${TILED_MAP__WIDTH_NUMBER}x${TILED_MAP_HEIGTH_NUMBER}.json`).then((res) =>
           res.json()
@@ -178,108 +313,126 @@ function App() {
               pos: juegoKaplay.vec2(0, 0),
               tiles: { ...tileMapping },
             });
-
-            // Jugador
-            console.log(juegoKaplay.center())
-            const player = juegoKaplay.add([
-              juegoKaplay.pos((juegoKaplay.center().x)/4,(juegoKaplay.center().y)/4 ),
-              juegoKaplay.sprite("robot"),
-              juegoKaplay.scale(4),
-              juegoKaplay.body(),
-              juegoKaplay.area(),
-              juegoKaplay.health(5),
-              "player",
-            ]);
-
-            // Enemigo
-            const enemy = juegoKaplay.add([
-              juegoKaplay.pos(juegoKaplay.center()),
-              juegoKaplay.sprite("enemy"),
-              juegoKaplay.scale(4),
-              juegoKaplay.area(),
-              juegoKaplay.body(),
-              "enemy",
-            ]);
-
-            // Flechas
-            const arrows = {
-              up: juegoKaplay.add([
-                juegoKaplay.pos(0, (juegoKaplay.center().y)/8),
-                juegoKaplay.sprite("up"),
-                juegoKaplay.scale(2),
-                juegoKaplay.area(),
-              ]),
-              down: juegoKaplay.add([
-                juegoKaplay.pos(0 ,(juegoKaplay.center().y)/4),
-                juegoKaplay.sprite("down"),
-                juegoKaplay.scale(2),
-                juegoKaplay.area(),
-              ]),
-              left: juegoKaplay.add([
-                juegoKaplay.pos(0,(juegoKaplay.center().y)/2),
-                juegoKaplay.sprite("left"),
-                juegoKaplay.scale(2),
-                juegoKaplay.area(),
-              ]),
-              right: juegoKaplay.add([
-                juegoKaplay.pos(0,(juegoKaplay.center().y)),
-                juegoKaplay.sprite("right"),
-                juegoKaplay.scale(2),
-                juegoKaplay.area(),
-              ]),
-            };
-
-            const velocidad = 1000;
-
-            // Movimiento con teclado
-            juegoKaplay.onKeyDown("w", () => {
-              player.move(0, -velocidad);
-            });
-            juegoKaplay.onKeyDown("s", () => {
-              player.move(0, velocidad);
-            });
-            juegoKaplay.onKeyDown("a", () => {
-              player.move(-velocidad, 0);
-            });
-            juegoKaplay.onKeyDown("d", () => {
-              player.move(velocidad, 0);
-            });
-
-            // Movimiento con clic
-            arrows.up.onClick(() => {
-              player.move(0, -velocidad);
-              player.play("up");
-            });
-            arrows.down.onClick(() => {
-              player.move(0, velocidad);
-              player.play("down");
-            });
-            arrows.left.onClick(() => {
-              player.move(-velocidad, 0);
-              player.play("left");
-            });
-            arrows.right.onClick(() => {
-              player.move(velocidad, 0);
-              player.play("right");
-            });
-
-            // Colisión con el enemigo
-            enemy.onCollide("player", (jugador: any) => {
-              jugador.destroy();
-              juegoKaplay.debug.log("¡Has perdido!");
-            });
           }
-        });
-      });
-    }
+            */
 
-    const handleResize = () => {
-      juegoKaplayRef.current.setSize(window.innerWidth, window.innerHeight);
-    };
-    // Ajustar el canvas cuando cambie el tamaño de la ventana
-    window.addEventListener("resize", handleResize);
+          
+
+          generarEsquemaMapa(
+            juegoKaplay,
+            {
+              tileWidth: TILED_WIDTH,
+              tileHeight: TILED_HEIGTH,
+              pos: juegoKaplay.vec2(0, 0),
+            },
+            `./world-20x15-con-numeros.json`,
+            "Dungeon_Tileset.png",
+            10,
+            10
+          ).then(
+            (resultado: any) => {
+              console.log(resultado)
+              // Jugador
+          console.log(juegoKaplay.center())
+          const player = juegoKaplay.add([
+            juegoKaplay.pos((juegoKaplay.center().x)/4,(juegoKaplay.center().y)/4 ),
+            juegoKaplay.sprite("robot"),
+            juegoKaplay.scale(4),
+            juegoKaplay.body(),
+            juegoKaplay.area(),
+            juegoKaplay.health(5),
+            "player",
+          ]);
+
+          // Enemigo
+          const enemy = juegoKaplay.add([
+            juegoKaplay.pos(juegoKaplay.center()),
+            juegoKaplay.sprite("enemy"),
+            juegoKaplay.scale(4),
+            juegoKaplay.area(),
+            juegoKaplay.body(),
+            "enemy",
+          ]);
+
+          // Flechas
+          const arrows = {
+            up: juegoKaplay.add([
+              juegoKaplay.pos(0, (juegoKaplay.center().y)/8),
+              juegoKaplay.sprite("up"),
+              juegoKaplay.scale(2),
+              juegoKaplay.area(),
+            ]),
+            down: juegoKaplay.add([
+              juegoKaplay.pos(0 ,(juegoKaplay.center().y)/4),
+              juegoKaplay.sprite("down"),
+              juegoKaplay.scale(2),
+              juegoKaplay.area(),
+            ]),
+            left: juegoKaplay.add([
+              juegoKaplay.pos(0,(juegoKaplay.center().y)/2),
+              juegoKaplay.sprite("left"),
+              juegoKaplay.scale(2),
+              juegoKaplay.area(),
+            ]),
+            right: juegoKaplay.add([
+              juegoKaplay.pos(0,(juegoKaplay.center().y)),
+              juegoKaplay.sprite("right"),
+              juegoKaplay.scale(2),
+              juegoKaplay.area(),
+            ]),
+          };
+
+          const velocidad = 1000;
+
+          // Movimiento con teclado
+          juegoKaplay.onKeyDown("w", () => {
+            player.move(0, -velocidad);
+          });
+          juegoKaplay.onKeyDown("s", () => {
+            player.move(0, velocidad);
+          });
+          juegoKaplay.onKeyDown("a", () => {
+            player.move(-velocidad, 0);
+          });
+          juegoKaplay.onKeyDown("d", () => {
+            player.move(velocidad, 0);
+          });
+
+          // Movimiento con clic
+          arrows.up.onClick(() => {
+            player.move(0, -velocidad);
+            player.play("up");
+          });
+          arrows.down.onClick(() => {
+            player.move(0, velocidad);
+            player.play("down");
+          });
+          arrows.left.onClick(() => {
+            player.move(-velocidad, 0);
+            player.play("left");
+          });
+          arrows.right.onClick(() => {
+            player.move(velocidad, 0);
+            player.play("right");
+          });
+
+          // Colisión con el enemigo
+          enemy.onCollide("player", (jugador: any) => {
+            jugador.destroy();
+            juegoKaplay.debug.log("¡Has perdido!");
+          });
+            }
+          )
+
+          
+
+        }) //Fin - Onload()
+
+      
+        
+      }
   
-   resizeCanvas(); // Ajustar en la carga inicial
+    resizeCanvas(); // Ajustar en la carga inicial
 
    
     return () => {
