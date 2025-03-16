@@ -172,8 +172,8 @@ function App() {
   //const TILED_MAP__WIDTH_NUMBER: number = 20
   //const TILED_MAP_HEIGTH_NUMBER: number = 15
 
-  const TILED_MAP__WIDTH_NUMBER: number = 20
-  const TILED_MAP_HEIGTH_NUMBER: number = 15
+  const TILED_MAP__WIDTH_NUMBER: number = 5
+  const TILED_MAP_HEIGTH_NUMBER: number = 5
 
   const TILED_WIDTH: number = 1920 / TILED_MAP__WIDTH_NUMBER
   const TILED_HEIGTH: number = 1080 / TILED_MAP_HEIGTH_NUMBER
@@ -236,6 +236,11 @@ function App() {
           left: { from: 24, to: 27, loop: false },
           quiet: { from: 0, to: 0, loop: false },
         },
+      });
+
+      juegoKaplay.loadSprite("scarecrow", "sprites/scarecrow.png", {
+        sliceX: 1,
+        sliceY: 1,
       });
 
       // Cargar sprites adicionales
@@ -352,10 +357,10 @@ function App() {
               tileHeight: TILED_HEIGTH,
               pos: juegoKaplay.vec2(0, 0),
             },
-            `./world-20x15-con-numeros.json`,
-            "Dungeon_Tileset.png",
+            `./theofficialbackground.json`,
+            "Tilemap_Flat.png",
             10,
-            10
+            4
           ).then(
             (resultado: any) => {
               console.log(resultado)
@@ -407,6 +412,16 @@ function App() {
                 juegoKaplay.area(),
                 juegoKaplay.body(),
                 "enemy",
+              ]);
+
+              //Scarecrow
+              const scarecrow = juegoKaplay.add([
+                juegoKaplay.pos(juegoKaplay.center()),
+                juegoKaplay.sprite("scarecrow"),
+                juegoKaplay.scale(2),
+                juegoKaplay.area(),
+                juegoKaplay.body(),
+                "scarecrow",
               ]);
 
               // Flechas
