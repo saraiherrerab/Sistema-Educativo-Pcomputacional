@@ -234,6 +234,8 @@ function App() {
   // Referencia persistente para almacenar la instancia de Kaplay
   const juegoKaplayRef = useRef<any>(null);
 
+  let lives = 3
+
   const SCREEN_RESOLUTION_X: number = 1920
   const SCREEN_RESOLUTION_Y: number = 1080
 
