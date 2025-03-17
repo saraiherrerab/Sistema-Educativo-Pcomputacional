@@ -4,12 +4,13 @@ import kaplay, { Asset, GameObj, KAPLAYCtx, LevelOpt, Rect, SpriteData, Vec2 } f
 interface informacionNivel {
   urlTextura: string,
   dimensionTexturasX: number,
-  dimensionTexturasY: number
+  dimensionTexturasY: number,
+  firstgid: number
 }
 
 function devolverSiguienteNumeroValido (validarNumero: number, arregloNumerosProhibidos: number[]) : number {
   arregloNumerosProhibidos.sort((a, b) => a - b);
-  return arregloNumerosProhibidos[arregloNumerosProhibidos.length - 1];
+  return (arregloNumerosProhibidos.includes(validarNumero) ) ? arregloNumerosProhibidos[arregloNumerosProhibidos.length - 1] : validarNumero;
 }
 const generarEsquemaMapa = async (
 
@@ -26,13 +27,14 @@ const generarEsquemaMapa = async (
     (worldJson:any) => {
       
       console.log(worldJson)
-      
-      const tilesetOrder: any= worldJson.tilesets
+
+      //Extraemos los arreglos que contienen el firtsgid (Posición donde comienzan cada una de las imagenes de cada capa)
+      const tilesetOrder: any= informacionMapa
       console.log("tilesetOrder")
       console.log(tilesetOrder)
 
-      const spritesCargados:  Asset<SpriteData>[] = []
       //cargamos todas las texturas que seran usadas para generar el mapa en orden
+      const spritesCargados:  Asset<SpriteData>[] = []
       informacionMapa.forEach( (informacionNivel: informacionNivel, index: number) => {
           spritesCargados.push(contextoKaplay.loadSprite(`tiles-${index+1}`, informacionNivel.urlTextura, {
             sliceX: informacionNivel.dimensionTexturasX,
@@ -41,15 +43,14 @@ const generarEsquemaMapa = async (
         )
       })
 
-      //console.log(spritesCargados) //Validamos que los sprites han sido cargados
-
       const anchoCuadrado: number = 1920 / worldJson.width
       const altoCuadrado: number = 1080 / worldJson.height
-
+      /*
       console.log("Dimensiones recibidas" , {
         "ancho": anchoCuadrado,
         "alto": altoCuadrado
-      })
+      }
+      */
     
       const tileMap: { [key: string] : number}[] = [{}]
 
@@ -60,14 +61,20 @@ const generarEsquemaMapa = async (
 
       
 
+      //Luego para cada CAPA que contiene números que no pueden ser procesados por el generador de niveles
+      //Es necesario que realizacemos una reasignación con un caracter ASCII, tomando en cuenta que hay caracteres que 
+      //No pueden ser procesados como una cadena (Valores Prohibidos)
       mapaGenerado.forEach((layer:any, numeroLayer: number) => {
-
+        //Para cada capa inicializamos un contador que contiene el código ASCII del "$" para reemplazarlo en el caso de que el número
+        //extraido sea mayor a 9
         let contador = 36;
 
+        //Luego por cada uno de los números que representan una capa realizamos lo siguiente:
         layer.data.forEach( (tileNumber: number, index: number) => {
 
-          //Falta validar los codigos ASCII INVALIDOS del contador
-
+          
+          //Validamos que el TileMap el cual contiene una relación llave valor con el caracter 
+          //y su equivalente en la capa, por ejemplo $: 36, esté inicializado.
           if (!(numeroLayer >= 0 && numeroLayer < tileMap.length)) {
             console.log("El índice no existe");
             tileMap.push({})
@@ -76,28 +83,36 @@ const generarEsquemaMapa = async (
           //Si el "Tilemap" en la capa actual no ha mapeado el número
           if(Object.values(tileMap[numeroLayer]).includes(tileNumber) === false){
 
+            //Validmos si es un número de dos dígitos y en caso de que lo sea, debemos validar el
+            //ultimo valor posible del contador.
+            contador = devolverSiguienteNumeroValido(contador,valoresProhibidos)
 
+            //Una vez validado, si el número a evaluar es de dos digitos y el contador está entre
+            //los numeros validos
             if(tileNumber.toString().length > 1 && contador >= 33 && contador <=165 ){
           
-              //console.log("Evaluando:", tileNumber)
+              //Al mapeo de la capa evaluada le asignamos una correspondencia entre el valor ASCCI y el numero
               (tileMap[numeroLayer])[String.fromCharCode(contador)] = tileNumber as number;
 
-              //console.log((tileMap[numeroLayer])[String.fromCharCode(contador)]);
-
+              //Actualizamos el mapa de la misma posicion con el nuevo caracter
               worldJson.layers[numeroLayer].data[index] = String.fromCharCode(contador);
+
+              //Avanzamos el contador para tomar el nuevo valor ASCII
               contador++;
             }else if(contador > 165){
+              //En caso de que el contador haya superado el límite de asignaciones
               throw new Error("La cantidad de cuadros a superado el limite establecido");
             }else {
 
-              if(tileNumber === 0){
-                (tileMap[numeroLayer])[tileNumber.toString() as string] = 0
-              }
+              //Si el mapeo realizado es de un número de un sólo digito entonces asignamos directamente ese numero 
               (tileMap[numeroLayer])[tileNumber.toString() as string] = tileNumber as number
             }
 
           }else{
-            //console.log("El valor ya ha sido mapeado", tileNumber, String.fromCharCode(contador))
+
+            //En la caso de extraer un número que ya ha sido mapeado y ya tiene asignado un valor ASCII
+            //Buscamos la llave a la que le corresponde ese valor
+            //Y actualizamos el mapa con ese caracter encontrado.
             const keyEncontrada = Object.entries(tileMap[numeroLayer]).find(([_, value]) => value === tileNumber)?.[0];
             worldJson.layers[numeroLayer].data[index] = keyEncontrada
           }
@@ -105,6 +120,7 @@ const generarEsquemaMapa = async (
         });
       });
     
+
       console.log(worldJson.layers)
 
       tileMap.forEach( (nivel:any) => {
@@ -112,17 +128,27 @@ const generarEsquemaMapa = async (
       })
     
       type TileComponent = ReturnType<typeof contextoKaplay.sprite> | ReturnType<typeof contextoKaplay.scale>;
-    
       const tileMapping: Record<string, () => TileComponent[]>[] = []
 
-
+      //Una vez realizada la asignación entre valores ASCII y valores númericos del mapa
+      //Es necesario asignar a un SPRITE a cada uno de esos valores, por lo que para
+      //lograrlo hacemos lo siguiente:
       tileMap.forEach( (layer: any, numeroLayer: number) => {
 
         console.log("Comenzando asociacion de la capa", numeroLayer)
+
+        //Para cada valor ASCII de la capa que se está evaluado hacemos lo siguiente
         Object.keys(layer).forEach((key:any, index: number) => {
 
-          
-          const frame = (index === 0 ) ? layer[key] : layer[key] - tilesetOrder[numeroLayer].firstgid  ; // Obtener el frame correcto del tileMap
+
+
+          //Si la capa que estamos extrayendo es la primera, extraemos el valor numerico asociado al codigo ASCII o "key"
+          //De lo contrario, si es una capa superior, debemos restar el punto de origen de las imagenes SPRITE usadas para
+          //hallar los frames originales.
+          console.log("DIFERENCIA",  (numeroLayer === 0 ) ? layer[key] : layer[key] - tilesetOrder[numeroLayer].firstgid)
+          if((numeroLayer !== 0 )) console.log("CAPA 1",  layer[key] - tilesetOrder[numeroLayer].firstgid)
+          if((numeroLayer !== 0 )) console.log("CAPA 1",  layer[key])
+          const frame = (numeroLayer === 0 ) ? layer[key] : (layer[key] !== 0 && layer[key] !== "0" )  ? layer[key] - tilesetOrder[numeroLayer].firstgid + 1 : 0; // Obtener el frame correcto del tileMap
           //console.log(layer)
           console.log(`Al valor ${key} se le asignó ${frame as number}`);
 
@@ -131,23 +157,21 @@ const generarEsquemaMapa = async (
             tileMapping[numeroLayer] = {};
           }
 
+          //Si la clave que se está evaluando no es cero, entonces quiere decir que tiene un sprite asociado y no es vacio
+          //Por lo que hacemos lo siguiente
           if(key !== 0 && key !== "0" ){
-            console.log()
-            console.log()
-             console.log("SE ENCONTRO ALGO");
-             console.log(tileMapping[numeroLayer])
-             console.log(frame)
+
+            //Al TileMapping (Mapa entre codigo ASCII y el SPRITE le asignamos el frame encontrado (menos una posicion porque TILED empieza en 1))
              tileMapping[numeroLayer][key] = () => [
               contextoKaplay.sprite(`tiles-${numeroLayer+1}`, { frame: (frame as number) - 1, width: anchoCuadrado, height: altoCuadrado }),
               contextoKaplay.scale(1)
              ]
-             console.log(tileMapping[numeroLayer])
-             console.log("AISGNACION PRINCIPAL")
-             console.log((tileMapping[numeroLayer])[key])
+
           }else{
+            //De lo contrario si encuentra un cero, le asignamos una imagen especial transparente para cubrir el espacio vacio
             console.log("%c hola",(tileMapping[numeroLayer])[key], "color:green;");
             (tileMapping[numeroLayer])[key] = () => [
-              contextoKaplay.sprite(`tiles-0`, { frame: 2 , width: anchoCuadrado, height: altoCuadrado }),
+              contextoKaplay.sprite(`title-0`, { width: anchoCuadrado, height: altoCuadrado }),
               contextoKaplay.scale(1)
              ]
           }
@@ -158,43 +182,10 @@ const generarEsquemaMapa = async (
 
       })
 
-    
 
-      console.log(tileMapping)
-
-      console.log(worldJson.layers)
-
-
-      console.log("Extrayendo LAYER")
-      console.log(worldJson.layers[0])
-      let resultadoMapa = [];
-
-      const { data, width } = worldJson.layers[1];
-      console.log(data)
-      const mapa = [];
-      for (let i = 0; i < width; i++) {
-        mapa.push(data.slice(i * width, (i + 1) * width));
-      }
-      console.log(mapa)
-      const resultadoMapeo = mapa.map((fila: any) =>
-        fila.map((cell: any) => cell.toString()).join("")
-      );
-      console.log(resultadoMapeo.length)
-      console.log(resultadoMapeo)
-      resultadoMapa = [...resultadoMapeo]
-      console.log("BIEN HASTA AQUI")
-      console.log(tileMapping[0]);
-      contextoKaplay.addLevel(resultadoMapa, {
-        tileWidth: anchoCuadrado,
-        tileHeight: altoCuadrado,
-        pos: configuracionMapa.pos,
-        tiles: { ...tileMapping[0] },
-      })
-        
-    
       worldJson.layers.forEach((layer: any, numeroLayer: number) => {
 
-        /*
+        
         console.log("Extrayendo LAYER")
         console.log(layer)
         let resultadoMapa = [];
@@ -211,8 +202,7 @@ const generarEsquemaMapa = async (
           );
           console.log(resultadoMapeo.length)
           resultadoMapa = [...resultadoMapeo]
-          console.log("BIEN HASTA AQUI")
-          console.log(tileMapping[numeroLayer]);
+          console.log(resultadoMapa)
           contextoKaplay.addLevel(resultadoMapa, {
             tileWidth: anchoCuadrado,
             tileHeight: altoCuadrado,
@@ -221,7 +211,7 @@ const generarEsquemaMapa = async (
           })
         }
         
-        */
+        
       })
 
       console.log("SALI DE LA FUNCION")
@@ -322,6 +312,11 @@ function App() {
         sliceY: 1,
       });
 
+      juegoKaplay.loadSprite("title-0", "prueba/title-0.png", {
+        sliceX: 1,
+        sliceY: 1,
+      });
+
       // Cargar sprites adicionales
       ["up", "down", "left", "right"].forEach((dir) => {
         juegoKaplay.loadSprite(dir, `sprites/${dir}-arrow.png`);
@@ -345,17 +340,31 @@ function App() {
               tileHeight: TILED_HEIGTH,
               pos: juegoKaplay.vec2(0, 0),
             },
-            `./prueba/prueba2x2.json`,
+            `./prueba/prueba10x10-capa2.json`,
             [
               {
                 urlTextura: "./prueba/Tilemap_Flat.png",
                 dimensionTexturasX: 20,
-                dimensionTexturasY: 8
+                dimensionTexturasY: 8,
+                firstgid: 1
               },
               {
                 urlTextura: "./prueba/Tilemap_Elevation.png",
                 dimensionTexturasX: 8,
-                dimensionTexturasY: 16
+                dimensionTexturasY: 16,
+                firstgid: 161
+              },
+              {
+                urlTextura: "./prueba/Tilemap_Elevation.png",
+                dimensionTexturasX: 8,
+                dimensionTexturasY: 16,
+                firstgid: 161
+              },
+              {
+                urlTextura: "./prueba/Tilemap_Elevation.png",
+                dimensionTexturasX: 8,
+                dimensionTexturasY: 16,
+                firstgid: 161
               }
             ]
           ).then(
