@@ -234,18 +234,14 @@ function App() {
   // Referencia persistente para almacenar la instancia de Kaplay
   const juegoKaplayRef = useRef<any>(null);
 
-  const TILED_PIXEL_DIMENSION: number = 64
-  const MAX_TILED_PIXEL_WIDTH: number = 20
-  const MAX_TILED_PIXEL_HEIGTH: number = 13
-
-  //const TILED_MAP__WIDTH_NUMBER: number = 20
-  //const TILED_MAP_HEIGTH_NUMBER: number = 15
+  const SCREEN_RESOLUTION_X: number = 1920
+  const SCREEN_RESOLUTION_Y: number = 1080
 
   const TILED_MAP__WIDTH_NUMBER: number = 10
   const TILED_MAP_HEIGTH_NUMBER: number = 10
 
-  const TILED_WIDTH: number = 1920 / TILED_MAP__WIDTH_NUMBER
-  const TILED_HEIGTH: number = 1080 / TILED_MAP_HEIGTH_NUMBER
+  const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
+  const TILED_HEIGTH: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGTH_NUMBER
 
   console.log(TILED_WIDTH)
   console.log(TILED_HEIGTH)
@@ -269,8 +265,8 @@ function App() {
       console.log(window.innerWidth)
       console.log(window.innerHeight)
       juegoKaplayRef.current = kaplay({
-        width:  1920,//TILED_PIXEL_DIMENSION * MAX_TILED_PIXEL_WIDTH,*/ // Ancho dinámico
-        height: 1080,/*TILED_PIXEL_DIMENSION * 15, */// Alto dinámico
+        width:  SCREEN_RESOLUTION_X,//TILED_PIXEL_DIMENSION * MAX_TILED_PIXEL_WIDTH,*/ // Ancho dinámico
+        height: SCREEN_RESOLUTION_Y,/*TILED_PIXEL_DIMENSION * 15, */// Alto dinámico
         letterbox: true,
         global: false,
         debug: true, // Cambiar a false en producción
@@ -340,7 +336,7 @@ function App() {
               tileHeight: TILED_HEIGTH,
               pos: juegoKaplay.vec2(0, 0),
             },
-            `./prueba/prueba10x10-capa2.json`,
+            `./prueba/mapa1.json`,
             [
               {
                 urlTextura: "./prueba/Tilemap_Flat.png",
@@ -355,16 +351,16 @@ function App() {
                 firstgid: 161
               },
               {
-                urlTextura: "./prueba/Tilemap_Elevation.png",
-                dimensionTexturasX: 8,
-                dimensionTexturasY: 16,
-                firstgid: 161
+                urlTextura: "./prueba/Tilemap_Flat.png",
+                dimensionTexturasX: 20,
+                dimensionTexturasY: 8,
+                firstgid: 1
               },
               {
-                urlTextura: "./prueba/Tilemap_Elevation.png",
-                dimensionTexturasX: 8,
-                dimensionTexturasY: 16,
-                firstgid: 161
+                urlTextura: "./prueba/Bridge_All.png",
+                dimensionTexturasX: 6,
+                dimensionTexturasY: 8,
+                firstgid: 289
               }
             ]
           ).then(
