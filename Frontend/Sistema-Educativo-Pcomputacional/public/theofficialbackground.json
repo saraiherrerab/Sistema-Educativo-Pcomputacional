@@ -65,23 +65,8 @@
          "width":5,
          "x":0,
          "y":0
-        }, 
-        {
-         "data":[0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0],
-         "height":5,
-         "id":9,
-         "name":"enemy",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":5,
-         "x":0,
-         "y":0
-        }],
+        }
+      ],
  "nextlayerid":10,
  "nextobjectid":1,
  "orientation":"orthogonal",

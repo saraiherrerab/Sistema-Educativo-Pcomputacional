@@ -1,19 +1,23 @@
 import { useEffect, useRef } from "react";
-import kaplay, { GameObj, KAPLAYCtx, LevelOpt, Vec2 } from "kaplay";
+import kaplay, { Asset, GameObj, KAPLAYCtx, LevelOpt, Rect, SpriteData, Vec2 } from "kaplay";
 
+interface informacionNivel {
+  urlTextura: string,
+  dimensionTexturasX: number,
+  dimensionTexturasY: number
+}
 
+function devolverSiguienteNumeroValido (validarNumero: number, arregloNumerosProhibidos: number[]) : number {
+  arregloNumerosProhibidos.sort((a, b) => a - b);
+  return arregloNumerosProhibidos[arregloNumerosProhibidos.length - 1];
+}
 const generarEsquemaMapa = async (
 
   contextoKaplay: KAPLAYCtx<{},never>,
   configuracionMapa: { tileWidth: number,tileHeight: number,pos: Vec2,},
   urlMapa: string,
-  urlTexturas: string, 
-  dimensionTexturasX: number,
-  dimensionTexturasY: number
-
+  informacionMapa: informacionNivel[]
 ) : Promise<any> => {
-
-  let mapaGenerado: string[] = []
 
   const resultado = fetch(urlMapa).then(
     (res) => res.json()
@@ -22,11 +26,22 @@ const generarEsquemaMapa = async (
     (worldJson:any) => {
       
       console.log(worldJson)
-      console.log("urlTexturas", urlTexturas)
-      contextoKaplay.loadSprite("tiles", urlTexturas, {
-        sliceX: dimensionTexturasX,
-        sliceY: dimensionTexturasY,
-      });
+      
+      const tilesetOrder: any= worldJson.tilesets
+      console.log("tilesetOrder")
+      console.log(tilesetOrder)
+
+      const spritesCargados:  Asset<SpriteData>[] = []
+      //cargamos todas las texturas que seran usadas para generar el mapa en orden
+      informacionMapa.forEach( (informacionNivel: informacionNivel, index: number) => {
+          spritesCargados.push(contextoKaplay.loadSprite(`tiles-${index+1}`, informacionNivel.urlTextura, {
+            sliceX: informacionNivel.dimensionTexturasX,
+            sliceY: informacionNivel.dimensionTexturasY,
+          })
+        )
+      })
+
+      //console.log(spritesCargados) //Validamos que los sprites han sido cargados
 
       const anchoCuadrado: number = 1920 / worldJson.width
       const altoCuadrado: number = 1080 / worldJson.height
@@ -36,91 +51,183 @@ const generarEsquemaMapa = async (
         "alto": altoCuadrado
       })
     
-      const nivelGenerado = worldJson?.layers[0]
-
-      console.log(nivelGenerado)
-    
-      const tileMap: { [key: string] : number} = {}
-    
-      let contador = 36;
+      const tileMap: { [key: string] : number}[] = [{}]
 
       const valoresProhibidos: number[] = [39,48,49,50,51,52,53,54,55,56,57]
-    
-      nivelGenerado.data.forEach( (tileNumber: number, index: number) => {
-        const numero: number = tileNumber
-        //console.log(numero)
-        if(valoresProhibidos.includes(contador)){
-          console.log("Valor prohibido encontrado!", contador)
-          contador++
-        }
 
-        if(Object.values(tileMap).includes(tileNumber) === false){
-          if(tileNumber.toString().length > 1 && contador >= 33 && contador <=165 ){
+      const mapaGenerado = worldJson?.layers
+      console.log(mapaGenerado)
 
-            //validar valores prohibidos aqui
+      
 
-            //console.log("Evaluando:", tileNumber)
-            tileMap[String.fromCharCode(contador)] = tileNumber as number;
-            worldJson.layers[0].data[index] = String.fromCharCode(contador);
-            contador++;
-          }else if(contador > 165){
-            throw new Error("La cantidad de cuadros a superado el limite establecido");
-          }else {
-            tileMap[tileNumber.toString() as string] = tileNumber as number
+      mapaGenerado.forEach((layer:any, numeroLayer: number) => {
+
+        let contador = 36;
+
+        layer.data.forEach( (tileNumber: number, index: number) => {
+
+          //Falta validar los codigos ASCII INVALIDOS del contador
+
+          if (!(numeroLayer >= 0 && numeroLayer < tileMap.length)) {
+            console.log("El índice no existe");
+            tileMap.push({})
           }
-        }else{
-          console.log("El valor ya ha sido mapeado", tileNumber, String.fromCharCode(contador))
-          const keyEncontrada = Object.entries(tileMap).find(([_, value]) => value === tileNumber)?.[0];
-          worldJson.layers[0].data[index] = keyEncontrada
-        }
-  
+
+          //Si el "Tilemap" en la capa actual no ha mapeado el número
+          if(Object.values(tileMap[numeroLayer]).includes(tileNumber) === false){
+
+
+            if(tileNumber.toString().length > 1 && contador >= 33 && contador <=165 ){
+          
+              //console.log("Evaluando:", tileNumber)
+              (tileMap[numeroLayer])[String.fromCharCode(contador)] = tileNumber as number;
+
+              //console.log((tileMap[numeroLayer])[String.fromCharCode(contador)]);
+
+              worldJson.layers[numeroLayer].data[index] = String.fromCharCode(contador);
+              contador++;
+            }else if(contador > 165){
+              throw new Error("La cantidad de cuadros a superado el limite establecido");
+            }else {
+
+              if(tileNumber === 0){
+                (tileMap[numeroLayer])[tileNumber.toString() as string] = 0
+              }
+              (tileMap[numeroLayer])[tileNumber.toString() as string] = tileNumber as number
+            }
+
+          }else{
+            //console.log("El valor ya ha sido mapeado", tileNumber, String.fromCharCode(contador))
+            const keyEncontrada = Object.entries(tileMap[numeroLayer]).find(([_, value]) => value === tileNumber)?.[0];
+            worldJson.layers[numeroLayer].data[index] = keyEncontrada
+          }
+    
+        });
       });
     
-      console.log(worldJson.layers[0].data)
-      console.table(tileMap) 
+      console.log(worldJson.layers)
+
+      tileMap.forEach( (nivel:any) => {
+        console.log(nivel)
+      })
     
       type TileComponent = ReturnType<typeof contextoKaplay.sprite> | ReturnType<typeof contextoKaplay.scale>;
     
-      const tileMapping: Record<string, () => TileComponent[]> = {}
+      const tileMapping: Record<string, () => TileComponent[]>[] = []
+
+
+      tileMap.forEach( (layer: any, numeroLayer: number) => {
+
+        console.log("Comenzando asociacion de la capa", numeroLayer)
+        Object.keys(layer).forEach((key:any, index: number) => {
+
+          
+          const frame = (index === 0 ) ? layer[key] : layer[key] - tilesetOrder[numeroLayer].firstgid  ; // Obtener el frame correcto del tileMap
+          //console.log(layer)
+          console.log(`Al valor ${key} se le asignó ${frame as number}`);
+
+          // Asegurar que tileMapping[index] existe como un objeto antes de asignar valores
+          if (!tileMapping[numeroLayer]) {
+            tileMapping[numeroLayer] = {};
+          }
+
+          if(key !== 0 && key !== "0" ){
+            console.log()
+            console.log()
+             console.log("SE ENCONTRO ALGO");
+             console.log(tileMapping[numeroLayer])
+             console.log(frame)
+             tileMapping[numeroLayer][key] = () => [
+              contextoKaplay.sprite(`tiles-${numeroLayer+1}`, { frame: (frame as number) - 1, width: anchoCuadrado, height: altoCuadrado }),
+              contextoKaplay.scale(1)
+             ]
+             console.log(tileMapping[numeroLayer])
+             console.log("AISGNACION PRINCIPAL")
+             console.log((tileMapping[numeroLayer])[key])
+          }else{
+            console.log("%c hola",(tileMapping[numeroLayer])[key], "color:green;");
+            (tileMapping[numeroLayer])[key] = () => [
+              contextoKaplay.sprite(`tiles-0`, { frame: 2 , width: anchoCuadrado, height: altoCuadrado }),
+              contextoKaplay.scale(1)
+             ]
+          }
+             
+        });
+
+        console.log("Terminó asociacion de la capa", numeroLayer)
+
+      })
+
     
-      Object.keys(tileMap).forEach((key) => {
-
-        const frame = tileMap[key]; // Obtener el frame correcto del tileMap
-
-        console.log(`Al valor ${key} se le asignó ${frame as number}`)
-        tileMapping[key] = () => [
-          contextoKaplay.sprite("tiles", { frame: (frame as number) - 1, width: anchoCuadrado, height: altoCuadrado }),
-          contextoKaplay.scale(1)
-        ]
-      });
 
       console.log(tileMapping)
+
+      console.log(worldJson.layers)
+
+
+      console.log("Extrayendo LAYER")
+      console.log(worldJson.layers[0])
+      let resultadoMapa = [];
+
+      const { data, width } = worldJson.layers[1];
+      console.log(data)
+      const mapa = [];
+      for (let i = 0; i < width; i++) {
+        mapa.push(data.slice(i * width, (i + 1) * width));
+      }
+      console.log(mapa)
+      const resultadoMapeo = mapa.map((fila: any) =>
+        fila.map((cell: any) => cell.toString()).join("")
+      );
+      console.log(resultadoMapeo.length)
+      console.log(resultadoMapeo)
+      resultadoMapa = [...resultadoMapeo]
+      console.log("BIEN HASTA AQUI")
+      console.log(tileMapping[0]);
+      contextoKaplay.addLevel(resultadoMapa, {
+        tileWidth: anchoCuadrado,
+        tileHeight: altoCuadrado,
+        pos: configuracionMapa.pos,
+        tiles: { ...tileMapping[0] },
+      })
+        
     
-      worldJson.layers.forEach((layer: any) => {
-        if (layer.type === "tilelayer") {
+      worldJson.layers.forEach((layer: any, numeroLayer: number) => {
+
+        /*
+        console.log("Extrayendo LAYER")
+        console.log(layer)
+        let resultadoMapa = [];
+        if (layer.type === "tilelayer" ) {
           const { data, width } = layer;
-    
+          console.log(data)
           const mapa = [];
           for (let i = 0; i < width; i++) {
             mapa.push(data.slice(i * width, (i + 1) * width));
           }
-    
+          console.log(mapa)
           const resultadoMapeo = mapa.map((fila: any) =>
             fila.map((cell: any) => cell.toString()).join("")
           );
-    
-          mapaGenerado = [...resultadoMapeo]
+          console.log(resultadoMapeo.length)
+          resultadoMapa = [...resultadoMapeo]
+          console.log("BIEN HASTA AQUI")
+          console.log(tileMapping[numeroLayer]);
+          contextoKaplay.addLevel(resultadoMapa, {
+            tileWidth: anchoCuadrado,
+            tileHeight: altoCuadrado,
+            pos: configuracionMapa.pos,
+            tiles: { ...tileMapping[numeroLayer] },
+          })
         }
+        
+        */
       })
+
+      console.log("SALI DE LA FUNCION")
     
-      console.log(mapaGenerado)
     
-      return contextoKaplay.addLevel(mapaGenerado, {
-        tileWidth: anchoCuadrado,
-        tileHeight: altoCuadrado,
-        pos: configuracionMapa.pos,
-        tiles: { ...tileMapping },
-      })
+      return "Generación de mapa completada exitosamente"
     }
 
     
@@ -129,38 +236,10 @@ const generarEsquemaMapa = async (
     console.error(error)
   });
 
-  return resultado
+  return "resultado"
   
 }
 
-function detectaBorde(player: any, redRoom: any): boolean {
-  const margen = 2; // Aumentamos el margen para mayor precisión
-
-  // Obtenemos el área del jugador y de la habitación en caso de que width/height no existan
-  const playerWidth = player.width || (player.area ? player.area.width : 0);
-  const playerHeight = player.height || (player.area ? player.area.height : 0);
-  const roomWidth = redRoom.width || (redRoom.area ? redRoom.area.width : 0);
-  const roomHeight = redRoom.height || (redRoom.area ? redRoom.area.height : 0);
-
-  // Coordenadas del jugador
-  const playerBottom = player.pos.y + playerHeight;
-  const playerTop = player.pos.y;
-  const playerLeft = player.pos.x;
-  const playerRight = player.pos.x + playerWidth;
-
-  // Coordenadas de la habitación
-  const roomBottom = redRoom.pos.y + roomHeight;
-  const roomTop = redRoom.pos.y;
-  const roomLeft = redRoom.pos.x;
-  const roomRight = redRoom.pos.x + roomWidth;
-
-  return (
-    (Math.abs(playerBottom - roomTop) <= margen && playerRight > roomLeft && playerLeft < roomRight) || // Toca el borde superior
-    (Math.abs(playerTop - roomBottom) <= margen && playerRight > roomLeft && playerLeft < roomRight) || // Toca el borde inferior
-    (Math.abs(playerRight - roomLeft) <= margen && playerBottom > roomTop && playerTop < roomBottom) || // Toca el borde izquierdo
-    (Math.abs(playerLeft - roomRight) <= margen && playerBottom > roomTop && playerTop < roomBottom)    // Toca el borde derecho
-  );
-}
 function App() {
   // Referencia persistente para almacenar la instancia de Kaplay
   const juegoKaplayRef = useRef<any>(null);
@@ -172,8 +251,8 @@ function App() {
   //const TILED_MAP__WIDTH_NUMBER: number = 20
   //const TILED_MAP_HEIGTH_NUMBER: number = 15
 
-  const TILED_MAP__WIDTH_NUMBER: number = 5
-  const TILED_MAP_HEIGTH_NUMBER: number = 5
+  const TILED_MAP__WIDTH_NUMBER: number = 10
+  const TILED_MAP_HEIGTH_NUMBER: number = 10
 
   const TILED_WIDTH: number = 1920 / TILED_MAP__WIDTH_NUMBER
   const TILED_HEIGTH: number = 1080 / TILED_MAP_HEIGTH_NUMBER
@@ -259,97 +338,6 @@ function App() {
 
       juegoKaplay.onLoad(async () => {
 
-        /*
-        console.log(`./world-${TILED_MAP__WIDTH_NUMBER}x${TILED_MAP__WIDTH_NUMBER}.json`)
-        const worldJson = await fetch(`./world-${TILED_MAP__WIDTH_NUMBER}x${TILED_MAP_HEIGTH_NUMBER}.json`).then((res) =>
-          res.json()
-        );
-
-        const dungeonBoxReference = {
-          //Esquinas
-          "0": 0,
-          "5": 5,
-          "40": 40,
-          "45": 45,
-          //Pared Norte
-          "1": 1,
-          //Pared Este
-          "15": 15,
-          //Pared Oeste
-          "30": 30,
-          //Pared Sur
-          "44": 44
-        }
-
-        const tileMapping = {
-          "1": () => [
-            juegoKaplay.sprite("tiles", { frame: 0, width: Math.trunc(TILED_WIDTH), height: Math.trunc(TILED_HEIGTH) }),
-            juegoKaplay.scale(1)
-          ],
-          "6": () => [
-            juegoKaplay.sprite("tiles", { frame: 5, width: TILED_WIDTH, height: TILED_HEIGTH }),
-            juegoKaplay.scale(1)
-          ],
-          "$": () => [ // -> $
-            juegoKaplay.sprite("tiles", { frame: 40, width: TILED_WIDTH, height: TILED_HEIGTH }),
-            juegoKaplay.scale(1)
-          ],
-          "%": () => [ // -> %
-            juegoKaplay.sprite("tiles", { frame: 45, width: TILED_WIDTH, height: TILED_HEIGTH }),
-            juegoKaplay.scale(1)
-          ],
-          "2": () => [
-            juegoKaplay.sprite("tiles", { frame: 1, width: TILED_WIDTH, height: TILED_HEIGTH }),
-            juegoKaplay.scale(1)
-          ],
-          "&": () => [ //-> &
-            juegoKaplay.sprite("tiles", { frame: 15, width: TILED_WIDTH, height: TILED_HEIGTH }),
-            juegoKaplay.scale(1)
-          ],
-          //Pared Oeste
-          "/": () => [ //->/
-            juegoKaplay.sprite("tiles", { frame: 30, width: TILED_WIDTH, height: TILED_HEIGTH }),
-            juegoKaplay.scale(1)
-          ],
-          //Pared Sur
-          "(": () => [ //->(
-            juegoKaplay.sprite("tiles", { frame: 44, width: TILED_WIDTH, height: TILED_HEIGTH }),
-            juegoKaplay.scale(1)
-          ],
-          "=": () => [
-            juegoKaplay.sprite("tiles", { frame: 11,width: Math.trunc(TILED_WIDTH), height: Math.trunc(TILED_HEIGTH)}),
-            juegoKaplay.scale(1)
-          ],
-          "*": () => [
-            juegoKaplay.sprite("tiles", { frame: 36, width: Math.trunc(TILED_WIDTH), height: Math.trunc(TILED_HEIGTH) }),
-            juegoKaplay.area(),
-          ],
-        };
-
-        worldJson.layers.forEach((layer: any) => {
-          if (layer.type === "tilelayer") {
-            const { data, width } = layer;
-
-            const mapa = [];
-            for (let i = 0; i < width; i++) {
-              mapa.push(data.slice(i * width, (i + 1) * width));
-            }
-
-            const matrizString = mapa.map((fila: any) =>
-              fila.map((cell: any) => cell.toString()).join("")
-            );
-
-            juegoKaplay.addLevel(matrizString, {
-              tileWidth: TILED_WIDTH,
-              tileHeight: TILED_HEIGTH,
-              pos: juegoKaplay.vec2(0, 0),
-              tiles: { ...tileMapping },
-            });
-          }
-            */
-
-          
-
           const nivelPrincipal = generarEsquemaMapa(
             juegoKaplay,
             {
@@ -357,37 +345,24 @@ function App() {
               tileHeight: TILED_HEIGTH,
               pos: juegoKaplay.vec2(0, 0),
             },
-            `./theofficialbackground.json`,
-            "Tilemap_Flat.png",
-            10,
-            4
+            `./prueba/prueba2x2.json`,
+            [
+              {
+                urlTextura: "./prueba/Tilemap_Flat.png",
+                dimensionTexturasX: 20,
+                dimensionTexturasY: 8
+              },
+              {
+                urlTextura: "./prueba/Tilemap_Elevation.png",
+                dimensionTexturasX: 8,
+                dimensionTexturasY: 16
+              }
+            ]
           ).then(
             (resultado: any) => {
               console.log(resultado)
               // Jugador
-              
               /*
-              juegoKaplay.add([
-                juegoKaplay.rect(1920, 1080),
-                juegoKaplay.area(),
-                juegoKaplay.color(0, 0, 255),
-                juegoKaplay.pos(1920,0),
-                "blueRoom"
-              ])
-              */
-              const nivelSiguiente = generarEsquemaMapa(
-                juegoKaplay,
-                {
-                  tileWidth: TILED_WIDTH,
-                  tileHeight: TILED_HEIGTH,
-                  pos: juegoKaplay.vec2(1920, 0),
-                },
-                `./world-20x15-con-numeros.json`,
-                "Dungeon_Tileset.png",
-                10,
-                10
-              )
-              console.log(juegoKaplay.center())
               const player = juegoKaplay.add([
                 juegoKaplay.pos((juegoKaplay.center().x)/4,(juegoKaplay.center().y)/4 ),
                 juegoKaplay.sprite("robot"),
@@ -531,7 +506,12 @@ function App() {
                 )
               })
               */
+
             }
+          ).catch(
+            ((error:any) => {
+              console.log("Ah vaina simon")
+            })
           )
 
           
