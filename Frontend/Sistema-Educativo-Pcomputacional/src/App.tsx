@@ -133,6 +133,8 @@ const generarEsquemaMapa = async (
   
 }
 
+
+
 function detectaBorde(player: any, redRoom: any): boolean {
   const margen = 2; // Aumentamos el margen para mayor precisión
 
@@ -219,13 +221,33 @@ function App() {
         sliceX: 4,
         sliceY: 12,
         anims: {
-          right: { from: 16, to: 19, loop: false },
-          up: { from: 20, to: 23, loop: false },
-          down: { from: 12, to: 15, loop: false },
-          left: { from: 24, to: 27, loop: false },
+          right: { from: 16, to: 19, loop: true },
+          up: { from: 20, to: 23, loop: true },
+          down: { from: 12, to: 15, loop: true },
+          left: { from: 24, to: 27, loop: true },
           quiet: { from: 0, to: 0, loop: false },
         },
       });
+
+      let xcoord= (juegoKaplay.center().x)/4;
+
+      let ycoord= (juegoKaplay.center().y)/4;
+   
+
+      juegoKaplay.loadSprite("knight", "sprites/purple_knight.png", {
+        sliceX: 6,
+        sliceY: 8,
+        anims: {
+          right: { from: 6, to: 11, loop: false },
+          up: { from: 42, to: 47, loop: false },
+          down: { from: 26, to: 30, loop: false },
+          left: { from: 5, to: 1, loop: false },
+          quiet: { from: 31, to: 31, loop: false },
+        },
+      });
+
+
+
       juegoKaplay.loadSprite("enemy", "sprites/enemy-blue.png", {
         sliceX: 4,
         sliceY: 12,
@@ -387,16 +409,21 @@ function App() {
                 10,
                 10
               )
+
+
               console.log(juegoKaplay.center())
               const player = juegoKaplay.add([
                 juegoKaplay.pos((juegoKaplay.center().x)/4,(juegoKaplay.center().y)/4 ),
-                juegoKaplay.sprite("robot"),
-                juegoKaplay.scale(4),
+                juegoKaplay.sprite("knight"),
+                juegoKaplay.scale(2),
                 juegoKaplay.body(),
-                juegoKaplay.area(),
+                juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2( (juegoKaplay.center().x)/24,(juegoKaplay.center().y)/16  ), 60, 60), // Rectángulo más pequeño
+                }),
                 juegoKaplay.health(5),
                 "player",
               ]);
+
+
               const redRoom = juegoKaplay.add([
                 juegoKaplay.rect(200, 500),
                 juegoKaplay.area(),
@@ -406,10 +433,11 @@ function App() {
               ])
               // Enemigo
               const enemy = juegoKaplay.add([
-                juegoKaplay.pos(juegoKaplay.center()),
+                juegoKaplay.pos(120,20),
                 juegoKaplay.sprite("enemy"),
                 juegoKaplay.scale(4),
-                juegoKaplay.area(),
+                juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2( 10,5), 15, 20), // Rectángulo más pequeño
+                }),
                 juegoKaplay.body(),
                 "enemy",
               ]);
@@ -452,7 +480,7 @@ function App() {
                 ]),
               };
 
-              const velocidad = 1000;
+              const velocidad = 3000;
 
               // Movimiento con teclado
               juegoKaplay.onKeyDown("w", () => {
@@ -488,8 +516,8 @@ function App() {
 
               // Colisión con el enemigo
               enemy.onCollide("player", (jugador: any) => {
-                jugador.destroy();
-                juegoKaplay.debug.log("¡Has perdido!");
+                jugador.hurt(1);
+                juegoKaplay.debug.log("¡ouch!");
               });
               
               console.log("IMPRIMIENDO COORDENADAS DE BORDE")
