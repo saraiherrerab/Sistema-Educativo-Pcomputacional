@@ -163,10 +163,12 @@ function detectaBorde(player: any, redRoom: any): boolean {
     (Math.abs(playerLeft - roomRight) <= margen && playerBottom > roomTop && playerTop < roomBottom)    // Toca el borde derecho
   );
 }
+
 function App() {
   // Referencia persistente para almacenar la instancia de Kaplay
   const juegoKaplayRef = useRef<any>(null);
 
+  let lives =3;
   const TILED_PIXEL_DIMENSION: number = 64
   const MAX_TILED_PIXEL_WIDTH: number = 20
   const MAX_TILED_PIXEL_HEIGTH: number = 13
@@ -234,13 +236,13 @@ function App() {
       let ycoord= (juegoKaplay.center().y)/4;
    
 
-      juegoKaplay.loadSprite("knight", "sprites/purple_knight.png", {
+      juegoKaplay.loadSprite("knight", "sprites/p_knight_official.png", {
         sliceX: 6,
         sliceY: 8,
         anims: {
           right: { from: 6, to: 11, loop: false },
-          up: { from: 42, to: 47, loop: false },
-          down: { from: 26, to: 30, loop: false },
+          up: { from: 36, to: 38, loop: false },
+          down: { from: 24, to: 26, loop: false },
           left: { from: 5, to: 1, loop: false },
           quiet: { from: 31, to: 31, loop: false },
         },
@@ -261,6 +263,11 @@ function App() {
       });
 
       juegoKaplay.loadSprite("scarecrow", "sprites/scarecrow.png", {
+        sliceX: 1,
+        sliceY: 1,
+      });
+
+      juegoKaplay.loadSprite("heart", "sprites/heart.png", {
         sliceX: 1,
         sliceY: 1,
       });
@@ -412,6 +419,7 @@ function App() {
 
 
               console.log(juegoKaplay.center())
+
               const player = juegoKaplay.add([
                 juegoKaplay.pos((juegoKaplay.center().x)/4,(juegoKaplay.center().y)/4 ),
                 juegoKaplay.sprite("knight"),
@@ -419,9 +427,11 @@ function App() {
                 juegoKaplay.body(),
                 juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2( (juegoKaplay.center().x)/24,(juegoKaplay.center().y)/16  ), 60, 60), // Rectángulo más pequeño
                 }),
-                juegoKaplay.health(5),
+                juegoKaplay.health(3),
                 "player",
               ]);
+
+              
 
 
               const redRoom = juegoKaplay.add([
@@ -431,15 +441,47 @@ function App() {
                 juegoKaplay.pos(1920 - 200,juegoKaplay.center().y - 250),
                 "redRoom"
               ])
+
               // Enemigo
               const enemy = juegoKaplay.add([
-                juegoKaplay.pos(120,20),
+                juegoKaplay.pos(520,460),
                 juegoKaplay.sprite("enemy"),
                 juegoKaplay.scale(4),
                 juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2( 10,5), 15, 20), // Rectángulo más pequeño
                 }),
                 juegoKaplay.body(),
                 "enemy",
+              ]);
+
+              const live1 = juegoKaplay.add([
+                juegoKaplay.pos(220,20),
+                juegoKaplay.sprite("heart"),
+                juegoKaplay.scale(4),
+                juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2( 10,5), 15, 20), // Rectángulo más pequeño
+                }),
+                juegoKaplay.body(),
+                "heart",
+              ]);
+
+              const live2 = juegoKaplay.add([
+                juegoKaplay.pos(350,20),
+                juegoKaplay.sprite("heart"),
+                juegoKaplay.scale(4),
+                juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2( 10,5), 15, 20), // Rectángulo más pequeño
+                }),
+                juegoKaplay.body(),
+                "heart2",
+              ]);
+
+              
+              const live3 = juegoKaplay.add([
+                juegoKaplay.pos(480,20),
+                juegoKaplay.sprite("heart"),
+                juegoKaplay.scale(4),
+                juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2( 10,5), 15, 20), // Rectángulo más pequeño
+                }),
+                juegoKaplay.body(),
+                "heart3",
               ]);
 
               //Scarecrow
@@ -518,6 +560,25 @@ function App() {
               enemy.onCollide("player", (jugador: any) => {
                 jugador.hurt(1);
                 juegoKaplay.debug.log("¡ouch!");
+                lives--;
+                console.log(lives);
+              });
+
+              // Intentando eliminar las vidas
+              juegoKaplay.onUpdate(()=>{
+                if (lives==2){
+                  juegoKaplay.destroy(live3);
+                }else if(lives==1){
+                  juegoKaplay.destroy(live2);
+                }else if(lives==0){
+                  juegoKaplay.destroy(live1);
+                }
+              })
+
+
+
+              player.onDeath(() => {
+                juegoKaplay.destroy(player);
               });
               
               console.log("IMPRIMIENDO COORDENADAS DE BORDE")
