@@ -404,6 +404,7 @@ function App() {
                 }),
                 juegoKaplay.health(3),
                 "player",
+                { z: 10 } // Asegura que el jugador esté en una capa superior
               ]);
 
               
@@ -414,7 +415,8 @@ function App() {
                 juegoKaplay.area(),
                 juegoKaplay.color(255, 0, 0),
                 juegoKaplay.pos(1920 - 200,juegoKaplay.center().y - 250),
-                "redRoom"
+                "redRoom",
+                { z: 10 } // Asegura que el jugador esté en una capa superior
               ])
 
               // Enemigo
@@ -426,6 +428,7 @@ function App() {
                 }),
                 juegoKaplay.body(),
                 "enemy",
+                { z: 10 } // Asegura que el jugador esté en una capa superior
               ]);
 
               const live1 = juegoKaplay.add([
@@ -436,6 +439,7 @@ function App() {
                 }),
                 juegoKaplay.body(),
                 "heart",
+                { z: 10 } // Asegura que el jugador esté en una capa superior
               ]);
 
               const live2 = juegoKaplay.add([
@@ -446,6 +450,7 @@ function App() {
                 }),
                 juegoKaplay.body(),
                 "heart2",
+                { z: 10 } // Asegura que el jugador esté en una capa superior
               ]);
 
               
@@ -457,6 +462,7 @@ function App() {
                 }),
                 juegoKaplay.body(),
                 "heart3",
+                { z: 10 } // Asegura que el jugador esté en una capa superior
               ]);
 
               //Scarecrow
@@ -467,6 +473,7 @@ function App() {
                 juegoKaplay.area(),
                 juegoKaplay.body(),
                 "scarecrow",
+                { z: 10 } // Asegura que el jugador esté en una capa superior
               ]);
 
               // Flechas
@@ -476,24 +483,28 @@ function App() {
                   juegoKaplay.sprite("up"),
                   juegoKaplay.scale(2),
                   juegoKaplay.area(),
+                  { z: 10 } // Asegura que el jugador esté en una capa superior
                 ]),
                 down: juegoKaplay.add([
                   juegoKaplay.pos(0 ,(juegoKaplay.center().y)/4),
                   juegoKaplay.sprite("down"),
                   juegoKaplay.scale(2),
                   juegoKaplay.area(),
+                  { z: 10 } // Asegura que el jugador esté en una capa superior
                 ]),
                 left: juegoKaplay.add([
                   juegoKaplay.pos(0,(juegoKaplay.center().y)/2),
                   juegoKaplay.sprite("left"),
                   juegoKaplay.scale(2),
                   juegoKaplay.area(),
+                  { z: 10 } // Asegura que el jugador esté en una capa superior
                 ]),
                 right: juegoKaplay.add([
                   juegoKaplay.pos(0,(juegoKaplay.center().y)),
                   juegoKaplay.sprite("right"),
                   juegoKaplay.scale(2),
                   juegoKaplay.area(),
+                  { z: 10 } // Asegura que el jugador esté en una capa superior
                 ]),
               };
 
@@ -603,7 +614,7 @@ function App() {
             })
           )
 
-          
+
 
         }) //Fin - Onload()
 
