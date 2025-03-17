@@ -367,7 +367,7 @@ function App() {
             (resultado: any) => {
               console.log(resultado)
               // Jugador
-              /*
+
               const player = juegoKaplay.add([
                 juegoKaplay.pos((juegoKaplay.center().x)/4,(juegoKaplay.center().y)/4 ),
                 juegoKaplay.sprite("robot"),
