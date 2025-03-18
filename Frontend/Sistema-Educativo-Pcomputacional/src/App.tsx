@@ -234,7 +234,7 @@ function App() {
   // Referencia persistente para almacenar la instancia de Kaplay
   const juegoKaplayRef = useRef<any>(null);
 
-  let lives = 3
+  let lives = 4
 
   const SCREEN_RESOLUTION_X: number = 1920
   const SCREEN_RESOLUTION_Y: number = 1080
@@ -286,11 +286,11 @@ function App() {
         sliceX: 4,
         sliceY: 12,
         anims: {
-          right: { from: 16, to: 19, loop: true },
-          up: { from: 20, to: 23, loop: true },
-          down: { from: 12, to: 15, loop: true },
-          left: { from: 24, to: 27, loop: true },
-          quiet: { from: 0, to: 0, loop: false },
+          right: { from: 16, to: 19, loop: false },
+          up: { from: 20, to: 23, loop: false},
+          down: { from: 12, to: 15, loop: false},
+          left: { from: 24, to: 27, loop: false},
+          quiet: { from: 0, to: 0, loop: false},
         },
       });
 
@@ -313,14 +313,12 @@ function App() {
 
 
 
-      juegoKaplay.loadSprite("enemy", "sprites/enemy-blue.png", {
-        sliceX: 4,
-        sliceY: 12,
+      juegoKaplay.loadSprite("enemy", "sprites/TNT_Blue (1).png", {
+        sliceX: 7,
+        sliceY: 3,
         anims: {
-          right: { from: 16, to: 19, loop: false },
-          up: { from: 20, to: 23, loop: false },
-          down: { from: 12, to: 15, loop: false },
-          left: { from: 24, to: 27, loop: false },
+          left_a: { from: 20, to: 14, loop: false },
+          right_a: { from: 7, to: 13, loop: false },
           quiet: { from: 0, to: 0, loop: false },
         },
       });
@@ -396,17 +394,18 @@ function App() {
               // Jugador
 
               const player = juegoKaplay.add([
-                juegoKaplay.pos((juegoKaplay.center().x)/4,(juegoKaplay.center().y)/4 ),
+                juegoKaplay.pos(1500,-25 ),
                 juegoKaplay.sprite("knight"),
                 juegoKaplay.scale(2),
                 juegoKaplay.body(),
-                juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2( (juegoKaplay.center().x)/24,(juegoKaplay.center().y)/16  ), 60, 60), // Rectángulo más pequeño
+                juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2( 30,20 ), 60, 60), // Rectángulo más pequeño
                 }),
                 juegoKaplay.health(3),
                 "player",
                 { z: 10 } // Asegura que el jugador esté en una capa superior
               ]);
 
+              
               
 
 
@@ -421,13 +420,33 @@ function App() {
 
               // Enemigo
               const enemy = juegoKaplay.add([
-                juegoKaplay.pos(520,460),
+                juegoKaplay.pos(1000,-110),
                 juegoKaplay.sprite("enemy"),
-                juegoKaplay.scale(4),
-                juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2( 10,5), 15, 20), // Rectángulo más pequeño
+                juegoKaplay.scale(2),
+                juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2( 50,80), 70, 40), // Rectángulo más pequeño
                 }),
                 juegoKaplay.body(),
                 "enemy",
+                { z: 10 } // Asegura que el jugador esté en una capa superior
+              ]);
+              
+              // Enemigo zone
+              const square = juegoKaplay.add([
+                juegoKaplay.pos(1090,-110),
+                juegoKaplay.scale(2),
+                juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2( 50,80), 50, 30), // Rectángulo más pequeño
+                }),
+                "square",
+                { z: 10 } // Asegura que el jugador esté en una capa superior
+              ]);
+
+              // Enemigo zone
+              const square1 = juegoKaplay.add([
+                juegoKaplay.pos(950,-110),
+                juegoKaplay.scale(2),
+                juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2( 50,80), 50, 30), // Rectángulo más pequeño
+                }),
+                "square",
                 { z: 10 } // Asegura que el jugador esté en una capa superior
               ]);
 
@@ -438,7 +457,7 @@ function App() {
                 juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2( 10,5), 15, 20), // Rectángulo más pequeño
                 }),
                 juegoKaplay.body(),
-                "heart",
+                "heart1",
                 { z: 10 } // Asegura que el jugador esté en una capa superior
               ]);
 
@@ -508,7 +527,7 @@ function App() {
                 ]),
               };
 
-              const velocidad = 3000;
+              const velocidad = 1500;
 
               // Movimiento con teclado
               juegoKaplay.onKeyDown("w", () => {
@@ -542,23 +561,50 @@ function App() {
                 player.play("right");
               });
 
+              enemy.play("quiet")
+
               // Colisión con el enemigo
               enemy.onCollide("player", (jugador: any) => {
-                jugador.hurt(1);
-                juegoKaplay.debug.log("¡ouch!");
-                lives--;
-                console.log(lives);
+                setTimeout(() => {
+                  jugador.hurt(1);
+                  juegoKaplay.debug.log("¡ouch!");
+                  lives--;
+                  juegoKaplay.debug.log("Han pasado dos segundos");
+                }, 100); // Espera 2000 milisegundos (2 segundos)
+              });
+              // Colisión con zona enemiga
+              square.onCollide("player", (jugador: any) => {
+                setTimeout(() => {
+                  jugador.hurt(1);
+                  lives--;
+                  juegoKaplay.debug.log("¡ouch!");
+                  enemy.play("right_a");
+                  jugador.move(6500, 0);
+                  juegoKaplay.debug.log("Han pasado dos segundos");
+                }, 100); // Espera 2000 milisegundos (2 segundos)
+              });
+
+              // Colisión con zona enemiga
+              square1.onCollide("player", (jugador: any) => {
+                setTimeout(() => {
+                  jugador.hurt(1);
+                  juegoKaplay.debug.log("¡ouch!");
+                  enemy.play("left_a");
+                  jugador.move(-6500, 0);
+                  lives--;
+                  juegoKaplay.debug.log("Han pasado dos segundos");
+                }, 100);
               });
 
               // Intentando eliminar las vidas
               juegoKaplay.onUpdate(()=>{
-                if (lives==2){
-                  juegoKaplay.destroy(live3);
-                }else if(lives==1){
-                  juegoKaplay.destroy(live2);
-                }else if(lives==0){
+                if (lives==3){
                   juegoKaplay.destroy(live1);
-                }
+                }else if(lives==2){
+                  juegoKaplay.destroy(live2);
+                }else if(lives==1){
+                  juegoKaplay.destroy(live3);
+                };
               })
 
 
