@@ -239,8 +239,8 @@ function App() {
   const SCREEN_RESOLUTION_X: number = 1920
   const SCREEN_RESOLUTION_Y: number = 1080
 
-  const TILED_MAP__WIDTH_NUMBER: number = 10
-  const TILED_MAP_HEIGTH_NUMBER: number = 10
+  const TILED_MAP__WIDTH_NUMBER: number = 20
+  const TILED_MAP_HEIGTH_NUMBER: number = 15
 
   const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
   const TILED_HEIGTH: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGTH_NUMBER
@@ -361,32 +361,62 @@ function App() {
               tileHeight: TILED_HEIGTH,
               pos: juegoKaplay.vec2(0, 0),
             },
-            `./prueba/mapa1.json`,
+            `./nivel1/nivel1_mapeo.json`,
             [
               {
-                urlTextura: "./prueba/Tilemap_Flat.png",
-                dimensionTexturasX: 20,
-                dimensionTexturasY: 8,
+                urlTextura: "./nivel1/Water.png",
+                dimensionTexturasX: 2,
+                dimensionTexturasY: 2,
                 firstgid: 1
               },
               {
-                urlTextura: "./prueba/Tilemap_Elevation.png",
+                urlTextura: "./nivel1/Tilemap_Flat.png",
+                dimensionTexturasX: 20,
+                dimensionTexturasY: 8,
+                firstgid: 5
+              },
+              {
+                urlTextura: "./nivel1/Tilemap_Elevation.png",
                 dimensionTexturasX: 8,
                 dimensionTexturasY: 16,
-                firstgid: 161
+                firstgid: 165
               },
               {
-                urlTextura: "./prueba/Tilemap_Flat.png",
+                urlTextura: "./nivel1/Tilemap_Flat.png",
                 dimensionTexturasX: 20,
                 dimensionTexturasY: 8,
-                firstgid: 1
+                firstgid: 5
               },
               {
-                urlTextura: "./prueba/Bridge_All.png",
+                urlTextura: "./nivel1/Tilemap_Flat.png",
+                dimensionTexturasX: 20,
+                dimensionTexturasY: 8,
+                firstgid: 5
+              },
+              {
+                urlTextura: "./nivel1/Bridge_All.png",
                 dimensionTexturasX: 6,
                 dimensionTexturasY: 8,
-                firstgid: 289
-              }
+                firstgid: 293
+              },
+              {
+                urlTextura: "./nivel1/Rocks_01.png",
+                dimensionTexturasX: 32,
+                dimensionTexturasY: 4,
+                firstgid: 341
+              },
+              {
+                urlTextura: "./nivel1/Rocks_04.png",
+                dimensionTexturasX: 32,
+                dimensionTexturasY: 4,
+                firstgid: 469
+              },
+              {
+                urlTextura: "./nivel1/Foam.png",
+                dimensionTexturasX: 48,
+                dimensionTexturasY: 6,
+                firstgid: 597
+              },
             ]
           ).then(
             (resultado: any) => {
