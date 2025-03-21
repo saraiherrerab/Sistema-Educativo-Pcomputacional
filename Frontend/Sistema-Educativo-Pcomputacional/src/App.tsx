@@ -8,6 +8,15 @@ interface informacionNivel {
   firstgid: number
 }
 
+const SCREEN_RESOLUTION_X: number = window.innerWidth
+const SCREEN_RESOLUTION_Y: number = window.innerHeight
+
+const TILED_MAP__WIDTH_NUMBER: number = 20
+const TILED_MAP_HEIGTH_NUMBER: number = 15
+
+const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
+const TILED_HEIGTH: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGTH_NUMBER
+
 function devolverSiguienteNumeroValido (validarNumero: number, arregloNumerosProhibidos: number[]) : number {
   arregloNumerosProhibidos.sort((a, b) => a - b);
   return (arregloNumerosProhibidos.includes(validarNumero) ) ? arregloNumerosProhibidos[arregloNumerosProhibidos.length - 1] : validarNumero;
@@ -58,7 +67,8 @@ const generarEsquemaMapa = async (
 
       const mapaGenerado = worldJson?.layers
       console.log(mapaGenerado)
-
+      const proporcionalidadX = Math.floor(SCREEN_RESOLUTION_X / 640)
+      const proporcionalidadY = Math.floor(SCREEN_RESOLUTION_Y / 480)
       
 
       //Luego para cada CAPA que contiene números que no pueden ser procesados por el generador de niveles
@@ -69,55 +79,88 @@ const generarEsquemaMapa = async (
         //extraido sea mayor a 9
         let contador = 36;
 
-        //Luego por cada uno de los números que representan una capa realizamos lo siguiente:
-        layer.data.forEach( (tileNumber: number, index: number) => {
+        if(layer.type === "tilelayer"){
 
-          
-          //Validamos que el TileMap el cual contiene una relación llave valor con el caracter 
-          //y su equivalente en la capa, por ejemplo $: 36, esté inicializado.
-          if (!(numeroLayer >= 0 && numeroLayer < tileMap.length)) {
-            console.log("El índice no existe");
-            tileMap.push({})
-          }
+          //Luego por cada uno de los números que representan una capa realizamos lo siguiente:
+          layer.data.forEach( (tileNumber: number, index: number) => {
 
-          //Si el "Tilemap" en la capa actual no ha mapeado el número
-          if(Object.values(tileMap[numeroLayer]).includes(tileNumber) === false){
-
-            //Validmos si es un número de dos dígitos y en caso de que lo sea, debemos validar el
-            //ultimo valor posible del contador.
-            contador = devolverSiguienteNumeroValido(contador,valoresProhibidos)
-
-            //Una vez validado, si el número a evaluar es de dos digitos y el contador está entre
-            //los numeros validos
-            if(tileNumber.toString().length > 1 && contador >= 33 && contador <=165 ){
-          
-              //Al mapeo de la capa evaluada le asignamos una correspondencia entre el valor ASCCI y el numero
-              (tileMap[numeroLayer])[String.fromCharCode(contador)] = tileNumber as number;
-
-              //Actualizamos el mapa de la misma posicion con el nuevo caracter
-              worldJson.layers[numeroLayer].data[index] = String.fromCharCode(contador);
-
-              //Avanzamos el contador para tomar el nuevo valor ASCII
-              contador++;
-            }else if(contador > 165){
-              //En caso de que el contador haya superado el límite de asignaciones
-              throw new Error("La cantidad de cuadros a superado el limite establecido");
-            }else {
-
-              //Si el mapeo realizado es de un número de un sólo digito entonces asignamos directamente ese numero 
-              (tileMap[numeroLayer])[tileNumber.toString() as string] = tileNumber as number
+            
+            //Validamos que el TileMap el cual contiene una relación llave valor con el caracter 
+            //y su equivalente en la capa, por ejemplo $: 36, esté inicializado.
+            if (!(numeroLayer >= 0 && numeroLayer < tileMap.length)) {
+              console.log("El índice no existe");
+              tileMap.push({})
             }
 
-          }else{
+            //Si el "Tilemap" en la capa actual no ha mapeado el número
+            if(Object.values(tileMap[numeroLayer]).includes(tileNumber) === false){
 
-            //En la caso de extraer un número que ya ha sido mapeado y ya tiene asignado un valor ASCII
-            //Buscamos la llave a la que le corresponde ese valor
-            //Y actualizamos el mapa con ese caracter encontrado.
-            const keyEncontrada = Object.entries(tileMap[numeroLayer]).find(([_, value]) => value === tileNumber)?.[0];
-            worldJson.layers[numeroLayer].data[index] = keyEncontrada
-          }
-    
-        });
+              //Validmos si es un número de dos dígitos y en caso de que lo sea, debemos validar el
+              //ultimo valor posible del contador.
+              contador = devolverSiguienteNumeroValido(contador,valoresProhibidos)
+
+              //Una vez validado, si el número a evaluar es de dos digitos y el contador está entre
+              //los numeros validos
+              if(tileNumber.toString().length > 1 && contador >= 33 && contador <=165 ){
+            
+                //Al mapeo de la capa evaluada le asignamos una correspondencia entre el valor ASCCI y el numero
+                (tileMap[numeroLayer])[String.fromCharCode(contador)] = tileNumber as number;
+
+                //Actualizamos el mapa de la misma posicion con el nuevo caracter
+                worldJson.layers[numeroLayer].data[index] = String.fromCharCode(contador);
+
+                //Avanzamos el contador para tomar el nuevo valor ASCII
+                contador++;
+              }else if(contador > 165){
+                //En caso de que el contador haya superado el límite de asignaciones
+                throw new Error("La cantidad de cuadros a superado el limite establecido");
+              }else {
+
+                //Si el mapeo realizado es de un número de un sólo digito entonces asignamos directamente ese numero 
+                (tileMap[numeroLayer])[tileNumber.toString() as string] = tileNumber as number
+              }
+
+            }else{
+
+              //En la caso de extraer un número que ya ha sido mapeado y ya tiene asignado un valor ASCII
+              //Buscamos la llave a la que le corresponde ese valor
+              //Y actualizamos el mapa con ese caracter encontrado.
+              const keyEncontrada = Object.entries(tileMap[numeroLayer]).find(([_, value]) => value === tileNumber)?.[0];
+              worldJson.layers[numeroLayer].data[index] = keyEncontrada
+            }
+      
+          });
+
+
+        }
+
+        if(layer.type === "objectgroup" && layer.name === "colisiones"){
+
+          layer.objects.forEach( (zonaColision: any, numeroColision: number) => {
+
+            //if(numeroColision === 4){
+              console.log({
+                "POSX": (zonaColision.x / 32) * TILED_WIDTH,
+                "POSY":(zonaColision.y / 32)*TILED_HEIGTH,
+                "WIDTH":  (zonaColision.width / 32 ) * TILED_WIDTH,
+                "HEIGHT": (zonaColision.height / 32) * TILED_HEIGTH
+              })
+              // Zona de caid
+              let caida_ = contextoKaplay.add([
+              contextoKaplay.pos(zonaColision.x * ( 1920 / 640 ), zonaColision.y * (1080 / 480)),
+              contextoKaplay.scale(1),
+              contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0.0), zonaColision.width * ( 1920 / 640 ) , zonaColision.height * (( 1080 / 480 ))) // Rectángulo más pequeño
+              }),
+              `square-${numeroColision}`,
+              ]);
+            //}
+            
+
+          });
+
+
+            
+        }
       });
     
 
@@ -236,15 +279,6 @@ function App() {
 
   let lives = 3
 
-  const SCREEN_RESOLUTION_X: number = 1920
-  const SCREEN_RESOLUTION_Y: number = 1080
-
-  const TILED_MAP__WIDTH_NUMBER: number = 20
-  const TILED_MAP_HEIGTH_NUMBER: number = 15
-
-  const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
-  const TILED_HEIGTH: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGTH_NUMBER
-
   console.log(TILED_WIDTH)
   console.log(TILED_HEIGTH)
 
@@ -269,7 +303,7 @@ function App() {
       juegoKaplayRef.current = kaplay({
         width:  SCREEN_RESOLUTION_X,//TILED_PIXEL_DIMENSION * MAX_TILED_PIXEL_WIDTH,*/ // Ancho dinámico
         height: SCREEN_RESOLUTION_Y,/*TILED_PIXEL_DIMENSION * 15, */// Alto dinámico
-        letterbox: true,
+        letterbox: false,
         global: false,
         debug: true, // Cambiar a false en producción
         debugKey: "f1",
@@ -469,7 +503,7 @@ function App() {
                 "square",
                 { z: 10 } // Asegura que el jugador esté en una capa superior
               ]);
-
+              /*
               // Zona de caida
               const fall1 = juegoKaplay.add([
                 juegoKaplay.pos(465,280),
@@ -517,7 +551,7 @@ function App() {
                 "square",
                 { z: 10 } // Asegura que el jugador esté en una capa superior
               ]);
-
+              
               // Colisión con el borde
               fall1.onCollide("player", (jugador: any) => {
                 setTimeout(() => {
@@ -558,7 +592,7 @@ function App() {
                 }, 100); // Espera 2000 milisegundos (2 segundos)
               });
 
-
+              */
 
 
 
