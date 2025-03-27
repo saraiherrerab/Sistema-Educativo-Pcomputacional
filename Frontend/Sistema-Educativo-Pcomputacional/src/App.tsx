@@ -8,21 +8,19 @@ interface informacionNivel {
   firstgid: number
 }
 
-const arregloNotasMusicales = []
 
+const SCREEN_RESOLUTION_X: number = window.innerWidth 
+const SCREEN_RESOLUTION_Y: number = window.innerHeight 
 
-
-const SCREEN_RESOLUTION_X: number = window.innerWidth
-const SCREEN_RESOLUTION_Y: number = window.innerHeight
-
-const TILED_MAP__WIDTH_NUMBER: number = 20
-const TILED_MAP_HEIGTH_NUMBER: number = 15
+const TILED_MAP__WIDTH_NUMBER: number = 21
+const TILED_MAP_HEIGHT_NUMBER: number = 16
 
 const ORIGINAL_GAME_SCREEN_X: number = TILED_MAP__WIDTH_NUMBER * 32
-const ORIGINAL_GAME_SCREEN_Y: number = TILED_MAP_HEIGTH_NUMBER * 32
+const ORIGINAL_GAME_SCREEN_Y: number = TILED_MAP_HEIGHT_NUMBER * 32
 
 const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
-const TILED_HEIGTH: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGTH_NUMBER
+const TILED_HEIGHT: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGHT_NUMBER
+
 
 function devolverSiguienteNumeroValido (validarNumero: number, arregloNumerosProhibidos: number[]) : number {
   arregloNumerosProhibidos.sort((a, b) => a - b);
@@ -56,8 +54,8 @@ const generarEsquemaMapa = async (
         )
       })
 
-      const anchoCuadrado: number = 1920 / worldJson.width
-      const altoCuadrado: number = 1080 / worldJson.height
+      const anchoCuadrado: number = window.innerWidth / worldJson.width
+      const altoCuadrado: number = window.innerHeight / worldJson.height
     
       const tileMap: { [key: string] : number}[] = [{}]
 
@@ -249,7 +247,9 @@ const generarEsquemaMapa = async (
 function App() {
   // Referencia persistente para almacenar la instancia de Kaplay
   const juegoKaplayRef = useRef<any>(null);
-
+  
+  let music =null; 
+  let started =0;
   let lives = 3
 
   useEffect(() => {
@@ -267,7 +267,7 @@ function App() {
     // Inicializar Kaplay solo si no está creado
     if (!juegoKaplayRef.current) {
       juegoKaplayRef.current = kaplay({
-        width:  1920,//TILED_PIXEL_DIMENSION * MAX_TILED_PIXEL_WIDTH,*/ // Ancho dinámico
+        width:  SCREEN_RESOLUTION_X,//TILED_PIXEL_DIMENSION * MAX_TILED_PIXEL_WIDTH,*/ // Ancho dinámico
         height: SCREEN_RESOLUTION_Y,/*TILED_PIXEL_DIMENSION * 15, */// Alto dinámico
         letterbox: false,
         global: false,
@@ -277,9 +277,12 @@ function App() {
         pixelDensity: 1,
       });
 
+      
+
       const juegoKaplay = juegoKaplayRef.current;
 
       juegoKaplay.setBackground(71,171,169)
+ 
 
       juegoKaplay.loadRoot("./");
       juegoKaplay.loadSprite("robot", "sprites/robotin.png", {
@@ -346,6 +349,18 @@ function App() {
       });
 
       juegoKaplay.loadSound("sonidoPrueba", "button_09-190435.mp3");
+      const P1= juegoKaplay.loadSound("P1", "./sounds/P1.mp3");
+      juegoKaplay.loadSound("P2", "./sounds/P2.mp3");
+      juegoKaplay.loadSound("P3", "./sounds/P3.mp3");
+      juegoKaplay.loadSound("P4", "./sounds/P4.mp3");
+      juegoKaplay.loadSound("P5", "./sounds/P5.mp3");
+      juegoKaplay.loadSound("P6", "./sounds/P6.mp3");
+      juegoKaplay.loadSound("A0", "./sounds/A0.mp3");
+      juegoKaplay.loadSound("A1", "./sounds/A1.mp3");
+      juegoKaplay.loadSound("A2", "./sounds/A2.mp3");
+
+      
+      //P1.sound();
 
       juegoKaplay.onDraw(() => {
         juegoKaplay.drawSprite({
@@ -355,6 +370,41 @@ function App() {
           height: juegoKaplay.height
         });
       });
+
+     /* setTimeout(() => {
+        juegoKaplay.play("P1", {
+            volume: 0.5, // set the volume to 50%
+            speed: 1.5, // speed up the sound
+            loop: true, // loop the sound
+        });
+    }, 3000); // 3000 milisegundos = 3 segundos
+    /* const music = juegoKaplay.play("OtherworldlyFoe", {
+        loop: true,
+        paused: true,
+    });*/
+
+     //const sound = juegoKaplay.play("P1");
+  /*    juegoKaplay.play("P1", {
+        volume: 0.5, // set the volume to 50%
+        speed: 1.5, // speed up the sound
+        loop: true, // loop the sound
+    });*/
+     //sound.stop();
+
+
+
+     /* juegoKaplay.onUpdate(()=>{
+        juegoKaplay.play("P1", {
+          volume: 0.1, // set the volume to 50%
+          speed: 1, // speed up the sound
+          loop: false, // loop the sound
+        });
+        //juegoKaplay.sound.stop();
+        
+      });*/
+
+
+
       // Cargar sprites adicionales
       ["up", "down", "left", "right"].forEach((dir) => {
         juegoKaplay.loadSprite(dir, `sprites/${dir}-arrow.png`);
@@ -364,30 +414,30 @@ function App() {
       juegoKaplay.layers(["background", "game", "foreground"], "game")
 
       juegoKaplay.onLoad(async () => {
-
+          //Practicando aqui
         const nivelPrincipal = generarEsquemaMapa(
           juegoKaplay,
           {
             tileWidth: TILED_WIDTH,
-            tileHeight: TILED_HEIGTH,
+            tileHeight: TILED_HEIGHT,
             pos: juegoKaplay.vec2(0, 0),
           },
-          `./nivel2/prueba3.json`,
+          `./fondo_de_agua.json`,   //archivo de donde voy a extraer el mapa
           
-          [
+          [ //Aca lo importante es que debo introducir el orden de las texturas en el que va, capa por capa
             {
-              urlTextura: "./nivel2/Water.png",
-              dimensionTexturasX: 2,
+              urlTextura: "./nivel2/Water.png",  
+              dimensionTexturasX: 2, //Dimensiones de tiled
               dimensionTexturasY: 2,
-              firstgid: 1
+              firstgid: 1 //orden en el que tiled extrae esas imagenes (esta llega a cuatro)
             },
             {
               urlTextura: "./nivel2/Tilemap_Flat.png",
               dimensionTexturasX: 20,
               dimensionTexturasY: 8,
-              firstgid: 5
+              firstgid: 5 //(esta comienza en 5)
             },             
-            {
+            /*{
               urlTextura: "./nivel1/Tilemap_Elevation.png",
               dimensionTexturasX: 8,
               dimensionTexturasY: 16,
@@ -398,7 +448,7 @@ function App() {
               dimensionTexturasX: 20,
               dimensionTexturasY: 8,
               firstgid: 5
-            }
+            } */
           ]
         )
        .then(
@@ -527,11 +577,11 @@ function App() {
                      })
 
 
-                     const posicionNotasY: number = 500;
-                     const posicionNotasx: number = 1000;
+                     //const posicionNotasY: number = 500;
+                     // const posicionNotasx: number = 1000;
 
                      const circle1 = juegoKaplay.add([
-                      juegoKaplay.pos(juegoKaplay.center().x, juegoKaplay.center().y + juegoKaplay.center().y / 2 + juegoKaplay.center().y / 6),
+                      juegoKaplay.pos(juegoKaplay.center().x - juegoKaplay.center().x / 4, juegoKaplay.center().y + juegoKaplay.center().y / 2 + juegoKaplay.center().y / 6),
                       juegoKaplay.sprite("notas_circulo", {frame: 0}),
                       juegoKaplay.area(),
                       juegoKaplay.scale(0.20),
@@ -541,7 +591,7 @@ function App() {
                      
 
                      const circle2 = juegoKaplay.add([
-                      juegoKaplay.pos(juegoKaplay.center().x - juegoKaplay.center().x / 4, juegoKaplay.center().y + juegoKaplay.center().y / 2 + juegoKaplay.center().y / 6),
+                      juegoKaplay.pos(juegoKaplay.center().x, juegoKaplay.center().y + juegoKaplay.center().y / 2 + juegoKaplay.center().y / 6),
                       juegoKaplay.sprite("notas_circulo", {frame: 1}),
                       juegoKaplay.area(),
                       juegoKaplay.scale(0.20),
@@ -593,16 +643,16 @@ function App() {
                       ]),
                     };
                   */
-                    let puntoPartida: number = 200
-                    const puntoPartidaY:number = 300
+                    let puntoPartida: number = window.innerWidth/2.9
+                    const puntoPartidaY:number = window.innerHeight/2
 
                     const patrones = [
-                      [0, 1, 2, 0, 1, 2, 0, 1, 2, 0], 
-                      [2, 2, 1, 1, 0, 0, 2, 2, 1, 1], 
-                      [0, 0, 0, 1, 1, 1, 2, 2, 2, 0], 
-                      [1, 2, 0, 1, 2, 0, 1, 2, 0, 1], 
-                      [2, 1, 0, 2, 1, 0, 2, 1, 0, 2], 
-                      [0, 1, 1, 2, 2, 0, 0, 1, 1, 2] 
+                      [0, 1, 2, 0, 1, 2, 0, 1, 2], 
+                      [2, 2, 1, 1, 0, 0, 2, 2, 1, 1, 2, 2], 
+                      [0, 0, 0, 1, 1, 1, 2, 2, 2, 0, 0], 
+                      [1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2], 
+                      [2, 1, 0, 2, 1, 0, 2, 1, 0 ], 
+                      [0, 0, 1, 1, 2, 2, 0, 0, 1, 1, 2, 2] 
                     ];
               
 
@@ -618,13 +668,13 @@ function App() {
                       switch(numeroAzar){
                         case 0:
                           const semicorchea = juegoKaplay.add([
-                            juegoKaplay.pos(puntoPartida,((juegoKaplay.center().y) / 2 ) + puntoPartidaY),
+                            juegoKaplay.pos(puntoPartida,((juegoKaplay.center().y / 2 )) + puntoPartidaY),
                             juegoKaplay.sprite("notas"),
                             juegoKaplay.scale(0.2),
                             { z: 2 }, // Asegura que el jugador esté en una capa superior,
                          ])
                          semicorchea.frame = 0
-                         puntoPartida = puntoPartida + 150
+                         puntoPartida = puntoPartida + 100
                         break;
                         case 1:
                           const semicorchea2 = juegoKaplay.add([
@@ -634,7 +684,7 @@ function App() {
                             { z: 2 } // Asegura que el jugador esté en una capa superior
                           ])
                           semicorchea2.frame = 1
-                          puntoPartida = puntoPartida + 150
+                          puntoPartida = puntoPartida + 100
                         break;
                         case 2:
                           const semicorchea3 = juegoKaplay.add([
@@ -645,16 +695,17 @@ function App() {
                           ])
       
                           semicorchea3.frame = 2
-                          puntoPartida = puntoPartida + 150
+                          puntoPartida = puntoPartida + 100
                         break;
                       }
                     })
 
+
                     circle1.onClick( () => {
-                      juegoKaplay.play("sonidoPrueba", {
-                        volume: 0.5, // set the volume to 50%
-                        speed: 1.5, // speed up the sound
-                        loop: false, // loop the sound
+                      juegoKaplay.play("A0", {
+                        volume: 1, 
+                        speed: 1, 
+                        loop: false, 
                       });
                       if(ultimo === 1){
                         console.log("Ganaste")
@@ -663,10 +714,10 @@ function App() {
                       }
                      })
                      circle2.onClick( () => {
-                      juegoKaplay.play("sonidoPrueba", {
-                        volume: 0.5, // set the volume to 50%
-                        speed: 1.5, // speed up the sound
-                        loop: false, // loop the sound
+                      juegoKaplay.play("A1", {
+                        volume: 1, 
+                        speed: 1, 
+                        loop: false, 
                       });
                       if(ultimo === 0){
                         console.log("Ganaste")
@@ -676,10 +727,10 @@ function App() {
                      })
 
                      circle3.onClick( () => {
-                      juegoKaplay.play("sonidoPrueba", {
-                        volume: 0.5, // set the volume to 50%
-                        speed: 1.5, // speed up the sound
-                        loop: false, // loop the sound
+                      juegoKaplay.play("A2", {
+                        volume: 1, 
+                        speed: 1, 
+                        loop: false, 
                       });
                       if(ultimo === 2){
                         console.log("Ganaste")
