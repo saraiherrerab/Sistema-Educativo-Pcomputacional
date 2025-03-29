@@ -98,6 +98,12 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
   
     juegoKaplay.onLoad(async () => {
         //Practicando aqui
+
+        
+      juegoKaplay.loadSprite("mundo", "panel/imagen_panel.png", {
+        sliceX: 1,
+        sliceY: 1,
+      });
       const nivelPrincipal = generarEsquemaMapa(
         juegoKaplay,
         {
