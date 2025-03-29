@@ -9,6 +9,9 @@ const TILED_MAP__WIDTH_NUMBER: number = 21
 const TILED_MAP_HEIGHT_NUMBER: number = 16
 const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
 const TILED_HEIGHT: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGHT_NUMBER
+let cancion = 1;
+export let cambioNivel = 0;
+
 
 export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
     // Referencia persistente para almacenar la instancia de Kaplay
@@ -111,7 +114,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
               tileHeight: TILED_HEIGHT,
               pos: juegoKaplay.vec2(0, 0),
             },
-            `./fondo_de_agua.json`,   //archivo de donde voy a extraer el mapa
+            `./fondomusical.json`,   //archivo de donde voy a extraer el mapa
             
             [ //Aca lo importante es que debo introducir el orden de las texturas en el que va, capa por capa
               {
@@ -119,20 +122,73 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
                 dimensionTexturasX: 2, //Dimensiones de tiled
                 dimensionTexturasY: 2,
                 firstgid: 1 //orden en el que tiled extrae esas imagenes (esta llega a cuatro)
-              },
+              }, 
               {
                 urlTextura: "./nivel2/Tilemap_Flat.png",
                 dimensionTexturasX: 20,
                 dimensionTexturasY: 8,
                 firstgid: 5 //(esta comienza en 5)
-              },             
+             },        
+              {urlTextura: "./nivel2/Tilemap_Elevation.png",
+              dimensionTexturasX: 8,
+              dimensionTexturasY: 16,
+              firstgid: 165
+               },
+               {
+                urlTextura: "./nivel2/Tilemap_Flat.png",
+                dimensionTexturasX: 20,
+                dimensionTexturasY: 8,
+                firstgid: 5 //(esta comienza en 5)
+             }
+   
+                 
      
             ]
           )
          .then(
                      (resultado: any) => {
                        // Jugador
-         
+
+                       /*
+                      if(cancion==0){
+                        juegoKaplay.play("P1", {
+                          volume: 1, 
+                          speed: 1, 
+                          loop: false, 
+                        });                       
+                      }else if(cancion==1){
+                        juegoKaplay.play("P2", {
+                          volume: 1, 
+                          speed: 1, 
+                          loop: false, 
+                        });
+                      }else if(cancion==2){
+                        juegoKaplay.play("P3", {
+                          volume: 1, 
+                          speed: 1, 
+                          loop: false, 
+                        });
+                      }else if(cancion==3){
+                        juegoKaplay.play("P4", {
+                          volume: 1, 
+                          speed: 1, 
+                          loop: false, 
+                        });
+                      }else if(cancion==4){
+                        juegoKaplay.play("P5", {
+                          volume: 1, 
+                          speed: 1, 
+                          loop: false, 
+                        });
+                      }else if(cancion==5){
+                        juegoKaplay.play("P6", {
+                          volume: 1, 
+                          speed: 1, 
+                          loop: false, 
+                        });
+                      } */
+
+
                        const player = juegoKaplay.add([
                          juegoKaplay.pos(450,109),
                          juegoKaplay.sprite("knight"),
@@ -143,7 +199,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
                          { z: 1 } // Asegura que el jugador esté en una capa superior
                        ]);
          
-                       const live1 = juegoKaplay.add([
+                    /*  const live1 = juegoKaplay.add([
                          juegoKaplay.pos(220,20),
                          juegoKaplay.sprite("heart"),
                          juegoKaplay.scale(4),
@@ -175,7 +231,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
                          juegoKaplay.body(),
                          "heart3",
                          { z: 1 } // Asegura que el jugador esté en una capa superior
-                       ]);
+                       ]); */
          
                        // Flechas
                        const arrows = {
@@ -244,7 +300,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
                        });
         
                        // Intentando eliminar las vidas
-                       juegoKaplay.onUpdate(()=>{
+                     /*  juegoKaplay.onUpdate(()=>{
                          if (lives==2){
                            juegoKaplay.destroy(live1);
                          }else if(lives==1){
@@ -252,7 +308,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
                          }else if(lives==0){
                            juegoKaplay.destroy(live3);
                          };
-                       })
+                       })*/
   
   
                        //const posicionNotasY: number = 500;
@@ -286,63 +342,85 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
                         { z: 1},// Asegura que el jugador esté en una capa superior,
                        ])
 
-                      let puntoPartida: number = window.innerWidth/2.9
+                      let puntoPartida: number = window.innerWidth/3
                       const puntoPartidaY:number = window.innerHeight/2
   
                       const patrones = [
-                        [0, 1, 2, 0, 1, 2, 0, 1, 2], 
-                        [2, 2, 1, 1, 0, 0, 2, 2, 1, 1, 2, 2], 
-                        [0, 0, 0, 1, 1, 1, 2, 2, 2, 0, 0], 
-                        [1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2], 
-                        [2, 1, 0, 2, 1, 0, 2, 1, 0 ], 
-                        [0, 0, 1, 1, 2, 2, 0, 0, 1, 1, 2, 2] 
+                        [0, 1, 2, 0, 1, 2, 0, 1, 2], //0 
+                        [2, 2, 1, 1, 0, 0, 2, 2, 1], //1
+                        [0, 0, 0, 1, 1, 1, 2, 2, 2], //2
+                        [1, 2, 0, 1, 2, 0, 1, 2, 0], //3
+                        [2, 1, 0, 2, 1, 0, 2, 1, 0], //4
+                        [0, 0, 1, 1, 0, 0, 1, 1, 0] //5
                       ];
                 
-  
+                      let delay = 1000; // Inicializar el retraso
                       const numeros = generarNumerosAzar();
                       console.log(numeros)
                       console.log(patrones[numeros[0]])
                       const ultimo = patrones[numeros[0]][patrones[numeros[0]].length - 1];
                       patrones[numeros[0]] = patrones[numeros[0]].slice(0, -1);
-  
+                      //let cancion = numeros[0]
                       patrones[numeros[0]].forEach((numeroAzar: number) => {
                         console.log("Estudiando el número:", numeroAzar  )
                         console.log(`Ubicando en x:${puntoPartida} y:${((juegoKaplay.center().y) / 2 ) + puntoPartidaY}` )
+                        setTimeout(() => {
                         switch(numeroAzar){
                           case 0:
                             const semicorchea = juegoKaplay.add([
                               juegoKaplay.pos(puntoPartida,((juegoKaplay.center().y / 2 )) + puntoPartidaY),
                               juegoKaplay.sprite("notas"),
-                              juegoKaplay.scale(0.2),
+                              juegoKaplay.scale(0.1),
                               { z: 2 }, // Asegura que el jugador esté en una capa superior,
                            ])
                            semicorchea.frame = 0
-                           puntoPartida = puntoPartida + 100
+                           puntoPartida = puntoPartida + 70
+                           juegoKaplay.play("A0", {
+                            volume: 1, 
+                            speed: 1, 
+                            loop: false, 
+                          });
+                           
                           break;
                           case 1:
                             const semicorchea2 = juegoKaplay.add([
                               juegoKaplay.pos( puntoPartida ,((juegoKaplay.center().y) / 2 ) + puntoPartidaY),
                               juegoKaplay.sprite("notas"),
-                              juegoKaplay.scale(0.2),
+                              juegoKaplay.scale(0.1),
                               { z: 2 } // Asegura que el jugador esté en una capa superior
                             ])
                             semicorchea2.frame = 1
-                            puntoPartida = puntoPartida + 100
-                          break;
+                            puntoPartida = puntoPartida + 70
+                            juegoKaplay.play("A1", {
+                              volume: 1, 
+                              speed: 1, 
+                              loop: false, 
+                            });
+                           break;
+
                           case 2:
                             const semicorchea3 = juegoKaplay.add([
                               juegoKaplay.pos(puntoPartida ,((juegoKaplay.center().y) / 2 ) + puntoPartidaY),
                               juegoKaplay.sprite("notas"),
-                              juegoKaplay.scale(0.2),
+                              juegoKaplay.scale(0.1),
                               { z: 2 } // Asegura que el jugador esté en una capa superior
                             ])
         
                             semicorchea3.frame = 2
-                            puntoPartida = puntoPartida + 100
+                            puntoPartida = puntoPartida + 70
+
+                            juegoKaplay.play("A2", {
+                              volume: 1, 
+                              speed: 1, 
+                              loop: false, 
+                            });
+                            
                           break;
                         }
-                      })
-  
+                      }, delay); // Retrasar la reproducción según el valor de 'delay'
+                      delay += 1000; // Incrementar el retraso para el siguiente sonido (ajusta el valor según sea necesario)
+                  });
+                      
   
                       circle1.onClick( () => {
                         juegoKaplay.play("A0", {

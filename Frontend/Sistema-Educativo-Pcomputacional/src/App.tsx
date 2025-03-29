@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react";
 import kaplay, { Asset, GameObj, KAPLAYCtx, LevelOpt, Rect, SpriteData, Vec2 } from "kaplay";
 import { Nivel1 } from "./1stLevel";
+import { Panel } from "./PanelJuegos";
+
 
 const SCREEN_RESOLUTION_X: number = window.innerWidth 
 const SCREEN_RESOLUTION_Y: number = window.innerHeight 
@@ -37,7 +39,8 @@ function App() {
       const juegoKaplay = juegoKaplayRef.current;
       juegoKaplay.setBackground(71,171,169)
       juegoKaplay.loadRoot("./");
-      Nivel1(juegoKaplay);
+     // Nivel1(juegoKaplay);
+     Panel(juegoKaplay);
         
       }
   
