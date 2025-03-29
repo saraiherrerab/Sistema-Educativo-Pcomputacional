@@ -1,13 +1,26 @@
-import { useEffect, useRef } from "react";
-import kaplay, { Asset, GameObj, KAPLAYCtx, LevelOpt, Rect, SpriteData, Vec2 } from "kaplay";
+
+import { Asset, KAPLAYCtx, SpriteData, Vec2 } from "kaplay";
 import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido";
+
+
+    /* Bitacora de Luis (Nota número 1 para mi amorcito): Empecé a comentar las secciones de código que he hecho para explicarte que 
+    voy haciendo mi amor precioso, así vas entendiendo que es lo que busque lograr con cada implementación y tengas una base para explorar
+    todas las funciones del código.
+    
+    La función "generarEsquemaMapa() se encarga de leer las representaciones del mundo generadas por Tiled (en formato JSON) para imprimir ese mapa
+    en la pantalla. Estos mapas contienen propiedades importantes (a las que puedes acceder con punto al ser objetos, ejemplo: world.layer.data), entre ellas
+    las más importante es la propiedad "layers" que contiene todas las capas de ese mundo, así mismo, cada capa tiene un atributo "data" que contiene el ID 
+    de cada fracción de imagen que se genera cuando cargamos el conjunto de patrones en Tiled.
+
+    
+    */
 
     const generarEsquemaMapa = async (
       
-    contextoKaplay: KAPLAYCtx<{},never>,
-    configuracionMapa: { tileWidth: number,tileHeight: number,pos: Vec2,},
-    urlMapa: string,
-    informacionMapa: informacionNivel[]
+    contextoKaplay: KAPLAYCtx<{},never>, // contextoKaplay es el objeto que representa todo el juego y se obtiene de la función "kaplay()"
+    configuracionMapa: { tileWidth: number,tileHeight: number,pos: Vec2,}, // la configuración del mapa representa las dimensiones que debe tener cada cuadro y la posición del primero para empezar a dibujar
+    urlMapa: string, //Es la URL en la que se encuentra la carpeta con las imagenes del mapa en formato JSON
+    informacionMapa: informacionNivel[] //Contiene en orden todas las imagenes que se utilizaron en cada capa para generar el mundo.
   ) : Promise<any> => {
   
     const resultado = fetch(urlMapa).then(
@@ -172,8 +185,28 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
           });
   
         })
+      
+        const imagenMundo = contextoKaplay.sprite("mundo")
+        console.log(imagenMundo)
+        imagenMundo.width = window.innerWidth
+        imagenMundo.height = window.innerHeight
+
+        contextoKaplay.add([
+          imagenMundo, // Asegúrate de cargar esta imagen en KaplayJS
+          contextoKaplay.pos(0, 0), // Ubicar en la posición inicial
+          contextoKaplay.fixed(),// Para que no se mueva con la cámara,
+          contextoKaplay.scale(1)
+        ]);
+
+        // Esperar a que la imagen cargue para modificar su tamaño
+        setTimeout(() => {
+          if (imagenMundo.width && imagenMundo.height) {
+            imagenMundo.width = window.innerWidth;
+            imagenMundo.height = window.innerHeight;
+          }
+        }, 0);
   
-  
+        /*
         worldJson.layers.forEach((layer: any, numeroLayer: number) => {
         
           let resultadoMapa = [];
@@ -203,6 +236,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
           
           
         })
+        */
   
         console.log("SALI DE LA FUNCION")
       
