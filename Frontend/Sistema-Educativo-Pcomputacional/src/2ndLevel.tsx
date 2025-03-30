@@ -75,13 +75,12 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>) {
         juegoKaplay.onLoad(async () => {
             
             
-            juegoKaplay.loadSprite("mundo", "nivel1/nivel1_mapeo.png", {
-                sliceX: 1,
-                sliceY: 1,
-            });
+
             const nivelPrincipal = generarEsquemaMapa(
                 juegoKaplay,
                 {
+                  nameFolder: "nivel1",
+                  nameFile: "nivel1_mapeo.png",
                   tileWidth: TILED_WIDTH,
                   tileHeight: TILED_HEIGHT,
                   pos: juegoKaplay.vec2(0, 0),

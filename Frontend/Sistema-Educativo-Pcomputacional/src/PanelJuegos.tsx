@@ -73,11 +73,6 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>) {
       sliceX: 1,
       sliceY: 1,
     });
-
-    juegoKaplay.loadSprite("mundo", "panel/imagen_panel.png", {
-      sliceX: 1,
-      sliceY: 1,
-    });
   
     // Cargar sprites adicionales
     ["up", "down", "left", "right"].forEach((dir) => {
@@ -92,11 +87,13 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>) {
       const nivelPrincipal = generarEsquemaMapa(
         juegoKaplay,
         {
+          nameFolder: "panel",
+          nameFile: "panel.png",
           tileWidth: TILED_WIDTH,
           tileHeight: TILED_HEIGHT,
           pos: juegoKaplay.vec2(0, 0),
         },
-        `./panelv.json`,   //archivo de donde voy a extraer el mapa
+        `./panel/panelv.json`,   //archivo de donde voy a extraer el mapa
         
         [ //Aca lo importante es que debo introducir el orden de las texturas en el que va, capa por capa
           {

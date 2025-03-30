@@ -18,7 +18,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
     const generarEsquemaMapa = async (
       
     contextoKaplay: KAPLAYCtx<{},never>, // contextoKaplay es el objeto que representa todo el juego y se obtiene de la función "kaplay()"
-    configuracionMapa: { tileWidth: number,tileHeight: number,pos: Vec2,}, // la configuración del mapa representa las dimensiones que debe tener cada cuadro y la posición del primero para empezar a dibujar
+    configuracionMapa: { nameFolder: string, nameFile: string,tileWidth: number,tileHeight: number,pos: Vec2,}, // la configuración del mapa representa las dimensiones que debe tener cada cuadro y la posición del primero para empezar a dibujar
     urlMapa: string, //Es la URL en la que se encuentra la carpeta con las imagenes del mapa en formato JSON
     informacionMapa: informacionNivel[] //Contiene en orden todas las imagenes que se utilizaron en cada capa para generar el mundo.
   ) : Promise<any> => {
@@ -28,7 +28,24 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
     )
     .then(
       (worldJson:any) => {
-        
+
+        console.log(`${configuracionMapa.nameFolder}/${configuracionMapa.nameFile}`)
+
+        contextoKaplay.loadSprite("mundo", `${configuracionMapa.nameFolder}/${configuracionMapa.nameFile}`, {
+          sliceX: 1,
+          sliceY: 1,
+        });
+
+        contextoKaplay.onDraw(() => {
+          contextoKaplay.drawSprite({
+            sprite: "mundo",
+            width: window.innerWidth,
+            height: window.innerHeight
+          });
+        });
+ 
+
+
         //Extraemos los arreglos que contienen el firtsgid (Posición donde comienzan cada una de las imagenes de cada capa)
         const tilesetOrder: any= informacionMapa
         console.log(tilesetOrder)
@@ -186,25 +203,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
   
         })
       
-        const imagenMundo = contextoKaplay.sprite("mundo")
-        console.log(imagenMundo)
-        imagenMundo.width = window.innerWidth
-        imagenMundo.height = window.innerHeight
-
-        contextoKaplay.add([
-          imagenMundo, // Asegúrate de cargar esta imagen en KaplayJS
-          contextoKaplay.pos(0, 0), // Ubicar en la posición inicial
-          contextoKaplay.fixed(),// Para que no se mueva con la cámara,
-          contextoKaplay.scale(1)
-        ]);
-
-        // Esperar a que la imagen cargue para modificar su tamaño
-        setTimeout(() => {
-          if (imagenMundo.width && imagenMundo.height) {
-            imagenMundo.width = window.innerWidth;
-            imagenMundo.height = window.innerHeight;
-          }
-        }, 0);
+        
   
         /*
         worldJson.layers.forEach((layer: any, numeroLayer: number) => {
