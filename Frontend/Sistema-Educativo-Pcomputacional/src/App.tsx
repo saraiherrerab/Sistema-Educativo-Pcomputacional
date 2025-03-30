@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import kaplay, { Asset, GameObj, KAPLAYCtx, LevelOpt, Rect, SpriteData, Vec2 } from "kaplay";
 import { Nivel1 } from "./1stLevel";
 import { Panel } from "./PanelJuegos";
@@ -54,7 +54,39 @@ function App() {
     
   }, []);
 
-  return <canvas id="game" style={{ width: "100vw", height: "100vh" }} />;;
+  const amoALuis = () => {
+    setState(false);
+    
+  };
+
+  const [cambiarMostrar, setState] = useState(true);
+
+  return (<>
+    <canvas id="game" style={{ width: "100vw", height: "100vh", position:"relative" }} />
+    <div style={{
+          position: "absolute",
+          top: "20px", // Ajusta la posición según sea necesario
+          left: "50%",
+          transform: "translateX(-50%)", // Centrar horizontalmente
+          color: "white",
+          backgroundColor: "rgba(0, 0, 0, 0.5)", // Fondo semitransparente
+          padding: "10px",
+          borderRadius: "5px",
+          fontSize: "20px",
+    }}><button onClick={amoALuis}> Mensaje condicional</button>  </div>
+    {cambiarMostrar?<div style={{
+          position: "absolute",
+          top: "40px", // Ajusta la posición según sea necesario
+          left: "50%",
+          transform: "translateX(-50%)", // Centrar horizontalmente
+          color: "white",
+          backgroundColor: "rgba(0, 0, 0, 0.5)", // Fondo semitransparente
+          padding: "10px",
+          borderRadius: "5px",
+          fontSize: "20px",
+    }}><p>Me duele la tripa</p></div>:null}
+    
+     </>)
 
 }
 
