@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import kaplay, { Asset, GameObj, KAPLAYCtx, LevelOpt, Rect, SpriteData, Vec2 } from "kaplay";
-import { Nivel1 } from "./1stLevel";
+import { Nivel1 } from "./app/videojuego/1stLevel";
 import { Panel } from "./PanelJuegos";
 
 

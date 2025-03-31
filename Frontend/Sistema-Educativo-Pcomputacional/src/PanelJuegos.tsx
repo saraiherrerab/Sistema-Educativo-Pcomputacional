@@ -2,8 +2,8 @@ import { useEffect, useRef } from "react";
 import kaplay, { Asset, GameObj, KAPLAYCtx, LevelOpt, Rect, SpriteData, Vec2 } from "kaplay";
 import generarEsquemaMapa from "../src/MapsGenerator";
 import generarNumerosAzar from "./utils/generarNumerosAzar";
-import { Nivel1 } from "./1stLevel";
-import { Nivel2 } from "./2ndLevel";
+import { Nivel1 } from "./app/videojuego/1stLevel";
+import { Nivel2 } from "./app/videojuego/2ndLevel";
 const SCREEN_RESOLUTION_X: number = window.innerWidth 
 const SCREEN_RESOLUTION_Y: number = window.innerHeight 
 const TILED_MAP__WIDTH_NUMBER: number = 21
