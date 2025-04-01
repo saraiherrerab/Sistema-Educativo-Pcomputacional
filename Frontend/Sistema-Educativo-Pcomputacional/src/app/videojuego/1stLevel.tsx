@@ -8,50 +8,59 @@ const TILED_MAP__WIDTH_NUMBER: number = 21
 const TILED_MAP_HEIGHT_NUMBER: number = 16
 const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
 const TILED_HEIGHT: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGHT_NUMBER
+let aciertos = 0;
 export let cambioNivel = 0;
 
 
 export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
     // Referencia persistente para almacenar la instancia de Kaplay
     
-    juegoKaplay.loadSprite("robot", "sprites/robotin.png", {
-      sliceX: 4,
-      sliceY: 12,
-      anims: {
-        right: { from: 16, to: 19, loop: false },
-        up: { from: 20, to: 23, loop: false},
-        down: { from: 12, to: 15, loop: false},
-        left: { from: 24, to: 27, loop: false},
-        quiet: { from: 0, to: 0, loop: false},
-      },
+    juegoKaplay.loadSprite("casa3", "sprites/buildings/House_Blue.png", {
+      sliceX: 1,
+      sliceY: 1,
+    });
+
+    juegoKaplay.loadSprite("casa2", "sprites/buildings/House_Destroyed.png", {
+      sliceX: 1,
+      sliceY: 1,
+    });
+
+    juegoKaplay.loadSprite("casa1", "sprites/buildings/House_Construction.png", {
+      sliceX: 1,
+      sliceY: 1,
+    });
+
+    juegoKaplay.loadSprite("House_Blue", "sprites/buildings/House_Blue.png", {
+      sliceX: 1,
+      sliceY: 1,
+    });
+
+    juegoKaplay.loadSprite("Tower_Blue", "sprites/buildings/Tower_Blue.png", {
+      sliceX: 1,
+      sliceY: 1,
     });
   
-    juegoKaplay.loadSprite("knight", "sprites/p_knight_official.png", {
+    juegoKaplay.loadSprite("pawn", "sprites/characters/Pawn_Purple.png", {
       sliceX: 6,
-      sliceY: 8,
+      sliceY: 6,
       anims: {
-        right: { from: 6, to: 11, loop: false },
-        up: { from: 36, to: 38, loop: false },
-        down: { from: 24, to: 26, loop: false },
-        left: { from: 5, to: 1, loop: false },
-        quiet: { from: 31, to: 31, loop: false },
-      },
-    });
-  
-    juegoKaplay.loadSprite("enemy", "sprites/TNT_Blue (1).png", {
-      sliceX: 7,
-      sliceY: 3,
-      anims: {
-        left_a: { from: 20, to: 14, loop: false },
-        right_a: { from: 7, to: 13, loop: false },
+        right: { from: 18, to: 23, loop: false },
         quiet: { from: 0, to: 0, loop: false },
       },
     });
 
-    juegoKaplay.loadSprite("scarecrow", "sprites/scarecrow.png", {
-      sliceX: 1,
-      sliceY: 1,
+    juegoKaplay.loadSprite("tree", "sprites/deco/Tree.png", {
+      sliceX: 4,
+      sliceY: 3,
+      anims: {
+        bye: { from: 8, to: 8, loop: false },
+        quiet: { from: 0, to: 3, loop: true },
+      },
     });
+  
+
+
+
 
     juegoKaplay.loadSprite("heart", "sprites/heart.png", {
       sliceX: 1,
@@ -145,14 +154,35 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
         
           // Jugador
           const player = juegoKaplay.add([
-            juegoKaplay.pos(450,109),
-            juegoKaplay.sprite("knight"),
-            juegoKaplay.scale(2),
+            juegoKaplay.pos(730, 5),
+            juegoKaplay.sprite("pawn"),
+            juegoKaplay.scale(1),
             juegoKaplay.health(3),
             juegoKaplay.area(),
             "player",
             { z: 1 } // Asegura que el jugador esté en una capa superior
           ]);
+
+          const tree = juegoKaplay.add([
+            juegoKaplay.pos(810,-5),
+            juegoKaplay.sprite("tree"),
+            juegoKaplay.scale(0.8),
+            juegoKaplay.health(3),
+            juegoKaplay.area(),
+            "tree",
+            { z: 1 } // Asegura que el jugador esté en una capa superior
+          ]);
+
+         /* const casa = juegoKaplay.add([
+            juegoKaplay.pos(400,-5),
+            juegoKaplay.sprite("casa1"),
+            juegoKaplay.scale(0.8),
+            juegoKaplay.health(3),
+            juegoKaplay.area(),
+            "casa",
+            { z: 1 } // Asegura que el jugador esté en una capa superior
+          ]);*/
+
 
           // Flechas
           const arrows = {
@@ -331,7 +361,11 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
             loop: false, 
           });
           if(ultimo === 1){
-            console.log("Ganaste")
+
+            player.play("right");
+            tree.play("bye");
+            aciertos++;
+            
           }else{
             console.log("Fallaste")
           }
@@ -343,7 +377,12 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
             loop: false, 
           });
           if(ultimo === 0){
-            console.log("Ganaste")
+
+            player.play("right");
+            tree.play("bye");
+            aciertos++;
+            //console.log("El mensaje es: " + aciertos);
+           
           }else{
             console.log("Fallaste")
           }
@@ -356,12 +395,58 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
             loop: false, 
           });
           if(ultimo === 2){
-            console.log("Ganaste")
+
+            player.play("right");
+            tree.play("bye");
+            aciertos++;
+            //console.log("El mensaje es: " + aciertos);
+            
           }else{
             console.log("Fallaste")
           }
           })
 
+          juegoKaplay.onUpdate(()=>{
+            if(aciertos==1){
+              const casa1 = juegoKaplay.add([
+                juegoKaplay.pos(400,-5),
+                juegoKaplay.sprite("casa1"),
+                juegoKaplay.scale(0.8),
+                juegoKaplay.health(3),
+                juegoKaplay.area(),
+                "casa",
+                { z: 1 } // Asegura que el jugador esté en una capa superior
+              ]);
+              console.log("El mensaje es: " + aciertos);
+  
+            }else if(aciertos==2){
+              
+              const casa2 = juegoKaplay.add([
+                juegoKaplay.pos(400,-5),
+                juegoKaplay.sprite("casa2"),
+                juegoKaplay.scale(0.8),
+                juegoKaplay.health(3),
+                juegoKaplay.area(),
+                "casa",
+                { z: 1 } // Asegura que el jugador esté en una capa superior
+              ]);
+              console.log("El mensaje es: " + aciertos);
+  
+            }else if(aciertos==3){
+              const casa3 = juegoKaplay.add([
+                juegoKaplay.pos(400,-5),
+                juegoKaplay.sprite("casa3"),
+                juegoKaplay.scale(0.8),
+                juegoKaplay.health(3),
+                juegoKaplay.area(),
+                "casa",
+                { z: 1 } // Asegura que el jugador esté en una capa superior
+              ]);
+              console.log("El mensaje es: " + aciertos);
+  
+            }
+          })
+         
 
           player.onDeath(() => {
             juegoKaplay.destroy(player);

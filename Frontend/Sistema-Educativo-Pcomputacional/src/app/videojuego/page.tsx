@@ -4,17 +4,15 @@
  import { Nivel1 } from "./1stLevel";
  import { Panel } from "./PanelJuegos";
  
-
+ 
+ const SCREEN_RESOLUTION_X: number = window.innerWidth 
+ const SCREEN_RESOLUTION_Y: number = window.innerHeight 
+ 
  function Page() {
    
    const juegoKaplayRef = useRef<any>(null);
  
    useEffect(() => {
-
-     
-    const SCREEN_RESOLUTION_X: number = window.innerWidth 
-    const SCREEN_RESOLUTION_Y: number = window.innerHeight 
- 
    
        
      const resizeCanvas = () => {
