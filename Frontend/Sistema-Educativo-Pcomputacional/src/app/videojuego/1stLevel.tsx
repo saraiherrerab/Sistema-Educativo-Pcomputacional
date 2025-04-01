@@ -2,17 +2,18 @@ import {KAPLAYCtx} from "kaplay";
 import generarEsquemaMapa from "../../MapsGenerator";
 import generarNumerosAzar from "../../utils/generarNumerosAzar";
 
-const SCREEN_RESOLUTION_X: number = window.innerWidth 
-const SCREEN_RESOLUTION_Y: number = window.innerHeight 
-const TILED_MAP__WIDTH_NUMBER: number = 21
-const TILED_MAP_HEIGHT_NUMBER: number = 16
-const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
-const TILED_HEIGHT: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGHT_NUMBER
 export let cambioNivel = 0;
 
 
 export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
+  const SCREEN_RESOLUTION_X: number = window.innerWidth 
+  const SCREEN_RESOLUTION_Y: number = window.innerHeight 
+  const TILED_MAP__WIDTH_NUMBER: number = 21
+  const TILED_MAP_HEIGHT_NUMBER: number = 16
+  const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
+  const TILED_HEIGHT: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGHT_NUMBER
     // Referencia persistente para almacenar la instancia de Kaplay
+    console.log(juegoKaplay)
     
     juegoKaplay.loadSprite("robot", "sprites/robotin.png", {
       sliceX: 4,
@@ -83,11 +84,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
     juegoKaplay.loadSound("A0", "./sounds/A0.mp3");
     juegoKaplay.loadSound("A1", "./sounds/A1.mp3");
     juegoKaplay.loadSound("A2", "./sounds/A2.mp3");
-  
-        
-        
-  
-  
+
     // Cargar sprites adicionales
     ["up", "down", "left", "right"].forEach((dir) => {
       juegoKaplay.loadSprite(dir, `sprites/${dir}-arrow.png`);
@@ -100,7 +97,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
         //Practicando aqui
 
 
-      const nivelPrincipal = generarEsquemaMapa(
+      generarEsquemaMapa(
         juegoKaplay,
         {
           nameFolder: "nivel2",
@@ -142,17 +139,8 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
       )
       .then(
         (resultado: any) => {
-        
-          // Jugador
-          const player = juegoKaplay.add([
-            juegoKaplay.pos(450,109),
-            juegoKaplay.sprite("knight"),
-            juegoKaplay.scale(2),
-            juegoKaplay.health(3),
-            juegoKaplay.area(),
-            "player",
-            { z: 1 } // Asegura que el jugador esté en una capa superior
-          ]);
+
+          const player = juegoKaplay.get("player")[0]
 
           // Flechas
           const arrows = {
@@ -370,7 +358,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
         }
           ).catch(
             ((error:any) => {
-            
+              console.log(error)
             })
           )   
   

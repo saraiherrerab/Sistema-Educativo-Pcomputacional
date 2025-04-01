@@ -1,17 +1,20 @@
 import { KAPLAYCtx } from "kaplay";
 import generarEsquemaMapa from "../../MapsGenerator";
 
-const SCREEN_RESOLUTION_X: number = window.innerWidth 
-const SCREEN_RESOLUTION_Y: number = window.innerHeight 
-const TILED_MAP__WIDTH_NUMBER: number = 21
-const TILED_MAP_HEIGHT_NUMBER: number = 16
-const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
-const TILED_HEIGHT: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGHT_NUMBER
-
-const ORIGINAL_GAME_SCREEN_X: number = TILED_MAP__WIDTH_NUMBER * 32
-const ORIGINAL_GAME_SCREEN_Y: number =TILED_MAP_HEIGHT_NUMBER * 32
 export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>) {
-    // Referencia persistente para almacenar la instancia de Kaplay
+
+        const SCREEN_RESOLUTION_X: number = window.innerWidth 
+        const SCREEN_RESOLUTION_Y: number = window.innerHeight 
+        const TILED_MAP__WIDTH_NUMBER: number = 21
+        const TILED_MAP_HEIGHT_NUMBER: number = 16
+        const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
+        const TILED_HEIGHT: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGHT_NUMBER
+
+        const ORIGINAL_GAME_SCREEN_X: number = TILED_MAP__WIDTH_NUMBER * 32
+        const ORIGINAL_GAME_SCREEN_Y: number =TILED_MAP_HEIGHT_NUMBER * 32
+
+        console.log("Comenzando a generar nivel 2")
+        console.log(juegoKaplay.get("*"))
 
         let lives = 3
     
@@ -73,10 +76,8 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>) {
         
   
         juegoKaplay.onLoad(async () => {
-            
-            
 
-            const nivelPrincipal = generarEsquemaMapa(
+            generarEsquemaMapa(
                 juegoKaplay,
                 {
                   nameFolder: "nivel1",
@@ -144,25 +145,14 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>) {
                 ]
               ).then(
                 (resultado: any) => {
-                  console.log(resultado)
-                  // Jugador
-    
-                  const player = juegoKaplay.add([
-                    juegoKaplay.pos(1500,-25 ),
-                    juegoKaplay.sprite("knight"),
-                    juegoKaplay.scale(2),
-                    juegoKaplay.body(),
-                    juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2( 30,20 ), 60, 60), // Rectángulo más pequeño
-                    }),
-                    juegoKaplay.health(3),
-                    "player",
-                    { z: 10 } // Asegura que el jugador esté en una capa superior
-                  ]);
-    
                   
+                  console.log("Resultado de generar nivel 2")
+                  console.log(juegoKaplay.get("*"))
+                  console.log(juegoKaplay.get("player"))
+
+                  const player = juegoKaplay.get("player")[0]
+                  const enemy = juegoKaplay.get("enemy")[0]
                   
-    
-    
                   const redRoom = juegoKaplay.add([
                     juegoKaplay.rect(200, 500),
                     juegoKaplay.area(),
@@ -171,18 +161,6 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>) {
                     "redRoom",
                     { z: 10 } // Asegura que el jugador esté en una capa superior
                   ])
-    
-                  // Enemigo
-                  const enemy = juegoKaplay.add([
-                    juegoKaplay.pos(1000,-110),
-                    juegoKaplay.sprite("enemy"),
-                    juegoKaplay.scale(2),
-                    juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2( 50,80), 70, 40), // Rectángulo más pequeño
-                    }),
-                    juegoKaplay.body(),
-                    "enemy",
-                    { z: 10 } // Asegura que el jugador esté en una capa superior
-                  ]);
                   
                   // Enemigo zone
                   const square = juegoKaplay.add([
@@ -225,8 +203,7 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>) {
                     "heart2",
                     { z: 10 } // Asegura que el jugador esté en una capa superior
                   ]);
-    
-                  
+         
                   const live3 = juegoKaplay.add([
                     juegoKaplay.pos(480,20),
                     juegoKaplay.sprite("heart"),
@@ -238,6 +215,7 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>) {
                     { z: 10 } // Asegura que el jugador esté en una capa superior
                   ]);
     
+                  /*
                   //Scarecrow
                   const scarecrow = juegoKaplay.add([
                     juegoKaplay.pos(juegoKaplay.center()),
@@ -248,7 +226,7 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>) {
                     "scarecrow",
                     { z: 10 } // Asegura que el jugador esté en una capa superior
                   ]);
-    
+                  */
                   // Flechas
                   const arrows = {
                     up: juegoKaplay.add([
@@ -410,33 +388,11 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>) {
                 }
               ).catch(
                 ((error:any) => {
-                  console.log("Ah vaina simon")
+                  console.log(error)
                 })
               )
   
   
         }) //Fin - Onload()
-  
-        /*
-        juegoKaplay.onUpdate(() => {
-            const camX = juegoKaplay.camPos().x;
-            const camY = juegoKaplay.camPos().y;
-        
-            juegoKaplay.getAll().forEach((obj:any) => {
-                if (
-                    obj.pos.x < camX - 1920 || obj.pos.x > camX + 1920 ||
-                    obj.pos.y < camY - 1080 || obj.pos.y > camY + 1080
-                ) {
-                    obj.hidden = true;  // No dibujar objetos fuera del área visible
-                } else {
-                    obj.hidden = false;
-                }
-            });
-        });    
-        */  
-  
-    //return <canvas id="game" style={{ width: "100vw", height: "100vh" }} />;;
-  }
-/*
 
-  */
+  }

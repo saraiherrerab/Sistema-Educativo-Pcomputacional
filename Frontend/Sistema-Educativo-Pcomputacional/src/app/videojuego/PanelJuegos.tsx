@@ -1,19 +1,24 @@
-import { useEffect, useRef } from "react";
-import kaplay, { Asset, GameObj, KAPLAYCtx, LevelOpt, Rect, SpriteData, Vec2 } from "kaplay";
 import generarEsquemaMapa from "../../MapsGenerator";
-import generarNumerosAzar from "../../utils/generarNumerosAzar";
 import { Nivel1 } from "./1stLevel";
 import { Nivel2 } from "./2ndLevel";
-const SCREEN_RESOLUTION_X: number = window.innerWidth 
-const SCREEN_RESOLUTION_Y: number = window.innerHeight 
-const TILED_MAP__WIDTH_NUMBER: number = 21
-const TILED_MAP_HEIGHT_NUMBER: number = 16
-const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
-const TILED_HEIGHT: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGHT_NUMBER
 
-
-export function Panel(juegoKaplay:KAPLAYCtx<{},never>) {
+export function Panel(kaplayRef: React.RefObject<any>) {
     // Referencia persistente para almacenar la instancia de Kaplay
+
+    const SCREEN_RESOLUTION_X: number = window.innerWidth 
+    const SCREEN_RESOLUTION_Y: number = window.innerHeight 
+
+    const TILED_MAP__WIDTH_NUMBER: number = 21
+    const TILED_MAP_HEIGHT_NUMBER: number = 16
+
+    const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
+    const TILED_HEIGHT: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGHT_NUMBER
+
+    const juegoKaplay = kaplayRef.current
+
+    console.log("Entrando a panel")
+    console.log(juegoKaplay.get("*"))
+
      
     juegoKaplay.loadSprite("robot", "sprites/robotin.png", {
       sliceX: 4,
@@ -82,9 +87,9 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>) {
     juegoKaplay.loadSprite("redbox", "red-border-box.png");
     
 
-    juegoKaplay.onLoad(async () => {
+    juegoKaplay.onLoad(() => {
         //Practicando aqui
-      const nivelPrincipal = generarEsquemaMapa(
+      generarEsquemaMapa(
         juegoKaplay,
         {
           nameFolder: "panel",
@@ -129,136 +134,133 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>) {
         ]
       )
       .then(
-                  (resultado: any) => {
-                    // Jugador
-                  
+        (resultado: any) => {
 
-                    const player = juegoKaplay.add([
-                      juegoKaplay.pos(450,109),
-                      juegoKaplay.sprite("knight"),
-                      juegoKaplay.scale(1),
-                      juegoKaplay.health(3),
-                      juegoKaplay.area(),
-                      "player",
-                      { z: 2 } // Asegura que el jugador esté en una capa superior
-                    ]);
+          const player = juegoKaplay.add([
+            juegoKaplay.pos(450,109),
+            juegoKaplay.sprite("knight"),
+            juegoKaplay.scale(1),
+            juegoKaplay.health(3),
+            juegoKaplay.area(),
+            "player",
+            { z: 2 } // Asegura que el jugador esté en una capa superior
+          ]);
 
-                  const castillo = juegoKaplay.add([
-                    juegoKaplay.pos(800,-20),
-                    juegoKaplay.sprite("castillo"),
-                    juegoKaplay.scale(0.7),
-                    juegoKaplay.area(),
-                    "castillo",
-                    { z: 1 } // Asegura que el jugador esté en una capa superior
-                  ]);
+          const castillo = juegoKaplay.add([
+            juegoKaplay.pos(800,-20),
+            juegoKaplay.sprite("castillo"),
+            juegoKaplay.scale(0.7),
+            juegoKaplay.area(),
+            "castillo",
+            { z: 1 } // Asegura que el jugador esté en una capa superior
+          ]);
 
-                  const torre = juegoKaplay.add([
-                    juegoKaplay.pos(630,-40),
-                    juegoKaplay.sprite("torre"),
-                    juegoKaplay.scale(0.7),
-                    juegoKaplay.area(),
-                    "torre",
-                    { z: 1 } // Asegura que el jugador esté en una capa superior
-                  ]);
+          const torre = juegoKaplay.add([
+            juegoKaplay.pos(630,-40),
+            juegoKaplay.sprite("torre"),
+            juegoKaplay.scale(0.7),
+            juegoKaplay.area(),
+            "torre",
+            { z: 1 } // Asegura que el jugador esté en una capa superior
+          ]);
 
-                  torre.use("torre"); // green bean <:
+          torre.use("torre"); // green bean <:
 
 
-                  torre.onClick(()=>{
-                    juegoKaplay.destroy(torre);
-                    juegoKaplay.destroy(castillo);
-                    juegoKaplay.destroy(player);
-                    Nivel1(juegoKaplay);
-                    // We pass the component id for remove it.
-                  });
-      
-                  castillo.onClick(()=>{
-                    juegoKaplay.destroy(torre);
-                    juegoKaplay.destroy(castillo);
-                    juegoKaplay.destroy(player);
-                    Nivel2(juegoKaplay);
-                    // We pass the component id for remove it.
-                  });
-      
-                    // Flechas
-                    const arrows = {
-                      up: juegoKaplay.add([
-                        juegoKaplay.pos(0, (juegoKaplay.center().y)/8),
-                        juegoKaplay.sprite("up"),
-                        juegoKaplay.scale(2),
-                        juegoKaplay.area(),
-                        { z: 1 } // Asegura que el jugador esté en una capa superior
-                      ]),
-                      down: juegoKaplay.add([
-                        juegoKaplay.pos(0 ,(juegoKaplay.center().y)/4),
-                        juegoKaplay.sprite("down"),
-                        juegoKaplay.scale(2),
-                        juegoKaplay.area(),
-                        { z: 1 } // Asegura que el jugador esté en una capa superior
-                      ]),
-                      left: juegoKaplay.add([
-                        juegoKaplay.pos(0,(juegoKaplay.center().y)/2),
-                        juegoKaplay.sprite("left"),
-                        juegoKaplay.scale(2),
-                        juegoKaplay.area(),
-                        { z: 1 } // Asegura que el jugador esté en una capa superior
-                      ]),
-                      right: juegoKaplay.add([
-                        juegoKaplay.pos(0,(juegoKaplay.center().y)),
-                        juegoKaplay.sprite("right"),
-                        juegoKaplay.scale(2),
-                        juegoKaplay.area(),
-                        { z: 1 } // Asegura que el jugador esté en una capa superior
-                      ]),
-                    };
-      
-                    const velocidad = 440;
-      
-                    // Movimiento con teclado
-                    juegoKaplay.onKeyDown("w", () => {
-                      player.move(0, -velocidad);
-                    });
-                    juegoKaplay.onKeyDown("s", () => {
-                      player.move(0, velocidad);
-                    });
-                    juegoKaplay.onKeyDown("a", () => {
-                      player.move(-velocidad, 0);
-                    });
-                    juegoKaplay.onKeyDown("d", () => {
-                      player.move(velocidad, 0);
-                    });
-      
-                    // Movimiento con clic
-                    arrows.up.onClick(() => {
-                      player.move(0, -velocidad);
-                      player.play("up");
-                    });
-                    arrows.down.onClick(() => {
-                      player.move(0, velocidad);
-                      player.play("down");
-                    });
-                    arrows.left.onClick(() => {
-                      player.move(-velocidad, 0);
-                      player.play("left");
-                    });
-                    arrows.right.onClick(() => {
-                      player.move(velocidad, 0);
-                      player.play("right");
-                    });
+          torre.onClick(()=>{
+            juegoKaplay.destroy(torre);
+            juegoKaplay.destroy(castillo);
+            juegoKaplay.destroy(player);
+            Nivel1(juegoKaplay);
+            // We pass the component id for remove it.
+          });
+
+          castillo.onClick(()=>{
+            juegoKaplay.destroy(torre);
+            juegoKaplay.destroy(castillo);
+            juegoKaplay.destroy(player);
+            Nivel2(juegoKaplay);
+            // We pass the component id for remove it.
+          });
+
+          // Flechas
+          const arrows = {
+            up: juegoKaplay.add([
+              juegoKaplay.pos(0, (juegoKaplay.center().y)/8),
+              juegoKaplay.sprite("up"),
+              juegoKaplay.scale(2),
+              juegoKaplay.area(),
+              { z: 1 } // Asegura que el jugador esté en una capa superior
+            ]),
+            down: juegoKaplay.add([
+              juegoKaplay.pos(0 ,(juegoKaplay.center().y)/4),
+              juegoKaplay.sprite("down"),
+              juegoKaplay.scale(2),
+              juegoKaplay.area(),
+              { z: 1 } // Asegura que el jugador esté en una capa superior
+            ]),
+            left: juegoKaplay.add([
+              juegoKaplay.pos(0,(juegoKaplay.center().y)/2),
+              juegoKaplay.sprite("left"),
+              juegoKaplay.scale(2),
+              juegoKaplay.area(),
+              { z: 1 } // Asegura que el jugador esté en una capa superior
+            ]),
+            right: juegoKaplay.add([
+              juegoKaplay.pos(0,(juegoKaplay.center().y)),
+              juegoKaplay.sprite("right"),
+              juegoKaplay.scale(2),
+              juegoKaplay.area(),
+              { z: 1 } // Asegura que el jugador esté en una capa superior
+            ]),
+          };
+
+          const velocidad = 440;
+
+          // Movimiento con teclado
+          juegoKaplay.onKeyDown("w", () => {
+            player.move(0, -velocidad);
+          });
+          juegoKaplay.onKeyDown("s", () => {
+            player.move(0, velocidad);
+          });
+          juegoKaplay.onKeyDown("a", () => {
+            player.move(-velocidad, 0);
+          });
+          juegoKaplay.onKeyDown("d", () => {
+            player.move(velocidad, 0);
+          });
+
+          // Movimiento con clic
+          arrows.up.onClick(() => {
+            player.move(0, -velocidad);
+            player.play("up");
+          });
+          arrows.down.onClick(() => {
+            player.move(0, velocidad);
+            player.play("down");
+          });
+          arrows.left.onClick(() => {
+            player.move(-velocidad, 0);
+            player.play("left");
+          });
+          arrows.right.onClick(() => {
+            player.move(velocidad, 0);
+            player.play("right");
+          });
+
+          console.log("Resultado de PANEL")
+          console.log(juegoKaplay.get("*"))
 
 
-                  }
-                ).catch(
-                  ((error:any) => {
-                  console.log(error)
-                  })
-                )   
+        })
+        .catch(
+        ((error:any) => {
+          console.log(error)
+        })
+      )   
 
 
     }) //Fin - Onload()
-  
-    return () => {
-      
-    };
     
-  }
+}
