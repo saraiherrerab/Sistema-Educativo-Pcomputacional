@@ -1,4 +1,4 @@
-import {KAPLAYCtx} from "kaplay";
+import {GameObj, KAPLAYCtx} from "kaplay";
 import generarEsquemaMapa from "../../MapsGenerator";
 import generarNumerosAzar from "../../utils/generarNumerosAzar";
 
@@ -9,7 +9,10 @@ const TILED_MAP_HEIGHT_NUMBER: number = 16
 const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
 const TILED_HEIGHT: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGHT_NUMBER
 let aciertos = 0;
+let nuevoSprite: GameObj;
 export let cambioNivel = 0;
+
+
 
 
 export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
@@ -81,6 +84,12 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
       sliceX: 3,
       sliceY: 1
     });
+
+    let semicorchea1: GameObj;
+    let semicorchea2: GameObj;
+    let semicorchea3:GameObj;
+
+ 
 
     juegoKaplay.loadSound("sonidoPrueba", "button_09-190435.mp3");
     const P1= juegoKaplay.loadSound("P1", "./sounds/P1.mp3");
@@ -275,83 +284,167 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
           ])
 
         let puntoPartida: number = window.innerWidth/3
-        const puntoPartidaY:number = window.innerHeight/2
+        let puntoPartidaY:number = window.innerHeight/2
+        //let spritecito="";
 
-        const patrones = [
-          [0, 1, 2, 0, 1, 2, 0, 1, 2], //0 
-          [2, 2, 1, 1, 0, 0, 2, 2, 1], //1
-          [0, 0, 0, 1, 1, 1, 2, 2, 2], //2
-          [1, 2, 0, 1, 2, 0, 1, 2, 0], //3
-          [2, 1, 0, 2, 1, 0, 2, 1, 0], //4
-          [0, 0, 1, 1, 0, 0, 1, 1, 0] //5
-        ];
+         /* function clean(spritecito: any){
+            juegoKaplay.destroy(spritecito);
+          };*/
 
-        let delay = 1000; // Inicializar el retraso
-        const numeros = generarNumerosAzar();
-        console.log(numeros)
-        console.log(patrones[numeros[0]])
-        const ultimo = patrones[numeros[0]][patrones[numeros[0]].length - 1];
-        patrones[numeros[0]] = patrones[numeros[0]].slice(0, -1);
-        //let cancion = numeros[0]
-        patrones[numeros[0]].forEach((numeroAzar: number) => {
-          console.log("Estudiando el número:", numeroAzar  )
-          console.log(`Ubicando en x:${puntoPartida} y:${((juegoKaplay.center().y) / 2 ) + puntoPartidaY}` )
-          setTimeout(() => {
-            switch(numeroAzar){
-              case 0:
-                const semicorchea = juegoKaplay.add([
-                  juegoKaplay.pos(puntoPartida,((juegoKaplay.center().y / 2 )) + puntoPartidaY),
-                  juegoKaplay.sprite("notas"),
-                  juegoKaplay.scale(0.1),
-                  { z: 2 }, // Asegura que el jugador esté en una capa superior,
-                ])
-                semicorchea.frame = 0
-                puntoPartida = puntoPartida + 70
-                juegoKaplay.play("A0", {
-                volume: 1, 
-                speed: 1, 
-                loop: false, 
-              });
-                
-              break;
-              case 1:
-                const semicorchea2 = juegoKaplay.add([
-                  juegoKaplay.pos( puntoPartida ,((juegoKaplay.center().y) / 2 ) + puntoPartidaY),
-                  juegoKaplay.sprite("notas"),
-                  juegoKaplay.scale(0.1),
-                  { z: 2 } // Asegura que el jugador esté en una capa superior
-                ])
-                semicorchea2.frame = 1
-                puntoPartida = puntoPartida + 70
-                juegoKaplay.play("A1", {
-                  volume: 1, 
-                  speed: 1, 
-                  loop: false, 
-                });
-                break;
+// Array para almacenar los sprites de notas creados
+  let spritesNotas: GameObj[] = []; // Asegúrate de usar el tipo correcto para los sprites en Kaboom.js
 
-              case 2:
-                const semicorchea3 = juegoKaplay.add([
-                  juegoKaplay.pos(puntoPartida ,((juegoKaplay.center().y) / 2 ) + puntoPartidaY),
-                  juegoKaplay.sprite("notas"),
-                  juegoKaplay.scale(0.1),
-                  { z: 2 } // Asegura que el jugador esté en una capa superior
-                ])
+  function validarAciertos(){
+    if(aciertos==1){
+              
+      const casa1 = juegoKaplay.add([
+        juegoKaplay.pos(400,-5),
+        juegoKaplay.sprite("casa1"),
+        juegoKaplay.scale(0.8),
+        juegoKaplay.health(3),
+        juegoKaplay.area(),
+        "casa",
+        { z: 1 } // Asegura que el jugador esté en una capa superior
+      ]);
+      console.log("El mensaje es: " + aciertos);
+      
+      patronesdinamicos();
 
-                semicorchea3.frame = 2
-                puntoPartida = puntoPartida + 70
+    }else if(aciertos==2){
+      
+      const casa2 = juegoKaplay.add([
+        juegoKaplay.pos(400,-5),
+        juegoKaplay.sprite("casa2"),
+        juegoKaplay.scale(0.8),
+        juegoKaplay.health(3),
+        juegoKaplay.area(),
+        "casa",
+        { z: 1 } // Asegura que el jugador esté en una capa superior
+      ]);
+      console.log("El mensaje es: " + aciertos);
+      
+      patronesdinamicos();
 
-                juegoKaplay.play("A2", {
-                  volume: 1, 
-                  speed: 1, 
-                  loop: false, 
-                });
-                
-              break;
-            }
-          }, delay); // Retrasar la reproducción según el valor de 'delay'
-          delay += 1000; // Incrementar el retraso para el siguiente sonido (ajusta el valor según sea necesario)
-        });
+    }else if(aciertos==3){
+      const casa3 = juegoKaplay.add([
+        juegoKaplay.pos(400,-5),
+        juegoKaplay.sprite("casa3"),
+        juegoKaplay.scale(0.8),
+        juegoKaplay.health(3),
+        juegoKaplay.area(),
+        "casa",
+        { z: 1 } // Asegura que el jugador esté en una capa superior
+      ]);
+      console.log("El mensaje es: " + aciertos);
+      //patronesdinamicos().clear;
+      
+      
+      patronesdinamicos();
+
+    }
+  };
+
+
+  function limpiarNotas() {
+    
+    spritesNotas = juegoKaplay.get("notas");
+    console.log(spritesNotas);
+    spritesNotas.forEach((spritesNotas:any)=>{
+      spritesNotas.destroy();
+    })
+    puntoPartida = window.innerWidth/3
+    puntoPartidaY= window.innerHeight/2
+  }
+
+  function patronesdinamicos() {
+    // Limpia los sprites de notas anteriores
+    limpiarNotas();
+
+    const patrones = [
+      [0, 1, 2, 0, 1, 2, 0, 1, 2],
+      [2, 2, 1, 1, 0, 0, 2, 2, 1],
+      [0, 0, 0, 1, 1, 1, 2, 2, 2],
+      [1, 2, 0, 1, 2, 0, 1, 2, 0],
+      [2, 1, 0, 2, 1, 0, 2, 1, 0],
+      [0, 0, 1, 1, 0, 0, 1, 1, 0],
+    ];
+
+    let delay = 1000; // Inicializar el retraso
+    const numeros = generarNumerosAzar();
+    console.log(numeros);
+    console.log(patrones[numeros[0]]);
+    const ultimo = patrones[numeros[0]][patrones[numeros[0]].length - 1];
+    patrones[numeros[0]] = patrones[numeros[0]].slice(0, -1);
+
+    // Iterar sobre el patrón seleccionado
+    patrones[numeros[0]].forEach((numeroAzar: number) => {
+      setTimeout(() => {
+        
+
+        switch (numeroAzar) {
+          case 0:
+            nuevoSprite = juegoKaplay.add([
+              juegoKaplay.pos(
+                puntoPartida,
+                juegoKaplay.center().y / 2 + puntoPartidaY
+              ),
+              juegoKaplay.sprite("notas"),
+              juegoKaplay.scale(0.1),
+              { z: 2 },
+              "notas"
+            ]);
+            nuevoSprite.frame = 0;
+            puntoPartida += 70;
+            juegoKaplay.play("A0", { volume: 1, speed: 1, loop: false });
+            break;
+
+          case 1:
+            nuevoSprite = juegoKaplay.add([
+              juegoKaplay.pos(
+                puntoPartida,
+                juegoKaplay.center().y / 2 + puntoPartidaY
+              ),
+              juegoKaplay.sprite("notas"),
+              juegoKaplay.scale(0.1),
+              { z: 2 },
+              "notas"
+            ]);
+            nuevoSprite.frame = 1;
+            puntoPartida += 70;
+            juegoKaplay.play("A1", { volume: 1, speed: 1, loop: false });
+            break;
+
+          case 2:
+            nuevoSprite = juegoKaplay.add([
+              juegoKaplay.pos(
+                puntoPartida,
+                juegoKaplay.center().y / 2 + puntoPartidaY
+              ),
+              juegoKaplay.sprite("notas"),
+              juegoKaplay.scale(0.1),
+              { z: 2 },
+              "notas"
+            ]);
+            nuevoSprite.frame = 2;
+            puntoPartida += 70;
+            juegoKaplay.play("A2", { volume: 1, speed: 1, loop: false });
+            break;
+        }
+
+        // Agrega el sprite al array para rastrear todos los sprites creados
+        if (nuevoSprite) {
+          spritesNotas.push(nuevoSprite);
+        }
+      }, delay);
+
+      delay += 1000; // Incrementar el retraso para el siguiente sprite
+    });
+
+    return ultimo; // Retorna el último valor del patrón
+  }
+
+
+        let ultimo = patronesdinamicos();
         
 
         circle1.onClick( () => {
@@ -365,6 +458,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
             player.play("right");
             tree.play("bye");
             aciertos++;
+            validarAciertos();
             
           }else{
             console.log("Fallaste")
@@ -381,6 +475,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
             player.play("right");
             tree.play("bye");
             aciertos++;
+            validarAciertos();
             //console.log("El mensaje es: " + aciertos);
            
           }else{
@@ -399,6 +494,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
             player.play("right");
             tree.play("bye");
             aciertos++;
+            validarAciertos();
             //console.log("El mensaje es: " + aciertos);
             
           }else{
@@ -406,45 +502,8 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
           }
           })
 
-          juegoKaplay.onUpdate(()=>{
-            if(aciertos==1){
-              const casa1 = juegoKaplay.add([
-                juegoKaplay.pos(400,-5),
-                juegoKaplay.sprite("casa1"),
-                juegoKaplay.scale(0.8),
-                juegoKaplay.health(3),
-                juegoKaplay.area(),
-                "casa",
-                { z: 1 } // Asegura que el jugador esté en una capa superior
-              ]);
-              console.log("El mensaje es: " + aciertos);
-  
-            }else if(aciertos==2){
-              
-              const casa2 = juegoKaplay.add([
-                juegoKaplay.pos(400,-5),
-                juegoKaplay.sprite("casa2"),
-                juegoKaplay.scale(0.8),
-                juegoKaplay.health(3),
-                juegoKaplay.area(),
-                "casa",
-                { z: 1 } // Asegura que el jugador esté en una capa superior
-              ]);
-              console.log("El mensaje es: " + aciertos);
-  
-            }else if(aciertos==3){
-              const casa3 = juegoKaplay.add([
-                juegoKaplay.pos(400,-5),
-                juegoKaplay.sprite("casa3"),
-                juegoKaplay.scale(0.8),
-                juegoKaplay.health(3),
-                juegoKaplay.area(),
-                "casa",
-                { z: 1 } // Asegura que el jugador esté en una capa superior
-              ]);
-              console.log("El mensaje es: " + aciertos);
-  
-            }
+          juegoKaplay.onClick(()=>{
+          
           })
          
 
@@ -455,7 +514,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
         }
           ).catch(
             ((error:any) => {
-            
+              console.log("lerolerolero")
             })
           )   
   
