@@ -146,9 +146,6 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
   
           }
 
-
-          //let tamañoCuadro = window.innerWidth / 20
-          //let cuadroPosicion = zonaColision.x / 32
           let proporcionX = ( window.innerWidth / (32 * TILED_MAP__WIDTH_NUMBER) )
           let proporcionY = (window.innerHeight / (32 * TILED_HEIGTH_NUMBER))
   
@@ -178,15 +175,22 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
   
               
           }
+
+
+
           if(layer.type === "objectgroup" && layer.name === "player"){
   
+            let posicionX: number = (layer.objects[0].x / 32) * ( window.innerWidth / 20);
+            let posicionY: number = (layer.objects[0].y / 32) * ( window.innerHeight / 15)
               // Jugador
               const player = contextoKaplay.add([
-                contextoKaplay.pos((layer.objects[0].x / 32) * ( window.innerWidth / 20),(layer.objects[0].y / 32) * ( window.innerHeight / 15)),
+                contextoKaplay.pos(posicionX+48,posicionY+32),
                 contextoKaplay.sprite("knight"),
                 contextoKaplay.scale(1),
                 contextoKaplay.health(3),
-                contextoKaplay.area(),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), 64, 64)}),
+                contextoKaplay.body(),
+                contextoKaplay.anchor(contextoKaplay.vec2(0.0)),
                 "player",
                 { z: 1 } // Asegura que el jugador esté en una capa superior
               ]);
@@ -199,16 +203,16 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
           }
           if(layer.type === "objectgroup" && layer.name === "enemy"){
   
-            // Jugador
-            // Enemigo
+            let posicionX: number = (layer.objects[0].x / 32) * ( window.innerWidth / 20);
+            let posicionY: number = (layer.objects[0].y / 32) * ( window.innerHeight / 15)
+
             const enemy = contextoKaplay.add([
-              contextoKaplay.pos((layer.objects[0].x / 32) * ( window.innerWidth / 20),(layer.objects[0].y / 32) * ( window.innerHeight / 15)),
+              contextoKaplay.pos(posicionX+48,posicionY + 32),
               contextoKaplay.sprite("enemy"),
               contextoKaplay.scale(0.8),
-              contextoKaplay.area(
-             // contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2( 50,80), 32, 32), // Rectángulo más pequeño
-              ),
+              contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), 64, 64)}), // Rectángulo más pequeño
               contextoKaplay.body(),
+              contextoKaplay.anchor(contextoKaplay.vec2(0,0)),
               "enemy",
               { z: 1 } // Asegura que el jugador esté en una capa superior
             ]);
