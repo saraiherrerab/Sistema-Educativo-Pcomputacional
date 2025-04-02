@@ -1,6 +1,10 @@
 import {GameObj, KAPLAYCtx} from "kaplay";
 import generarEsquemaMapa from "../../MapsGenerator";
 import generarNumerosAzar from "../../utils/generarNumerosAzar";
+import { useEffect, useRef, useState } from "react";
+//import './styles.css';
+
+
 
 const SCREEN_RESOLUTION_X: number = window.innerWidth 
 const SCREEN_RESOLUTION_Y: number = window.innerHeight 
@@ -15,9 +19,9 @@ export let cambioNivel = 0;
 
 
 
-export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
+export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any) {
     // Referencia persistente para almacenar la instancia de Kaplay
-    
+   // setState(false);
     juegoKaplay.loadSprite("casa3", "sprites/buildings/House_Blue.png", {
       sliceX: 1,
       sliceY: 1,
@@ -181,6 +185,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
             "tree",
             { z: 1 } // Asegura que el jugador esté en una capa superior
           ]);
+          
 
          /* const casa = juegoKaplay.add([
             juegoKaplay.pos(400,-5),
@@ -307,8 +312,11 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
         { z: 1 } // Asegura que el jugador esté en una capa superior
       ]);
       console.log("El mensaje es: " + aciertos);
+      //setState(true);
       
-      patronesdinamicos();
+     
+      ultimo = patronesdinamicos();
+     
 
     }else if(aciertos==2){
       
@@ -322,8 +330,10 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
         { z: 1 } // Asegura que el jugador esté en una capa superior
       ]);
       console.log("El mensaje es: " + aciertos);
+     // setState(true);
       
-      patronesdinamicos();
+      
+      ultimo = patronesdinamicos();
 
     }else if(aciertos==3){
       const casa3 = juegoKaplay.add([
@@ -339,7 +349,8 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
       //patronesdinamicos().clear;
       
       
-      patronesdinamicos();
+      
+      ultimo = patronesdinamicos();
 
     }
   };
@@ -361,15 +372,15 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
     limpiarNotas();
 
     const patrones = [
-      [0, 1, 2, 0, 1, 2, 0, 1, 2],
-      [2, 2, 1, 1, 0, 0, 2, 2, 1],
-      [0, 0, 0, 1, 1, 1, 2, 2, 2],
-      [1, 2, 0, 1, 2, 0, 1, 2, 0],
-      [2, 1, 0, 2, 1, 0, 2, 1, 0],
-      [0, 0, 1, 1, 0, 0, 1, 1, 0],
+      [0, 1, 2, 0, 1, 2, 0, 1, 2,],
+      [0, 2, 0, 2, 0, 2, 0, 2, 0,],
+      [0, 0, 0, 1, 1, 1, 2, 2, 2,],
+      [1, 2, 0, 1, 2, 0, 1, 2, 0,],
+      [2, 1, 0, 2, 1, 0, 2, 1, 0,],
+      [0, 0, 1, 1, 0, 0, 1, 1, 0,],
     ];
 
-    let delay = 1000; // Inicializar el retraso
+    let delay = 500; // Inicializar el retraso
     const numeros = generarNumerosAzar();
     console.log(numeros);
     console.log(patrones[numeros[0]]);
@@ -393,9 +404,9 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
               { z: 2 },
               "notas"
             ]);
-            nuevoSprite.frame = 0;
+            nuevoSprite.frame = 1;
             puntoPartida += 70;
-            juegoKaplay.play("A0", { volume: 1, speed: 1, loop: false });
+            juegoKaplay.play("A0", { volume: 1, speed: 1.5, loop: false });
             break;
 
           case 1:
@@ -409,9 +420,9 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
               { z: 2 },
               "notas"
             ]);
-            nuevoSprite.frame = 1;
+            nuevoSprite.frame = 0;
             puntoPartida += 70;
-            juegoKaplay.play("A1", { volume: 1, speed: 1, loop: false });
+            juegoKaplay.play("A1", { volume: 1, speed: 1.5, loop: false });
             break;
 
           case 2:
@@ -427,7 +438,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
             ]);
             nuevoSprite.frame = 2;
             puntoPartida += 70;
-            juegoKaplay.play("A2", { volume: 1, speed: 1, loop: false });
+            juegoKaplay.play("A2", { volume: 1, speed: 1.5, loop: false });
             break;
         }
 
@@ -450,10 +461,10 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
         circle1.onClick( () => {
           juegoKaplay.play("A0", {
             volume: 1, 
-            speed: 1, 
+            speed: 1.5, 
             loop: false, 
           });
-          if(ultimo === 1){
+          if(ultimo == 0){
 
             player.play("right");
             tree.play("bye");
@@ -461,16 +472,16 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
             validarAciertos();
             
           }else{
-            console.log("Fallaste")
+            console.log("Fallaste" +ultimo)
           }
           })
           circle2.onClick( () => {
           juegoKaplay.play("A1", {
             volume: 1, 
-            speed: 1, 
+            speed: 1.5, 
             loop: false, 
           });
-          if(ultimo === 0){
+          if(ultimo == 1){
 
             player.play("right");
             tree.play("bye");
@@ -479,17 +490,17 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
             //console.log("El mensaje es: " + aciertos);
            
           }else{
-            console.log("Fallaste")
+            console.log("Fallaste"+ultimo)
           }
           })
 
           circle3.onClick( () => {
           juegoKaplay.play("A2", {
             volume: 1, 
-            speed: 1, 
+            speed: 1.5, 
             loop: false, 
           });
-          if(ultimo === 2){
+          if(ultimo == 2){
 
             player.play("right");
             tree.play("bye");
@@ -498,20 +509,21 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
             //console.log("El mensaje es: " + aciertos);
             
           }else{
-            console.log("Fallaste")
+            console.log("Fallaste"+ultimo)
           }
           })
 
-          juegoKaplay.onClick(()=>{
-          
-          })
          
 
           player.onDeath(() => {
             juegoKaplay.destroy(player);
           });
+
+          
         
         }
+        
+        
           ).catch(
             ((error:any) => {
               console.log("lerolerolero")
@@ -520,8 +532,12 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
   
   
         }) //Fin - Onload()
+       
+  
+}
   
     //return <canvas id="game" style={{ width: "100vw", height: "100vh" }} />;;
-  }
+    
+  
 
 

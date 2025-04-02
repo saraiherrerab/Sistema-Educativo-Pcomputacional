@@ -3,13 +3,51 @@
  import kaplay, { Asset, GameObj, KAPLAYCtx, LevelOpt, Rect, SpriteData, Vec2 } from "kaplay";
  import { Nivel1 } from "./1stLevel";
  import { Panel } from "./PanelJuegos";
+ import './styles.css';
+
+ //let respuesta=1;
  
+ function Cartel(props:any) {
+  // Declaración del estado con useState dentro del cuerpo del componente
  
+  console.log(props);
+  // Función para manejar el clic del botón
+ 
+  return (
+    <>
+      {props.respuesta ? (
+        <>
+          <div className="button-container">
+            <button onClick={props.amoALuis}>Mensaje condicional</button>
+          </div>
+          {props.cambiarMostrar && (
+            <div className="message-container">
+              <p>Me duele la tripa</p>
+            </div>
+          )}
+        </>
+      ) : (
+        <>
+          {props.cambiarMostrar && (
+            <div className="message-container">
+              <p>No Me duele la tripa</p>
+            </div>
+          )}
+        </>
+      )}
+    </>
+  );
+
+}
  const SCREEN_RESOLUTION_X: number = window.innerWidth 
  const SCREEN_RESOLUTION_Y: number = window.innerHeight 
  
  function Page() {
-   
+    const [cambiarMostrar, setState] = useState(true);
+     // Función para cambiar el estado
+    const amoALuis = () => {
+      setState(!cambiarMostrar); // Cambia el estado entre true y false
+    };
    const juegoKaplayRef = useRef<any>(null);
  
    useEffect(() => {
@@ -55,39 +93,15 @@
      
    }, []);
  
-   const amoALuis = () => {
-     setState(false);
-     
-   };
+
  
-   const [cambiarMostrar, setState] = useState(true);
- 
-   return (<>
-     <canvas id="game" style={{ width: "100vw", height: "100vh", position:"relative" }} />
-     <div style={{
-           position: "absolute",
-           top: "20px", // Ajusta la posición según sea necesario
-           left: "50%",
-           transform: "translateX(-50%)", // Centrar horizontalmente
-           color: "white",
-           backgroundColor: "rgba(0, 0, 0, 0.5)", // Fondo semitransparente
-           padding: "10px",
-           borderRadius: "5px",
-           fontSize: "20px",
-     }}><button onClick={amoALuis}> Mensaje condicional</button>  </div>
-     {cambiarMostrar?<div style={{
-           position: "absolute",
-           top: "40px", // Ajusta la posición según sea necesario
-           left: "50%",
-           transform: "translateX(-50%)", // Centrar horizontalmente
-           color: "white",
-           backgroundColor: "rgba(0, 0, 0, 0.5)", // Fondo semitransparente
-           padding: "10px",
-           borderRadius: "5px",
-           fontSize: "20px",
-     }}><p>Me duele la tripa</p></div>:null}
+   return (<> 
      
+        <canvas id="game" style={{ width: "100vw", height: "100vh", position:"relative" }} />
+        
+      <Cartel respuesta={cambiarMostrar} cambiarRespuesta={()=>amoALuis()}/>
       </>)
+     
  
  }
  

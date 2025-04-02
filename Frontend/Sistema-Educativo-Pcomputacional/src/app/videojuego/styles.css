@@ -1,0 +1,31 @@
+
+  
+  .button-container {
+    position: absolute;
+    top: 20px; /* Ajusta la posición según sea necesario */
+    left: 50%;
+    transform: translateX(-50%); /* Centrar horizontalmente */
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 20px;
+  }
+  
+  .message-container {
+    position: absolute;
+    top: 40px; /* Ajusta la posición según sea necesario */
+    left: 50%;
+    transform: translateX(-50%); /* Centrar horizontalmente */
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 20px;
+  }
+ 
+  
+
+  .Bcontainer{
+    position:relative;
+  }
