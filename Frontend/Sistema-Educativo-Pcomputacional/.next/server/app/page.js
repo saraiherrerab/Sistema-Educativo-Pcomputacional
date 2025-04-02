@@ -33,6 +33,16 @@ eval("Promise.resolve(/*! import() eager */).then(__webpack_require__.t.bind(__w
 
 /***/ }),
 
+/***/ "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?modules=%7B%22request%22%3A%22C%3A%5C%5CUsers%5C%5CWINDOWS%2011%5C%5CDocuments%5C%5CSistema-Educativo-Pcomputacional%5C%5CFrontend%5C%5CSistema-Educativo-Pcomputacional%5C%5Csrc%5C%5Capp%5C%5Cpage.tsx%22%2C%22ids%22%3A%5B%5D%7D&server=true!":
+/*!******************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?modules=%7B%22request%22%3A%22C%3A%5C%5CUsers%5C%5CWINDOWS%2011%5C%5CDocuments%5C%5CSistema-Educativo-Pcomputacional%5C%5CFrontend%5C%5CSistema-Educativo-Pcomputacional%5C%5Csrc%5C%5Capp%5C%5Cpage.tsx%22%2C%22ids%22%3A%5B%5D%7D&server=true! ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+eval("Promise.resolve(/*! import() eager */).then(__webpack_require__.bind(__webpack_require__, /*! ./src/app/page.tsx */ \"(rsc)/./src/app/page.tsx\"));\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHJzYykvLi9ub2RlX21vZHVsZXMvbmV4dC9kaXN0L2J1aWxkL3dlYnBhY2svbG9hZGVycy9uZXh0LWZsaWdodC1jbGllbnQtZW50cnktbG9hZGVyLmpzP21vZHVsZXM9JTdCJTIycmVxdWVzdCUyMiUzQSUyMkMlM0ElNUMlNUNVc2VycyU1QyU1Q1dJTkRPV1MlMjAxMSU1QyU1Q0RvY3VtZW50cyU1QyU1Q1Npc3RlbWEtRWR1Y2F0aXZvLVBjb21wdXRhY2lvbmFsJTVDJTVDRnJvbnRlbmQlNUMlNUNTaXN0ZW1hLUVkdWNhdGl2by1QY29tcHV0YWNpb25hbCU1QyU1Q3NyYyU1QyU1Q2FwcCU1QyU1Q3BhZ2UudHN4JTIyJTJDJTIyaWRzJTIyJTNBJTVCJTVEJTdEJnNlcnZlcj10cnVlISIsIm1hcHBpbmdzIjoiQUFBQSxnSkFBdUsiLCJzb3VyY2VzIjpbIiJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQoLyogd2VicGFja01vZGU6IFwiZWFnZXJcIiAqLyBcIkM6XFxcXFVzZXJzXFxcXFdJTkRPV1MgMTFcXFxcRG9jdW1lbnRzXFxcXFNpc3RlbWEtRWR1Y2F0aXZvLVBjb21wdXRhY2lvbmFsXFxcXEZyb250ZW5kXFxcXFNpc3RlbWEtRWR1Y2F0aXZvLVBjb21wdXRhY2lvbmFsXFxcXHNyY1xcXFxhcHBcXFxccGFnZS50c3hcIik7XG4iXSwibmFtZXMiOltdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?modules=%7B%22request%22%3A%22C%3A%5C%5CUsers%5C%5CWINDOWS%2011%5C%5CDocuments%5C%5CSistema-Educativo-Pcomputacional%5C%5CFrontend%5C%5CSistema-Educativo-Pcomputacional%5C%5Csrc%5C%5Capp%5C%5Cpage.tsx%22%2C%22ids%22%3A%5B%5D%7D&server=true!\n");
+
+/***/ }),
+
 /***/ "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?server=true!":
 /*!******************************************************************************************************!*\
   !*** ./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?server=true! ***!
@@ -61,7 +71,19 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ Page)\n/* harmony export */ });\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ \"(rsc)/./node_modules/next/dist/server/route-modules/app-page/vendored/rsc/react-jsx-dev-runtime.js\");\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__);\n\nfunction Page() {\n    return /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"h1\", {\n        children: \"Hello, Next.js!\"\n    }, void 0, false, {\n        fileName: \"C:\\\\Users\\\\WINDOWS 11\\\\Documents\\\\Sistema-Educativo-Pcomputacional\\\\Frontend\\\\Sistema-Educativo-Pcomputacional\\\\src\\\\app\\\\page.tsx\",\n        lineNumber: 2,\n        columnNumber: 12\n    }, this);\n}\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHJzYykvLi9zcmMvYXBwL3BhZ2UudHN4IiwibWFwcGluZ3MiOiI7Ozs7Ozs7QUFBZSxTQUFTQTtJQUNwQixxQkFBTyw4REFBQ0M7a0JBQUc7Ozs7OztBQUNiIiwic291cmNlcyI6WyJDOlxcVXNlcnNcXFdJTkRPV1MgMTFcXERvY3VtZW50c1xcU2lzdGVtYS1FZHVjYXRpdm8tUGNvbXB1dGFjaW9uYWxcXEZyb250ZW5kXFxTaXN0ZW1hLUVkdWNhdGl2by1QY29tcHV0YWNpb25hbFxcc3JjXFxhcHBcXHBhZ2UudHN4Il0sInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCBkZWZhdWx0IGZ1bmN0aW9uIFBhZ2UoKSB7XHJcbiAgICByZXR1cm4gPGgxPkhlbGxvLCBOZXh0LmpzITwvaDE+XHJcbiAgfSJdLCJuYW1lcyI6WyJQYWdlIiwiaDEiXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///(rsc)/./src/app/page.tsx\n");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react_server_dom_webpack_server_edge__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-server-dom-webpack/server.edge */ "(rsc)/./node_modules/next/dist/server/route-modules/app-page/vendored/rsc/react-server-dom-webpack-server-edge.js");
+/* harmony import */ var react_server_dom_webpack_server_edge__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_server_dom_webpack_server_edge__WEBPACK_IMPORTED_MODULE_0__);
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_server_dom_webpack_server_edge__WEBPACK_IMPORTED_MODULE_0__.registerClientReference)(
+function() { throw new Error("Attempted to call the default export of \"C:\\\\Users\\\\WINDOWS 11\\\\Documents\\\\Sistema-Educativo-Pcomputacional\\\\Frontend\\\\Sistema-Educativo-Pcomputacional\\\\src\\\\app\\\\page.tsx\" from the server, but it's on the client. It's not possible to invoke a client function from the server, it can only be rendered as a Component or passed to props of a Client Component."); },
+"C:\\Users\\WINDOWS 11\\Documents\\Sistema-Educativo-Pcomputacional\\Frontend\\Sistema-Educativo-Pcomputacional\\src\\app\\page.tsx",
+"default",
+));
+
 
 /***/ }),
 
@@ -75,6 +97,16 @@ eval("Promise.resolve(/*! import() eager */).then(__webpack_require__.t.bind(__w
 
 /***/ }),
 
+/***/ "(ssr)/./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?modules=%7B%22request%22%3A%22C%3A%5C%5CUsers%5C%5CWINDOWS%2011%5C%5CDocuments%5C%5CSistema-Educativo-Pcomputacional%5C%5CFrontend%5C%5CSistema-Educativo-Pcomputacional%5C%5Csrc%5C%5Capp%5C%5Cpage.tsx%22%2C%22ids%22%3A%5B%5D%7D&server=true!":
+/*!******************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?modules=%7B%22request%22%3A%22C%3A%5C%5CUsers%5C%5CWINDOWS%2011%5C%5CDocuments%5C%5CSistema-Educativo-Pcomputacional%5C%5CFrontend%5C%5CSistema-Educativo-Pcomputacional%5C%5Csrc%5C%5Capp%5C%5Cpage.tsx%22%2C%22ids%22%3A%5B%5D%7D&server=true! ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+eval("Promise.resolve(/*! import() eager */).then(__webpack_require__.bind(__webpack_require__, /*! ./src/app/page.tsx */ \"(ssr)/./src/app/page.tsx\"));\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHNzcikvLi9ub2RlX21vZHVsZXMvbmV4dC9kaXN0L2J1aWxkL3dlYnBhY2svbG9hZGVycy9uZXh0LWZsaWdodC1jbGllbnQtZW50cnktbG9hZGVyLmpzP21vZHVsZXM9JTdCJTIycmVxdWVzdCUyMiUzQSUyMkMlM0ElNUMlNUNVc2VycyU1QyU1Q1dJTkRPV1MlMjAxMSU1QyU1Q0RvY3VtZW50cyU1QyU1Q1Npc3RlbWEtRWR1Y2F0aXZvLVBjb21wdXRhY2lvbmFsJTVDJTVDRnJvbnRlbmQlNUMlNUNTaXN0ZW1hLUVkdWNhdGl2by1QY29tcHV0YWNpb25hbCU1QyU1Q3NyYyU1QyU1Q2FwcCU1QyU1Q3BhZ2UudHN4JTIyJTJDJTIyaWRzJTIyJTNBJTVCJTVEJTdEJnNlcnZlcj10cnVlISIsIm1hcHBpbmdzIjoiQUFBQSxnSkFBdUsiLCJzb3VyY2VzIjpbIiJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQoLyogd2VicGFja01vZGU6IFwiZWFnZXJcIiAqLyBcIkM6XFxcXFVzZXJzXFxcXFdJTkRPV1MgMTFcXFxcRG9jdW1lbnRzXFxcXFNpc3RlbWEtRWR1Y2F0aXZvLVBjb21wdXRhY2lvbmFsXFxcXEZyb250ZW5kXFxcXFNpc3RlbWEtRWR1Y2F0aXZvLVBjb21wdXRhY2lvbmFsXFxcXHNyY1xcXFxhcHBcXFxccGFnZS50c3hcIik7XG4iXSwibmFtZXMiOltdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///(ssr)/./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?modules=%7B%22request%22%3A%22C%3A%5C%5CUsers%5C%5CWINDOWS%2011%5C%5CDocuments%5C%5CSistema-Educativo-Pcomputacional%5C%5CFrontend%5C%5CSistema-Educativo-Pcomputacional%5C%5Csrc%5C%5Capp%5C%5Cpage.tsx%22%2C%22ids%22%3A%5B%5D%7D&server=true!\n");
+
+/***/ }),
+
 /***/ "(ssr)/./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?server=true!":
 /*!******************************************************************************************************!*\
   !*** ./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?server=true! ***!
@@ -82,6 +114,17 @@ eval("Promise.resolve(/*! import() eager */).then(__webpack_require__.t.bind(__w
 /***/ (() => {
 
 
+
+/***/ }),
+
+/***/ "(ssr)/./src/app/page.tsx":
+/*!**************************!*\
+  !*** ./src/app/page.tsx ***!
+  \**************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ Page)\n/* harmony export */ });\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ \"(ssr)/./node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js\");\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var next_navigation__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! next/navigation */ \"(ssr)/./node_modules/next/dist/api/navigation.js\");\n/* __next_internal_client_entry_do_not_use__ default auto */ \n\nfunction Page() {\n    const Router = (0,next_navigation__WEBPACK_IMPORTED_MODULE_1__.useRouter)();\n    return /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {\n        children: [\n            /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"h1\", {\n                children: \"Hello, Next.js!\"\n            }, void 0, false, {\n                fileName: \"C:\\\\Users\\\\WINDOWS 11\\\\Documents\\\\Sistema-Educativo-Pcomputacional\\\\Frontend\\\\Sistema-Educativo-Pcomputacional\\\\src\\\\app\\\\page.tsx\",\n                lineNumber: 7,\n                columnNumber: 7\n            }, this),\n            /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"button\", {\n                onClick: ()=>Router.push(\"/videojuego\"),\n                children: \" PANEL \"\n            }, void 0, false, {\n                fileName: \"C:\\\\Users\\\\WINDOWS 11\\\\Documents\\\\Sistema-Educativo-Pcomputacional\\\\Frontend\\\\Sistema-Educativo-Pcomputacional\\\\src\\\\app\\\\page.tsx\",\n                lineNumber: 8,\n                columnNumber: 7\n            }, this)\n        ]\n    }, void 0, true);\n}\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHNzcikvLi9zcmMvYXBwL3BhZ2UudHN4IiwibWFwcGluZ3MiOiI7Ozs7Ozs7O0FBQzRDO0FBRTdCLFNBQVNDO0lBQ3RCLE1BQU1DLFNBQVNGLDBEQUFTQTtJQUN0QixxQkFBTzs7MEJBQ0wsOERBQUNHOzBCQUFHOzs7Ozs7MEJBQ0osOERBQUNDO2dCQUFPQyxTQUFTLElBQUlILE9BQU9JLElBQUksQ0FBQzswQkFBZ0I7Ozs7Ozs7O0FBR3JEIiwic291cmNlcyI6WyJDOlxcVXNlcnNcXFdJTkRPV1MgMTFcXERvY3VtZW50c1xcU2lzdGVtYS1FZHVjYXRpdm8tUGNvbXB1dGFjaW9uYWxcXEZyb250ZW5kXFxTaXN0ZW1hLUVkdWNhdGl2by1QY29tcHV0YWNpb25hbFxcc3JjXFxhcHBcXHBhZ2UudHN4Il0sInNvdXJjZXNDb250ZW50IjpbIid1c2UgY2xpZW50J1xyXG5pbXBvcnQgeyB1c2VSb3V0ZXIgfSBmcm9tIFwibmV4dC9uYXZpZ2F0aW9uXCI7XHJcblxyXG5leHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBQYWdlKCkge1xyXG4gIGNvbnN0IFJvdXRlciA9IHVzZVJvdXRlcigpO1xyXG4gICAgcmV0dXJuIDw+XHJcbiAgICAgIDxoMT5IZWxsbywgTmV4dC5qcyE8L2gxPlxyXG4gICAgICA8YnV0dG9uIG9uQ2xpY2s9eygpPT5Sb3V0ZXIucHVzaChcIi92aWRlb2p1ZWdvXCIpfT4gUEFORUwgPC9idXR0b24+XHJcbiAgICAgIFxyXG4gICAgPC8+XHJcbiAgfSJdLCJuYW1lcyI6WyJ1c2VSb3V0ZXIiLCJQYWdlIiwiUm91dGVyIiwiaDEiLCJidXR0b24iLCJvbkNsaWNrIiwicHVzaCJdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///(ssr)/./src/app/page.tsx\n");
 
 /***/ }),
 
