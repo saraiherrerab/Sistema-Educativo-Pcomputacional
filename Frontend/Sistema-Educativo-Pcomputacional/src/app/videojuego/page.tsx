@@ -18,9 +18,9 @@
       {props.respuesta ? (
         <>
           <div className="button-container">
-            <button onClick={props.amoALuis}>Mensaje condicional</button>
+            <button onClick={() => props.cambiarRespuesta()}>Mensaje condicional</button>
           </div>
-          {props.cambiarMostrar && (
+          {props.respuesta && (
             <div className="message-container">
               <p>Me duele la tripa</p>
             </div>
@@ -28,7 +28,10 @@
         </>
       ) : (
         <>
-          {props.cambiarMostrar && (
+          <div className="button-container">
+            <button onClick={() => props.cambiarRespuesta()}>Mensaje condicional</button>
+          </div>
+          {!props.respuesta && (
             <div className="message-container">
               <p>No Me duele la tripa</p>
             </div>
