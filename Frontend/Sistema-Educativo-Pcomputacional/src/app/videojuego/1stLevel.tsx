@@ -109,11 +109,6 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any) {
         
         
   
-  
-    // Cargar sprites adicionales
-    ["up", "down", "left", "right"].forEach((dir) => {
-      juegoKaplay.loadSprite(dir, `sprites/${dir}-arrow.png`);
-    });
 
     juegoKaplay.loadSprite("redbox", "red-border-box.png");
         
@@ -198,71 +193,15 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any) {
           ]);*/
 
 
-          // Flechas
-          const arrows = {
-            up: juegoKaplay.add([
-              juegoKaplay.pos(0, (juegoKaplay.center().y)/8),
-              juegoKaplay.sprite("up"),
-              juegoKaplay.scale(2),
-              juegoKaplay.area(),
-              { z: 1 } // Asegura que el jugador esté en una capa superior
-            ]),
-            down: juegoKaplay.add([
-              juegoKaplay.pos(0 ,(juegoKaplay.center().y)/4),
-              juegoKaplay.sprite("down"),
-              juegoKaplay.scale(2),
-              juegoKaplay.area(),
-              { z: 1 } // Asegura que el jugador esté en una capa superior
-            ]),
-            left: juegoKaplay.add([
-              juegoKaplay.pos(0,(juegoKaplay.center().y)/2),
-              juegoKaplay.sprite("left"),
-              juegoKaplay.scale(2),
-              juegoKaplay.area(),
-              { z: 1 } // Asegura que el jugador esté en una capa superior
-            ]),
-            right: juegoKaplay.add([
-              juegoKaplay.pos(0,(juegoKaplay.center().y)),
-              juegoKaplay.sprite("right"),
-              juegoKaplay.scale(2),
-              juegoKaplay.area(),
-              { z: 1 } // Asegura que el jugador esté en una capa superior
-            ]),
-          };
+
+
+
 
           const velocidad = 440;
 
-          // Movimiento con teclado
-          juegoKaplay.onKeyDown("w", () => {
-            player.move(0, -velocidad);
-          });
-          juegoKaplay.onKeyDown("s", () => {
-            player.move(0, velocidad);
-          });
-          juegoKaplay.onKeyDown("a", () => {
-            player.move(-velocidad, 0);
-          });
-          juegoKaplay.onKeyDown("d", () => {
-            player.move(velocidad, 0);
-          });
 
-          // Movimiento con clic
-          arrows.up.onClick(() => {
-            player.move(0, -velocidad);
-            player.play("up");
-          });
-          arrows.down.onClick(() => {
-            player.move(0, velocidad);
-            player.play("down");
-          });
-          arrows.left.onClick(() => {
-            player.move(-velocidad, 0);
-            player.play("left");
-          });
-          arrows.right.onClick(() => {
-            player.move(velocidad, 0);
-            player.play("right");
-          });
+
+
 
           const circle1 = juegoKaplay.add([
           juegoKaplay.pos(juegoKaplay.center().x - juegoKaplay.center().x / 4, juegoKaplay.center().y + juegoKaplay.center().y / 2 + juegoKaplay.center().y / 6),
@@ -313,6 +252,9 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any) {
       ]);
       console.log("El mensaje es: " + aciertos);
       setState(true);
+      setTimeout(() => {
+        setState(false);
+      }, 2000); 
       
      
       ultimo = patronesdinamicos();
@@ -331,7 +273,9 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any) {
       ]);
       console.log("El mensaje es: " + aciertos);
       setState(true);
-      
+      setTimeout(() => {
+        setState(false);
+      }, 2000); 
       
       ultimo = patronesdinamicos();
 
@@ -347,9 +291,12 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any) {
       ]);
       console.log("El mensaje es: " + aciertos);
       //patronesdinamicos().clear;
+      setState(true);
+      setTimeout(() => {
+        setState(false);
+      }, 2000); 
       
-      
-      
+
       ultimo = patronesdinamicos();
 
     }

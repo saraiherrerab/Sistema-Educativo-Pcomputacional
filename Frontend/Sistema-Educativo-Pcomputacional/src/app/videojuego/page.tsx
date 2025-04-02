@@ -17,12 +17,11 @@
     <>
       {props.respuesta ? (
         <>
-          <div className="button-container">
-            <button onClick={() => props.cambiarRespuesta()}>Mensaje condicional</button>
-          </div>
           {props.respuesta && (
             <div className="message-container">
-              <p>Me duele la tripa</p>
+              <p>  Correcto,</p>
+              <p>  Sigamos así...</p>
+              
             </div>
           )}
         </>

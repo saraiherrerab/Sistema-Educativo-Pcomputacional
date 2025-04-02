@@ -31,10 +31,10 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any) {
       sliceX: 6,
       sliceY: 8,
       anims: {
-        right: { from: 6, to: 11, loop: false },
-        up: { from: 36, to: 38, loop: false },
-        down: { from: 24, to: 26, loop: false },
-        left: { from: 5, to: 1, loop: false },
+        right: { from: 6, to: 11, loop: true },
+        up: { from: 36, to: 38, loop: true },
+        down: { from: 24, to: 26, loop: true },
+        left: { from: 5, to: 1, loop: true },
         quiet: { from: 31, to: 31, loop: false },
       },
     });
@@ -180,72 +180,35 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any) {
                     // We pass the component id for remove it.
                   });
       
-                    // Flechas
-                    const arrows = {
-                      up: juegoKaplay.add([
-                        juegoKaplay.pos(0, (juegoKaplay.center().y)/8),
-                        juegoKaplay.sprite("up"),
-                        juegoKaplay.scale(2),
-                        juegoKaplay.area(),
-                        { z: 1 } // Asegura que el jugador esté en una capa superior
-                      ]),
-                      down: juegoKaplay.add([
-                        juegoKaplay.pos(0 ,(juegoKaplay.center().y)/4),
-                        juegoKaplay.sprite("down"),
-                        juegoKaplay.scale(2),
-                        juegoKaplay.area(),
-                        { z: 1 } // Asegura que el jugador esté en una capa superior
-                      ]),
-                      left: juegoKaplay.add([
-                        juegoKaplay.pos(0,(juegoKaplay.center().y)/2),
-                        juegoKaplay.sprite("left"),
-                        juegoKaplay.scale(2),
-                        juegoKaplay.area(),
-                        { z: 1 } // Asegura que el jugador esté en una capa superior
-                      ]),
-                      right: juegoKaplay.add([
-                        juegoKaplay.pos(0,(juegoKaplay.center().y)),
-                        juegoKaplay.sprite("right"),
-                        juegoKaplay.scale(2),
-                        juegoKaplay.area(),
-                        { z: 1 } // Asegura que el jugador esté en una capa superior
-                      ]),
-                    };
+                   
+   
       
-                    const velocidad = 440;
+                    const velocidad = 100;
       
                     // Movimiento con teclado
                     juegoKaplay.onKeyDown("w", () => {
+                      player.play("up");
                       player.move(0, -velocidad);
+                      
                     });
                     juegoKaplay.onKeyDown("s", () => {
+                      player.play("down");
                       player.move(0, velocidad);
+                      
                     });
                     juegoKaplay.onKeyDown("a", () => {
+                      player.play("left");
                       player.move(-velocidad, 0);
+                      
                     });
                     juegoKaplay.onKeyDown("d", () => {
+                      player.play("right");
                       player.move(velocidad, 0);
+                     
                     });
       
-                    // Movimiento con clic
-                    arrows.up.onClick(() => {
-                      player.move(0, -velocidad);
-                      player.play("up");
-                    });
-                    arrows.down.onClick(() => {
-                      player.move(0, velocidad);
-                      player.play("down");
-                    });
-                    arrows.left.onClick(() => {
-                      player.move(-velocidad, 0);
-                      player.play("left");
-                    });
-                    arrows.right.onClick(() => {
-                      player.move(velocidad, 0);
-                      player.play("right");
-                    });
-
+                  
+                    
 
                   }
                 ).catch(
