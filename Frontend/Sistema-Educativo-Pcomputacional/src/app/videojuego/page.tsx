@@ -26,18 +26,7 @@
             </div>
           )}
         </>
-      ) : (
-        <>
-          <div className="button-container">
-            <button onClick={() => props.cambiarRespuesta()}>Mensaje condicional</button>
-          </div>
-          {!props.respuesta && (
-            <div className="message-container">
-              <p>No Me duele la tripa</p>
-            </div>
-          )}
-        </>
-      )}
+      ) : null}
     </>
   );
 
@@ -46,7 +35,7 @@
  const SCREEN_RESOLUTION_Y: number = window.innerHeight 
  
  function Page() {
-    const [cambiarMostrar, setState] = useState(true);
+    const [cambiarMostrar, setState] = useState(false);
      // Función para cambiar el estado
     const amoALuis = () => {
       setState(!cambiarMostrar); // Cambia el estado entre true y false
@@ -82,7 +71,8 @@
        juegoKaplay.setBackground(71,171,169)
        juegoKaplay.loadRoot("./");
       // Nivel1(juegoKaplay);
-      Panel(juegoKaplay);
+      Panel(juegoKaplay, setState);
+
          
        }
    

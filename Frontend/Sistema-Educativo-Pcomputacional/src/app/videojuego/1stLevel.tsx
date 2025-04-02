@@ -312,7 +312,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any) {
         { z: 1 } // Asegura que el jugador esté en una capa superior
       ]);
       console.log("El mensaje es: " + aciertos);
-      //setState(true);
+      setState(true);
       
      
       ultimo = patronesdinamicos();
@@ -330,7 +330,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any) {
         { z: 1 } // Asegura que el jugador esté en una capa superior
       ]);
       console.log("El mensaje es: " + aciertos);
-     // setState(true);
+      setState(true);
       
       
       ultimo = patronesdinamicos();

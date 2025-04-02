@@ -12,7 +12,7 @@ const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
 const TILED_HEIGHT: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGHT_NUMBER
 
 
-export function Panel(juegoKaplay:KAPLAYCtx<{},never>) {
+export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any) {
     // Referencia persistente para almacenar la instancia de Kaplay
      
     juegoKaplay.loadSprite("robot", "sprites/robotin.png", {
@@ -168,7 +168,7 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>) {
                     juegoKaplay.destroy(torre);
                     juegoKaplay.destroy(castillo);
                     juegoKaplay.destroy(player);
-                    Nivel1(juegoKaplay);
+                    Nivel1(juegoKaplay, setState);
                     // We pass the component id for remove it.
                   });
       
