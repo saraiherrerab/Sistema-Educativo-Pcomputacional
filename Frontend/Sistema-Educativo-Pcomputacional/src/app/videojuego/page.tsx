@@ -4,8 +4,13 @@
  import { Nivel1 } from "./1stLevel";
  import { Panel } from "./PanelJuegos";
  import './styles.css';
+import { useRouter } from "next/navigation";
+
+
 
  //let respuesta=1;
+
+
  
  function Cartel(props:any) {
   // Declaración del estado con useState dentro del cuerpo del componente
@@ -15,13 +20,12 @@
  
   return (
     <>
+
       {props.respuesta ? (
         <>
           {props.respuesta && (
             <div className="message-container">
-              <p>  Correcto,</p>
-              <p>  Sigamos así...</p>
-              
+              <p className="elmensaje">  {props.mensaje}</p>
             </div>
           )}
         </>
@@ -35,6 +39,8 @@
  
  function Page() {
     const [cambiarMostrar, setState] = useState(false);
+    const [ganar, cambiarGanar] = useState(true);
+    const Router= useRouter();
      // Función para cambiar el estado
     const amoALuis = () => {
       setState(!cambiarMostrar); // Cambia el estado entre true y false
@@ -70,7 +76,7 @@
        juegoKaplay.setBackground(71,171,169)
        juegoKaplay.loadRoot("./");
       // Nivel1(juegoKaplay);
-      Panel(juegoKaplay, setState);
+      Panel(juegoKaplay, setState, cambiarGanar, Router);
 
          
        }
@@ -91,7 +97,12 @@
      
         <canvas id="game" style={{ width: "100vw", height: "100vh", position:"relative" }} />
         
-      <Cartel respuesta={cambiarMostrar} cambiarRespuesta={()=>amoALuis()}/>
+        <Cartel 
+            respuesta={cambiarMostrar} 
+            cambiarRespuesta={() => amoALuis()} 
+            mensaje={ganar ? "Correcto, sigue así" : "Oh no, intenta de nuevo"} 
+            cambiarGanar={() => cambiarGanar(true)} 
+        />
       </>)
      
  

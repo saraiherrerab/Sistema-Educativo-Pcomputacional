@@ -1,0 +1,28 @@
+.input-container {
+    display: flex;       /* Activa Flexbox */
+    flex-direction: column; /* Cambia la dirección a columna */
+    gap: 5px;           /* Espaciado entre los inputs */
+    width: 100%;         /* Opcional: ajusta el tamaño */
+    align-items: center;  /* Alinea los elementos al inicio */
+  }
+  
+.form-container{
+    display: flex;      
+    flex-direction: column; 
+    gap: 10px;           
+    width: 100%;         
+    align-items: center;  
+}
+
+.login-container {
+  display: flex;
+  flex-direction: row; /* Los elementos estarán en fila */
+  align-items: center; /* Centra los elementos verticalmente */
+  height: 100vh; /* Asegúrate de que el contenedor tenga altura para ver el centrado */
+  width:100vw;
+}
+
+
+div{
+  margin:0px;
+}

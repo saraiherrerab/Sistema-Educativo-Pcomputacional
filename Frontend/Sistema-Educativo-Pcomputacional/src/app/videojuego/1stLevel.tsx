@@ -19,9 +19,10 @@ export let cambioNivel = 0;
 
 
 
-export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any) {
+export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any, Router:any) {
     // Referencia persistente para almacenar la instancia de Kaplay
    // setState(false);
+   
     juegoKaplay.loadSprite("casa3", "sprites/buildings/House_Blue.png", {
       sliceX: 1,
       sliceY: 1,
@@ -251,6 +252,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any) {
         { z: 1 } // Asegura que el jugador esté en una capa superior
       ]);
       console.log("El mensaje es: " + aciertos);
+      cambiarGanar(true);
       setState(true);
       setTimeout(() => {
         setState(false);
@@ -273,6 +275,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any) {
       ]);
       console.log("El mensaje es: " + aciertos);
       setState(true);
+      cambiarGanar(true);
       setTimeout(() => {
         setState(false);
       }, 2000); 
@@ -292,12 +295,21 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any) {
       console.log("El mensaje es: " + aciertos);
       //patronesdinamicos().clear;
       setState(true);
+      cambiarGanar(true);
+      window.location.href=window.location.href;
       setTimeout(() => {
         setState(false);
       }, 2000); 
+     //setTimeout(()=>{
+        
+     // },200);
+      
+      
       
 
-      ultimo = patronesdinamicos();
+      
+
+      
 
     }
   };
@@ -420,6 +432,11 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any) {
             
           }else{
             console.log("Fallaste" +ultimo)
+            setState(true);
+            cambiarGanar(false);
+            setTimeout(() => {
+              setState(false);
+            }, 2000); 
           }
           })
           circle2.onClick( () => {
@@ -438,6 +455,11 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any) {
            
           }else{
             console.log("Fallaste"+ultimo)
+            setState(true);
+            cambiarGanar(false);
+            setTimeout(() => {
+              setState(false);
+            }, 2000); 
           }
           })
 
@@ -456,7 +478,12 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any) {
             //console.log("El mensaje es: " + aciertos);
             
           }else{
-            console.log("Fallaste"+ultimo)
+            console.log("Fallaste" +ultimo)
+            setState(true);
+            cambiarGanar(false);
+            setTimeout(() => {
+              setState(false);
+            }, 2000); 
           }
           })
 

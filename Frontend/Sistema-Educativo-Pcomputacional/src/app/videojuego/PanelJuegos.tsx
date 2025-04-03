@@ -12,7 +12,7 @@ const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
 const TILED_HEIGHT: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGHT_NUMBER
 
 
-export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any) {
+export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any, Router:any) {
     // Referencia persistente para almacenar la instancia de Kaplay
      
     juegoKaplay.loadSprite("robot", "sprites/robotin.png", {
@@ -31,11 +31,11 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any) {
       sliceX: 6,
       sliceY: 8,
       anims: {
-        right: { from: 6, to: 11, loop: true },
+        right: { from: 6, to: 11, loop: true},
         up: { from: 36, to: 38, loop: true },
         down: { from: 24, to: 26, loop: true },
         left: { from: 5, to: 1, loop: true },
-        quiet: { from: 31, to: 31, loop: false },
+        quiet: { from: 31, to: 31, loop: true },
       },
     });
 
@@ -168,7 +168,7 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any) {
                     juegoKaplay.destroy(torre);
                     juegoKaplay.destroy(castillo);
                     juegoKaplay.destroy(player);
-                    Nivel1(juegoKaplay, setState);
+                    Nivel1(juegoKaplay, setState, cambiarGanar, Router);
                     // We pass the component id for remove it.
                   });
       
@@ -183,30 +183,64 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any) {
                    
    
       
-                    const velocidad = 100;
-      
-                    // Movimiento con teclado
-                    juegoKaplay.onKeyDown("w", () => {
+                    const velocidad = 200;
+
+                    //juegoKaplay.onUpdate(()=>{
+                             // Movimiento con teclado
+
+
+                    juegoKaplay.onKeyPress("w", () => {
                       player.play("up");
-                      player.move(0, -velocidad);
+                      ///player.move(0, -velocidad);
                       
                     });
+                    juegoKaplay.onKeyDown("w", () => {
+                      //  player.play("up");
+                        player.move(0, -velocidad);
+                        
+                      });
+                      
+
+                    juegoKaplay.onKeyRelease(()=>{
+                      player.play("quiet");
+
+                    })  
+
                     juegoKaplay.onKeyDown("s", () => {
-                      player.play("down");
                       player.move(0, velocidad);
                       
                     });
+
+                    juegoKaplay.onKeyPress("s", () => {
+                      player.play("down");
+                      ///player.move(0, -velocidad);
+                      
+                    });
+
                     juegoKaplay.onKeyDown("a", () => {
-                      player.play("left");
                       player.move(-velocidad, 0);
                       
                     });
+
+                    juegoKaplay.onKeyPress("a", () => {
+                      player.play("left");
+                      ///player.move(0, -velocidad);
+                      
+                    });
+
                     juegoKaplay.onKeyDown("d", () => {
-                      player.play("right");
                       player.move(velocidad, 0);
                      
                     });
+                    juegoKaplay.onKeyPress("d", () => {
+                      player.play("right");
+                      ///player.move(0, -velocidad);
+                      
+                    });
       
+                   // })
+      
+             
                   
                     
 
