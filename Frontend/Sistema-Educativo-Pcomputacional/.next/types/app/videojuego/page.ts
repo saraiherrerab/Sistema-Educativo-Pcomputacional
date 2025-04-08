@@ -1,4 +1,4 @@
-// File: C:\Users\WINDOWS 11\Documents\Sistema-Educativo-Pcomputacional\Frontend\Sistema-Educativo-Pcomputacional\src\app\videojuego\page.tsx
+// File: C:\Users\Lucho\Desktop\Sistema-Educativo-Pcomputacional\Frontend\Sistema-Educativo-Pcomputacional\src\app\videojuego\page.tsx
 import * as entry from '../../../../src/app/videojuego/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

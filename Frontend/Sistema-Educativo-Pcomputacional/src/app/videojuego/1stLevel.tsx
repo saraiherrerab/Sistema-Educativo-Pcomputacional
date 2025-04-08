@@ -200,6 +200,22 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
 
           const velocidad = 440;
 
+          // Movimiento con teclado
+          juegoKaplay.onKeyDown("w", () => {
+            player.move(0, -velocidad);
+          });
+          juegoKaplay.onKeyDown("s", () => {
+            player.move(0, velocidad);
+          });
+          juegoKaplay.onKeyDown("a", () => {
+            player.move(-velocidad, 0);
+          });
+          juegoKaplay.onKeyDown("d", () => {
+            const intervalId = setInterval(() => {
+              player.move(velocidad, 0);
+              player.play("right"); // Reproduce la animación
+          }, 500); // Ajusta el tiempo según la duración de la animación
+          });
 
 
 
