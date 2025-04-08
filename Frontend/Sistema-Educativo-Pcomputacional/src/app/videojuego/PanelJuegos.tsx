@@ -31,11 +31,11 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any) {
       sliceX: 6,
       sliceY: 8,
       anims: {
-        right: { from: 6, to: 11, loop: false },
-        up: { from: 36, to: 38, loop: false },
-        down: { from: 24, to: 26, loop: false },
-        left: { from: 5, to: 1, loop: false },
-        quiet: { from: 31, to: 31, loop: false },
+        "right": { from: 6, to: 11, loop: true },
+        "up": { from: 36, to: 38, loop: true },
+        "down": { from: 24, to: 26, loop: true },
+        "left": { from: 5, to: 1, loop: true },
+        "quiet": { from: 31, to: 31, loop: true },
       },
     });
 

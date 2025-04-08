@@ -243,7 +243,10 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any) {
             player.move(-velocidad, 0);
           });
           juegoKaplay.onKeyDown("d", () => {
-            player.move(velocidad, 0);
+            const intervalId = setInterval(() => {
+              player.move(velocidad, 0);
+              player.play("right"); // Reproduce la animación
+          }, 500); // Ajusta el tiempo según la duración de la animación
           });
 
           // Movimiento con clic
