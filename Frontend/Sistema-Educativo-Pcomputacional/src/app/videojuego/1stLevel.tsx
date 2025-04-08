@@ -4,29 +4,28 @@ import generarNumerosAzar from "../../utils/generarNumerosAzar";
 import { useEffect, useRef, useState } from "react";
 //import './styles.css';
 
+
+
+const SCREEN_RESOLUTION_X: number = window.innerWidth 
+const SCREEN_RESOLUTION_Y: number = window.innerHeight 
+const TILED_MAP__WIDTH_NUMBER: number = 21
+const TILED_MAP_HEIGHT_NUMBER: number = 16
+const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
+const TILED_HEIGHT: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGHT_NUMBER
+let aciertos = 0;
+let nuevoSprite: GameObj;
 export let cambioNivel = 0;
 
 
-export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
-  const SCREEN_RESOLUTION_X: number = window.innerWidth 
-  const SCREEN_RESOLUTION_Y: number = window.innerHeight 
-  const TILED_MAP__WIDTH_NUMBER: number = 21
-  const TILED_MAP_HEIGHT_NUMBER: number = 16
-  const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
-  const TILED_HEIGHT: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGHT_NUMBER
+
+
+export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any, Router:any) {
     // Referencia persistente para almacenar la instancia de Kaplay
-    console.log(juegoKaplay)
-    
-    juegoKaplay.loadSprite("robot", "sprites/robotin.png", {
-      sliceX: 4,
-      sliceY: 12,
-      anims: {
-        right: { from: 16, to: 19, loop: false },
-        up: { from: 20, to: 23, loop: false},
-        down: { from: 12, to: 15, loop: false},
-        left: { from: 24, to: 27, loop: false},
-        quiet: { from: 0, to: 0, loop: false},
-      },
+   // setState(false);
+   
+    juegoKaplay.loadSprite("casa3", "sprites/buildings/House_Blue.png", {
+      sliceX: 1,
+      sliceY: 1,
     });
 
     juegoKaplay.loadSprite("casa2", "sprites/buildings/House_Destroyed.png", {
@@ -107,11 +106,10 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
     juegoKaplay.loadSound("A0", "./sounds/A0.mp3");
     juegoKaplay.loadSound("A1", "./sounds/A1.mp3");
     juegoKaplay.loadSound("A2", "./sounds/A2.mp3");
-
-    // Cargar sprites adicionales
-    ["up", "down", "left", "right"].forEach((dir) => {
-      juegoKaplay.loadSprite(dir, `sprites/${dir}-arrow.png`);
-    });
+  
+        
+        
+  
 
     juegoKaplay.loadSprite("redbox", "red-border-box.png");
         
@@ -120,7 +118,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
         //Practicando aqui
 
 
-      generarEsquemaMapa(
+      const nivelPrincipal = generarEsquemaMapa(
         juegoKaplay,
         {
           nameFolder: "nivel2",
@@ -162,40 +160,28 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
       )
       .then(
         (resultado: any) => {
+        
+          // Jugador
+          const player = juegoKaplay.add([
+            juegoKaplay.pos(730, 5),
+            juegoKaplay.sprite("pawn"),
+            juegoKaplay.scale(1),
+            juegoKaplay.health(3),
+            juegoKaplay.area(),
+            "player",
+            { z: 1 } // Asegura que el jugador esté en una capa superior
+          ]);
 
-          const player = juegoKaplay.get("player")[0]
-
-          // Flechas
-          const arrows = {
-            up: juegoKaplay.add([
-              juegoKaplay.pos(0, (juegoKaplay.center().y)/8),
-              juegoKaplay.sprite("up"),
-              juegoKaplay.scale(2),
-              juegoKaplay.area(),
-              { z: 1 } // Asegura que el jugador esté en una capa superior
-            ]),
-            down: juegoKaplay.add([
-              juegoKaplay.pos(0 ,(juegoKaplay.center().y)/4),
-              juegoKaplay.sprite("down"),
-              juegoKaplay.scale(2),
-              juegoKaplay.area(),
-              { z: 1 } // Asegura que el jugador esté en una capa superior
-            ]),
-            left: juegoKaplay.add([
-              juegoKaplay.pos(0,(juegoKaplay.center().y)/2),
-              juegoKaplay.sprite("left"),
-              juegoKaplay.scale(2),
-              juegoKaplay.area(),
-              { z: 1 } // Asegura que el jugador esté en una capa superior
-            ]),
-            right: juegoKaplay.add([
-              juegoKaplay.pos(0,(juegoKaplay.center().y)),
-              juegoKaplay.sprite("right"),
-              juegoKaplay.scale(2),
-              juegoKaplay.area(),
-              { z: 1 } // Asegura que el jugador esté en una capa superior
-            ]),
-          };
+          const tree = juegoKaplay.add([
+            juegoKaplay.pos(810,-5),
+            juegoKaplay.sprite("tree"),
+            juegoKaplay.scale(0.8),
+            juegoKaplay.health(3),
+            juegoKaplay.area(),
+            "tree",
+            { z: 1 } // Asegura que el jugador esté en una capa superior
+          ]);
+          
 
          /* const casa = juegoKaplay.add([
             juegoKaplay.pos(400,-5),
@@ -214,22 +200,6 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
 
           const velocidad = 440;
 
-          // Movimiento con teclado
-          juegoKaplay.onKeyDown("w", () => {
-            player.move(0, -velocidad);
-          });
-          juegoKaplay.onKeyDown("s", () => {
-            player.move(0, velocidad);
-          });
-          juegoKaplay.onKeyDown("a", () => {
-            player.move(-velocidad, 0);
-          });
-          juegoKaplay.onKeyDown("d", () => {
-            const intervalId = setInterval(() => {
-              player.move(velocidad, 0);
-              player.play("right"); // Reproduce la animación
-          }, 500); // Ajusta el tiempo según la duración de la animación
-          });
 
 
 
@@ -530,7 +500,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>) {
         
           ).catch(
             ((error:any) => {
-              console.log(error)
+              console.log("lerolerolero")
             })
           )   
   

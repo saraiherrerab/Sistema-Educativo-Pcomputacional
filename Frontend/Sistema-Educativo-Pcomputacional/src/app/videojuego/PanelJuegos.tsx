@@ -1,12 +1,16 @@
+import { KAPLAYCtx } from "kaplay";
 import generarEsquemaMapa from "../../MapsGenerator";
 import { Nivel1 } from "./1stLevel";
 import { Nivel2 } from "./2ndLevel";
 
-export function Panel(kaplayRef: React.RefObject<any>) {
-    // Referencia persistente para almacenar la instancia de Kaplay
-
 export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any, Router:any) {
     // Referencia persistente para almacenar la instancia de Kaplay
+    const SCREEN_RESOLUTION_X: number = window.innerWidth 
+    const SCREEN_RESOLUTION_Y: number = window.innerHeight 
+    const TILED_MAP__WIDTH_NUMBER: number = 21
+    const TILED_MAP_HEIGHT_NUMBER: number = 16
+    const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
+    const TILED_HEIGHT: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGHT_NUMBER
      
     juegoKaplay.loadSprite("robot", "sprites/robotin.png", {
       sliceX: 4,
@@ -236,57 +240,17 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
                     
 
                   }
-                ).catch(
-                  ((error:any) => {
-                  console.log(error)
-                  })
-                )   
-
-          const velocidad = 440;
-
-          // Movimiento con teclado
-          juegoKaplay.onKeyDown("w", () => {
-            player.move(0, -velocidad);
-          });
-          juegoKaplay.onKeyDown("s", () => {
-            player.move(0, velocidad);
-          });
-          juegoKaplay.onKeyDown("a", () => {
-            player.move(-velocidad, 0);
-          });
-          juegoKaplay.onKeyDown("d", () => {
-            player.move(velocidad, 0);
-          });
-
-          // Movimiento con clic
-          arrows.up.onClick(() => {
-            player.move(0, -velocidad);
-            player.play("up");
-          });
-          arrows.down.onClick(() => {
-            player.move(0, velocidad);
-            player.play("down");
-          });
-          arrows.left.onClick(() => {
-            player.move(-velocidad, 0);
-            player.play("left");
-          });
-          arrows.right.onClick(() => {
-            player.move(velocidad, 0);
-            player.play("right");
-          });
-
-          console.log("Resultado de PANEL")
-          console.log(juegoKaplay.get("*"))
-
-
-        })
-        .catch(
+      ).catch(
         ((error:any) => {
-          console.log(error)
+        console.log(error)
         })
       )   
 
+      const velocidad = 440;
+
+
+      console.log("Resultado de PANEL")
+      console.log(juegoKaplay.get("*"))
 
     }) //Fin - Onload()
     
