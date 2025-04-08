@@ -15,6 +15,18 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
     
     */
 
+
+    const TILED_HEIGTH_NUMBER:number = 15
+
+    interface informacionNivel {
+      urlTextura: string,
+      dimensionTexturasX: number,
+      dimensionTexturasY: number,
+      firstgid: number
+    }
+
+    const TILED_MAP__WIDTH_NUMBER: number = 21
+
     const generarEsquemaMapa = async (
       
     contextoKaplay: KAPLAYCtx<{},never>, // contextoKaplay es el objeto que representa todo el juego y se obtiene de la función "kaplay()"
@@ -23,13 +35,16 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
     informacionMapa: informacionNivel[] //Contiene en orden todas las imagenes que se utilizaron en cada capa para generar el mundo.
   ) : Promise<any> => {
   
-    const resultado = fetch(urlMapa).then(
+    return fetch(urlMapa).then(
       (res) => res.json()
     )
     .then(
       (worldJson:any) => {
 
-        console.log(`${configuracionMapa.nameFolder}/${configuracionMapa.nameFile}`)
+        console.log("LLAMANDO A LA FUNCION GENERAR MAPA")
+        console.log(contextoKaplay.get("*"))
+
+        //console.log(`${configuracionMapa.nameFolder}/${configuracionMapa.nameFile}`)
 
         contextoKaplay.loadSprite("mundo", `${configuracionMapa.nameFolder}/${configuracionMapa.nameFile}`, {
           sliceX: 1,
@@ -130,22 +145,26 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
   
   
           }
+
+          let proporcionX = ( window.innerWidth / (32 * TILED_MAP__WIDTH_NUMBER) )
+          let proporcionY = (window.innerHeight / (32 * TILED_HEIGTH_NUMBER))
   
           if(layer.type === "objectgroup" && layer.name === "colisiones"){
   
-            layer.objects.forEach( (zonaColision: any, numeroColision: number) => {
+            layer.objects.forEach( (zonaColision: any) => {
   
               //if(numeroColision === 4){
                 // Zona de caid
-                let caida_ = contextoKaplay.add([
-                contextoKaplay.pos(zonaColision.x * ( 1920 / ORIGINAL_GAME_SCREEN_X ), zonaColision.y * (1080 / ORIGINAL_GAME_SCREEN_Y)),
-                contextoKaplay.scale(1),
-                contextoKaplay.body({isStatic: true}),
-                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0.0), zonaColision.width * ( 1920 / ORIGINAL_GAME_SCREEN_X ) , zonaColision.height * (( 1080 / SCREEN_RESOLUTION_Y ))) // Rectángulo más pequeño
-                }),
-                { width: zonaColision.width * (1920 / ORIGINAL_GAME_SCREEN_X), height: zonaColision.height * (1080 / SCREEN_RESOLUTION_Y) }, // Agrega propiedades manualmente
-                //`square-${numeroColision}`,
-                "square-colision"
+
+                console.log(zonaColision.width)
+                
+                contextoKaplay.add([
+                  contextoKaplay.pos( (zonaColision.x / 32) *( window.innerWidth / 20), Math.floor((zonaColision.y / 32 )*(window.innerHeight / 15))),
+                  contextoKaplay.scale(1),
+                  contextoKaplay.body({isStatic: true}),
+                  contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0.0), (zonaColision.width / 32) * ( window.innerWidth / 20) , zonaColision.height * proporcionY)}),
+                  { width: zonaColision.width * proporcionX, height: zonaColision.height * proporcionY }, // Agrega propiedades manualmente
+                  "square-colision"
                 ]);
   
               //}
@@ -156,7 +175,53 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
   
               
           }
+
+
+
+          if(layer.type === "objectgroup" && layer.name === "player"){
+  
+            let posicionX: number = (layer.objects[0].x / 32) * ( window.innerWidth / 20);
+            let posicionY: number = (layer.objects[0].y / 32) * ( window.innerHeight / 15)
+              // Jugador
+              const player = contextoKaplay.add([
+                contextoKaplay.pos(posicionX+48,posicionY+32),
+                contextoKaplay.sprite("knight"),
+                contextoKaplay.scale(1),
+                contextoKaplay.health(3),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), 64, 64)}),
+                contextoKaplay.body(),
+                contextoKaplay.anchor(contextoKaplay.vec2(0.0)),
+                "player",
+                { z: 1 } // Asegura que el jugador esté en una capa superior
+              ]);
+
+              player.tag("player")
+              
+              console.log(player)
+
+              console.log(contextoKaplay.get("player"))
+          }
+          if(layer.type === "objectgroup" && layer.name === "enemy"){
+  
+            let posicionX: number = (layer.objects[0].x / 32) * ( window.innerWidth / 20);
+            let posicionY: number = (layer.objects[0].y / 32) * ( window.innerHeight / 15)
+
+            const enemy = contextoKaplay.add([
+              contextoKaplay.pos(posicionX+48,posicionY + 32),
+              contextoKaplay.sprite("enemy"),
+              contextoKaplay.scale(0.8),
+              contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), 64, 64)}), // Rectángulo más pequeño
+              contextoKaplay.body(),
+              contextoKaplay.anchor(contextoKaplay.vec2(0,0)),
+              "enemy",
+              { z: 1 } // Asegura que el jugador esté en una capa superior
+            ]);
+
+            enemy.tag("enemy")
+            
+        }
         });
+        
       
         type TileComponent = ReturnType<typeof contextoKaplay.sprite> | ReturnType<typeof contextoKaplay.scale>;
         const tileMapping: Record<string, () => TileComponent[]>[] = []
@@ -237,10 +302,6 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
         })
         */
   
-        console.log("SALI DE LA FUNCION")
-      
-      
-        return "Generación de mapa completada exitosamente"
       }
   
       
@@ -249,30 +310,12 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
       console.error(error)
     });
   
-    return "resultado"
     
     }
 
     export default generarEsquemaMapa;
 
-    interface informacionNivel {
-        urlTextura: string,
-        dimensionTexturasX: number,
-        dimensionTexturasY: number,
-        firstgid: number
-      }
-      const SCREEN_RESOLUTION_X: number = window.innerWidth 
-      const SCREEN_RESOLUTION_Y: number = window.innerHeight 
-      
-      const TILED_MAP__WIDTH_NUMBER: number = 21
-      const TILED_MAP_HEIGHT_NUMBER: number = 16
-      
-      const ORIGINAL_GAME_SCREEN_X: number = TILED_MAP__WIDTH_NUMBER * 32
-      const ORIGINAL_GAME_SCREEN_Y: number = TILED_MAP_HEIGHT_NUMBER * 32
-      
-      const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
-      const TILED_HEIGHT: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGHT_NUMBER
- 
+
 
 
     

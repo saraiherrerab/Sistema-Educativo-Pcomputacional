@@ -1,7 +1,6 @@
 'use client'
  import { useEffect, useRef, useState } from "react";
- import kaplay, { Asset, GameObj, KAPLAYCtx, LevelOpt, Rect, SpriteData, Vec2 } from "kaplay";
- import { Nivel1 } from "./1stLevel";
+ import kaplay from "kaplay";
  import { Panel } from "./PanelJuegos";
  import './styles.css';
 import { useRouter } from "next/navigation";
@@ -50,13 +49,13 @@ import { useRouter } from "next/navigation";
    useEffect(() => {
    
        
-     const resizeCanvas = () => {
-       const canvas = document.getElementById("game") as HTMLCanvasElement;
-       if (canvas) {
-         canvas.width = window.innerWidth //TILED_PIXEL_DIMENSION * MAX_TILED_PIXEL_WIDTH;
-         canvas.height = window.innerHeight //TILED_PIXEL_DIMENSION * MAX_TILED_PIXEL_HEIGTH;
-       }
-     };
+    const resizeCanvas = () => {
+      const canvas = document.getElementById("game") as HTMLCanvasElement;
+      if (canvas) {
+        canvas.width = window.innerWidth //TILED_PIXEL_DIMENSION * MAX_TILED_PIXEL_WIDTH;
+        canvas.height = window.innerHeight //TILED_PIXEL_DIMENSION * MAX_TILED_PIXEL_HEIGTH;
+      }
+    };
      
      
      // Inicializar Kaplay solo si no está creado
@@ -81,15 +80,14 @@ import { useRouter } from "next/navigation";
          
        }
    
-     resizeCanvas(); // Ajustar en la carga inicial
+    resizeCanvas(); // Ajustar en la carga inicial
  
     
-     return () => {
-       window.removeEventListener("resize", resizeCanvas);
-     };
+    return () => {
+      window.removeEventListener("resize", resizeCanvas);
+    };
      
-     
-   }, []);
+  }, []);
  
 
  
