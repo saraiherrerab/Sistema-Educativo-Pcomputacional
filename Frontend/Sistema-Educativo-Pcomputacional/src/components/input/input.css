@@ -9,7 +9,7 @@ input {
     margin: 5px 0;        /* Espaciado externo */
     border: 2px solid #c1BBBB; /* Borde con color */
     border-radius: 5px;    /* Bordes redondeados */
-    font-size: 12px;       /* Tamaño de la letra */
+    font-size: 14px;       /* Tamaño de la letra */
     font-family: "Roboto", sans-serif; /* Fuente */
 }
 

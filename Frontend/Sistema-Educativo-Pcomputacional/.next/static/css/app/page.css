@@ -12,7 +12,7 @@ input {
     margin: 5px 0;        /* Espaciado externo */
     border: 2px solid #c1BBBB; /* Borde con color */
     border-radius: 5px;    /* Bordes redondeados */
-    font-size: 12px;       /* Tamaño de la letra */
+    font-size: 14px;       /* Tamaño de la letra */
     font-family: "Roboto", sans-serif; /* Fuente */
 }
 
@@ -31,7 +31,7 @@ input:focus {
 button {
     background-color: #4B22F4; 
     color: white;             
-    font-size: 12px;          
+    font-size: 14px;          
     font-family: "Roboto", sans-serif; 
     padding: 10px 20px;       
     border: none;            
