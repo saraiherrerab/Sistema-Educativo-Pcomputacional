@@ -1,0 +1,159 @@
+/*!************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!./src/app/profile/styles.css ***!
+  \************************************************************************************************************************************************************************************************************************************************************************/
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+body{
+    background-color: #6F4EF6;
+    margin: 0; /* Asegúrate de eliminar los márgenes predeterminados del body */
+    
+}
+
+.titulo{
+    margin-bottom:15px;
+}
+
+.datosBloques{
+    align-items: center;
+    font-family: "Inter", sans-serif;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Crea dos columnas de igual ancho */
+    grid-template-rows: auto auto; /* Crea dos filas con altura automática */
+    grid-gap: 16px;
+    gap: 16px; /* Espacio entre las notas (ajusta este valor según necesites) */
+    position: relative; /* Asegura que se superponga al canvas */ 
+    top: 0;
+    left: 0;
+    margin:15px;
+    
+}
+
+.perfil{
+    display: flex; /* Convierte .perfil en un contenedor Flexbox */
+    flex-direction: row; /* Alinea los elementos hijos en fila (uno al lado del otro) */
+    align-items: flex-start; /* Alinea los elementos verticalmente al inicio */
+    height: 100vh; /* Asegúrate de que el contenedor tenga altura para ver el centrado */
+    width:100vw;
+    margin:35px;
+}
+
+.datosUsario {
+    /* Estilos para el contenedor del span "holis" si los necesitas */
+    margin-right: 16px; /* Agrega un espacio a la derecha del span para separarlo de las notas */
+    width: 40%; /* O un valor fijo como width: 150px; */
+    display:flex;
+    justify-content: center;
+    padding-left: 60px;
+    padding-right:60px;
+    flex-direction: column;
+  }
+  
+/*!**********************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!./src/components/dbasicos/dbasicos.css ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************/
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+.datos-section {
+    display: flex;
+    flex-direction: row; /* Organiza el título y la descripción en columnas */
+    align-items: flex-start; /* Alinea el texto a la izquierda */
+    padding:10px;
+    margin:5px;
+    font-family: "Inter", sans-serif;
+  }
+  
+  .tituloDatos {
+    color: white; /* Color del título (puedes cambiarlo) */
+    font-size: 14px; /* Tamaño del título */
+    font-weight: bold; /* Título en negrita */
+    margin-bottom: 10px; /* Espacio debajo del título */
+    margin-right:10px;
+  }
+  
+
+  .descripcion {
+    color:white; /* Color de la descripción (puedes cambiarlo) */
+    font-size: 14px; /* Tamaño de la descripción */
+    font-weight: normal; /* Título en negrita */
+  }
+/*!******************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!./src/components/nombre/nombre.css ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************/
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+.nombre-section {
+    display: flex;
+    flex-direction: column; /* Organiza el título y la descripción en columnas */
+    align-items: flex-start; /* Alinea el texto a la izquierda */
+    padding:10px;
+    margin:5px;
+    font-family: "Inter", sans-serif;
+  }
+  
+  .tituloNombre {
+    color: white; /* Color del título (puedes cambiarlo) */
+    font-size: 16px; /* Tamaño del título */
+    font-weight: bold; /* Título en negrita */
+    margin-bottom: 15px; /* Espacio debajo del título */
+    margin-right:10px;
+  }
+  
+
+  .Nombre {
+    color:white; /* Color de la descripción (puedes cambiarlo) */
+    font-size: 16px; /* Tamaño de la descripción */
+    font-weight: normal; /* Título en negrita */
+  }
+/*!******************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!./src/components/dnotas/dnotas.css ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************/
+.notas-section {
+    background-color: white; /* Fondo blanco */
+    border-radius: 10px; /* Esquinas redondeadas (ajusta el valor según desees) */
+    padding: 15px; /* Espacio interno alrededor del texto */
+    display: flex;
+    flex-direction: column; /* Organiza el título y la descripción en columnas */
+    align-items: flex-start; /* Alinea el texto a la izquierda */
+    padding:30px;
+    height:   200px;
+    margin-right:10px;
+  }
+  
+  .tituloNotas {
+    color: black; /* Color del título (puedes cambiarlo) */
+    font-size: 1.2em; /* Tamaño del título */
+    font-weight: bold; /* Título en negrita */
+    margin-bottom: 15px; /* Espacio debajo del título */
+  }
+  
+
+  .descripcionN {
+    color: black; /* Color de la descripción (puedes cambiarlo) */
+    font-size: 1em; /* Tamaño de la descripción */
+  }
+/*!**************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!./src/components/foto/foto.css ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************/
+.foto-container {
+    display: flex;
+    flex-direction: column; /* Coloca la imagen y el texto en columna */
+    align-items: center; /* Centra la imagen y el texto horizontalmente */
+    justify-content: center; /* Centra la imagen y el texto verticalmente */
+    width: 250px; /* Ajusta el ancho del botón */
+    height: 250px; /* Ajusta la altura del botón */
+    border-radius: 50%; /* Hace que el botón sea un círculo */
+    border: none;
+    background-color: white; /* Botón blanco */
+    cursor: pointer;
+    padding: 0;
+    margin-bottom:20px;
+  }
+
+  .foto {
+    display: block; /* Evita espacios extra debajo de la imagen */
+    width: 100%; /* La imagen ocupa el 100% del ancho del contenedor */
+    height: 100%; /* La imagen ocupa el 100% de la altura del contenedor */
+    object-fit: cover; /* La imagen se recorta para cubrir el contenedor manteniendo su aspecto */
+    border-radius: 50%; 
+  }

@@ -25,7 +25,7 @@ export default function Menu() {
                 </div>
                 
                 <div className="descripcion">
-                    <MenuButton imageUrl='./teacher.png' onClick={()=>Router.push("/videojuego")}/>
+                    <MenuButton imageUrl='./teacher.png' onClick={()=>Router.push("/profile")}/>
                     <span>MI PERFIL</span>
                 </div>
                 

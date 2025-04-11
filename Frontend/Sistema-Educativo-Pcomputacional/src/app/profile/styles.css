@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+body{
+    background-color: #6F4EF6;
+    margin: 0; /* Asegúrate de eliminar los márgenes predeterminados del body */
+    
+}
+
+.titulo{
+    margin-bottom:15px;
+}
+
+.datosBloques{
+    align-items: center;
+    font-family: "Inter", sans-serif;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Crea dos columnas de igual ancho */
+    grid-template-rows: auto auto; /* Crea dos filas con altura automática */
+    gap: 16px; /* Espacio entre las notas (ajusta este valor según necesites) */
+    position: relative; /* Asegura que se superponga al canvas */ 
+    top: 0;
+    left: 0;
+    margin:15px;
+    
+}
+
+.perfil{
+    display: flex; /* Convierte .perfil en un contenedor Flexbox */
+    flex-direction: row; /* Alinea los elementos hijos en fila (uno al lado del otro) */
+    align-items: flex-start; /* Alinea los elementos verticalmente al inicio */
+    height: 100vh; /* Asegúrate de que el contenedor tenga altura para ver el centrado */
+    width:100vw;
+    margin:35px;
+}
+
+.datosUsario {
+    /* Estilos para el contenedor del span "holis" si los necesitas */
+    margin-right: 16px; /* Agrega un espacio a la derecha del span para separarlo de las notas */
+    width: 40%; /* O un valor fijo como width: 150px; */
+    display:flex;
+    justify-content: center;
+    padding-left: 60px;
+    padding-right:60px;
+    flex-direction: column;
+  }
+  
