@@ -1,5 +1,9 @@
 {
+<<<<<<< Updated upstream
   "/page": "app/page.js",
   "/videojuego/page": "app/videojuego/page.js",
   "/menu/page": "app/menu/page.js"
+=======
+  "/videojuego/page": "app/videojuego/page.js"
+>>>>>>> Stashed changes
 }

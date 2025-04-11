@@ -7,18 +7,43 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+# Node
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# Compilación y caché
+*.pack.gz
+.cache/
+
+# Archivos de entorno
+.env
+.env.local
+.env.*.local
+.vite-env.d.ts
+
+# Archivos de distribución
+dist/
+dist-ssr/
+
+# Archivos locales
 *.local
 
-# Editor directories and files
+# Archivos temporales del sistema
+.DS_Store
+Thumbs.db
+
+# VSCode y otros editores
 .vscode/*
 !.vscode/extensions.json
 .idea
-.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# Archivos HTML temporales (si estás mezclando con Vite)
+index.html
