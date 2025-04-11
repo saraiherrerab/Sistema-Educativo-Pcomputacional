@@ -5,29 +5,23 @@
       "static/chunks/main-app.js",
       "static/chunks/app/layout.js"
     ],
-<<<<<<< Updated upstream
     "/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/page.css",
       "static/chunks/app/page.js"
     ],
-=======
->>>>>>> Stashed changes
-    "/videojuego/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/videojuego/page.css",
-      "static/chunks/app/videojuego/page.js"
-<<<<<<< Updated upstream
-    ],
     "/menu/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/menu/page.css",
       "static/chunks/app/menu/page.js"
-=======
->>>>>>> Stashed changes
+    ],
+    "/videojuego/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/videojuego/page.css",
+      "static/chunks/app/videojuego/page.js"
     ]
   }
 }

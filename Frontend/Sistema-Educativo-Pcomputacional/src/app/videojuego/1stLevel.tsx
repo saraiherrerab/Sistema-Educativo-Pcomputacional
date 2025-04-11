@@ -434,6 +434,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
             console.log("Fallaste" +ultimo)
             setState(true);
             cambiarGanar(false);
+            ultimo = patronesdinamicos();
             setTimeout(() => {
               setState(false);
             }, 2000); 
@@ -457,6 +458,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
             console.log("Fallaste"+ultimo)
             setState(true);
             cambiarGanar(false);
+            ultimo = patronesdinamicos();
             setTimeout(() => {
               setState(false);
             }, 2000); 
@@ -481,6 +483,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
             console.log("Fallaste" +ultimo)
             setState(true);
             cambiarGanar(false);
+            ultimo = patronesdinamicos();
             setTimeout(() => {
               setState(false);
             }, 2000); 
