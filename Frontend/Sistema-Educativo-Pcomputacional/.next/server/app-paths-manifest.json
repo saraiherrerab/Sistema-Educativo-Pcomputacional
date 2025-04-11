@@ -1,5 +1,6 @@
 {
   "/page": "app/page.js",
-  "/videojuego/page": "app/videojuego/page.js",
-  "/menu/page": "app/menu/page.js"
+  "/menu/page": "app/menu/page.js",
+  "/profile/page": "app/profile/page.js",
+  "/videojuego/page": "app/videojuego/page.js"
 }
