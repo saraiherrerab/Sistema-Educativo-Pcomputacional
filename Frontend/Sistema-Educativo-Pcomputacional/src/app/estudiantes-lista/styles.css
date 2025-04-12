@@ -22,6 +22,7 @@ body {
   width: 100%; /* Ocupa todo el ancho del contenedor .listado */
   text-align: left; /* Alinea el texto del título a la izquierda */
   margin-bottom: 10px; /* Espacio entre el título y la tabla */
+  font-size: larger;
 }
 
 table {
@@ -74,21 +75,56 @@ th:last-child {
   border-right: 0.01px solid #ccc; /* Borde derecho */
 }
 
+
+/* ... otros estilos ... */
+
 .barraBusqueda {
-  margin-bottom: 20px; /* Espacio entre la barra de búsqueda y la tabla */
-  width: 80%; /* Ancho similar al de la tabla */
+  margin-bottom: 20px;
+  width: 80%;
+  display: flex;
+  align-items: center; /* Alinea verticalmente los elementos */
+  margin-right:20px;
 }
 
-.barraBusqueda input[type="text"] {
+.search-input-container {
+  position: relative; /* Para posicionar el icono */
+  flex-grow: 1; /* El input ocupa el espacio restante */
+}
+
+.search-icon {
+  position: absolute; /* Posiciona la lupa dentro del contenedor */
+  right: -5px; /* Cambiamos 'left' a 'right' */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  opacity: 0.6;
+  cursor: pointer; /* Indica que es clickable */
+}
+
+.search-input {
   width: 100%;
-  padding: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left:15px;
+  padding-right:0px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 10px;
   font-size: 1em;
 }
 
-.barraBusqueda input[type="text"]:focus {
+.search-input:focus {
   outline: none;
-  border-color: #007bff; /* Un color de foco */
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Un efecto de sombra al enfocar */
 }
+
+.encabezado{
+  display:flex;
+  display: flex; /* Habilita Flexbox para alinear el título y la búsqueda */
+  justify-content: space-between; /* Espacia el título a la izquierda y la búsqueda a la derecha */
+  align-items: center; /* Alinea verticalmente el título y la búsqueda (opcional) */
+  width: 100%; /* Ocupa todo el ancho del contenedor .listado */
+  margin-bottom: 20px; /* Espacio entre el header y la tabla */
+}
+/* Hemos eliminado los estilos del botón "Buscar" separado */
+
+/* ... otros estilos ... */

@@ -6,9 +6,9 @@ import { useRouter } from "next/navigation";
 export default function EstudiantesLista() {
     const Router = useRouter();
     const [estudiantes, setEstudiantes] = useState([
-        { id: 1, nombre: 'Ana', apellido: 'García', nivel:'1', usuario:'', contrasenia:'', perfil:'', estado:'' },
-        { id: 2, nombre: 'Carlos', apellido: 'Pérez', nivel:'1', usuario:'', contrasenia:'', perfil:'', estado:'' },
-        { id: 3, nombre: 'Sofía', apellido: 'Martínez', nivel:'1', usuario:'', contrasenia:'', perfil:'', estado:'' },
+        { id: 1, nombre: 'Ana', apellido: 'García', nivel: '1', usuario: '', contrasenia: '', perfil: '', estado: '' },
+        { id: 2, nombre: 'Carlos', apellido: 'Pérez', nivel: '1', usuario: '', contrasenia: '', perfil: '', estado: '' },
+        { id: 3, nombre: 'Sofía', apellido: 'Martínez', nivel: '1', usuario: '', contrasenia: '', perfil: '', estado: '' },
     ]);
 
     const [searchTerm, setSearchTerm] = useState('');
@@ -28,39 +28,64 @@ export default function EstudiantesLista() {
     };
 
     const agregarEstudiante = (nuevoEstudiante: any) => {
+        const nuevoEstudianteConId = { ...nuevoEstudiante, id: Date.now() };
         setEstudiantes((prevEstudiantes) => [
             ...prevEstudiantes,
-            { ...nuevoEstudiante, id: Date.now() },
+            nuevoEstudianteConId,
+        ]);
+        // Actualizar también filteredEstudiantes para que la tabla se re-renderice con el nuevo estudiante
+        setFilteredEstudiantes((prevFilteredEstudiantes) => [
+            ...prevFilteredEstudiantes,
+            nuevoEstudianteConId,
         ]);
     };
 
     const handleAgregarClick = () => {
-        const nuevo = { nombre: 'Luis', apellido: 'Rodríguez', nivel:'1', usuario:'', contrasenia:'', perfil:'', estado:'' };
+        const nuevo = { nombre: 'Luis', apellido: 'Rodríguez', nivel: '1', usuario: '', contrasenia: '', perfil: '', estado: '' };
         agregarEstudiante(nuevo);
     };
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
+        filterStudents();
     };
-
 
     const handleSearchClick = () => {
         filterStudents();
     };
 
+    const handleTitleClick = () => {
+        window.location.reload(); // Esta es la forma más sencilla de recargar la página
+        // O puedes usar Router.reload() si estás dentro del contexto de Next.js Router
+        // Router.reload();
+    };
+
     return (
+        
+        
         <div className="listado">
-            <div className="tituloListado">
-                 <h2 className="estudiantes">ESTUDIANTES</h2>
-            </div>
-            <div className="barraBusqueda">
-                <input
-                    type="text"
-                    placeholder="Buscar estudiantes..."
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                />
-                <button onClick={handleSearchClick}>Buscar</button>
+            <div className="encabezado">
+                <div className="tituloListado" onClick={handleTitleClick} style={{ cursor: 'pointer' }}>
+                    <h2 className="estudiantes">ESTUDIANTES</h2>
+                </div>
+                <div className="barraBusqueda">
+                    <div className="search-input-container">
+                        <input
+                            type="text"
+                            placeholder="Buscar estudiantes..."
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                            className="search-input"
+                        />
+                        <img
+                            src="./lupa-icon.png"
+                            alt="Buscar"
+                            className="search-icon"
+                            onClick={handleSearchClick}
+                            style={{ cursor: 'pointer' }}
+                        />
+                    </div>
+                </div>
             </div>
             <table>
                 <thead>
@@ -69,7 +94,7 @@ export default function EstudiantesLista() {
                         <th>Apellido</th>
                         <th>Nivel</th>
                         <th>Usuario</th>
-                        <th>Contrasenia</th>
+                        <th>Contraseña</th>
                         <th>Perfil</th>
                         <th>Estado</th>
                     </tr>
@@ -90,5 +115,7 @@ export default function EstudiantesLista() {
             </table>
             <button onClick={handleAgregarClick}>Agregar Nuevo Estudiante (Simulado)</button>
         </div>
+        
+        
     );
 }

@@ -22,6 +22,18 @@
       "static/chunks/main-app.js",
       "static/css/app/estudiantes-lista/page.css",
       "static/chunks/app/estudiantes-lista/page.js"
+    ],
+    "/profile/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/profile/page.css",
+      "static/chunks/app/profile/page.js"
+    ],
+    "/videojuego/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/videojuego/page.css",
+      "static/chunks/app/videojuego/page.js"
     ]
   }
 }
