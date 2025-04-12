@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
-=======
   "/page": "app/page.js",
   "/menu/page": "app/menu/page.js",
-  "/profile/page": "app/profile/page.js",
->>>>>>> origin/perfiles
-  "/videojuego/page": "app/videojuego/page.js"
+  "/estudiantes-lista/page": "app/estudiantes-lista/page.js"
 }
