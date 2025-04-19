@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+.header-container{
+    display:flex;
+    background-color: #4B22F4; 
+    color: white; 
+    font-size: 14px;          
+    font-family: "Roboto", sans-serif; 
+    width: 100%;
+    margin:0px;
+    border: none;
+    justify-content: space-between; /* Espacia el título a la izquierda y la búsqueda a la derecha */
+    align-items: center; /* Alinea verticalmente el título y la búsqueda (opcional) */
+    
+}
+
+.header-logo{
+
+}
+
+.header-button{
+    cursor:pointer;
+}

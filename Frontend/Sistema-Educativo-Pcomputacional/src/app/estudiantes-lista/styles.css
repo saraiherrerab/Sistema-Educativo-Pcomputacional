@@ -1,13 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
 body {
-  background-color: #6F4EF6;
+  /*background-color: #6F4EF6; */
+  background-color:white;
   font-family: "Inter", sans-serif;
+  padding: -10px;
+
+
+}
+
+.encabezado-fondo{
+  background-color: #6F4EF6;
 }
 
 .estudiantes {
   align-items: left;
-  color:white;
+  /*color:white;*/
+  color:#6F4EF6; 
 }
 
 .listado {
@@ -16,6 +25,7 @@ body {
   align-items: center; /* Centra los hijos horizontalmente (por defecto) */
   width: 80%; /* Ancho del contenedor para que coincida con la tabla */
   margin: 20px auto; /* Centra el contenedor en la página (ajusté el margin-top) */
+  
 }
 
 .tituloListado {

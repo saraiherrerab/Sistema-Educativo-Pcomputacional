@@ -1,7 +1,5 @@
 {
-  "/menu/page": "app/menu/page.js",
-  "/estudiantes-lista/page": "app/estudiantes-lista/page.js",
   "/page": "app/page.js",
-  "/profile/page": "app/profile/page.js",
-  "/videojuego/page": "app/videojuego/page.js"
+  "/menu/page": "app/menu/page.js",
+  "/estudiantes-lista/page": "app/estudiantes-lista/page.js"
 }

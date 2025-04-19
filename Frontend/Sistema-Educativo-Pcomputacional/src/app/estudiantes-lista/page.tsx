@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from "react";
 import './styles.css';
+import Header  from "../../components/header/header";
 import { useRouter } from "next/navigation";
 
 export default function EstudiantesLista() {
@@ -61,10 +62,21 @@ export default function EstudiantesLista() {
     };
 
     return (
-        
-        
+        <>
+        <div className="encabezado-fondo"></div>
+            <Header 
+                        text="MULTIPLAYER" onClick={()=>Router.push("/videojuego")}
+                        text1="Panel de Juegos" onClick1={()=>Router.push("/videojuego")}
+                        text2="Menu" onClick2={()=>Router.push("/videojuego")}
+                        text3="Mi perfil" onClick3={()=>Router.push("/videojuego")}
+                        text4="Salir" onClick4={()=>Router.push("/videojuego")}>
+            </Header>
+
         <div className="listado">
+        
             <div className="encabezado">
+               
+       
                 <div className="tituloListado" onClick={handleTitleClick} style={{ cursor: 'pointer' }}>
                     <h2 className="estudiantes">ESTUDIANTES</h2>
                 </div>
@@ -115,7 +127,8 @@ export default function EstudiantesLista() {
             </table>
             <button onClick={handleAgregarClick}>Agregar Nuevo Estudiante (Simulado)</button>
         </div>
-        
+        </>
+            
         
     );
 }
