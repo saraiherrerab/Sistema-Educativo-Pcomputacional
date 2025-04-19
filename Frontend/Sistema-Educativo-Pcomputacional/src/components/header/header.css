@@ -12,6 +12,8 @@
     border: none;
     justify-content: space-between; /* Espacia el título a la izquierda y la búsqueda a la derecha */
     align-items: center; /* Alinea verticalmente el título y la búsqueda (opcional) */
+    padding-left: 10%;
+    padding-right: 10%;
     
 }
 
