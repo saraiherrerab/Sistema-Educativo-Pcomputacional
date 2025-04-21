@@ -1,7 +1,8 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
-  "/page": "app/page.js",
-  "/Aestudiantes-lista/page": "app/Aestudiantes-lista/page.js",
   "/videojuego/page": "app/videojuego/page.js",
-  "/menu/page": "app/menu/page.js"
+  "/Aestudiantes-lista/page": "app/Aestudiantes-lista/page.js",
+  "/Amenu/page": "app/Amenu/page.js",
+  "/profile/page": "app/profile/page.js",
+  "/Aprofesores-lista/page": "app/Aprofesores-lista/page.js",
+  "/Aadmins-lista/page": "app/Aadmins-lista/page.js"
 }

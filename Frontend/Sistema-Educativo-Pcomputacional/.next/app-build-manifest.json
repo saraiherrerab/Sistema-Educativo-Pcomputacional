@@ -29,10 +29,29 @@
       "static/css/app/videojuego/page.css",
       "static/chunks/app/videojuego/page.js"
     ],
-    "/_not-found/page": [
+    "/Amenu/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/_not-found/page.js"
+      "static/css/app/Amenu/page.css",
+      "static/chunks/app/Amenu/page.js"
+    ],
+    "/profile/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/profile/page.css",
+      "static/chunks/app/profile/page.js"
+    ],
+    "/Aprofesores-lista/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/Aprofesores-lista/page.css",
+      "static/chunks/app/Aprofesores-lista/page.js"
+    ],
+    "/Aadmins-lista/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/Aadmins-lista/page.css",
+      "static/chunks/app/Aadmins-lista/page.js"
     ]
   }
 }
