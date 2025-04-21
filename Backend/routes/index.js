@@ -20,4 +20,19 @@ router.get('/', async function(req, res, next) {
   
 });
 
+/* GET home page. */
+router.get('/profesores', async function(req, res, next) {
+  
+  try {
+    const result = await db.any('SELECT * FROM prueba');
+    console.log('Resultado:', result); // { value: 123 }
+    res.json(query)
+  } catch (error) {
+    console.error('Error al hacer la consulta:', error);
+    res.json({menssage: "Error al obtener profesores"})
+  }
+  
+});
+
+
 module.exports = router;
