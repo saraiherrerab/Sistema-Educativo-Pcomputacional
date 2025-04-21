@@ -4,23 +4,26 @@ html, body {
   padding: 0;
   width: 100%;
   height: 100%;
+  box-sizing: border-box;
+  font-size: 14px;
 }
 
 body {
   /*background-color: #6F4EF6; */
   background-color:white;
   font-family: "Inter", sans-serif;
+ 
 
 }
 
 .encabezado-fondo{
-  background-color: #6F4EF6;
+  background-color: black;
 }
 
 .estudiantes {
   align-items: left;
   /*color:white;*/
-  color:#6F4EF6; 
+  color:black; 
 }
 
 .listado {
@@ -36,7 +39,8 @@ body {
   width: 100%; /* Ocupa todo el ancho del contenedor .listado */
   text-align: left; /* Alinea el texto del título a la izquierda */
   margin-bottom: 10px; /* Espacio entre el título y la tabla */
-  font-size: larger;
+  font-size: 16px;
+  color: black;
 }
 
 table {
@@ -93,7 +97,7 @@ th:last-child {
 /* ... otros estilos ... */
 
 .barraBusqueda {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   width: 80%;
   display: flex;
   align-items: center; /* Alinea verticalmente los elementos */

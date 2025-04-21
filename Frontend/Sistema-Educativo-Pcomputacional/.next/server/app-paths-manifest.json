@@ -1,3 +1,4 @@
 {
+  "/page": "app/page.js",
   "/estudiantes-lista/page": "app/estudiantes-lista/page.js"
 }
