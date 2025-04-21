@@ -1,5 +1,5 @@
 'use client';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import './styles.css';
 import Header from "../../components/header/header";
 import { useRouter } from "next/navigation";
@@ -36,6 +36,12 @@ export default function EstudiantesLista() {
         perfil: '',
         estado: ''
     });
+
+    useEffect(() => {
+        console.log('La pantalla se montó solo una vez');
+    
+        // Aquí podrías cargar datos, hacer una animación, redirigir, etc.
+      }, []); // <--- Esto garantiza que se ejecuta una sola vez (cuando se monta)
 
     const filterStudents = () => {
         const results = estudiantes.filter(estudiante =>
@@ -98,6 +104,8 @@ export default function EstudiantesLista() {
     };
 
     const mostrarFormularioAgregar = () => {
+
+        console.log("Mostrar formulario para agregar")
         setMostrarFormulario(true);
         setEstudianteEditando(null); // Asegúrate de que no se muestre el formulario de edición al mismo tiempo
     };
@@ -112,26 +120,26 @@ export default function EstudiantesLista() {
                 text4="Salir" onClick4={() => Router.push("/videojuego")}>
             </Header>
 
-            <div className="listado">
-                <div className="encabezado">
-                    <div className="tituloListado" onClick={handleTitleClick} style={{ cursor: 'pointer' }}>
-                        <h2 className="estudiantes">ESTUDIANTES</h2>
-                        <button onClick={mostrarFormularioAgregar}>Agregar Estudiante</button>
-                    </div>
-                    <div className="barraBusqueda">
+                <div className="listado">
+                    <div className="encabezado">
+                        <div className="tituloListado" style={{ cursor: 'pointer' }}>
+                            <h2 className="estudiantes" onClick={() => handleTitleClick()}>ESTUDIANTES</h2>
+                            <button onClick={() => mostrarFormularioAgregar()}>Agregar Estudiante</button>
+                        </div>
+                        <div className="barraBusqueda">
                         <div className="search-input-container">
                             <input
                                 type="text"
                                 placeholder="Buscar estudiantes..."
                                 value={searchTerm}
-                                onChange={handleSearchChange}
+                                onChange={ e => handleSearchChange(e)}
                                 className="search-input"
                             />
                             <img
                                 src="./lupa-icon.png"
                                 alt="Buscar"
                                 className="search-icon"
-                                onClick={handleSearchClick}
+                                onClick={() => handleSearchClick()}
                                 style={{ cursor: 'pointer' }}
                             />
                         </div>
@@ -148,7 +156,7 @@ export default function EstudiantesLista() {
                         <input type="password" placeholder="Contraseña" value={nuevoEstudiante.contrasenia} onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, contrasenia: e.target.value })} />
                         <input type="text" placeholder="Perfil" value={nuevoEstudiante.perfil} onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, perfil: e.target.value })} />
                         <input type="text" placeholder="Estado" value={nuevoEstudiante.estado} onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, estado: e.target.value })} />
-                        <button onClick={onAgregarEstudiante}>Guardar</button>
+                        <button onClick={() => onAgregarEstudiante()}>Guardar</button>
                         <button onClick={() => setMostrarFormulario(false)}>Cancelar</button>
                     </div>
                 )}
@@ -197,7 +205,7 @@ export default function EstudiantesLista() {
                         <input type="password" value={estudianteEditando.contrasenia} onChange={e => setEstudianteEditando({ ...estudianteEditando, contrasenia: e.target.value })} />
                         <input type="text" value={estudianteEditando.perfil} onChange={e => setEstudianteEditando({ ...estudianteEditando, perfil: e.target.value })} />
                         <input type="text" value={estudianteEditando.estado} onChange={e => setEstudianteEditando({ ...estudianteEditando, estado: e.target.value })} />
-                        <button onClick={onGuardarEdicion}>Guardar</button>
+                        <button onClick={() => onGuardarEdicion()}>Guardar</button>
                         <button onClick={() => setEstudianteEditando(null)}>Cancelar</button>
                     </div>
                 )}

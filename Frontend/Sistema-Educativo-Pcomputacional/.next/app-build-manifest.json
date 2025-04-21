@@ -17,17 +17,22 @@
       "static/css/app/menu/page.css",
       "static/chunks/app/menu/page.js"
     ],
-    "/estudiantes-lista/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/estudiantes-lista/page.css",
-      "static/chunks/app/estudiantes-lista/page.js"
-    ],
     "/Aestudiantes-lista/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/Aestudiantes-lista/page.css",
       "static/chunks/app/Aestudiantes-lista/page.js"
+    ],
+    "/videojuego/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/videojuego/page.css",
+      "static/chunks/app/videojuego/page.js"
+    ],
+    "/_not-found/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/_not-found/page.js"
     ]
   }
 }
