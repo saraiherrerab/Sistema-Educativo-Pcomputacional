@@ -1,8 +1,12 @@
+
 /*Tablas principales*/
-DROP TABLE IF EXISTS Profesor;
 DROP TABLE IF EXISTS Estudiante;
 DROP TABLE IF EXISTS Grupos;
 DROP TABLE IF EXISTS Curso;
+DROP TABLE IF EXISTS Profesor;
+
+
+
 
 DROP TABLE IF EXISTS Usuario_Nivel;
 DROP TABLE IF EXISTS Nivel;
@@ -14,7 +18,7 @@ DROP TABLE IF EXISTS Administrador;
 /* Lógica de usuarios */
 DROP TABLE IF EXISTS Usuario;
 CREATE TABLE IF NOT EXISTS Usuario (
-	id_usuario INTEGER NOT NULL,
+	id_usuario SERIAL NOT NULL,
 	telefono VARCHAR(14),
 	nombre TEXT NOT NULL,
 	apellido TEXT NOT NULL,

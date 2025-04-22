@@ -1,5 +1,5 @@
 {
+  "/Aprofesores-lista/page": "app/Aprofesores-lista/page.js",
   "/page": "app/page.js",
-  "/Amenu/page": "app/Amenu/page.js",
-  "/Aprofesores-lista/page": "app/Aprofesores-lista/page.js"
+  "/Amenu/page": "app/Amenu/page.js"
 }

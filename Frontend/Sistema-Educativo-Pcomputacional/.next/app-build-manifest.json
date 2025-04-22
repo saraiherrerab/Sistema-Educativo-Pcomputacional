@@ -5,6 +5,12 @@
       "static/chunks/main-app.js",
       "static/chunks/app/layout.js"
     ],
+    "/Aprofesores-lista/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/Aprofesores-lista/page.css",
+      "static/chunks/app/Aprofesores-lista/page.js"
+    ],
     "/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -17,11 +23,10 @@
       "static/css/app/Amenu/page.css",
       "static/chunks/app/Amenu/page.js"
     ],
-    "/Aprofesores-lista/page": [
+    "/_not-found/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/Aprofesores-lista/page.css",
-      "static/chunks/app/Aprofesores-lista/page.js"
+      "static/chunks/app/_not-found/page.js"
     ]
   }
 }

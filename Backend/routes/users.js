@@ -37,10 +37,30 @@ router.get('/profesores/:id', async function(req, res, next) {
 router.post('/profesores', async function(req, res, next) {
   
   try {
-    const { id_profesor,curriculum } = req.body
-    const findProfesor =  new PQ({text :`INSERT INTO Profesor (id_profesor,curriculum)  VALUES ($1,$2)`, values: [id_profesor,curriculum]});
+    
+    const { 
+      id_usuario,
+      telefono,
+      nombre,
+      apellido,
+      correo,
+      edad,
+      foto,
+      usuario,
+      clave_acceso,
+      cedula,
+      id_profesor,
+      curriculum 
+    } = req.body
+
+    const createUsuario = new PQ({text :`INSERT INTO Usuario (nombre, apellido, usuario,clave_acceso) VALUES ($1,$2,$3,$4) RETURNING *`, values: [nombre,apellido,usuario,clave_acceso]});
+    const resultadoCreacionUsuario = await db.one(createUsuario);
+
+    console.log(resultadoCreacionUsuario)
+
+    const findProfesor =  new PQ({text :`INSERT INTO Profesor (id_profesor,curriculum)  VALUES ($1,$2)`, values: [resultadoCreacionUsuario.id_usuario,curriculum]});
     const result = await db.none(findProfesor);
-    console.log('Resultado:', result); // { value: 123 }
+
     return res.json({mensaje: "El profesor ha sido creado con éxito"})
   } catch (error) {
     console.error('Error al hacer la consulta:', error);
@@ -52,12 +72,28 @@ router.post('/profesores', async function(req, res, next) {
 
 router.put('/profesores', async function(req, res, next) {
   try {
-    const { id,curriculum } = req.body
-    const updateProfesor = new PQ({text :`UPDATE Profesor SET curriculum = $2 WHERE id_profesor = $1`, values: [id,curriculum]});
+    const { 
+      id_usuario,
+      telefono,
+      nombre,
+      apellido,
+      correo,
+      edad,
+      foto,
+      usuario,
+      clave_acceso,
+      cedula,
+      id_profesor,
+      curriculum 
+    } = req.body
 
+    const updateUser = new PQ({text :`UPDATE Usuario SET nombre = $2, apellido = $3 WHERE id_usuario = $1`, values: [id_usuario,nombre,apellido]});
+    const updateProfesor = new PQ({text :`UPDATE Profesor SET curriculum = $2 WHERE id_profesor = $1`, values: [id_usuario,curriculum]});
+
+    const resultUsuario = await db.none(updateUser);
     const result = await db.none(updateProfesor);
     console.log('Resultado:', result); // { value: 123 }
-    return res.json({mensaje: `El profesor con id: ${id} ha sido actualizado con éxito `})
+    return res.json({mensaje: `El profesor con id: ${id_usuario} ha sido actualizado con éxito `})
   } catch (error) {
     console.error('Error al hacer la consulta:', error);
     res.json({menssage: "Error al actualizar profesor"})
