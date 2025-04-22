@@ -4,16 +4,48 @@ import './styles.css';
 import Header from "../../components/header/header";
 import { useRouter } from "next/navigation";
 
+
 export default function EstudiantesLista() {
     const Router = useRouter();
-    const [estudiantes, setEstudiantes] = useState([
-        { id: 1, nombre: 'Ana', apellido: 'García', nivel: '1', usuario: 'ana123', contrasenia: '1234', perfil: 'Estudiante', estado: 'Activo' },
-        { id: 2, nombre: 'Carlos', apellido: 'Pérez', nivel: '1', usuario: 'carlos456', contrasenia: '5678', perfil: 'Estudiante', estado: 'Activo' },
-        { id: 3, nombre: 'Sofía', apellido: 'Martínez', nivel: '1', usuario: 'sofia789', contrasenia: '91011', perfil: 'Estudiante', estado: 'Activo' },
-    ]);
 
-    const [searchTerm, setSearchTerm] = useState('');
-    const [filteredEstudiantes, setFilteredEstudiantes] = useState([...estudiantes]);
+    interface Estudiante {
+        id: number;
+        nombre: string;
+        apellido: string;
+        nivel: string;
+        usuario: string;
+        contrasenia: string;
+        perfil: string;
+        estado: string;
+      }
+      
+      const [estudiantes, setEstudiantes] = useState<Estudiante[]>([]);
+      const [filteredEstudiantes, setFilteredEstudiantes] = useState<Estudiante[]>([]);
+      const [searchTerm, setSearchTerm] = useState('');
+    
+    useEffect(() => {
+        obtenerProfesores();
+      }, []);
+      
+    async function obtenerProfesores() {
+        const resultado= await fetch('http://localhost:5555/profesores',{
+                method: 'GET', // Método especificado
+                mode: 'cors',   // Habilita CORS
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+                    });
+        const resultado_json= await resultado.json();
+        console.log(resultado_json);
+
+        setEstudiantes(resultado_json);
+        setFilteredEstudiantes(resultado_json); // para que la tabla tenga datos visibles al inicio
+    }
+    
+    useEffect(() => {
+        filterStudents();
+    }, [searchTerm, estudiantes]);
+    
 
     const [estudianteEditando, setEstudianteEditando] = useState<{
         id: number;
@@ -43,34 +75,65 @@ export default function EstudiantesLista() {
         // Aquí podrías cargar datos, hacer una animación, redirigir, etc.
       }, []); // <--- Esto garantiza que se ejecuta una sola vez (cuando se monta)
 
-    const filterStudents = () => {
+      const filterStudents = () => {
         const results = estudiantes.filter(estudiante =>
-            estudiante.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            estudiante.apellido.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            estudiante.nivel.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            estudiante.usuario.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            estudiante.perfil.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            estudiante.estado.toLowerCase().includes(searchTerm.toLowerCase())
+          (estudiante.nombre?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+          (estudiante.apellido?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+          (estudiante.nivel?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+          (estudiante.usuario?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+          (estudiante.perfil?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+          (estudiante.estado?.toLowerCase() || "").includes(searchTerm.toLowerCase())
         );
         setFilteredEstudiantes(results);
-    };
+      };
+      
 
     const onEditar = (estudiante: any) => {
         setEstudianteEditando({ ...estudiante });
     };
 
-    const onGuardarEdicion = () => {
+    const onGuardarEdicion = async () => {
         if (!estudianteEditando) return;
-        setEstudiantes(estudiantes.map(est => est.id === estudianteEditando.id ? estudianteEditando : est));
-        setFilteredEstudiantes(filteredEstudiantes.map(est => est.id === estudianteEditando.id ? estudianteEditando : est));
-        setEstudianteEditando(null);
+
+        try {
+            const response = await fetch(`http://localhost:5555/profesores/${estudianteEditando.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(estudianteEditando),
+            });
+
+            if (response.ok) {
+                const updatedList = estudiantes.map(est =>
+                    est.id === estudianteEditando.id ? estudianteEditando : est
+                );
+                setEstudiantes(updatedList);
+                setFilteredEstudiantes(updatedList);
+                setEstudianteEditando(null);
+            } else {
+                console.error("Error al actualizar el profesor");
+            }
+        } catch (error) {
+            console.error("Error en la petición:", error);
+        }
     };
 
-    const onEliminar = (id: number) => {
+    const onEliminar = async (id: number) => {
         const confirmacion = confirm("¿Estás seguro de que quieres eliminar este estudiante?");
-        if (confirmacion) {
-            setEstudiantes(estudiantes.filter(estudiante => estudiante.id !== id));
-            setFilteredEstudiantes(filteredEstudiantes.filter(estudiante => estudiante.id !== id));
+        if (!confirmacion) return;
+
+        try {
+            const response = await fetch(`http://localhost:5555/profesores/${id}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                setEstudiantes(estudiantes.filter(est => est.id !== id));
+                setFilteredEstudiantes(filteredEstudiantes.filter(est => est.id !== id));
+            } else {
+                console.error("Error al eliminar el profesor");
+            }
+        } catch (error) {
+            console.error("Error en la petición:", error);
         }
     };
 
@@ -119,6 +182,7 @@ export default function EstudiantesLista() {
                 text3="Mi perfil" onClick3={() => Router.push("/videojuego")}
                 text4="Salir" onClick4={() => Router.push("/videojuego")}>
             </Header>
+            <button onClick={()=>obtenerProfesores()}> ObtenerProfesores </button>
 
                 <div className="listado">
                     <div className="encabezado">

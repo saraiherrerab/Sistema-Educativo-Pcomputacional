@@ -7,7 +7,7 @@ const {ParameterizedQuery: PQ} = require('pg-promise');
 router.get('/profesores', async function(req, res, next) {
   
   try {
-    const result = await db.any('SELECT * FROM profesor');
+    const result = await db.any(`SELECT U.*, P.* FROM Usuario AS U, Profesor as P WHERE id_usuario = id_profesor`);
     console.log('Resultado:', result); // { value: 123 }
     return res.json(result)
   } catch (error) {

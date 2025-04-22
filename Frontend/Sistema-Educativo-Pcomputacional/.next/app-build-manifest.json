@@ -11,47 +11,17 @@
       "static/css/app/page.css",
       "static/chunks/app/page.js"
     ],
-    "/menu/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/menu/page.css",
-      "static/chunks/app/menu/page.js"
-    ],
-    "/Aestudiantes-lista/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/Aestudiantes-lista/page.css",
-      "static/chunks/app/Aestudiantes-lista/page.js"
-    ],
-    "/videojuego/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/videojuego/page.css",
-      "static/chunks/app/videojuego/page.js"
-    ],
     "/Amenu/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/Amenu/page.css",
       "static/chunks/app/Amenu/page.js"
     ],
-    "/profile/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/profile/page.css",
-      "static/chunks/app/profile/page.js"
-    ],
     "/Aprofesores-lista/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/Aprofesores-lista/page.css",
       "static/chunks/app/Aprofesores-lista/page.js"
-    ],
-    "/Aadmins-lista/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/Aadmins-lista/page.css",
-      "static/chunks/app/Aadmins-lista/page.js"
     ]
   }
 }
