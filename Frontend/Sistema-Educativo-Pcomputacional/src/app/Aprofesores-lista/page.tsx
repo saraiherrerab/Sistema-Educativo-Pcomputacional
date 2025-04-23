@@ -5,7 +5,7 @@ import Header from "../../components/header/header";
 import { useRouter } from "next/navigation";
 
 
-export default function EstudiantesLista() {
+export default function ProfesoresLista() {
     const Router = useRouter();
 
     interface Profesor {
@@ -85,8 +85,8 @@ export default function EstudiantesLista() {
     };
       
 
-    const onEditar = (estudiante: any) => {
-        setProfesorEditando({ ...estudiante });
+    const onEditar = (profesor: any) => {
+        setProfesorEditando({ ...profesor });
     };
 
     
@@ -127,7 +127,7 @@ export default function EstudiantesLista() {
     
         try {
 
-            const confirmacion = confirm("¿Estás seguro de que quieres eliminar este estudiante?");
+            const confirmacion = confirm("¿Estás seguro de que quieres eliminar este profesor?");
             if (!confirmacion) return;
 
             console.log("Eliminando")
@@ -267,6 +267,11 @@ export default function EstudiantesLista() {
                     <input type="text" placeholder="Apellido" value={nuevoProfesor.apellido} onChange={e => setNuevoProfesor({ ...nuevoProfesor, apellido: e.target.value })} />
                     <input type="text" placeholder="Usuario" value={nuevoProfesor.usuario} onChange={e => setNuevoProfesor({ ...nuevoProfesor, usuario: e.target.value })} />
                     <input type="text" placeholder="Clave" value={nuevoProfesor.clave_acceso} onChange={e => setNuevoProfesor({ ...nuevoProfesor, clave_acceso: e.target.value })} />
+                    <input type="text" placeholder="Telefono" value={nuevoProfesor.telefono} onChange={e => setNuevoProfesor({ ...nuevoProfesor, telefono: e.target.value })} />
+                    <input type="text" placeholder="Correo" value={nuevoProfesor.correo} onChange={e => setNuevoProfesor({ ...nuevoProfesor, correo: e.target.value })} />
+                    <input type="number" placeholder="Edad" value={nuevoProfesor.edad} onChange={e => setNuevoProfesor({ ...nuevoProfesor, edad: (e.target.value) as unknown as number})} />
+                    <input type="text" placeholder="Cedula" value={nuevoProfesor.cedula} onChange={e => setNuevoProfesor({ ...nuevoProfesor, cedula: e.target.value })} />
+                    <input type="text" placeholder="Foto" value={nuevoProfesor.foto} onChange={e => setNuevoProfesor({ ...nuevoProfesor, foto: e.target.value })} />
                     <button onClick={() => onAgregarProfesor()}>Guardar</button>
                     <button onClick={() => setMostrarFormulario(false)}>Cancelar</button>
                 </div>
@@ -282,6 +287,7 @@ export default function EstudiantesLista() {
                             <th>Clave</th>
                             <th>Correo</th>
                             <th>Celular</th>
+                            <th>Perfil</th> 
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -297,6 +303,9 @@ export default function EstudiantesLista() {
                                 <td>{profesor.correo ? profesor.correo : "null"}</td>
                                 <td>{profesor.telefono ? profesor.telefono : "null"}</td>
                                 <td>
+                                    <button onClick={()=>Router.push("/profile")}>Ver Perfil</button>
+                                </td>
+                                <td>
                                     <button onClick={() => onEditar(profesor)}>Editar</button>
                                     <button onClick={() => onEliminar(profesor.id_profesor)}>Eliminar</button>
                                 </td>
@@ -309,10 +318,15 @@ export default function EstudiantesLista() {
             {profesorEditando && (
                 <div className="formulario-edicion">
                     <h3>Editando profesor</h3>
-                    <input type="text" value={profesorEditando.nombre} onChange={e => setProfesorEditando({ ...profesorEditando, nombre: e.target.value })} />
-                    <input type="text" value={profesorEditando.apellido} onChange={e => setProfesorEditando({ ...profesorEditando, apellido: e.target.value })} />
-                    <input type="text" value={profesorEditando.usuario} onChange={e => setProfesorEditando({ ...profesorEditando, usuario: e.target.value })} />
-                    <input type="text" value={profesorEditando.clave_acceso} onChange={e => setProfesorEditando({ ...profesorEditando, clave_acceso: e.target.value })} />
+                    <input type="text" placeholder="Nombre" value={profesorEditando.nombre} onChange={e => setProfesorEditando({ ...profesorEditando, nombre: e.target.value })} />
+                    <input type="text" placeholder="Apellido" value={profesorEditando.apellido} onChange={e => setProfesorEditando({ ...profesorEditando, apellido: e.target.value })} />
+                    <input type="text" placeholder="Usuario" value={profesorEditando.usuario} onChange={e => setProfesorEditando({ ...profesorEditando, usuario: e.target.value })} />
+                    <input type="text" placeholder="Clave" value={profesorEditando.clave_acceso} onChange={e => setProfesorEditando({ ...profesorEditando, clave_acceso: e.target.value })} />
+                    <input type="text" placeholder="Telefono" value={nuevoProfesor.telefono} onChange={e => setNuevoProfesor({ ...nuevoProfesor, telefono: e.target.value })} />
+                    <input type="text" placeholder="Correo" value={nuevoProfesor.correo} onChange={e => setNuevoProfesor({ ...nuevoProfesor, correo: e.target.value })} />
+                    <input type="number" placeholder="Edad" value={nuevoProfesor.edad} onChange={e => setNuevoProfesor({ ...nuevoProfesor, edad: (e.target.value) as unknown as number})} />
+                    <input type="text" placeholder="Cedula" value={nuevoProfesor.cedula} onChange={e => setNuevoProfesor({ ...nuevoProfesor, cedula: e.target.value })} />
+                    <input type="text" placeholder="Foto" value={nuevoProfesor.foto} onChange={e => setNuevoProfesor({ ...nuevoProfesor, foto: e.target.value })} />
                     <button onClick={() => onGuardarEdicion()}>Guardar</button>
                     <button onClick={() => setProfesorEditando(null)}>Cancelar</button>
                 </div>

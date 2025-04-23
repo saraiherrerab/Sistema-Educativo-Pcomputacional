@@ -62,11 +62,10 @@ th {
 
 th,
 td {
-  padding: 16px 18px; /* Más espacio interno en las celdas (vertical y horizontal) */
   text-align: left; /* Alinea el texto a la izquierda por defecto */
   font-size: 1.1em; /* Letra un poco más grande */
   border-bottom: 1px solid #ddd; /* Línea divisoria sutil entre filas */
-  padding: 20px 45px !important; /* AUMENTAMOS el padding */
+  padding: 20px 15px !important; /* AUMENTAMOS el padding */
 }
 
 th {
