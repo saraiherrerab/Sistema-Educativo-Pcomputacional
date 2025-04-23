@@ -19,20 +19,23 @@ export default function Header({ text, onClick, text1, onClick1, text2, onClick2
         
         <div className='header-container'>
             <p className="header-logo" onClick={onClick}>
-                {text}
+                    {text}
             </p>
-            <p className="header-button" onClick={onClick1}>
-                {text1}
-            </p>
-            <p className="header-button" onClick={onClick2}>
-                {text2}
-            </p>
-            <p className="header-button" onClick={onClick3}>
-                {text3}
-            </p>
-            <p className="header-button" onClick={onClick4}>
-                {text4}
-            </p>
+            <div className='botones'>
+                <p className="header-button" onClick={onClick1}>
+                    {text1}
+                </p>
+                <p className="header-button" onClick={onClick2}>
+                    {text2}
+                </p>
+                <p className="header-button" onClick={onClick3}>
+                    {text3}
+                </p>
+                <p className="header-button" onClick={onClick4}>
+                    {text4}
+                </p>
+            </div>
+                
         </div>
         
 

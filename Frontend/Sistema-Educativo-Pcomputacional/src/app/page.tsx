@@ -14,7 +14,7 @@ export default function Page() {
           <div className="input-container">
             <Input placeholder="Escribe tu nombre" />
             <Input placeholder="Escribe tu apellido" />
-            <Button text="Aceptar" onClick={()=>Router.push("/menu")}/>
+            <Button text="Aceptar" onClick={()=>Router.push("/Amenu")}/>
           </div>
         </div>
         <Imagen/>

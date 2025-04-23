@@ -1,8 +1,12 @@
+
 /*Tablas principales*/
-DROP TABLE IF EXISTS Profesor;
 DROP TABLE IF EXISTS Estudiante;
 DROP TABLE IF EXISTS Grupos;
 DROP TABLE IF EXISTS Curso;
+DROP TABLE IF EXISTS Profesor;
+
+
+
 
 DROP TABLE IF EXISTS Usuario_Nivel;
 DROP TABLE IF EXISTS Nivel;
@@ -14,7 +18,7 @@ DROP TABLE IF EXISTS Administrador;
 /* Lógica de usuarios */
 DROP TABLE IF EXISTS Usuario;
 CREATE TABLE IF NOT EXISTS Usuario (
-	id_usuario INTEGER NOT NULL,
+	id_usuario SERIAL NOT NULL,
 	telefono VARCHAR(14),
 	nombre TEXT NOT NULL,
 	apellido TEXT NOT NULL,
@@ -28,27 +32,27 @@ CREATE TABLE IF NOT EXISTS Usuario (
 );
 
 -- Jackeline
-INSERT INTO Usuario (id_usuario, telefono, nombre, apellido, correo, edad, usuario, clave_acceso, cedula)
-VALUES (1, '04121234567', 'Jackeline', 'Duarte', 'jackeline.duarte@example.com', 35, 'jduarte', 'admin123', 'V12345678');
+INSERT INTO Usuario (telefono, nombre, apellido, correo, edad, usuario, clave_acceso, cedula)
+VALUES ('04121234567', 'Jackeline', 'Duarte', 'jackeline.duarte@example.com', 35, 'jduarte', 'admin123', 'V12345678');
 
 -- Sarai
-INSERT INTO Usuario (id_usuario, telefono, nombre, apellido, correo, edad, usuario, clave_acceso, cedula)
-VALUES (2, '04129876543', 'Sarai', 'Herrea', 'sarai.herrea@example.com', 40, 'sherrea', 'profesor123', 'V87654321');
+INSERT INTO Usuario (telefono, nombre, apellido, correo, edad, usuario, clave_acceso, cedula)
+VALUES ('04129876543', 'Sarai', 'Herrea', 'sarai.herrea@example.com', 40, 'sherrea', 'profesor123', 'V87654321');
 
 -- Nahum
-INSERT INTO Usuario (id_usuario, telefono, nombre, apellido, correo, edad, usuario, clave_acceso, cedula)
-VALUES (3, '04125551234', 'Nahum', 'Giral', 'nahum.giral@example.com', 38, 'ngiral', 'profesor123', 'V45678912');
+INSERT INTO Usuario (telefono, nombre, apellido, correo, edad, usuario, clave_acceso, cedula)
+VALUES ('04125551234', 'Nahum', 'Giral', 'nahum.giral@example.com', 38, 'ngiral', 'profesor123', 'V45678912');
 
 -- Otros 7 usuarios de prueba
-INSERT INTO Usuario (id_usuario, telefono, nombre, apellido, correo, edad, usuario, clave_acceso, cedula)
+INSERT INTO Usuario (telefono, nombre, apellido, correo, edad, usuario, clave_acceso, cedula)
 VALUES 
-(4, '04241234567', 'Carlos', 'Pérez', 'carlos.perez@example.com', 20, 'cperez', 'est123', 'V11223344'),
-(5, '04241234568', 'Ana', 'Martínez', 'ana.martinez@example.com', 19, 'amartinez', 'est123', 'V22334455'),
-(6, '04241234569', 'Luis', 'Rodríguez', 'luis.rodriguez@example.com', 21, 'lrodriguez', 'est123', 'V33445566'),
-(7, '04241234570', 'María', 'López', 'maria.lopez@example.com', 22, 'mlopez', 'est123', 'V44556677'),
-(8, '04241234571', 'Pedro', 'González', 'pedro.gonzalez@example.com', 20, 'pgonzalez', 'est123', 'V55667788'),
-(9, '04241234572', 'Laura', 'Jiménez', 'laura.jimenez@example.com', 18, 'ljimenez', 'est123', 'V66778899'),
-(10, '04241234573', 'Diego', 'Ramos', 'diego.ramos@example.com', 23, 'dramos', 'est123', 'V77889900');
+('04241234567', 'Carlos', 'Pérez', 'carlos.perez@example.com', 20, 'cperez', 'est123', 'V11223344'),
+('04241234568', 'Ana', 'Martínez', 'ana.martinez@example.com', 19, 'amartinez', 'est123', 'V22334455'),
+('04241234569', 'Luis', 'Rodríguez', 'luis.rodriguez@example.com', 21, 'lrodriguez', 'est123', 'V33445566'),
+('04241234570', 'María', 'López', 'maria.lopez@example.com', 22, 'mlopez', 'est123', 'V44556677'),
+('04241234571', 'Pedro', 'González', 'pedro.gonzalez@example.com', 20, 'pgonzalez', 'est123', 'V55667788'),
+('04241234572', 'Laura', 'Jiménez', 'laura.jimenez@example.com', 18, 'ljimenez', 'est123', 'V66778899'),
+('04241234573', 'Diego', 'Ramos', 'diego.ramos@example.com', 23, 'dramos', 'est123', 'V77889900');
 
 
 CREATE TABLE  IF NOT EXISTS Administrador (
