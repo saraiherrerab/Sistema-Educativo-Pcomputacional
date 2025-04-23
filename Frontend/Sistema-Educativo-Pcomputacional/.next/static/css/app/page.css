@@ -1,6 +1,35 @@
-/*!****************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!./src/components/input/input.css ***!
-  \****************************************************************************************************************************************************************************************************************************************************************************/
+/*!***************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!./src/app/login.css ***!
+  \***************************************************************************************************************************************************************************************************************************************************************/
+.input-container {
+    display: flex;       /* Activa Flexbox */
+    flex-direction: column; /* Cambia la dirección a columna */
+    gap: 5px;           /* Espaciado entre los inputs */
+    width: 100%;         /* Opcional: ajusta el tamaño */
+    align-items: center;  /* Alinea los elementos al inicio */
+  }
+  
+.form-container{
+    display: flex;      
+    flex-direction: column; 
+    gap: 10px;           
+    width: 100%;         
+    align-items: center;  
+}
+
+.login-container {
+  display: flex;
+  flex-direction: row; /* Los elementos estarán en fila */
+  align-items: center; /* Centra los elementos verticalmente */
+  height: 100vh; /* Asegúrate de que el contenedor tenga altura para ver el centrado */
+  width:100vw;
+}
+
+
+div{
+  margin:0px;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
 /* Estilo para la etiqueta input */
@@ -23,9 +52,6 @@ input:focus {
     color: #4B22F4;  
 }
 
-/*!******************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!./src/components/button/button.css ***!
-  \******************************************************************************************************************************************************************************************************************************************************************************/
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
 button {
@@ -63,37 +89,6 @@ button:disabled {
     opacity: 0.6;             
 }
 
-/*!***************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!./src/app/login.css ***!
-  \***************************************************************************************************************************************************************************************************************************************************************/
-.input-container {
-    display: flex;       /* Activa Flexbox */
-    flex-direction: column; /* Cambia la dirección a columna */
-    gap: 5px;           /* Espaciado entre los inputs */
-    width: 100%;         /* Opcional: ajusta el tamaño */
-    align-items: center;  /* Alinea los elementos al inicio */
-  }
-  
-.form-container{
-    display: flex;      
-    flex-direction: column; 
-    gap: 10px;           
-    width: 100%;         
-    align-items: center;  
-}
-
-.login-container {
-  display: flex;
-  flex-direction: row; /* Los elementos estarán en fila */
-  align-items: center; /* Centra los elementos verticalmente */
-  height: 100vh; /* Asegúrate de que el contenedor tenga altura para ver el centrado */
-  width:100vw;
-}
-
-
-div{
-  margin:0px;
-}
 /*!**************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!./src/components/imageRight/imageRight.css ***!
   \**************************************************************************************************************************************************************************************************************************************************************************************/

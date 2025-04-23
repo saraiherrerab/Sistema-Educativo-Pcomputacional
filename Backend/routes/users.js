@@ -17,6 +17,34 @@ router.get('/profesores', async function(req, res, next) {
   
 });
 
+/* Función para validar usuario y contraseña */
+router.post('/validar', async function(req, res, next) {
+  try {
+    const { usuario, clave_acceso } = req.body
+    const findUsuario =  new PQ({text: `SELECT U.* FROM Usuario as U WHERE U.usuario = $1 AND U.clave_acceso = $2`, values: [usuario,clave_acceso]})
+    const result = await db.oneOrNone(findUsuario);
+    console.log('Resultado:', result); // { value: 123 }
+    return res.json(result)
+  } catch (error) {
+    console.error('Error al hacer la consulta:', error);
+    res.json({menssage: "Error al validar usuario y contraseña"})
+  }
+});
+
+/* Función auxiliar para obtener el ROL al que pertenece un usuario */
+router.post('/rol', async function(req, res, next) {
+  try {
+    const { id_usuario } = req.body
+    const findRol =  new PQ({text: `SELECT obtener_rol_usuario($1);`, values: [id_usuario]})
+    const result = await db.oneOrNone(findRol);
+    console.log('Resultado:', result); // { value: 123 }
+    return res.json(result)
+  } catch (error) {
+    console.error('Error al hacer la consulta:', error);
+    res.json({menssage: "Error al validar rol"})
+  }
+});
+
 /* GET Profesores By ID - Obtener Datos de Profesor y Usuario asociado mediante ID. */
 router.get('/profesores/:id', async function(req, res, next) {
   
