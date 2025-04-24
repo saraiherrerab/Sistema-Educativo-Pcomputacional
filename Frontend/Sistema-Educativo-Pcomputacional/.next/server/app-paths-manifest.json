@@ -1,7 +1,4 @@
 {
-  "/Amenu/page": "app/Amenu/page.js",
-  "/Aprofesores-lista/page": "app/Aprofesores-lista/page.js",
-  "/Aestudiantes-lista/page": "app/Aestudiantes-lista/page.js",
-  "/profile/page": "app/profile/page.js",
-  "/Aadmins-lista/page": "app/Aadmins-lista/page.js"
+  "/page": "app/page.js",
+  "/reportes/page": "app/reportes/page.js"
 }
