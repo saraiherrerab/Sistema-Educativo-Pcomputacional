@@ -1,13 +1,12 @@
+"use client";
+
 import {GameObj, KAPLAYCtx} from "kaplay";
 import generarEsquemaMapa from "../../MapsGenerator";
 import generarNumerosAzar from "../../utils/generarNumerosAzar";
-import { useEffect, useRef, useState } from "react";
-//import './styles.css';
 
+let SCREEN_RESOLUTION_X = 0;
+let SCREEN_RESOLUTION_Y = 0;
 
-
-const SCREEN_RESOLUTION_X: number = window.innerWidth 
-const SCREEN_RESOLUTION_Y: number = window.innerHeight 
 const TILED_MAP__WIDTH_NUMBER: number = 21
 const TILED_MAP_HEIGHT_NUMBER: number = 16
 const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
@@ -107,16 +106,13 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
     juegoKaplay.loadSound("A1", "./sounds/A1.mp3");
     juegoKaplay.loadSound("A2", "./sounds/A2.mp3");
   
-        
-        
-  
-
     juegoKaplay.loadSprite("redbox", "red-border-box.png");
         
   
     juegoKaplay.onLoad(async () => {
         //Practicando aqui
-
+        SCREEN_RESOLUTION_X = window.innerWidth 
+        SCREEN_RESOLUTION_Y = window.innerHeight 
 
       const nivelPrincipal = generarEsquemaMapa(
         juegoKaplay,

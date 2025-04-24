@@ -34,6 +34,17 @@
       "static/chunks/main-app.js",
       "static/css/app/Aprofesores-lista/page.css",
       "static/chunks/app/Aprofesores-lista/page.js"
+    "/videojuego/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/videojuego/page.css",
+      "static/chunks/app/videojuego/page.js"
+    ],
+    "/menu/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/menu/page.css",
+      "static/chunks/app/menu/page.js"
     ]
   }
 }

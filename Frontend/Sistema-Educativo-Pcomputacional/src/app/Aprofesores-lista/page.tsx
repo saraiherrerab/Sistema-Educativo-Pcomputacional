@@ -4,6 +4,8 @@ import './styles.css';
 import Header from "../../components/header/header";
 import { useRouter } from "next/navigation";
 
+import Swal from 'sweetalert2'
+
 
 export default function ProfesoresLista() {
     const Router = useRouter();
@@ -23,9 +25,9 @@ export default function ProfesoresLista() {
         curriculum: string
     }
       
-      const [profesores, setProfesores] = useState<Profesor[]>([]);
-      const [profesoresFiltrados, setProfesoresFiltrados] = useState<Profesor[]>([]);
-      const [searchTerm, setSearchTerm] = useState('');
+    const [profesores, setProfesores] = useState<Profesor[]>([]);
+    const [profesoresFiltrados, setProfesoresFiltrados] = useState<Profesor[]>([]);
+    const [searchTerm, setSearchTerm] = useState('');
 
     async function obtenerProfesores() : Promise<Profesor[]>{
         const resultado= await fetch('http://localhost:5555/profesores',{
@@ -41,7 +43,7 @@ export default function ProfesoresLista() {
 
     }
 
-        // Este useEffect se ejecuta una sola vez al montar el componente
+    // Este useEffect se ejecuta una sola vez al montar el componente
     useEffect(() => {
         const cargarProfesores = async () => {
             const respuesta = await obtenerProfesores();
@@ -55,8 +57,11 @@ export default function ProfesoresLista() {
         filtrarProfesores();
     }, [searchTerm, profesores]);
     
+ 
 
     const [profesorEditando, setProfesorEditando] = useState<Profesor | null>(null);
+
+    const [habilitarGuardado, setHabilitarGuardado] = useState<boolean>(true);
 
     const [mostrarFormulario, setMostrarFormulario] = useState(false);
     const [nuevoProfesor, setNuevoProfesor] = useState<Profesor>({
@@ -74,6 +79,23 @@ export default function ProfesoresLista() {
         curriculum: ""
     });
 
+    const validarFormulario = (): boolean => {
+        console.log("Validando Entradas de nuevo profesor")
+
+        const { nombre, apellido, usuario, clave_acceso } = nuevoProfesor;
+
+        const camposValidos = [nombre, apellido, usuario, clave_acceso].every(
+            (valor) => valor !== undefined && valor.trim() !== ''
+        );
+
+        console.log(camposValidos)
+
+        return !camposValidos;
+    }
+
+    useEffect(() => {
+        setHabilitarGuardado(validarFormulario())
+    }, [nuevoProfesor]);
 
     const filtrarProfesores = () => {
         const results = profesores.filter(profesores =>
@@ -84,16 +106,12 @@ export default function ProfesoresLista() {
         setProfesoresFiltrados(results);
     };
       
-
     const onEditar = (profesor: any) => {
         setProfesorEditando({ ...profesor });
     };
 
-    
     const onGuardarEdicion = async () => {
         
-        
-
         try {
             if (!profesorEditando) return;
             console.log(profesorEditando)
@@ -127,36 +145,51 @@ export default function ProfesoresLista() {
     
         try {
 
-            const confirmacion = confirm("¿Estás seguro de que quieres eliminar este profesor?");
-            if (!confirmacion) return;
+            Swal.fire({
+                title: "¿Estás seguro que quieres eliminar al profesor",
+                text: "Los cambios no son reversibles",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33000",
+                cancelButtonColor: "#0053d3",
+                confirmButtonText: "Borrar"
+              }).then(async (result) => {
+                if (result.isConfirmed) {
+                    console.log("Eliminando")
 
-            console.log("Eliminando")
+                    const response = await fetch(`http://localhost:5555/profesores`, {
+                        method: 'DELETE',
+                        mode: 'cors',   // Habilita CORS
+                        headers: {
+                          'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({id: id_profesor}),
+                    });
+        
+                    console.log(profesores)
+        
+                    const resultadoConsulta = await response.json()
+                    console.log(resultadoConsulta)
+        
+                    const arrayActualizado = profesores.filter(profesor => profesor.id_usuario !== id_profesor)
+                    console.log(arrayActualizado)
+                    setProfesores(arrayActualizado);
+                    setProfesoresFiltrados(arrayActualizado);
+                  Swal.fire({
+                    title: "El profesor ha sido borrado",
+                    text: "La eliminación se ha ejecutado exitosamente",
+                    icon: "success"
+                  });
+                }
+              });
 
-            const response = await fetch(`http://localhost:5555/profesores`, {
-                method: 'DELETE',
-                mode: 'cors',   // Habilita CORS
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({id: id_profesor}),
-            });
 
-            console.log(profesores)
-
-            const resultadoConsulta = await response.json()
-            console.log(resultadoConsulta)
-
-            const arrayActualizado = profesores.filter(profesor => profesor.id_usuario !== id_profesor)
-            console.log(arrayActualizado)
-            setProfesores(arrayActualizado);
-            setProfesoresFiltrados(arrayActualizado);
+           
 
         } catch (error) {
             console.error("Error en la petición:", error);
         }
-    };
-
-    
+    };  
 
     const onAgregarProfesor = async () => {
         
@@ -205,7 +238,6 @@ export default function ProfesoresLista() {
         
     };
     
-
     const handleTitleClick = () => {
         window.location.reload();
     };
@@ -272,7 +304,7 @@ export default function ProfesoresLista() {
                     <input type="number" placeholder="Edad" value={nuevoProfesor.edad} onChange={e => setNuevoProfesor({ ...nuevoProfesor, edad: (e.target.value) as unknown as number})} />
                     <input type="text" placeholder="Cedula" value={nuevoProfesor.cedula} onChange={e => setNuevoProfesor({ ...nuevoProfesor, cedula: e.target.value })} />
                     <input type="text" placeholder="Foto" value={nuevoProfesor.foto} onChange={e => setNuevoProfesor({ ...nuevoProfesor, foto: e.target.value })} />
-                    <button onClick={() => onAgregarProfesor()}>Guardar</button>
+                    <button onClick={() => onAgregarProfesor()} disabled={habilitarGuardado}>Guardar</button>
                     <button onClick={() => setMostrarFormulario(false)}>Cancelar</button>
                 </div>
             )}
