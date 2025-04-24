@@ -36,8 +36,12 @@ export default function Page() {
         console.log(dataRol.obtener_rol_usuario)
         if(dataRol.obtener_rol_usuario === "ADMINISTRADOR"){
           Router.push("./Amenu")
-        }else{
+        }else if(dataRol.obtener_rol_usuario === "PROFESOR"){
           Router.push("./menu")
+        }else if(dataRol.obtener_rol_usuario === "ESTUDIANTE"){
+          Router.push("./videojuego")
+        }else{
+          Router.push("./")
         }
       } else {
         // Lógica si no se encontró el usuario

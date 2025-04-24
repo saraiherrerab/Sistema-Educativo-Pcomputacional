@@ -22,7 +22,7 @@ body{
     left: 50%;
     transform: translateX(-50%); /* Centrar horizontalmente */
     color: rgb(62, 50, 1);
-    background-image: url('../../../public/sprites/UI/Carved_9Slides.png');  /* Fondo semitransparente */
+    background-image: url('../../../public/nivel2/cartel.png');  /* Fondo semitransparente */
     padding:10px;
     border-radius: 0px;
     font-size: 35px;
@@ -30,7 +30,15 @@ body{
     font-weight:400;
     background-repeat: no-repeat;
     background-size: cover;
+    animation: aparecerDesaparecer 6s ease-in-out forwards;
     
+  }
+
+  @keyframes aparecerDesaparecer {
+    0% { opacity: 0; transform: translateX(-50%) scale(0.8); }
+    10% { opacity: 1; transform: translateX(-50%) scale(1); }
+    80% { opacity: 1; transform: translateX(-50%) scale(1); }
+    100% { opacity: 0; transform: translateX(-50%) scale(0.8); }
   }
 
   p {
@@ -48,8 +56,26 @@ img {
   transform: translateX(-50%); /* Centrar horizontalmente */
 }
 
- 
-  
+.cartel-medieval {
+  position: absolute;
+  top: 40px; /* Ajusta la posición según sea necesario */
+  left: 50%;
+  transform: translateX(-50%); /* Centrar horizontalmente */
+  background-image: url('../../../public/sprites/UI/Carved_9Slides.png');  /* Fondo semitransparente */
+  font-family: "Jersey 15", sans-serif;
+  font-weight:400;
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-family: 'MedievalSharp', cursive;
+  background: #d2b48c;
+  border: 8px double #4b2e05;
+  color: #2d1601;
+  padding: 2rem 4rem;
+  font-size: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  opacity: 0;
+}
 
   .Bcontainer{
     position:relative;
