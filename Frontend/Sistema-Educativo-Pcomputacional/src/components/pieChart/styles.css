@@ -1,0 +1,10 @@
+.pie-chart {
+    border-radius: 50%;
+    position: relative;
+  }
+  
+  .pie-label {
+    font-size: 1.2em;
+    color:white;
+  }
+  

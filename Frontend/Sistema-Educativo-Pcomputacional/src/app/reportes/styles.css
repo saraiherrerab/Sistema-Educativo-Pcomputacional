@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+body {
+  font-family: "Inter", sans-serif;
+  background-color: #F6F7F9;
+  margin: 0;
+  padding: 0;
+}
+
+.bigContainer {
+  display: flex;
+  width: 100%;
+  height: 100vh; /* o ajusta según tu necesidad */
+}
+
+/* Cada mitad ocupa 50% */
+.container-left,
+.container-right {
+  width: 50%;
+  box-sizing: border-box;
+  padding: 20px;
+  background-color: #F6F7F9;
+  
+  
+}
+
+.container-left{
+    display:flex;
+    flex-direction: column;
+    border: 2px solid #F6F7F9;/* Añadimos un borde de 2 píxeles de grosor y color #D9D9D9 */
+    box-sizing: border-box; 
+    width:70%;
+    padding-right: 2px;
+}
+
+.container1-1{
+    height: 50%;
+    background-color: white;
+    
+}
+
+
+
+.container1-2{
+    height: 50%;
+    background-color: white;
+}
+
+.container-right {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Asegura que container-right ocupe todo el alto disponible */
+  width: 70%;
+  padding-left: 3px;
+  padding-top: 18px;
+  padding-bottom: 13px;
+}
+
+/* Contenido dentro de container2 */
+.container2 {
+  display: flex;
+  flex-direction: row;
+  height: 50%; /* container2 ocupa la mitad del alto de container-right */
+  border: 2px solid #F6F7F9; /* Añadimos un borde de 2 píxeles de grosor y color #D9D9D9 */
+  box-sizing: border-box; 
+}
+
+/* Parte izquierda del container2 */
+.c2ls {
+  width: 60%;
+  background-color: white; /* solo para visualizar */
+  padding: 10px;
+  box-sizing: border-box;
+  border: 2px solid #F6F7F9; /* Añadimos un borde de 2 píxeles de grosor y color #D9D9D9 */
+  box-sizing: border-box; 
+  
+}
+
+/* Parte derecha del container2 */
+.c2right {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  box-sizing: border-box;
+   
+}
+
+/* Dos filas dentro del c2right */
+.c2rs,
+.c2ri {
+  width: 100%;
+  height: 50%;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: white;
+  border: 2px solid #F6F7F9; /* Añadimos un borde de 2 píxeles de grosor y color #D9D9D9 */
+  box-sizing: border-box; 
+}
+
+.container3 {
+  height: 50%; /* container3 ocupa la otra mitad del alto de container-right */
+  border: 2px solid #F6F7F9; /* Añadimos un borde de 2 píxeles de grosor y color #D9D9D9 */
+  box-sizing: border-box; 
+  margin-top: -5px;
+  margin-right:-3px;
+}
+
+.container3-1 {
+  background-color: white; /* Solo para visualizar */
+  height: 50%;
+  padding: 0px;
+  box-sizing: border-box;
+  display: grid; /* Convertimos container3.1 en un contenedor grid */
+  grid-template-columns: 1.5fr 1fr; /* Definimos dos columnas de igual ancho */
+  border: 2px solid #F6F7F9; /* Añadimos un borde de 2 píxeles de grosor y color #D9D9D9 */
+  box-sizing: border-box; 
+  gap: 0px; 
+}
+.container3-2-1{
+  border: 2px solid #F6F7F9; /* Añadimos un borde de 2 píxeles de grosor y color #D9D9D9 */
+  box-sizing: border-box; 
+}
+
+.container3-2-2{
+  border: 2px solid #F6F7F9; /* Añadimos un borde de 2 píxeles de grosor y color #D9D9D9 */
+  box-sizing: border-box; 
+}
+
+.container3-1-1{
+  border: 2px solid #F6F7F9; /* Añadimos un borde de 2 píxeles de grosor y color #D9D9D9 */
+  box-sizing: border-box; 
+}
+
+.container3-1-2{
+  border: 2px solid #F6F7F9; /* Añadimos un borde de 2 píxeles de grosor y color #D9D9D9 */
+  box-sizing: border-box; 
+}
+
+.container3-2 {
+  background-color: white; /* Solo para visualizar */
+  height: 50%;
+  padding: 0px;
+  box-sizing: border-box;
+  display: grid; /* Convertimos container3.2 en un contenedor grid */
+  grid-template-columns: 1.5fr 1fr; /* Definimos dos columnas de igual ancho */
+  border: 2px solid #F6F7F9; /* Añadimos un borde de 2 píxeles de grosor y color #D9D9D9 */
+  box-sizing: border-box; 
+  gap: 0px;
+  margin-top: -3px;
+}
