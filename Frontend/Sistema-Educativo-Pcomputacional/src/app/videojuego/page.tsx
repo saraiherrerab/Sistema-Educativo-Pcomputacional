@@ -75,11 +75,11 @@ import { useRouter } from "next/navigation";
        const juegoKaplay = juegoKaplayRef.current;
        juegoKaplay.setBackground(71,171,169)
        juegoKaplay.loadRoot("./");
-      // Nivel1(juegoKaplay);
-      Panel(juegoKaplay, setState, cambiarGanar, Router);
+       // Nivel1(juegoKaplay);
+       Panel(juegoKaplay, setState, cambiarGanar, Router);
 
          
-       }
+      }
    
     resizeCanvas(); // Ajustar en la carga inicial
  

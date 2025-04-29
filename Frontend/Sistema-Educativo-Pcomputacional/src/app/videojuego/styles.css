@@ -1,20 +1,21 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Jersey+15&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Pixelify+Sans&display=swap');
+
 body{
   font-family: "Jersey 15", sans-serif;
 }
   
-  .button-container {
-    position: absolute;
-    top: 20px; /* Ajusta la posición según sea necesario */
-    left: 50%;
-    transform: translateX(-50%); /* Centrar horizontalmente */
-    color: white;
-    background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 20px;
-  }
+.button-container {
+  position: absolute;
+  top: 20px; /* Ajusta la posición según sea necesario */
+  left: 50%;
+  transform: translateX(-50%); /* Centrar horizontalmente */
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 20px;
+}
   
   .message-container {
     position: absolute;
@@ -41,15 +42,15 @@ body{
     100% { opacity: 0; transform: translateX(-50%) scale(0.8); }
   }
 
-  p {
-    line-height: 0.3; /* Ajusta el interlineado (1.2 = 120% de la altura de la fuente) */
+p {
+  line-height: 0.3; /* Ajusta el interlineado (1.2 = 120% de la altura de la fuente) */
 }
 
- .elmensaje{
+.elmensaje{
   margin:50px;
- }
+}
 
-img {
+.img_juego {
   position: absolute;
   top: 40px; /* Ajusta la posición según sea necesario */
   left: 50%;

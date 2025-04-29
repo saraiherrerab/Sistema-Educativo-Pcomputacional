@@ -128,6 +128,14 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
       .then(
         (resultado: any) => {
 
+          console.log("Resultado de generar nivel 2")
+          console.log(juegoKaplay.get("*"))
+          console.log(juegoKaplay.get("player"))
+
+          const player = juegoKaplay.get("player")[0]
+
+
+          /*
           const player = juegoKaplay.add([
             juegoKaplay.pos(450,109),
             juegoKaplay.sprite("knight"),
@@ -137,18 +145,20 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
             "player",
             { z: 2 } // Asegura que el jugador esté en una capa superior
           ]);
+          */
 
           const castillo = juegoKaplay.add([
-            juegoKaplay.pos(800,-20),
+            juegoKaplay.pos(1080, 64),
             juegoKaplay.sprite("castillo"),
             juegoKaplay.scale(0.7),
             juegoKaplay.area(),
+            juegoKaplay.body({ isStatic: true }),
             "castillo",
             { z: 1 } // Asegura que el jugador esté en una capa superior
           ]);
 
           const torre = juegoKaplay.add([
-            juegoKaplay.pos(630,-40),
+            juegoKaplay.pos(630, 32),
             juegoKaplay.sprite("torre"),
             juegoKaplay.scale(0.7),
             juegoKaplay.area(),
