@@ -1,10 +1,10 @@
 'use client'
+
 import { useRouter } from "next/navigation";
- import { useEffect, useRef, useState } from "react";
-import Input from "../components/input/input";
-import Button from "../components/button/button";
+import { useState } from "react";
 import './login.css';
 import Imagen from "../components/imageRight/imageRight";
+import Swal from "sweetalert2";
 
 export default function Page() {
 
@@ -45,11 +45,14 @@ export default function Page() {
         }
       } else {
         // Lógica si no se encontró el usuario
-        alert('Usuario o clave incorrectos');
+        Swal.fire({
+          icon: "error",
+          title: "Error en la validación de usuario",
+          text: "El usuario o contraseña son incorrectos"
+        });
       }
     } catch (error) {
       console.error('Error al validar usuario:', error);
-      alert('Ocurrió un error al validar');
     }
   }
 

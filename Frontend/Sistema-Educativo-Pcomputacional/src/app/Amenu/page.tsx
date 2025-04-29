@@ -8,9 +8,8 @@ import Saludo  from "../../components/saludo/saludo";
 export default function Amenu() {
   const Router = useRouter();
     return <>
-      <canvas id="menu" style={{ width: "100vw", height: "100vh", position:"relative" }} />
       
-      <div className="menu">
+      <div className="menu background_menu">
         <Saludo usuario="admin"></Saludo>
         <div className="contenedor">
         <div className= "MButtonsContainer">
