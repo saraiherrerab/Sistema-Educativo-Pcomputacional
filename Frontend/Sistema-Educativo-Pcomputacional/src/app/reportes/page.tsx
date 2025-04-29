@@ -8,8 +8,10 @@ import PieChart from "../../components/pieChart/pieChart";
 import Notita from "../../components/nota/notita";
 import Parametros from "../../components/parametros/parametros";
 import Estrellas from "../../components/estrellas/estrellas";
+import NombreEs from "../../components/nombreEs/nombreEs";
 
-export default function Reportes() {
+
+export default function Reportes( ) {
     const Router = useRouter();
   return (
     <>
@@ -20,7 +22,8 @@ export default function Reportes() {
                     text3="Mi perfil" onClick3={() => Router.push("/videojuego")}
                     text4="Salir" onClick4={() => Router.push("/videojuego")}>
                 </Header>
-
+        <h1 className="tituloInforme">Informe de avance del estudiante</h1>
+        <NombreEs Nombre="Perrucho" Apellido="Perez"></NombreEs>
         <div className="bigContainer">
             <div className="container-left">
                 <div className="container1-1">
