@@ -5,12 +5,6 @@
       "static/chunks/main-app.js",
       "static/chunks/app/layout.js"
     ],
-    "/videojuego/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/videojuego/page.css",
-      "static/chunks/app/videojuego/page.js"
-    ],
     "/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -29,11 +23,17 @@
       "static/css/app/Aprofesores-lista/page.css",
       "static/chunks/app/Aprofesores-lista/page.js"
     ],
-    "/profile/page": [
+    "/reportes/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/profile/page.css",
-      "static/chunks/app/profile/page.js"
+      "static/css/app/reportes/page.css",
+      "static/chunks/app/reportes/page.js"
+    ],
+    "/videojuego/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/videojuego/page.css",
+      "static/chunks/app/videojuego/page.js"
     ]
   }
 }
