@@ -1,14 +1,6 @@
 {
   "/page": "app/page.js",
-<<<<<<< HEAD
   "/Amenu/page": "app/Amenu/page.js",
-  "/reportes/page": "app/reportes/page.js",
-  "/profile/page": "app/profile/page.js",
-  "/Aprofesores-lista/page": "app/Aprofesores-lista/page.js"
-=======
   "/Aprofesores-lista/page": "app/Aprofesores-lista/page.js",
-  "/videojuego/page": "app/videojuego/page.js",
-  "/Amenu/page": "app/Amenu/page.js",
-  "/menu/page": "app/menu/page.js"
->>>>>>> backend
+  "/videojuego/page": "app/videojuego/page.js"
 }

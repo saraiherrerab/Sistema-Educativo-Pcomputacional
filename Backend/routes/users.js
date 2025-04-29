@@ -82,25 +82,25 @@ router.post('/profesores', async function(req, res, next) {
     const createUsuario = new PQ({text :`INSERT INTO Usuario (nombre, apellido, usuario,clave_acceso) VALUES ($1,$2,$3,$4) RETURNING *`, values: [nombre,apellido,usuario,clave_acceso]});
     
     const resultadoCreacionUsuario = await db.one(createUsuario);
-    if (telefono != undefined && telefono != NULL && telefono !=''){
-      const actualizarTelefono = new PQ({text :`UPDATE INTO Usuario SET telefono=$1  WHERE id_usuario=$2`, values: [telefono,resultadoCreacionUsuario.id_usuario]});
+    if (telefono != undefined && telefono != null && telefono !=''){
+      const actualizarTelefono = new PQ({text :`UPDATE Usuario SET telefono=$1  WHERE id_usuario=$2`, values: [telefono,resultadoCreacionUsuario.id_usuario]});
       const result_Up_Phone= await db.none(actualizarTelefono);
     }
-    if (correo != undefined && correo != NULL && correo !=''){
-      const actualizarCorreo = new PQ({text :`UPDATE INTO Usuario SET correo=$1  WHERE id_usuario=$2`, values: [correo,resultadoCreacionUsuario.id_usuario]});
+    if (correo != undefined && correo != null && correo !=''){
+      const actualizarCorreo = new PQ({text :`UPDATE Usuario SET correo=$1  WHERE id_usuario=$2`, values: [correo,resultadoCreacionUsuario.id_usuario]});
       const result_Up_Email= await db.none(actualizarCorreo);
     }
-    if (edad != undefined && edad != NULL && edad !=''){
-      const actualizarEdad = new PQ({text :`UPDATE INTO Usuario SET edad=$1  WHERE id_usuario=$2`, values: [edad,resultadoCreacionUsuario.id_usuario]});
+    if (edad != undefined && edad != null && edad !=''){
+      const actualizarEdad = new PQ({text :`UPDATE Usuario SET edad=$1  WHERE id_usuario=$2`, values: [edad,resultadoCreacionUsuario.id_usuario]});
       const result_Up_Phone= await db.none(actualizarEdad);
     }
-    if (foto != undefined && foto != NULL && foto !=''){
-      const actualizarFoto = new PQ({text :`UPDATE INTO Usuario SET foto=$1  WHERE id_usuario=$2`, values: [foto,resultadoCreacionUsuario.id_usuario]});
+    if (foto != undefined && foto != null && foto !=''){
+      const actualizarFoto = new PQ({text :`UPDATE Usuario SET foto=$1  WHERE id_usuario=$2`, values: [foto,resultadoCreacionUsuario.id_usuario]});
       const result_Up_Phone= await db.none(actualizarFoto);
     }
-    if (curriculum != undefined && curriculum != NULL && curriculum !=''){
-      const actualizarCV = new PQ({text :`UPDATE INTO Profesor SET curriculum=$1  WHERE id_profesor=$2`, values: [profesor,resultadoCreacionUsuario.id_profesor]});
-      const result_Up_CV= await db.none(actualizarCV);
+    if (cedula != undefined && cedula != null && cedula !=''){
+      const actualizarTelefono = new PQ({text :`UPDATE Usuario SET cedula=$1 WHERE id_usuario=$2`, values: [cedula,resultadoCreacionUsuario.id_usuario]});
+      const result_Up_Phone= await db.none(actualizarTelefono);
     }
    
     console.log(resultadoCreacionUsuario)
@@ -108,6 +108,10 @@ router.post('/profesores', async function(req, res, next) {
     const findProfesor =  new PQ({text :`INSERT INTO Profesor (id_profesor,curriculum)  VALUES ($1,$2)`, values: [resultadoCreacionUsuario.id_usuario,curriculum]});
     const result = await db.none(findProfesor);
     
+    if (curriculum != undefined && curriculum != null && curriculum !=''){
+      const actualizarCV = new PQ({text :`UPDATE Profesor SET curriculum=$1  WHERE id_profesor=$2`, values: [profesor,resultadoCreacionUsuario.id_profesor]});
+      const result_Up_CV= await db.none(actualizarCV);
+    }
 
     return res.json({mensaje: "El profesor ha sido creado con éxito"})
   } catch (error) {

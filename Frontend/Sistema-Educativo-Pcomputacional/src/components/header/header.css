@@ -27,10 +27,32 @@
 
 }
 
-.header-button{
-    cursor:pointer;
-    margin-left: 20px; /* Ajusta este valor para reducir el espacio a la izquierda */
-    margin-right: 20px; 
+.header-button {
+    cursor: pointer;
+    margin-left: 20px;
+    margin-right: 20px;
+    position: relative;
+    color: white; /* Color base del texto */
+    transition: color 0.3s ease;
+}
+
+.header-button::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -3px; /* Separación debajo del texto */
+    width: 0;
+    height: 2px;
+    background-color: white; /* Color del "stroke" */
+    transition: width 0.3s ease;
+}
+
+.header-button:hover {
+    color: #9c86f9; /* Cambia un poco el color del texto en hover si quieres */
+}
+
+.header-button:hover::after {
+    width: 100%; /* El subrayado se expande en hover */
 }
 
 .botones{
