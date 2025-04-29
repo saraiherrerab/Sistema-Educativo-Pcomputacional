@@ -17,9 +17,10 @@
       "static/css/app/Amenu/page.css",
       "static/chunks/app/Amenu/page.js"
     ],
-    "/Aprofesores-lista/page": [
+    "/videojuego/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
+<<<<<<< HEAD
       "static/css/app/Aprofesores-lista/page.css",
       "static/chunks/app/Aprofesores-lista/page.js"
     ],
@@ -32,6 +33,8 @@
     "/videojuego/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
+=======
+>>>>>>> origin/backend
       "static/css/app/videojuego/page.css",
       "static/chunks/app/videojuego/page.js"
     ]

@@ -81,22 +81,19 @@ DROP TABLE IF EXISTS Curso;
 CREATE TABLE IF NOT EXISTS Curso (
 	id_curso SERIAL NOT NULL,
 	nombre_curso TEXT,
-	PRIMARY KEY(id_curso),
-	FOREIGN KEY (id_profesor) REFERENCES Profesor (id_profesor)
-		ON UPDATE RESTRICT
-		ON DELETE CASCADE
+	PRIMARY KEY(id_curso)
 );
 
-INSERT INTO Curso (nombre_curso,id_profesor) VALUES ('Introducción a la Programación');
-INSERT INTO Curso (nombre_curso,id_profesor) VALUES ('Programación en Python para Robótica');
-INSERT INTO Curso (nombre_curso,id_profesor) VALUES ('Robótica con Arduino');
-INSERT INTO Curso (nombre_curso,id_profesor) VALUES ('Diseño de Algoritmos');
-INSERT INTO Curso (nombre_curso,id_profesor) VALUES ('Programación en C++ para Sistemas Embebidos');
-INSERT INTO Curso (nombre_curso,id_profesor) VALUES ('Automatización y Control con PLCs');
-INSERT INTO Curso (nombre_curso,id_profesor) VALUES ('Inteligencia Artificial en Robótica');
-INSERT INTO Curso (nombre_curso,id_profesor) VALUES ('Simulación de Robots en ROS');
-INSERT INTO Curso (nombre_curso,id_profesor) VALUES ('Machine Learning Aplicado a la Robótica');
-INSERT INTO Curso (nombre_curso,id_profesor) VALUES ('Desarrollo de Aplicaciones para IoT');
+INSERT INTO Curso (nombre_curso) VALUES ('Introducción a la Programación');
+INSERT INTO Curso (nombre_curso) VALUES ('Programación en Python para Robótica');
+INSERT INTO Curso (nombre_curso) VALUES ('Robótica con Arduino');
+INSERT INTO Curso (nombre_curso) VALUES ('Diseño de Algoritmos');
+INSERT INTO Curso (nombre_curso) VALUES ('Programación en C++ para Sistemas Embebidos');
+INSERT INTO Curso (nombre_curso) VALUES ('Automatización y Control con PLCs');
+INSERT INTO Curso (nombre_curso) VALUES ('Inteligencia Artificial en Robótica');
+INSERT INTO Curso (nombre_curso) VALUES ('Simulación de Robots en ROS');
+INSERT INTO Curso (nombre_curso) VALUES ('Machine Learning Aplicado a la Robótica');
+INSERT INTO Curso (nombre_curso) VALUES ('Desarrollo de Aplicaciones para IoT');
 
 DROP TABLE IF EXISTS Profesor_Curso;
 CREATE TABLE IF NOT EXISTS Profesor_Curso (
@@ -110,6 +107,13 @@ CREATE TABLE IF NOT EXISTS Profesor_Curso (
 		ON UPDATE RESTRICT
 		ON DELETE CASCADE
 );
+
+-- Asignar cursos 1 al 5 al profesor 2
+INSERT INTO Profesor_Curso (id_curso, id_profesor) VALUES (1, 2);
+INSERT INTO Profesor_Curso (id_curso, id_profesor) VALUES (2, 2);
+INSERT INTO Profesor_Curso (id_curso, id_profesor) VALUES (3, 2);
+INSERT INTO Profesor_Curso (id_curso, id_profesor) VALUES (4, 2);
+INSERT INTO Profesor_Curso (id_curso, id_profesor) VALUES (5, 2);
 
 /* Lógica de Grupos */
 CREATE TABLE IF NOT EXISTS Grupos (
