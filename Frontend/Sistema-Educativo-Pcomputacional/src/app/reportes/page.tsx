@@ -21,10 +21,10 @@ export default function Reportes( ) {
                     text2="Menu" onClick2={() => Router.push("/videojuego")}
                     text3="Mi perfil" onClick3={() => Router.push("/videojuego")}
                     text4="Salir" onClick4={() => Router.push("/videojuego")}>
-                </Header>
+        </Header>
         <h1 className="tituloInforme">Informe de avance del estudiante</h1>
         <NombreEs Nombre="Perrucho" Apellido="Perez"></NombreEs>
-        <div className="bigContainer">
+        <div className="bigContainer body_reporte">
             <div className="container-left">
                 <div className="container1-1">
                     <p className="tituloReporte">PREMIACIONES</p>
