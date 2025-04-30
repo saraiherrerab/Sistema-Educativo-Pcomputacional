@@ -7,6 +7,8 @@ import Saludo  from "../../components/saludo/saludo";
 
 export default function Amenu() {
   const Router = useRouter();
+
+  
     return <>
       
       <div className="menu background_menu">
