@@ -1,10 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
-body {
+ body{
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", sans-serif;
+}
+
+.body_reporte {
   font-family: "Inter", sans-serif;
   background-color: #F6F7F9;
   margin: 0;
   padding: 0;
+  height: 100%;
+
 }
 
 .bigContainer {
@@ -18,9 +26,10 @@ body {
 .container-right {
   width: 50%;
   box-sizing: border-box;
-  padding: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   background-color: #F6F7F9;
-  
+  margin-top: 0;
   
 }
 
@@ -30,20 +39,35 @@ body {
     border: 2px solid #F6F7F9;/* Añadimos un borde de 2 píxeles de grosor y color #D9D9D9 */
     box-sizing: border-box; 
     width:70%;
-    padding-right: 2px;
+    padding-right: 0.0001PX;
+    height: 88% !important;
+    margin-left: 20px;
+}
+
+.container-right{
+  
+  padding-left: 0.0001PX !important;
+  height: 88.5% !important;
+  margin-right: 20px;
 }
 
 .container1-1{
-    height: 50%;
+    height: 30%;
     background-color: white;
-    
+    padding: 20px;
+    box-sizing: border-box;
 }
+
+
 
 
 
 .container1-2{
-    height: 50%;
+    height: 70%;
     background-color: white;
+    padding: 10px;
+    box-sizing: border-box;
+    
 }
 
 .container-right {
@@ -148,4 +172,82 @@ body {
   box-sizing: border-box; 
   gap: 0px;
   margin-top: -3px;
+}
+
+/* Añadir esto a tu CSS existente */
+
+/* Centrado y estructura más clara */
+
+/* Contenedor de los gráficos */
+/* Contenedor de los gráficos */
+.tortaGraph, /* Contenedor de PieChart */
+.pieGraph { /* Contenedor de DonutChart */
+  display: flex;
+  flex-direction: column;  /* Asegura que el texto esté arriba y el gráfico abajo */
+  justify-content: center;  /* Centra verticalmente el gráfico */
+  align-items: center;      /* Centra horizontalmente el gráfico */
+  padding: 20px 10px;       /* Añadir algo de espacio alrededor */
+  background-color: #fff;  /* Opcional, para que no quede transparente */
+  width: 100%;
+
+}
+.pieGraph {
+  position: relative; /* 🔥 Clave para controlar hijos */
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Títulos arriba */
+  box-sizing: border-box;
+  padding: 10px;
+  overflow: hidden; /* 🔥 No permitir que se desborde */
+}
+/* Estilo del título */
+.tituloReporte {
+  font-weight: bold;
+  font-size: 14px;
+  font-family: "Inter", sans-serif;
+  text-align: left !important;         /* Alinea el título a la izquierda */
+  margin-bottom: 15px;      /* Espacio entre el texto y el gráfico */
+  padding-left: 10px;       /* Deja un espacio a la izquierda */
+  width: 100%;              /* Asegura que el título ocupe todo el ancho */
+  box-sizing: border-box;   /* Para manejar el padding correctamente */
+}
+
+.tituloInforme{
+  margin-left: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.leyenda {
+  display: flex;
+  gap: 12px;
+  margin-top: 25px;
+  margin-bottom: 15px;      /* Espacio entre el texto y el gráfico */
+  margin-left: -35px !important; 
+  font-family: "Inter", sans-serif;
+}
+
+.leyenda-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.color-box {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+}
+
+.color-box.completado {
+  background-color: #00AEB5;
+}
+
+.color-box.no-completado {
+  background-color: #45DFE6;
 }

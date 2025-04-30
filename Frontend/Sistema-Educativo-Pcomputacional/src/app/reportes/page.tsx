@@ -5,8 +5,13 @@ import Header from "../../components/header/header";
 import { useRouter } from "next/navigation";
 import DonutChart from "../../components/donutChart/donutChart";
 import PieChart from "../../components/pieChart/pieChart";
+import Notita from "../../components/nota/notita";
+import Parametros from "../../components/parametros/parametros";
+import Estrellas from "../../components/estrellas/estrellas";
+import NombreEs from "../../components/nombreEs/nombreEs";
 
-export default function Reportes() {
+
+export default function Reportes( ) {
     const Router = useRouter();
   return (
     <>
@@ -16,17 +21,31 @@ export default function Reportes() {
                     text2="Menu" onClick2={() => Router.push("/videojuego")}
                     text3="Mi perfil" onClick3={() => Router.push("/videojuego")}
                     text4="Salir" onClick4={() => Router.push("/videojuego")}>
-                </Header>
-
-        <div className="bigContainer">
+        </Header>
+        <h1 className="tituloInforme">Informe de avance del estudiante</h1>
+        <NombreEs Nombre="Perrucho" Apellido="Perez"></NombreEs>
+        <div className="bigContainer body_reporte">
             <div className="container-left">
                 <div className="container1-1">
-                        <span>holi</span>
+                    <p className="tituloReporte">PREMIACIONES</p>
+                    <Estrellas valores={[true, false, true]} />
                 </div>
                 <div className="container1-2">
                         <div className="tortaGraph">
-                            <PieChart value1={65} value2={35} />
+                            <p className="tituloReporte">PORCENTAJE DE ACTIVIDADES COMPLETADAS</p>
+                            <div className="leyenda">
+                                    <div className="leyenda-item">
+                                    <span className="color-box completado"></span>
+                                    <span>Completado</span>
+                                    </div>
+                                    <div className="leyenda-item">
+                                    <span className="color-box no-completado"></span>
+                                    <span>No completado</span>
+                                    </div>
+                                </div>
                         </div>
+                            <PieChart value1={65} value2={35} />
+                           
                 </div>
             </div>
             
@@ -34,29 +53,40 @@ export default function Reportes() {
                 <div className="container2">
                     <div className="c2ls">
                         <div className="pieGraph">
-                            <DonutChart percentage1={60} percentage2={40} />
+                            <p className="tituloReporte">EFICIENCIA ALGORÍTMICA</p>
+                                <DonutChart percentage1={60} percentage2={40} />
+                                
                         </div>
                     </div>
 
                     <div className="c2right">
                             <div className="c2rs">
-                                <span>holi</span>
+                                <Parametros parametroTitulo1="IDENTIFICACIÓN DE ERRORES" parametroTitulo2="DESAPROBADO" />
                             </div>
                             <div className="c2ri">
-                                3
+                                <Parametros parametroTitulo1="RECONOCIMIENTO DE PATRONES" parametroTitulo2="APROBADO" />
                             </div>
                     </div>
                 </div>
                 <div className="container3">
-                    <div className="container3-1">
-                        <div className="container3-1-1">Contenido Columna 1.1</div>
-                        <div className="container3-1-2">Contenido Columna 1.2</div>
+                        <div className="container3-1">
+                            <div className="container3-1-1">
+                                <Parametros parametroTitulo1="ABSTRACCIÓN" parametroTitulo2="DESAPROBADO" />
+                            </div>
+                            <div className="container3-1-2">
+                                <Parametros parametroTitulo1="ASOCIACIÓN" parametroTitulo2="DESAPROBADO" />
+                            </div>
+                        </div>
+
+                        <div className="container3-2"> 
+                            <div className="container3-2-1">
+                                <Parametros parametroTitulo1="CONSTRUCCIÓN DE ALGORITMOS" parametroTitulo2="APROBADO" />
+                            </div>
+                            <div className="container3-2-2">
+                                <Notita NotitaTitulo1="Sarai Herrera" NotitaTitulo2="MiniExplorer"/>
+                            </div>
+                        </div>
                     </div>
-                    <div className="container3-2"> 
-                        <div className="container3-2-1">Contenido Columna 1.1</div>
-                        <div className="container3-2-2">Contenido Columna 1.2</div>
-                    </div>
-                </div>
             </div>
                 
         </div>
