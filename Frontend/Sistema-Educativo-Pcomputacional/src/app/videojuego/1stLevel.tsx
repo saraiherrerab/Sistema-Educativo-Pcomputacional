@@ -335,7 +335,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
       [0, 0, 1, 1, 0, 0, 1, 1, 0,],
     ];
 
-    let delay = 500; // Inicializar el retraso
+    let delay = 350; // Inicializar el retraso
     const numeros = generarNumerosAzar();
     console.log(numeros);
     console.log(patrones[numeros[0]]);
@@ -403,7 +403,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
         }
       }, delay);
 
-      delay += 1000; // Incrementar el retraso para el siguiente sprite
+      delay += 400; // Incrementar el retraso para el siguiente sprite
     });
 
     return ultimo; // Retorna el último valor del patrón

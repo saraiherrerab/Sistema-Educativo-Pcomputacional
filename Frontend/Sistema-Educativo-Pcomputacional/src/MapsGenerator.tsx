@@ -219,7 +219,41 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
 
             enemy.tag("enemy")
             
+          }
+          if(layer.type === "objectgroup" && layer.name === "castillo"){
+  
+            let posicionX: number = (layer.objects[0].x / 32) * ( window.innerWidth / 20);
+            let posicionY: number = (layer.objects[0].y / 32) * ( window.innerHeight / 15)
+
+            const castillo = contextoKaplay.add([
+              contextoKaplay.pos(posicionX, posicionY - 100),
+              contextoKaplay.sprite("castillo"),
+              contextoKaplay.scale(0.7),
+              contextoKaplay.area(),
+              contextoKaplay.body({ isStatic: true }),
+              "castillo",
+              { z: 1 } // Asegura que el jugador esté en una capa superior
+            ]);
+
+            castillo.tag("castillo")
+            
         }
+        if(layer.type === "objectgroup" && layer.name === "torre"){
+  
+          let posicionX: number = (layer.objects[0].x / 32) * ( window.innerWidth / 20);
+          let posicionY: number = (layer.objects[0].y / 32) * ( window.innerHeight / 15)
+
+          const torre = contextoKaplay.add([
+            contextoKaplay.pos(posicionX, posicionY - 100),
+            contextoKaplay.sprite("torre"),
+            contextoKaplay.scale(0.7),
+            contextoKaplay.area(),
+            "torre"
+          ]);
+
+          torre.tag("castillo")
+          
+      }
         });
         
       

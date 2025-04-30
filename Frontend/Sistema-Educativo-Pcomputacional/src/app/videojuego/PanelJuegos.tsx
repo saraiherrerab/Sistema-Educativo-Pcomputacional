@@ -134,114 +134,79 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
 
           const player = juegoKaplay.get("player")[0]
 
+          const torre = juegoKaplay.get("torre")[0]
+          const castillo = juegoKaplay.get("castillo")[0]
 
-          /*
-          const player = juegoKaplay.add([
-            juegoKaplay.pos(450,109),
-            juegoKaplay.sprite("knight"),
-            juegoKaplay.scale(1),
-            juegoKaplay.health(3),
-            juegoKaplay.area(),
-            "player",
-            { z: 2 } // Asegura que el jugador esté en una capa superior
-          ]);
-          */
+          torre.onClick(()=>{
+            juegoKaplay.destroy(torre);
+            juegoKaplay.destroy(castillo);
+            juegoKaplay.destroy(player);
+            Nivel1(juegoKaplay, setState, cambiarGanar, Router);
+            // We pass the component id for remove it.
+          });
 
-          const castillo = juegoKaplay.add([
-            juegoKaplay.pos(1080, 64),
-            juegoKaplay.sprite("castillo"),
-            juegoKaplay.scale(0.7),
-            juegoKaplay.area(),
-            juegoKaplay.body({ isStatic: true }),
-            "castillo",
-            { z: 1 } // Asegura que el jugador esté en una capa superior
-          ]);
-
-          const torre = juegoKaplay.add([
-            juegoKaplay.pos(630, 32),
-            juegoKaplay.sprite("torre"),
-            juegoKaplay.scale(0.7),
-            juegoKaplay.area(),
-            "torre",
-            { z: 1 } // Asegura que el jugador esté en una capa superior
-          ]);
-
-          torre.use("torre"); // green bean <:
-
-
-                  torre.onClick(()=>{
-                    juegoKaplay.destroy(torre);
-                    juegoKaplay.destroy(castillo);
-                    juegoKaplay.destroy(player);
-                    Nivel1(juegoKaplay, setState, cambiarGanar, Router);
-                    // We pass the component id for remove it.
-                  });
+          castillo.onClick(()=>{
+            juegoKaplay.destroy(torre);
+            juegoKaplay.destroy(castillo);
+            juegoKaplay.destroy(player);
+            Nivel2(juegoKaplay);
+            // We pass the component id for remove it.
+          });
       
-                  castillo.onClick(()=>{
-                    juegoKaplay.destroy(torre);
-                    juegoKaplay.destroy(castillo);
-                    juegoKaplay.destroy(player);
-                    Nivel2(juegoKaplay);
-                    // We pass the component id for remove it.
-                  });
-      
-                   
-   
-      
-                    const velocidad = 200;
+          const velocidad = 200;
 
-                    //juegoKaplay.onUpdate(()=>{
-                             // Movimiento con teclado
+          //juegoKaplay.onUpdate(()=>{
+                    // Movimiento con teclado
 
 
-                    juegoKaplay.onKeyPress("w", () => {
-                      player.play("up");
-                      ///player.move(0, -velocidad);
-                      
-                    });
-                    juegoKaplay.onKeyDown("w", () => {
-                      //  player.play("up");
-                        player.move(0, -velocidad);
-                        
-                      });
-                      
+          juegoKaplay.onKeyPress("w", () => {
+            player.play("up");
+            ///player.move(0, -velocidad);
+            
+          });
+          juegoKaplay.onKeyDown("w", () => {
+            //  player.play("up");
+              player.move(0, -velocidad);
+              
+            });
+            
 
-                    juegoKaplay.onKeyRelease(()=>{
-                      player.play("quiet");
+          juegoKaplay.onKeyRelease(()=>{
+            player.play("quiet");
 
-                    })  
+          })  
 
-                    juegoKaplay.onKeyDown("s", () => {
-                      player.move(0, velocidad);
-                      
-                    });
+          juegoKaplay.onKeyDown("s", () => {
+            player.move(0, velocidad);
+            
+          });
 
-                    juegoKaplay.onKeyPress("s", () => {
-                      player.play("down");
-                      ///player.move(0, -velocidad);
-                      
-                    });
+          juegoKaplay.onKeyPress("s", () => {
+            player.play("down");
+            ///player.move(0, -velocidad);
+            
+          });
 
-                    juegoKaplay.onKeyDown("a", () => {
-                      player.move(-velocidad, 0);
-                      
-                    });
+          juegoKaplay.onKeyDown("a", () => {
+            player.move(-velocidad, 0);
+            
+          });
 
-                    juegoKaplay.onKeyPress("a", () => {
-                      player.play("left");
-                      ///player.move(0, -velocidad);
-                      
-                    });
+          juegoKaplay.onKeyPress("a", () => {
+            player.play("left");
+            ///player.move(0, -velocidad);
+            
+          });
 
-                    juegoKaplay.onKeyDown("d", () => {
-                      player.move(velocidad, 0);
-                     
-                    });
-                    juegoKaplay.onKeyPress("d", () => {
-                      player.play("right");
-                      ///player.move(0, -velocidad);
-                      
-                    });
+          juegoKaplay.onKeyDown("d", () => {
+            player.move(velocidad, 0);
+            
+          });
+          juegoKaplay.onKeyPress("d", () => {
+            player.play("right");
+            ///player.move(0, -velocidad);
+            
+          });
       
                    // })
       

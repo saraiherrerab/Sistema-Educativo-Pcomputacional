@@ -25,6 +25,7 @@ export default function Page() {
   
       if (data) {
         // Lógica si el usuario fue encontrado
+
         const responseRol = await fetch('http://localhost:5555/rol', {
           method: 'POST',
           headers: {
@@ -43,6 +44,12 @@ export default function Page() {
         }else{
           Router.push("./")
         }
+
+        const usuario = data;
+        usuario.rol = dataRol.obtener_rol_usuario
+        // Guardar en localStorage
+        localStorage.setItem('usuario', JSON.stringify(usuario));
+
       } else {
         // Lógica si no se encontró el usuario
         Swal.fire({

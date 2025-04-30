@@ -6,7 +6,8 @@
     flex-direction: column; /* Organiza el título y la descripción en columnas */
     align-items: flex-start; /* Alinea el texto a la izquierda */
     padding:30px;
-    height:   200px;
+    height: 100%;
+    margin-bottom: 10pxs;
     margin-right:10px;
   }
   
