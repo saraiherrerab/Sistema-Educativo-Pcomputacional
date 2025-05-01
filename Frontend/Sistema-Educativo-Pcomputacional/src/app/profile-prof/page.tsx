@@ -6,8 +6,8 @@ import Notas  from "../../components/dnotas/dnotas";
 import Foto from "../../components/foto/foto";
 import Datos from  "../../components/dbasicos/dbasicos";
 import Nombre from "../../components/nombre/nombre";
-import Button from "../../components/button/button";
-export default function Profile() {
+
+export default function Profileprof() {
 
   const [usuario, setUsuario] = useState(
     {
@@ -43,7 +43,7 @@ export default function Profile() {
             </div>
             <Datos titulo="Cedula" descripcion={ usuario.cedula }></Datos>
             <Datos titulo="Edad" descripcion={ usuario.edad.toString() }></Datos>
-            <Button text="Ver Reporte"  onClick={() =>Router.push("/reportes")}></Button>
+            <Datos titulo="CV" descripcion={ usuario.curriculum }></Datos>
           </div>
           <div className="datosBloques">
             <div className="fila">
@@ -54,7 +54,7 @@ export default function Profile() {
               </div>
 
               <div className="notas">
-                <Notas titulo="Situación médica" descripcionN="Lorem Ipsum text ever since the 1500s, 
+                <Notas titulo="Formación" descripcionN="Lorem Ipsum text ever since the 1500s, 
                 when an unknown printer took a galley of type and scrambled it to make a 
                 unknown printer took a galley of type and scrambled it to make a"></Notas>
             </div>
@@ -62,7 +62,7 @@ export default function Profile() {
 
             <div className="fila fila_espacio_fondo">
               <div className="notas">
-                <Notas titulo="Nivel" descripcionN="Lorem Ipsum text ever since the 1500s, when an unknown printer
+                <Notas titulo="Cursos" descripcionN="Lorem Ipsum text ever since the 1500s, when an unknown printer
                 took a galley of type and scrambled it to make a 
                 took a galley of type and scrambled it to make a"></Notas>
               </div>
