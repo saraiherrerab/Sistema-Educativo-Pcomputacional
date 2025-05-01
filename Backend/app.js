@@ -7,6 +7,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var profesorRouter = require('./routes/profesores');
+var awsRouter = require('../Backend/amazon_s3')
 const cors = require('cors');
 
 var app = express();
