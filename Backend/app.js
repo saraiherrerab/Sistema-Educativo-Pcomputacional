@@ -7,6 +7,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var profesorRouter = require('./routes/profesores');
+var awsRouter = require('./amazon_s3')
 const cors = require('cors');
 
 var app = express();
@@ -26,6 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use(usersRouter);
 app.use(profesorRouter);
+app.use(awsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

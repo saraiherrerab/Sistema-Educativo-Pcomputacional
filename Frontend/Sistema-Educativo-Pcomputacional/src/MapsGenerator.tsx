@@ -202,6 +202,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
               console.log(contextoKaplay.get("player"))
           }
           if(layer.type === "objectgroup" && layer.name === "enemy"){
+            
   
             let posicionX: number = (layer.objects[0].x / 32) * ( window.innerWidth / 20);
             let posicionY: number = (layer.objects[0].y / 32) * ( window.innerHeight / 15)
@@ -219,8 +220,9 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
 
             enemy.tag("enemy")
             
+            
           }
-          if(layer.type === "objectgroup" && layer.name === "castillo"){
+        if(layer.type === "objectgroup" && layer.name === "castillo"){
   
             let posicionX: number = (layer.objects[0].x / 32) * ( window.innerWidth / 20);
             let posicionY: number = (layer.objects[0].y / 32) * ( window.innerHeight / 15)
@@ -253,7 +255,23 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
 
           torre.tag("castillo")
           
-      }
+        }
+        if(layer.type === "objectgroup" && layer.name === "saco"){
+  
+          let posicionX: number = (layer.objects[0].x / 32) * ( window.innerWidth / 20);
+          let posicionY: number = (layer.objects[0].y / 32) * ( window.innerHeight / 15)
+
+          const saco = contextoKaplay.add([
+            contextoKaplay.pos(posicionX, posicionY),
+            contextoKaplay.sprite("saco"),
+            contextoKaplay.scale(0.7),
+            contextoKaplay.area(),
+            "saco"
+          ]);
+
+          saco.tag("saco")
+          
+        }
         });
         
       
@@ -301,40 +319,6 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
           });
   
         })
-      
-        
-  
-        /*
-        worldJson.layers.forEach((layer: any, numeroLayer: number) => {
-        
-          let resultadoMapa = [];
-          if (layer.type === "tilelayer" ) {
-            const { data, width } = layer;
-            const mapa = [];
-            for (let i = 0; i < width; i++) {
-              mapa.push(data.slice(i * width, (i + 1) * width));
-            }
-  
-            const resultadoMapeo = mapa.map((fila: any) =>
-              fila.map((cell: any) => cell.toString()).join("")
-            );
-  
-            resultadoMapa = [...resultadoMapeo]
-  
-          
-            contextoKaplay.addLevel(resultadoMapa, {
-              tileWidth: anchoCuadrado,
-              tileHeight: altoCuadrado,
-              pos: configuracionMapa.pos,
-              tiles: { ...tileMapping[numeroLayer] },
-            })
-          }
-  
-  
-          
-          
-        })
-        */
   
       }
   

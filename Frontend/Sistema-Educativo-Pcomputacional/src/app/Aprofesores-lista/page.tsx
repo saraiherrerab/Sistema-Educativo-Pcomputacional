@@ -29,6 +29,9 @@ export default function ProfesoresLista() {
     const [profesores, setProfesores] = useState<Profesor[]>([]);
     const [profesoresFiltrados, setProfesoresFiltrados] = useState<Profesor[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [fotoPerfil, setFotoPerfil] = useState<File | null>(null);
+    const [subiendo, setSubiendo] = useState(false);
+
 
     async function obtenerProfesores() : Promise<Profesor[]>{
         const resultado= await fetch('http://localhost:5555/profesores',{
@@ -219,6 +222,27 @@ export default function ProfesoresLista() {
         }
     };  
 
+    const handleFotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+          if (file.type === 'image/png') {
+            setNuevoProfesor({...nuevoProfesor, foto: file.name})
+            setFotoPerfil(file);
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Por favor, selecciona solo archivos con formato PNG.',
+            }).then(() => {
+              e.target.value = '';
+              setFotoPerfil(null);
+            });
+          }
+        } else {
+          setFotoPerfil(null);
+        }
+      };
+
     const onAgregarProfesor = async () => {
         
         const nuevo = { ...nuevoProfesor };
@@ -234,6 +258,8 @@ export default function ProfesoresLista() {
         });
 
           try {
+
+            
             const response = await fetch(`http://localhost:5555/profesores`, {
                 method: 'POST',
                 mode: 'cors',   // Habilita CORS
@@ -250,10 +276,54 @@ export default function ProfesoresLista() {
     
             const resultadoConsulta = await response.json()
             console.log(resultadoConsulta)
+
+            if(nuevo.foto){
+                console.log("subiendo foto")
+                setSubiendo(true)
+                const formData = new FormData();
+                let nuevoArchivo = null
+                
+                setFotoPerfil(nuevoArchivo);
+                
+                if (fotoPerfil) {
+
+                    nuevoArchivo = new File([fotoPerfil], `User-${resultadoConsulta.id_usuario.toString()}.png`, { type: fotoPerfil.type, lastModified: fotoPerfil.lastModified });
+
+                    formData.append('archivo', nuevoArchivo); // Agregar archivo solo si no es null
+                    formData.append('id_usuario', resultadoConsulta.id_usuario.toString());
+
+                    try {
+                        const response = await fetch('http://localhost:5555/cargar/archivo/imagen', {
+                            method: 'POST',
+                            body: formData,
+                        });
+        
+                        const data = await response.json();
+        
+                        // Simulamos una función asíncrona (puedes reemplazar esto con tu fetch, por ejemplo)
+                        await new Promise(resolve => setTimeout(resolve, 1000)); // Espera de 1 segundos
+        
+                        if (response.ok) {
+                            Swal.fire({ icon: 'success', title: 'Éxito', text: data.mensaje });
+                            // Opcional: Actualizar el estado local con la nueva URL de la foto
+                            console.log('URL de la foto subida:', data.archivo.url);
+                        } else {
+                            Swal.fire({ icon: 'error', title: 'Error', text: data.mensaje || 'Error al subir la imagen.' });
+                        }
+                        } catch (error) {
+                        console.error('Error al enviar la petición:', error);
+                        Swal.fire({ icon: 'error', title: 'Error', text: 'Error al conectar con el servidor.' });
+                        } finally {
+                            setSubiendo(false);
+                        }
+                  }
+                
+            }
     
             if(response.status === 200){
-                setProfesores([...profesores, nuevo]);
-                setProfesoresFiltrados([...profesoresFiltrados, nuevo]);
+                setNuevoProfesor({...resultadoConsulta})
+                setProfesores([...profesores, nuevoProfesor]);
+                setProfesoresFiltrados([...profesoresFiltrados, nuevoProfesor]);
                 setMostrarFormulario(false); // Asegúrate de que el formulario se cierre después de guardar
                 setNuevoProfesor({
                     id_usuario: 0,
@@ -361,7 +431,11 @@ export default function ProfesoresLista() {
                     <input type="text" placeholder="Correo" value={nuevoProfesor.correo} onChange={e => setNuevoProfesor({ ...nuevoProfesor, correo: e.target.value })} />
                     <input type="number" placeholder="Edad" value={nuevoProfesor.edad} onChange={e => setNuevoProfesor({ ...nuevoProfesor, edad: (e.target.value) as unknown as number})} />
                     <input type="text" placeholder="Cedula" value={nuevoProfesor.cedula} onChange={e => setNuevoProfesor({ ...nuevoProfesor, cedula: e.target.value })} />
-                    <input type="text" placeholder="Foto" value={nuevoProfesor.foto} onChange={e => setNuevoProfesor({ ...nuevoProfesor, foto: e.target.value })} />
+                    <input
+                        type="file"
+                        accept=".png"
+                        onChange={handleFotoChange}
+                    />
                     <button onClick={() => onAgregarProfesor()} disabled={habilitarGuardado}>Guardar</button>
                     <button onClick={() => setMostrarFormulario(false)}>Cancelar</button>
                 </div>

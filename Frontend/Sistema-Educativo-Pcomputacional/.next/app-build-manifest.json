@@ -11,23 +11,17 @@
       "static/css/app/page.css",
       "static/chunks/app/page.js"
     ],
-    "/videojuego/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/videojuego/page.css",
-      "static/chunks/app/videojuego/page.js"
-    ],
     "/Amenu/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/Amenu/page.css",
       "static/chunks/app/Amenu/page.js"
     ],
-    "/profile/page": [
+    "/videojuego/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/profile/page.css",
-      "static/chunks/app/profile/page.js"
+      "static/css/app/videojuego/page.css",
+      "static/chunks/app/videojuego/page.js"
     ]
   }
 }

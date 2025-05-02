@@ -113,7 +113,7 @@ router.post('/profesores', async function(req, res, next) {
       const result_Up_CV= await db.none(actualizarCV);
     }
 
-    return res.json({mensaje: "El profesor ha sido creado con éxito"})
+    return res.json({mensaje: "El profesor ha sido creado con éxito", id_usuario: resultadoCreacionUsuario.id_usuario})
   } catch (error) {
     console.error('Error al hacer la consulta:', error);
     res.json({menssage: "Error al crear profesor"})
