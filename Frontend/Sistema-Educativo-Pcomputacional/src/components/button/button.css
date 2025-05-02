@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
 button {
-    background-color: #4B22F4; 
-    color: white;             
+    background-color:  white;
+    color: #4B22F4;        
     font-size: 14px;          
     font-family: "Roboto", sans-serif; 
     padding: 10px 20px;       
