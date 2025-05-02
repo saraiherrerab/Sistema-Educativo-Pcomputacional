@@ -10,9 +10,6 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>) {
         const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
         const TILED_HEIGHT: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGHT_NUMBER
 
-        const ORIGINAL_GAME_SCREEN_X: number = TILED_MAP__WIDTH_NUMBER * 32
-        const ORIGINAL_GAME_SCREEN_Y: number =TILED_MAP_HEIGHT_NUMBER * 32
-
         console.log("Comenzando a generar nivel 2")
         console.log(juegoKaplay.get("*"))
 

@@ -77,7 +77,7 @@ export default function Profile() {
 
   return (
     <div className="perfil body_profile">
-                <div className="datosUsario">
+            <div className="datosUsario">
               {imagenDescargadaUrl ? (
               <Foto imageUrl={imagenDescargadaUrl} />
             ) : (
@@ -94,29 +94,21 @@ export default function Profile() {
           <div className="datosBloques">
             <div className="fila">
               <div className="notas">
-                <Notas titulo="Contacto" descripcionN="Lorem Ipsum text ever since the 1500s, 
-                when an unknown printer took a galley of type and scrambled it to make a 
-                nknown printer took a galley of type and scrambled it to make a"></Notas>
+                <Notas titulo="Contacto" descripcionN={[{titulo: "Teléfono", descripcion: ""}]}></Notas>
               </div>
 
               <div className="notas">
-                <Notas titulo="Situación médica" descripcionN="Lorem Ipsum text ever since the 1500s, 
-                when an unknown printer took a galley of type and scrambled it to make a 
-                unknown printer took a galley of type and scrambled it to make a"></Notas>
+                <Notas titulo="Situación médica" descripcionN={[{titulo: "Teléfono", descripcion: ""}]}></Notas>
             </div>
             </div>
 
             <div className="fila fila_espacio_fondo">
               <div className="notas">
-                <Notas titulo="Nivel" descripcionN="Lorem Ipsum text ever since the 1500s, when an unknown printer
-                took a galley of type and scrambled it to make a 
-                took a galley of type and scrambled it to make a"></Notas>
+                <Notas titulo="Nivel" descripcionN={[{titulo: "Teléfono", descripcion: ""}]}></Notas>
               </div>
 
               <div className="notas">
-                <Notas titulo="Horario" descripcionN="Lorem Ipsum text ever since the 1500s, when an unknown printer took
-                a galley of type and scrambled it to make a 
-                a galley of type and scrambled it to make a"></Notas>
+                <Notas titulo="Horario" descripcionN={[{titulo: "Teléfono", descripcion: ""}]}></Notas>
               </div>
             </div>
             
