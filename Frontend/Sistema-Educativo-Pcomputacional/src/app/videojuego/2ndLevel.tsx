@@ -5,8 +5,8 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>) {
 
         const SCREEN_RESOLUTION_X: number = window.innerWidth 
         const SCREEN_RESOLUTION_Y: number = window.innerHeight 
-        const TILED_MAP__WIDTH_NUMBER: number = 21
-        const TILED_MAP_HEIGHT_NUMBER: number = 16
+        const TILED_MAP__WIDTH_NUMBER: number = 20
+        const TILED_MAP_HEIGHT_NUMBER: number = 15
         const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
         const TILED_HEIGHT: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGHT_NUMBER
 
@@ -290,18 +290,18 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>) {
 
                     const posicionAnteriorX = player.pos.x
                     const posicionAnteriorY = player.pos.y
-                    
-                    player.move(0, -velocidad*64);
-                    player.play("up");
 
                     colisiones.forEach( (colision: GameObj<any>) => {
-                      
+                    
                       colision.onCollide("player", (jugador: any) => {
                         player.pos.x = posicionAnteriorX
                         player.pos.y = posicionAnteriorY
                       })
 
-                    })
+                      })
+
+                    player.play("up");
+                    player.moveTo(posicionAnteriorX,Math.ceil(posicionAnteriorY - TILED_HEIGHT));
                     
                   });
                   juegoKaplay.onKeyPress("s", () => {
@@ -311,18 +311,18 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>) {
 
                     const posicionAnteriorX = player.pos.x
                     const posicionAnteriorY = player.pos.y
-                    
-                    player.move(0, velocidad*64);
-                    player.play("down");
 
                     colisiones.forEach( (colision: GameObj<any>) => {
-                      
+                    
                       colision.onCollide("player", (jugador: any) => {
                         player.pos.x = posicionAnteriorX
                         player.pos.y = posicionAnteriorY
                       })
 
-                    })
+                      })
+
+                    player.play("down");
+                    player.moveTo(posicionAnteriorX,Math.ceil(posicionAnteriorY + TILED_HEIGHT));
 
                   });
                   juegoKaplay.onKeyPress("a", () => {
@@ -332,39 +332,42 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>) {
 
                     const posicionAnteriorX = player.pos.x
                     const posicionAnteriorY = player.pos.y
-                    
-                    player.move(-velocidad*64, 0);
-                    player.play("left");
 
+                    
                     colisiones.forEach( (colision: GameObj<any>) => {
-                      
+                    
                       colision.onCollide("player", (jugador: any) => {
                         player.pos.x = posicionAnteriorX
                         player.pos.y = posicionAnteriorY
                       })
 
-                    })
+                      })
+
+                    player.play("left");
+                    player.moveTo(Math.ceil(posicionAnteriorX - TILED_WIDTH),posicionAnteriorY);
 
                   });
-                  juegoKaplay.onKeyPress("d", () => {
+                  juegoKaplay.onKeyPress("d", async () => {
 
                     console.log(player.pos.x)
                     console.log(player.pos.y)
 
                     const posicionAnteriorX = player.pos.x
                     const posicionAnteriorY = player.pos.y
-                    
-                    player.move(velocidad*64, 0);
-                    player.play("right");
 
+                    
                     colisiones.forEach( (colision: GameObj<any>) => {
-                      
+                    
                       colision.onCollide("player", (jugador: any) => {
                         player.pos.x = posicionAnteriorX
                         player.pos.y = posicionAnteriorY
                       })
 
-                    })
+                      })
+
+                    player.play("right");
+                    player.moveTo(Math.ceil(posicionAnteriorX + TILED_WIDTH),posicionAnteriorY);
+
 
                   });
     

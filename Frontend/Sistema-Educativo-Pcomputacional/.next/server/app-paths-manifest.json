@@ -1,5 +1,5 @@
 {
-  "/Amenu/page": "app/Amenu/page.js",
-  "/videojuego/page": "app/videojuego/page.js",
-  "/page": "app/page.js"
+  "/prueba_posicionamiento/page": "app/prueba_posicionamiento/page.js",
+  "/page": "app/page.js",
+  "/videojuego/page": "app/videojuego/page.js"
 }

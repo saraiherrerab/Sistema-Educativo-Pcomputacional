@@ -5,6 +5,11 @@
       "static/chunks/main-app.js",
       "static/chunks/app/layout.js"
     ],
+    "/prueba_posicionamiento/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/prueba_posicionamiento/page.js"
+    ],
     "/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
