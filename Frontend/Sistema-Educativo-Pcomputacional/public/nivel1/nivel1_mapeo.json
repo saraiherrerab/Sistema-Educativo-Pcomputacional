@@ -238,72 +238,6 @@
         }, 
         {
          "draworder":"topdown",
-         "id":10,
-         "name":"colisiones",
-         "objects":[
-                {
-                 "height":64,
-                 "id":20,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":384,
-                 "x":160,
-                 "y":192
-                }, 
-                {
-                 "height":352,
-                 "id":24,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":544,
-                 "y":32
-                }, 
-                {
-                 "height":352,
-                 "id":25,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":64,
-                 "y":32
-                }, 
-                {
-                 "height":16,
-                 "id":26,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":448,
-                 "x":96,
-                 "y":32
-                }, 
-                {
-                 "height":16,
-                 "id":27,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":448,
-                 "x":96,
-                 "y":321.333333333333
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
          "id":12,
          "name":"player",
          "objects":[
@@ -317,6 +251,72 @@
                  "width":32,
                  "x":480,
                  "y":96
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":14,
+         "name":"colisiones",
+         "objects":[
+                {
+                 "height":16,
+                 "id":30,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":448,
+                 "x":96,
+                 "y":32
+                }, 
+                {
+                 "height":320,
+                 "id":32,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":560,
+                 "y":64
+                }, 
+                {
+                 "height":32,
+                 "id":33,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":448,
+                 "x":96,
+                 "y":320
+                }, 
+                {
+                 "height":32,
+                 "id":34,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":384,
+                 "x":160,
+                 "y":208
+                }, 
+                {
+                 "height":288,
+                 "id":35,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":64,
+                 "y":64
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -345,9 +345,31 @@
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":15,
+         "name":"saco",
+         "objects":[
+                {
+                 "height":32,
+                 "id":36,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":480,
+                 "y":272
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":14,
- "nextobjectid":30,
+ "nextlayerid":16,
+ "nextobjectid":37,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

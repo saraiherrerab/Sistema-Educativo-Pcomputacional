@@ -70,6 +70,11 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
       sliceX: 1,
       sliceY: 1,
     });
+
+    juegoKaplay.loadSprite("saco", "sprites/deco/saco.png", {
+      sliceX: 1,
+      sliceY: 1,
+    });
   
     // Cargar sprites adicionales
     ["up", "down", "left", "right"].forEach((dir) => {
@@ -149,6 +154,7 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
             juegoKaplay.destroy(torre);
             juegoKaplay.destroy(castillo);
             juegoKaplay.destroy(player);
+            juegoKaplay.destroyAll("*")
             Nivel2(juegoKaplay);
             // We pass the component id for remove it.
           });
