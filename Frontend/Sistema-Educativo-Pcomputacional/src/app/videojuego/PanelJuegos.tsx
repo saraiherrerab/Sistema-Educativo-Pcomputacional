@@ -2,6 +2,7 @@ import { KAPLAYCtx } from "kaplay";
 import generarEsquemaMapa from "../../MapsGenerator";
 import { Nivel1 } from "./1stLevel";
 import { Nivel2 } from "./2ndLevel";
+import { Nivel3 } from "./3rdLevel";
 
 export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any, Router:any) {
     // Referencia persistente para almacenar la instancia de Kaplay
@@ -146,7 +147,8 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
             juegoKaplay.destroy(torre);
             juegoKaplay.destroy(castillo);
             juegoKaplay.destroy(player);
-            Nivel1(juegoKaplay, setState, cambiarGanar, Router);
+            juegoKaplay.destroyAll("*")
+            Nivel3(juegoKaplay, setState, cambiarGanar, Router);
             // We pass the component id for remove it.
           });
 

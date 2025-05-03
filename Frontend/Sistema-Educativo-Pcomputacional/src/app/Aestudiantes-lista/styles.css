@@ -8,7 +8,7 @@ html, body {
   font-size: 14px;
 }
 
-body {
+.body_estudiantes {
   /*background-color: #6F4EF6; */
   background-color:white;
   font-family: "Inter", sans-serif;

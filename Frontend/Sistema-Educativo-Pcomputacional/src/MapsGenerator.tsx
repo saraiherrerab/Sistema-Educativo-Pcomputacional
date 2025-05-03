@@ -278,6 +278,26 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
           saco.tag("saco")
           
         }
+        if(layer.type === "objectgroup" && layer.name === "arbol"){
+
+          const anchoCelda: number = ( window.innerWidth / dimesionesMapaX)
+          const altoCelda: number = ( window.innerHeight / dimesionesMapaY)
+  
+          let posicionX: number = (layer.objects[0].x / 32) * anchoCelda;
+          let posicionY: number = (layer.objects[0].y / 32) * altoCelda
+
+          const arbol = contextoKaplay.add([
+            contextoKaplay.pos(posicionX, posicionY),
+            contextoKaplay.sprite("arbol"),
+            contextoKaplay.scale(0.5),
+            contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda, altoCelda)}), // Rectángulo más pequeño
+            contextoKaplay.anchor("center"),
+            "arbol"
+          ]);
+
+          arbol.tag("arbol")
+          
+        }
         });
         
       

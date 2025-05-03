@@ -100,7 +100,7 @@ const S3_CLIENT = new S3Client({
     } catch (error) {
       console.error('Error al descargar el archivo desde S3:', error);
       if (error.$metadata && error.$metadata.httpStatusCode === 404) {
-        return res.status(404).json({ mensaje: 'El archivo no se encontró en S3.' });
+        return res.status(404).json({ mensaje: 'El archivo no se encontró en S3.', encontrado: false });
       }
       res.status(500).json({ mensaje: 'Error al descargar el archivo desde S3.' });
     }

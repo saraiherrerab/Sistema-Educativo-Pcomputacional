@@ -241,7 +241,7 @@ export default function ProfesoresLista() {
         } else {
           setFotoPerfil(null);
         }
-      };
+    };
 
     const onAgregarProfesor = async () => {
         

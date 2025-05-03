@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS Estudiante (
 	construccion_algoritmos BOOLEAN DEFAULT FALSE,
 	p_actividades_completadas INTEGER DEFAULT 0,
 	tipo_premiacion TEXT,
-	id_grupo INTEGER NOT NULL,
+	id_grupo INTEGER,
 	PRIMARY KEY(id_estudiante),
 	FOREIGN KEY (id_estudiante) REFERENCES Usuario(id_usuario)
 		ON UPDATE RESTRICT
