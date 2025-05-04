@@ -185,7 +185,6 @@ router.get('/estudiantes', async function(req, res, next) {
   
   try {
     const result = await db.any(`SELECT U.*, P.* FROM Usuario AS U, Estudiante as P WHERE id_usuario = id_estudiante`);
-    console.log('Resultado:', result); // { value: 123 }
     return res.json(result)
   } catch (error) {
     console.error('Error al hacer la consulta:', error);
@@ -230,40 +229,47 @@ router.post('/estudiantes', async function(req, res, next) {
       id_grupo 
     } = req.body
 
+    console.log("RECIBIENDO DEL BODY")
+    console.log(req.body)
+
     const createUsuario = new PQ({text :`INSERT INTO Usuario (nombre, apellido, usuario,clave_acceso) VALUES ($1,$2,$3,$4) RETURNING *`, values: [nombre,apellido,usuario,clave_acceso]});
     
     const resultadoCreacionUsuario = await db.one(createUsuario);
-    if (telefono != undefined && telefono != NULL && telefono !=''){
-      const actualizarTelefono = new PQ({text :`UPDATE INTO Usuario SET telefono=$1  WHERE id_usuario=$2`, values: [telefono,resultadoCreacionUsuario.id_usuario]});
+    console.log("RESULTADO DE CREAR USUARIO")
+    console.log(resultadoCreacionUsuario)
+
+    if (telefono != undefined && telefono != null && telefono !=''){
+      const actualizarTelefono = new PQ({text :`UPDATE Usuario SET telefono=$1  WHERE id_usuario=$2`, values: [telefono,resultadoCreacionUsuario.id_usuario]});
       const result_Up_Phone= await db.none(actualizarTelefono);
     }
-    if (correo != undefined && correo != NULL && correo !=''){
-      const actualizarCorreo = new PQ({text :`UPDATE INTO Usuario SET correo=$1  WHERE id_usuario=$2`, values: [correo,resultadoCreacionUsuario.id_usuario]});
+    if (correo != undefined && correo != null && correo !=''){
+      const actualizarCorreo = new PQ({text :`UPDATE Usuario SET correo=$1  WHERE id_usuario=$2`, values: [correo,resultadoCreacionUsuario.id_usuario]});
       const result_Up_Email= await db.none(actualizarCorreo);
     }
-    if (edad != undefined && edad != NULL && edad !=''){
-      const actualizarEdad = new PQ({text :`UPDATE INTO Usuario SET edad=$1  WHERE id_usuario=$2`, values: [edad,resultadoCreacionUsuario.id_usuario]});
+    if (edad != undefined && edad != null && edad !=''){
+      const actualizarEdad = new PQ({text :`UPDATE Usuario SET edad=$1  WHERE id_usuario=$2`, values: [edad,resultadoCreacionUsuario.id_usuario]});
       const result_Up_Phone= await db.none(actualizarEdad);
     }
-    if (foto != undefined && foto != NULL && foto !=''){
-      const actualizarFoto = new PQ({text :`UPDATE INTO Usuario SET foto=$1  WHERE id_usuario=$2`, values: [foto,resultadoCreacionUsuario.id_usuario]});
+    if (foto != undefined && foto != null && foto !=''){
+      const actualizarFoto = new PQ({text :`UPDATE Usuario SET foto=$1  WHERE id_usuario=$2`, values: [foto,resultadoCreacionUsuario.id_usuario]});
       const result_Up_Phone= await db.none(actualizarFoto);
     }
-    if (condicion_medica != undefined && condicion_medica != NULL && condicion_medica !=''){
-      const actualizarCM = new PQ({text :`UPDATE INTO Estudiante SET condicion_medica=$1  WHERE id_estudiante=$2`, values: [condicion_medica,resultadoCreacionUsuario.id_estudiante]});
+    if (cedula != undefined && cedula != null && cedula !=''){
+      const actualizarCedula = new PQ({text :`UPDATE Usuario SET cedula=$1  WHERE id_usuario=$2`, values: [cedula,resultadoCreacionUsuario.id_usuario]});
+      const result_Up_Phone= await db.none(actualizarCedula);
+    }
+    if (condicion_medica != undefined && condicion_medica != null && condicion_medica !=''){
+      const actualizarCM = new PQ({text :`UPDATE Estudiante SET condicion_medica=$1  WHERE id_estudiante=$2`, values: [condicion_medica,resultadoCreacionUsuario.id_estudiante]});
       const result_Up_CM= await db.none(actualizarCM);
     }
-
-   
-    console.log(resultadoCreacionUsuario)
 
     const findEstudiante =  new PQ({text :`INSERT INTO Estudiante (id_estudiante,condicion_medica,id_grupo) VALUES ($1,$2,$3)`, values: [resultadoCreacionUsuario.id_usuario,condicion_medica,id_grupo]});
     const result = await db.none(findEstudiante);
     
-    return res.json({mensaje: "El estudiante ha sido creado con éxito"})
+    return res.json({mensaje: "El estudiante ha sido creado con éxito", id_usuario: resultadoCreacionUsuario.id_usuario})
   } catch (error) {
     console.error('Error al hacer la consulta:', error);
-    res.json({menssage: "Error al crear profesor"})
+    res.json({menssage: error})
   }
   
 })

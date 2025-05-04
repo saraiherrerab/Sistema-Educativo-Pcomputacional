@@ -7,6 +7,7 @@
     align-items: flex-start; /* Alinea el texto a la izquierda */
     padding:30px;
     height: 100%;
+    width: 100%;
     margin-bottom: 10pxs;
     margin-right:10px;
   }
@@ -16,10 +17,26 @@
     font-size: 1.2em; /* Tamaño del título */
     font-weight: bold; /* Título en negrita */
     margin-bottom: 15px; /* Espacio debajo del título */
+    width: 100%;
   }
   
 
   .descripcionN {
     color: black; /* Color de la descripción (puedes cambiarlo) */
     font-size: 1em; /* Tamaño de la descripción */
+    width: 100%;
   }
+
+  .fila_nota {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+
+  .fila_nota > .col30 {
+  width: 30%;
+}
+
+.fila_nota > .col70 {
+  width: 70%;
+}

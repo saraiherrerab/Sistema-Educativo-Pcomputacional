@@ -32,11 +32,12 @@ body {
     font-family: "Inter", sans-serif;
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Espacio entre filas */
+    gap: 30px; /* Espacio entre filas */
     position: relative; /* Asegura que se superponga al canvas */ 
     margin: 0;
     padding-right: 10rem;
     height: 100%;
+    width: 100%;
     
 }
 
@@ -52,21 +53,24 @@ body {
     padding-top: 5%;
   }
 
-  .fila {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex: 1;
-    gap: 10px; /* Espacio entre columnas */
-    padding-bottom: 30px;
-    padding-top: 30px;
-  }
+.fila {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  gap: 6rem; /* Espacio entre columnas */
+  padding-bottom: 30px;
+  padding-top: 30px;
+  width: 100%;
   
-  .fila_espacio_fondo {
-    margin-bottom: 40px;
-  }
-  .notas {
-    flex: 1;
-    height: 100%;
-    margin-bottom: 20px;
-  }
+}
+
+.fila_espacio_fondo {
+  margin-bottom: 40px;
+}
+.notas {
+  flex: 1;
+  height: 100%;
+  margin-bottom: 20px;
+
+}

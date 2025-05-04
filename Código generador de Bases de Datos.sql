@@ -1,4 +1,7 @@
+DROP FUNCTION IF EXISTS obtener_cursos_profesor;
+DROP FUNCTION IF EXISTS obtener_horarios_profesor;
 DROP TABLE IF EXISTS Profesor_Curso;
+DROP TABLE IF EXISTS horarios_profesor;
 /*Tablas principales*/
 DROP TABLE IF EXISTS Estudiante;
 DROP TABLE IF EXISTS Grupos;
@@ -37,7 +40,7 @@ VALUES ('04121234567', 'Jackeline', 'Duarte', 'jackeline.duarte@example.com', 35
 
 -- Sarai
 INSERT INTO Usuario (telefono, nombre, apellido, correo, edad, usuario, clave_acceso, cedula)
-VALUES ('04129876543', 'Sarai', 'Herrea', 'sarai.herrea@example.com', 40, 'sherrea', 'profesor123', 'V87654321');
+VALUES ('04129876543', 'Sarai', 'Herrera', 'sarai.herrea@example.com', 40, 'sherrea', 'profesor123', 'V87654321');
 
 -- Nahum
 INSERT INTO Usuario (telefono, nombre, apellido, correo, edad, usuario, clave_acceso, cedula)
@@ -68,13 +71,14 @@ INSERT INTO Administrador(id_admin) VALUES (1);
 CREATE TABLE IF NOT EXISTS Profesor (
 	id_profesor INTEGER NOT NULL,
 	curriculum TEXT,
+	formacion TEXT,
 	PRIMARY KEY(id_profesor),
 	FOREIGN KEY (id_profesor) REFERENCES Usuario(id_usuario)
 		ON UPDATE RESTRICT
 		ON DELETE CASCADE
 );
 
-INSERT INTO Profesor (id_profesor) VALUES (2);
+INSERT INTO Profesor (id_profesor, formacion) VALUES (2, 'Sarai Herrera es una programadora y profesora apasionada por la tecnología y la enseñanza. Con sólida experiencia en desarrollo web y software educativo, domina lenguajes como JavaScript, TypeScript y Python, así como frameworks modernos como React y Angular. Ha liderado proyectos innovadores integrando programación y pedagogía, y posee habilidades destacadas en diseño instruccional y metodologías activas de aprendizaje. Su enfoque combina la excelencia técnica con una fuerte vocación docente, fomentando entornos de aprendizaje dinámicos y accesibles. Comprometida con la formación continua, Sarai promueve el crecimiento profesional de sus estudiantes a través de la práctica y la creatividad.');
 INSERT INTO Profesor (id_profesor) VALUES (3);
 
 DROP TABLE IF EXISTS Curso;
@@ -144,7 +148,7 @@ CREATE TABLE IF NOT EXISTS Estudiante (
 	construccion_algoritmos BOOLEAN DEFAULT FALSE,
 	p_actividades_completadas INTEGER DEFAULT 0,
 	tipo_premiacion TEXT,
-	id_grupo INTEGER NOT NULL,
+	id_grupo INTEGER,
 	PRIMARY KEY(id_estudiante),
 	FOREIGN KEY (id_estudiante) REFERENCES Usuario(id_usuario)
 		ON UPDATE RESTRICT
@@ -223,6 +227,62 @@ CREATE TABLE IF NOT EXISTS Usuario_Nivel (
 		ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS horarios_profesor (
+  id_horario SERIAL PRIMARY KEY,
+  id_profesor INTEGER NOT NULL,
+  id_curso INTEGER NOT NULL,
+  dia_semana VARCHAR(10) NOT NULL CHECK (
+    dia_semana IN ('Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo')
+  ),
+  hora_inicio TIME NOT NULL,
+  hora_fin TIME NOT NULL,
+  FOREIGN KEY (id_profesor) REFERENCES Profesor(id_profesor),
+  FOREIGN KEY (id_curso) REFERENCES curso(id_curso)
+);
 
+INSERT INTO horarios_profesor (id_profesor, id_curso, dia_semana, hora_inicio, hora_fin)
+VALUES
+(2, 2, 'Lunes', '16:00', '18:00'),
+(2, 2, 'Martes', '16:00', '18:00'),
+(2, 2, 'Miércoles', '16:00', '18:00');
 
+CREATE OR REPLACE FUNCTION obtener_cursos_profesor(p_id_usuario INT)
+RETURNS SETOF Curso AS $$
+BEGIN
+	
+  RETURN QUERY
+  SELECT c.*
+  FROM Curso c
+  WHERE c.id_curso NOT IN (
+    SELECT pc.id_curso
+    FROM profesor_curso pc
+    WHERE pc.id_profesor = p_id_usuario
+  );
+	
+END;
+$$ LANGUAGE plpgsql;
 
+DROP FUNCTION IF EXISTS obtener_horarios_profesor;
+CREATE OR REPLACE FUNCTION obtener_horarios_profesor(p_id_profesor INTEGER)
+RETURNS SETOF horarios_profesor AS $$
+BEGIN
+  RETURN QUERY
+  SELECT *
+  FROM horarios_profesor
+  WHERE id_profesor = p_id_profesor
+  ORDER BY
+    CASE dia_semana
+      WHEN 'Lunes' THEN 1
+      WHEN 'Martes' THEN 2
+      WHEN 'Miércoles' THEN 3
+      WHEN 'Jueves' THEN 4
+      WHEN 'Viernes' THEN 5
+      WHEN 'Sábado' THEN 6
+      WHEN 'Domingo' THEN 7
+      ELSE 8
+    END,
+    hora_inicio;
+END;
+$$ LANGUAGE plpgsql;
+
+SELECT * FROM obtener_horarios_profesor(2)

@@ -31,7 +31,9 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
     contextoKaplay: KAPLAYCtx<{},never>, // contextoKaplay es el objeto que representa todo el juego y se obtiene de la función "kaplay()"
     configuracionMapa: { nameFolder: string, nameFile: string,tileWidth: number,tileHeight: number,pos: Vec2,}, // la configuración del mapa representa las dimensiones que debe tener cada cuadro y la posición del primero para empezar a dibujar
     urlMapa: string, //Es la URL en la que se encuentra la carpeta con las imagenes del mapa en formato JSON
-    informacionMapa: informacionNivel[] //Contiene en orden todas las imagenes que se utilizaron en cada capa para generar el mundo.
+    informacionMapa: informacionNivel[], //Contiene en orden todas las imagenes que se utilizaron en cada capa para generar el mundo.
+    dimesionesMapaX: number = 20,
+    dimesionesMapaY: number = 15,
   ) : Promise<any> => {
   
     return fetch(urlMapa).then(
@@ -178,18 +180,22 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
 
 
           if(layer.type === "objectgroup" && layer.name === "player"){
+
+            const anchoCelda: number = ( window.innerWidth / dimesionesMapaX)
+            const altoCelda: number = ( window.innerHeight / dimesionesMapaY)
   
-            let posicionX: number = (layer.objects[0].x / 32) * ( window.innerWidth / 20);
-            let posicionY: number = (layer.objects[0].y / 32) * ( window.innerHeight / 15)
+            let posicionX: number = (layer.objects[0].x / 32) * anchoCelda;
+            let posicionY: number = (layer.objects[0].y / 32) * altoCelda
+
               // Jugador
               const player = contextoKaplay.add([
-                contextoKaplay.pos(posicionX+48,posicionY+32),
+                contextoKaplay.pos(posicionX + (anchoCelda / 2),posicionY + (altoCelda / 2)),
                 contextoKaplay.sprite("knight"),
                 contextoKaplay.scale(1),
                 contextoKaplay.health(3),
-                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), 64, 64)}),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda, altoCelda)}),
                 contextoKaplay.body(),
-                contextoKaplay.anchor(contextoKaplay.vec2(0.0)),
+                contextoKaplay.anchor("center"),
                 "player",
                 { z: 1 } // Asegura que el jugador esté en una capa superior
               ]);

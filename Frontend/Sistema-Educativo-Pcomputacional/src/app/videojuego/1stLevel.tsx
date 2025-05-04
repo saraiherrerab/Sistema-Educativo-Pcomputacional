@@ -497,14 +497,14 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
         }
         
         
-          ).catch(
+      ).catch(
             ((error:any) => {
               console.log("lerolerolero")
             })
-          )   
+      )   
   
   
-        }) //Fin - Onload()
+    }) //Fin - Onload()
        
   
 }

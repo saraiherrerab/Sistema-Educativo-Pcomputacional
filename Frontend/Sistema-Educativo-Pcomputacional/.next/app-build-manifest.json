@@ -5,6 +5,12 @@
       "static/chunks/main-app.js",
       "static/chunks/app/layout.js"
     ],
+    "/Aestudiantes-lista/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/Aestudiantes-lista/page.css",
+      "static/chunks/app/Aestudiantes-lista/page.js"
+    ],
     "/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -17,11 +23,11 @@
       "static/css/app/Amenu/page.css",
       "static/chunks/app/Amenu/page.js"
     ],
-    "/videojuego/page": [
+    "/profile/[id]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/videojuego/page.css",
-      "static/chunks/app/videojuego/page.js"
+      "static/css/app/profile/[id]/page.css",
+      "static/chunks/app/profile/[id]/page.js"
     ]
   }
 }

@@ -241,7 +241,7 @@ export default function ProfesoresLista() {
         } else {
           setFotoPerfil(null);
         }
-      };
+    };
 
     const onAgregarProfesor = async () => {
         
@@ -467,7 +467,7 @@ export default function ProfesoresLista() {
                                 <td>{profesor.correo ? profesor.correo : "null"}</td>
                                 <td>{profesor.telefono ? profesor.telefono : "null"}</td>
                                 <td>
-                                    <button onClick={()=>Router.push("/profile/"+profesor.id_profesor)}>Ver Perfil</button>
+                                    <button onClick={()=>Router.push("/profile-prof/"+profesor.id_profesor)}>Ver Perfil</button>
                                 </td>
                                 <td>
                                     <button onClick={() => onEditar(profesor)}>Editar</button>
