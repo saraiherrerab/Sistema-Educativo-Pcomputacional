@@ -241,7 +241,7 @@
         {
          "draworder":"topdown",
          "id":12,
-         "name":"jugador",
+         "name":"player",
          "objects":[
                 {
                  "height":32.824520698498,
