@@ -1,7 +1,6 @@
 {
+  "/Aestudiantes-lista/page": "app/Aestudiantes-lista/page.js",
   "/page": "app/page.js",
   "/Amenu/page": "app/Amenu/page.js",
-  "/profile-prof/[id]/page": "app/profile-prof/[id]/page.js",
-  "/reportes/page": "app/reportes/page.js",
-  "/Aestudiantes-lista/page": "app/Aestudiantes-lista/page.js"
+  "/profile/[id]/page": "app/profile/[id]/page.js"
 }

@@ -532,7 +532,7 @@ export default function EstudiantesLista() {
                                     <td>{estudiante.correo ? estudiante.correo : "null"}</td>
                                     <td>{estudiante.telefono ? estudiante.telefono : "null"}</td>
                                     <td>
-                                        <button onClick={()=>Router.push("/profile")}>Ver Perfil</button>
+                                        <button onClick={()=>Router.push("/profile/" + estudiante.id_estudiante)}>Ver Perfil</button>
                                     </td>
                                     <td>
                                         <button onClick={() => onEditar(estudiante)}>Editar</button>

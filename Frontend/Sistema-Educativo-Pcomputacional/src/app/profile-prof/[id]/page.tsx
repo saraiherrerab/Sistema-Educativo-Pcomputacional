@@ -155,11 +155,10 @@ export default function Profileprof() {
                     <p>{descargandoImagen ? 'Cargando imagen...' : 'Cargando imagen...'}</p>
                   )}
                   <div className="titulo">
-                    <Nombre tituloN="PROFESOR" nombre={usuario.nombre + " " + usuario.apellido}></Nombre>
+                  <Nombre tituloN="PROFESOR" nombre={usuario.nombre + " " + usuario.apellido}></Nombre>
                   </div>
                   <Datos titulo="Cedula" descripcion={ usuario.cedula }></Datos>
                   <Datos titulo="Edad" descripcion={ usuario.edad.toString() }></Datos>
-                  <Datos titulo="CV" descripcion={ usuario.curriculum }></Datos>
             </div>
             <div className="datosBloques">
                 <div className="fila">
