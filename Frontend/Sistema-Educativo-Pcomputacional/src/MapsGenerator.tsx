@@ -1,4 +1,3 @@
-
 import { Asset, KAPLAYCtx, SpriteData, Vec2 } from "kaplay";
 import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido";
 
@@ -208,27 +207,30 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
               console.log(contextoKaplay.get("player"))
           }
           if(layer.type === "objectgroup" && layer.name === "enemy"){
-            
+            const anchoCelda: number = ( window.innerWidth / 20);
+            const altoCelda: number = ( window.innerHeight / 15)
+
+
+            layer.objects.forEach( (enemiguito: any) => {
+              let posicionX: number = (enemiguito.x / 32) * ( anchoCelda);
+              let posicionY: number = (enemiguito.y / 32) * ( altoCelda)
+              let enemy = contextoKaplay.add([
+                contextoKaplay.pos(posicionX+(anchoCelda/2),(posicionY+(altoCelda/2))),
+                contextoKaplay.sprite("enemy"),
+                contextoKaplay.scale(0.8),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), 64, 64)}), // Rectángulo más pequeño
+                contextoKaplay.body(),
+                contextoKaplay.anchor(contextoKaplay.vec2(0,0)),
+                "enemy",
+                { z: 1 } // Asegura que el jugador esté en una capa superior
+              ]);
   
-            let posicionX: number = (layer.objects[0].x / 32) * ( window.innerWidth / 20);
-            let posicionY: number = (layer.objects[0].y / 32) * ( window.innerHeight / 15)
-
-            const enemy = contextoKaplay.add([
-              contextoKaplay.pos(posicionX+48,posicionY + 32),
-              contextoKaplay.sprite("enemy"),
-              contextoKaplay.scale(0.8),
-              contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), 64, 64)}), // Rectángulo más pequeño
-              contextoKaplay.body(),
-              contextoKaplay.anchor(contextoKaplay.vec2(0,0)),
-              "enemy",
-              { z: 1 } // Asegura que el jugador esté en una capa superior
-            ]);
-
-            enemy.tag("enemy")
+              enemy.tag("enemy")
+            })
             
             
           }
-        if(layer.type === "objectgroup" && layer.name === "castillo"){
+          if(layer.type === "objectgroup" && layer.name === "castillo"){
   
             let posicionX: number = (layer.objects[0].x / 32) * ( window.innerWidth / 20);
             let posicionY: number = (layer.objects[0].y / 32) * ( window.innerHeight / 15)
@@ -261,43 +263,59 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
 
           torre.tag("castillo")
           
-        }
-        if(layer.type === "objectgroup" && layer.name === "saco"){
+      }
+      if(layer.type === "objectgroup" && layer.name === "arbol"){
+
+        const anchoCelda: number = ( window.innerWidth / 20);
+        const altoCelda: number = ( window.innerHeight / 15)
   
-          let posicionX: number = (layer.objects[0].x / 32) * ( window.innerWidth / 20);
-          let posicionY: number = (layer.objects[0].y / 32) * ( window.innerHeight / 15)
+        let posicionX: number = (layer.objects[0].x / 32) * anchoCelda
+        let posicionY: number = (layer.objects[0].y / 32) * altoCelda
 
-          const saco = contextoKaplay.add([
-            contextoKaplay.pos(posicionX, posicionY),
-            contextoKaplay.sprite("saco"),
-            contextoKaplay.scale(0.7),
-            contextoKaplay.area(),
-            "saco"
-          ]);
+        const escala: number = 0.5
 
-          saco.tag("saco")
-          
-        }
-        if(layer.type === "objectgroup" && layer.name === "arbol"){
+        layer.objects.forEach( (arbolito: any) => {
 
-          const anchoCelda: number = ( window.innerWidth / dimesionesMapaX)
-          const altoCelda: number = ( window.innerHeight / dimesionesMapaY)
-  
-          let posicionX: number = (layer.objects[0].x / 32) * anchoCelda;
-          let posicionY: number = (layer.objects[0].y / 32) * altoCelda
+          let posicionX: number = (arbolito.x / 32) * anchoCelda
+          let posicionY: number = (arbolito.y / 32) * altoCelda
 
           const arbol = contextoKaplay.add([
-            contextoKaplay.pos(posicionX, posicionY),
+            contextoKaplay.pos(posicionX + (anchoCelda / 2), posicionY  + (altoCelda / 2)),
             contextoKaplay.sprite("arbol"),
-            contextoKaplay.scale(0.5),
-            contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda, altoCelda)}), // Rectángulo más pequeño
+            contextoKaplay.scale(escala),
+            contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), (anchoCelda / escala) , (altoCelda / escala))}),
             contextoKaplay.anchor("center"),
             "arbol"
           ]);
-
+  
           arbol.tag("arbol")
-          
-        }
+
+        })
+  
+        
+
+
+        
+    }
+    if(layer.type === "objectgroup" && layer.name === "enemigo"){
+  
+      let posicionX: number = (layer.objects[0].x / 32) * ( window.innerWidth / 20);
+      let posicionY: number = (layer.objects[0].y / 32) * ( window.innerHeight / 15)
+
+      const enemigo = contextoKaplay.add([
+        contextoKaplay.pos(posicionX+48,posicionY + 32),
+        contextoKaplay.sprite("enemigo"),
+        contextoKaplay.scale(0.8),
+        contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), 64, 64)}), // Rectángulo más pequeño
+        contextoKaplay.body(),
+        contextoKaplay.anchor(contextoKaplay.vec2(0,0)),
+        "enemigo",
+        { z: 1 } // Asegura que el jugador esté en una capa superior
+      ]);
+
+      enemigo.tag("enemigo")
+      
+    }
         });
         
       
@@ -345,6 +363,40 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
           });
   
         })
+      
+        
+  
+        /*
+        worldJson.layers.forEach((layer: any, numeroLayer: number) => {
+        
+          let resultadoMapa = [];
+          if (layer.type === "tilelayer" ) {
+            const { data, width } = layer;
+            const mapa = [];
+            for (let i = 0; i < width; i++) {
+              mapa.push(data.slice(i * width, (i + 1) * width));
+            }
+  
+            const resultadoMapeo = mapa.map((fila: any) =>
+              fila.map((cell: any) => cell.toString()).join("")
+            );
+  
+            resultadoMapa = [...resultadoMapeo]
+  
+          
+            contextoKaplay.addLevel(resultadoMapa, {
+              tileWidth: anchoCuadrado,
+              tileHeight: altoCuadrado,
+              pos: configuracionMapa.pos,
+              tiles: { ...tileMapping[numeroLayer] },
+            })
+          }
+  
+  
+          
+          
+        })
+        */
   
       }
   

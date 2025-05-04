@@ -2,7 +2,7 @@ import { KAPLAYCtx } from "kaplay";
 import generarEsquemaMapa from "../../MapsGenerator";
 import { Nivel1 } from "./1stLevel";
 import { Nivel2 } from "./2ndLevel";
-import { Nivel3 } from "./3rdLevel";
+import {Nivel3} from "./3rdLevel";
 
 export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any, Router:any) {
     // Referencia persistente para almacenar la instancia de Kaplay
@@ -68,11 +68,6 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
     });
 
     juegoKaplay.loadSprite("torre", "sprites/buildings/Tower_Blue.png", {
-      sliceX: 1,
-      sliceY: 1,
-    });
-
-    juegoKaplay.loadSprite("saco", "sprites/deco/saco.png", {
       sliceX: 1,
       sliceY: 1,
     });
@@ -147,8 +142,8 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
             juegoKaplay.destroy(torre);
             juegoKaplay.destroy(castillo);
             juegoKaplay.destroy(player);
-            juegoKaplay.destroyAll("*")
-            Nivel3(juegoKaplay, setState, cambiarGanar, Router);
+            juegoKaplay.destroyAll("*");
+            Nivel1(juegoKaplay, setState, cambiarGanar, Router);
             // We pass the component id for remove it.
           });
 
@@ -156,8 +151,8 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
             juegoKaplay.destroy(torre);
             juegoKaplay.destroy(castillo);
             juegoKaplay.destroy(player);
-            juegoKaplay.destroyAll("*")
-            Nivel2(juegoKaplay);
+            juegoKaplay.destroyAll("*");
+            Nivel3(juegoKaplay);
             // We pass the component id for remove it.
           });
       
