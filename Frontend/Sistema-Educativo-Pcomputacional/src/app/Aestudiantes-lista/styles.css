@@ -58,15 +58,28 @@ table {
 th {
   color: rgb(141, 140, 140);
   padding: 20px 25px; /* AUMENTAMOS el padding */
+  
 }
 
+.texto_central {
+  text-align: center;
+  vertical-align: middle;
+}
 th,
 td {
   padding: 16px 18px; /* Más espacio interno en las celdas (vertical y horizontal) */
   text-align: left; /* Alinea el texto a la izquierda por defecto */
   font-size: 1.1em; /* Letra un poco más grande */
   border-bottom: 1px solid #ddd; /* Línea divisoria sutil entre filas */
-  padding: 20px 45px !important; /* AUMENTAMOS el padding */
+  /*padding: 20px 45px !important;  AUMENTAMOS el padding */
+}
+
+.display_flex {
+  display: flex;
+  height: 100%;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center;     /* Centra verticalmente */
+  gap: 1px;                /* Espacio entre botones, opcional */
 }
 
 th {

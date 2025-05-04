@@ -449,6 +449,90 @@ export default function EstudiantesLista() {
         }
     }
 
+    async function gestionarCursosYHorarios(){
+        console.log("gestionarCursosYHorarios()")
+
+        const mostrarSelectorDeGrupos = () => {
+            const grupos = [
+                { nombre: "Grupo A - Matemáticas", id: "matematicas-a" },
+                { nombre: "Grupo 1 - Historia", id: "historia-1" },
+                { nombre: "Grupo B - Física", id: "fisica-b" },
+                { nombre: "Grupo 2 - Química", id: "quimica-2" },
+                // Agrega aquí más grupos según sea necesario
+            ];
+        
+            const optionsHTML = grupos.map(grupo => `<option value="${grupo.id}">${grupo.nombre}</option>`).join('');
+        
+            Swal.fire({
+                title: "Selecciona un grupo",
+                html: `
+                    <select id="grupo-seleccionado" class="swal2-input">
+                        <option value="" disabled selected>-- Selecciona un grupo --</option>
+                        ${optionsHTML}
+                    </select>
+                `,
+                showCancelButton: true,
+                confirmButtonText: "Ver Grupo",
+                cancelButtonText: "Cerrar",
+                preConfirm: () => {
+                    const grupoId = (document.getElementById("grupo-seleccionado") as HTMLSelectElement)?.value;
+                    if (!grupoId) {
+                        Swal.showValidationMessage('Por favor, selecciona un grupo');
+                        return false;
+                    }
+                    return grupoId;
+                }
+            }).then((result) => {
+                if (result.isConfirmed && result.value) {
+                    const grupoSeleccionadoId = result.value;
+                    mostrarInformacionDelGrupo(grupoSeleccionadoId, mostrarSelectorDeGrupos); // Pasar la función para volver
+                }
+            });
+        }
+        
+        const mostrarInformacionDelGrupo = (grupoId: string, volverAlSelector: () => void) => {
+            const informacionGrupos: any = {
+                "matematicas-a": { nombre: "Grupo A - Matemáticas", profesor: "Dr. López", horario: "Lunes y Miércoles 16:00 - 18:00" },
+                "historia-1": { nombre: "Grupo 1 - Historia", profesor: "Dra. Pérez", horario: "Martes y Jueves 10:00 - 12:00" },
+                "fisica-b": { nombre: "Grupo B - Física", profesor: "Ing. Vargas", horario: "Viernes 09:00 - 11:00" },
+                "quimica-2": { nombre: "Grupo 2 - Química", profesor: "Lic. Gómez", horario: "Martes y Jueves 14:00 - 16:00" },
+                // Agrega la información para los demás grupos
+            };
+        
+            const infoGrupo = informacionGrupos[grupoId];
+        
+            if (infoGrupo) {
+                Swal.fire({
+                    title: infoGrupo.nombre,
+                    html: `
+                        <p><strong>Profesor:</strong> ${infoGrupo.profesor}</p>
+                        <p><strong>Horario:</strong> ${infoGrupo.horario}</p>
+                        `,
+                    showCancelButton: true,
+                    confirmButtonText: "Asignar estudiante a grupo",
+                    cancelButtonText: "Salir",
+                    showDenyButton: true, // Agregamos el botón "Volver al Selector"
+                    denyButtonText: "Volver a Grupos",
+                }).then((result) => {
+                    if (result.isDenied) {
+                        volverAlSelector(); // Llamamos a la función para mostrar el selector
+                    } else if (result.isConfirmed) {
+                        Swal.fire("¡Aceptado!", "La información del grupo ha sido aceptada.", "success");
+                        // Aquí puedes agregar la lógica para guardar o procesar la aceptación
+                    } else if (result.isDismissed && result.dismiss === Swal.DismissReason.cancel) {
+                        // Aquí puedes agregar la lógica para volver a la edición
+                        Swal.fire("Edición", "Volviendo a la edición del grupo.", "info");
+                    }
+                });
+            } else {
+                Swal.fire("Error", "No se encontró información para este grupo.", "error");
+            }
+        }
+        
+
+        mostrarSelectorDeGrupos();
+
+    }
     return (
         <>
             <Header
@@ -494,7 +578,22 @@ export default function EstudiantesLista() {
                         <input type="text" placeholder="Clave" value={nuevoEstudiante.clave_acceso} onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, clave_acceso: e.target.value })} />
                         <input type="text" placeholder="Telefono" value={nuevoEstudiante.telefono} onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, telefono: e.target.value })} />
                         <input type="text" placeholder="Correo" value={nuevoEstudiante.correo} onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, correo: e.target.value })} />
-                        <input type="number" placeholder="Edad" value={nuevoEstudiante.edad} onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, edad: (e.target.value) as unknown as number})} />
+                        <input
+                            type="number"
+                            min={0}
+                            placeholder="Edad"
+                            value={nuevoEstudiante.edad}
+                            onChange={e => {
+                                const value = e.target.value;
+                                const numberValue = Number(value);
+                                if (value === '' || (Number.isFinite(numberValue) && numberValue >= 0)) {
+                                setNuevoEstudiante({
+                                    ...nuevoEstudiante,
+                                    edad: value === '' ? 0 : numberValue,
+                                });
+                                }
+                            }}
+                        />
                         <input type="text" placeholder="Cedula" value={nuevoEstudiante.cedula} onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, cedula: e.target.value })} />
                         <input
                             type="file"
@@ -514,10 +613,11 @@ export default function EstudiantesLista() {
                                 <th>Apellido</th>
                                 <th>Usuario</th>
                                 <th>Clave</th>
-                                <th>Correo</th>
-                                <th>Celular</th>
-                                <th>Perfil</th> 
-                                <th>Acciones</th>
+                                <th className="texto_central">Correo</th>
+                                <th className="texto_central">Celular</th>
+                                <th className="texto_central">Perfil</th> 
+                                <th className="texto_central">Acciones</th>
+                                <th className="texto_central">Cursos</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -534,9 +634,14 @@ export default function EstudiantesLista() {
                                     <td>
                                         <button onClick={()=>Router.push("/profile/" + estudiante.id_estudiante)}>Ver Perfil</button>
                                     </td>
+                                    <td className="display_flex">
+                                        <button onClick={() => onEditar(estudiante)}><img src="/icons/edit_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
+                                        <button onClick={() => onEliminar(estudiante.id_estudiante)}><img src="/icons/delete_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
+                                    </td>
                                     <td>
-                                        <button onClick={() => onEditar(estudiante)}>Editar</button>
-                                        <button onClick={() => onEliminar(estudiante.id_estudiante)}>Eliminar</button>
+                                        <button onClick={() => gestionarCursosYHorarios()}>
+                                            <img src="/icons/arrow_forward_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} />
+                                        </button>
                                     </td>
                                 </tr>
                             ))}
@@ -554,7 +659,6 @@ export default function EstudiantesLista() {
                         <input type="text" placeholder="Correo" value={estudianteEditando.correo || ''} onChange={e => setEstudianteEditando({ ...estudianteEditando, correo: e.target.value })} />
                         <input type="number" placeholder="Edad" value={estudianteEditando.edad ?? ''} onChange={e => setEstudianteEditando({ ...estudianteEditando, edad: Number(e.target.value) })} />
                         <input type="text" placeholder="Cedula" value={estudianteEditando.cedula || ''} onChange={e => setEstudianteEditando({ ...estudianteEditando, cedula: e.target.value })} />
-                        <input type="text" placeholder="Foto" value={estudianteEditando.foto || ''} onChange={e => setEstudianteEditando({ ...estudianteEditando, foto: e.target.value })} />
                         <input type="text" placeholder="Condicion" value={estudianteEditando.condicion_medica || ''} onChange={e => setEstudianteEditando({ ...estudianteEditando, condicion_medica: e.target.value })} />
                         {imagenDescargadaUrl && (
                             <div>
