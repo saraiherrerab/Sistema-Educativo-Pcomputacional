@@ -139,6 +139,8 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
 
                   const enemigos = juegoKaplay.get("enemy")
                   const arboles= juegoKaplay.get("arbol")
+                  const colisiones = juegoKaplay.get("square-colision")
+                  console.log(colisiones)
                   
                   arboles.forEach( (arbol: GameObj<any>) => {
                     arbol.play("quiet");
@@ -168,7 +170,6 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
   
                     squareDer.onCollide("player", (jugador: any) => {
                       setTimeout(() => {
-                        jugador.hurt(1);
                         lives--;
                         juegoKaplay.debug.log("¡ouch!");
                         enemigo.play("right_a");
@@ -179,7 +180,6 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
   
                     squareIzq.onCollide("player", (jugador: any) => {
                       setTimeout(() => {
-                        jugador.hurt(1);
                         lives--;
                         juegoKaplay.debug.log("¡ouch!");
                         enemigo.play("right_a");
@@ -188,10 +188,19 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
                       }, 100); // Espera 2000 milisegundos (2 segundos)
                     });
                   })
-                  
+
+                  const posicionAnteriorX = player.pos.x
+                  const posicionAnteriorY = player.pos.y
+                  colisiones.forEach( (colision: GameObj<any>) => {
+                    
+                    colision.onCollide("player", (jugador: any) => {
+                      player.pos.x = posicionAnteriorX
+                      player.pos.y = posicionAnteriorY
+                    })
+
+                    })
                   enemigo.onCollide("player", (jugador: any) => {
                     setTimeout(() => {
-                      jugador.hurt(1);
                       lives--;
                       juegoKaplay.debug.log("¡ouch!");
                       enemigo.play("right_a");
@@ -248,7 +257,8 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
                       juegoKaplay.pos(juegoKaplay.center().x+570,SCREEN_RESOLUTION_Y - 480 ),
                       juegoKaplay.sprite("up"),
                       juegoKaplay.scale(4),
-                      juegoKaplay.area(),
+                      juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2( 10,5), 15, 20), // Rectángulo más pequeño
+                      }),
                       { z: 1 } // Asegura que el jugador esté en una capa superior
                     ]),
                     down: juegoKaplay.add([
@@ -315,7 +325,7 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
                   // Colisión con el enemigo
                   enemigo.onCollide("player", (jugador: any) => {
                     setTimeout(() => {
-                      jugador.hurt(1);
+                      
                       juegoKaplay.debug.log("¡ouch!");
                       lives--;
                       juegoKaplay.debug.log("Han pasado dos segundos");
@@ -352,6 +362,7 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
                       juegoKaplay.destroy(live2);
                     }else if(lives<1){
                       juegoKaplay.destroy(live3);
+                      juegoKaplay.destroy(player);
                     };
                   })
     
