@@ -176,6 +176,33 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
   
               
           }
+          if(layer.type === "objectgroup" && layer.name === "cartel"){
+
+            const anchoCelda: number = ( window.innerWidth / dimesionesMapaX)
+            const altoCelda: number = ( window.innerHeight / dimesionesMapaY)
+  
+            let posicionX: number = (layer.objects[0].x / 32) * anchoCelda;
+            let posicionY: number = (layer.objects[0].y / 32) * altoCelda
+
+              // Jugador
+              const cartel = contextoKaplay.add([
+                contextoKaplay.pos(posicionX +200,posicionY+100),
+                contextoKaplay.sprite("cartel"),
+                contextoKaplay.scale(0.1),
+                contextoKaplay.health(3),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda*0.7, altoCelda*0.7)}),
+                contextoKaplay.body(),
+                contextoKaplay.anchor("center"),
+                "cartel",
+                { z: 1 } // Asegura que el jugador esté en una capa superior
+              ]);
+
+              cartel.tag("cartel")
+              
+              console.log(cartel)
+
+              console.log(contextoKaplay.get("cartel"))
+          }
 
 
 
@@ -193,7 +220,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
                 contextoKaplay.sprite("knight"),
                 contextoKaplay.scale(1),
                 contextoKaplay.health(3),
-                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda, altoCelda)}),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda*0.7, altoCelda*0.7)}),
                 contextoKaplay.body(),
                 contextoKaplay.anchor("center"),
                 "player",
@@ -218,7 +245,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
                 contextoKaplay.pos(posicionX+(anchoCelda/2),(posicionY+(altoCelda/2))),
                 contextoKaplay.sprite("enemy"),
                 contextoKaplay.scale(0.8),
-                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), 64, 64)}), // Rectángulo más pequeño
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda*0.7, altoCelda*0.7)}),
                 contextoKaplay.body(),
                 contextoKaplay.anchor(contextoKaplay.vec2(0,0)),
                 "enemy",
