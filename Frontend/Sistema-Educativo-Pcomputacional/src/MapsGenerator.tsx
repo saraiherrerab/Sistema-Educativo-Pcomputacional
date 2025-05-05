@@ -150,6 +150,33 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
           let proporcionX = ( window.innerWidth / (32 * TILED_MAP__WIDTH_NUMBER) )
           let proporcionY = (window.innerHeight / (32 * TILED_HEIGTH_NUMBER))
   
+          if(layer.type === "objectgroup" && layer.name === "colisionarbol"){
+  
+            layer.objects.forEach( (zonaColision: any) => {
+  
+              //if(numeroColision === 4){
+                // Zona de caid
+
+                console.log(zonaColision.width)
+                
+                contextoKaplay.add([
+                  contextoKaplay.pos( (zonaColision.x / 32) *( window.innerWidth / 20), Math.floor((zonaColision.y / 32 )*(window.innerHeight / 15))),
+                  contextoKaplay.scale(1),
+                  contextoKaplay.body({isStatic: true}),
+                  contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0.0), (zonaColision.width / 32) * ( window.innerWidth / 20) , zonaColision.height * proporcionY)}),
+                  { width: zonaColision.width * proporcionX, height: zonaColision.height * proporcionY }, // Agrega propiedades manualmente
+                  "colisionarbol"
+                ]);
+  
+              //}
+              
+  
+            });
+  
+  
+              
+          }
+
           if(layer.type === "objectgroup" && layer.name === "colisiones"){
   
             layer.objects.forEach( (zonaColision: any) => {
@@ -416,7 +443,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
                 contextoKaplay.sprite("knight"),
                 contextoKaplay.scale(1),
                 contextoKaplay.health(3),
-                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda*0.7, altoCelda*0.7)}),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda*0.6, altoCelda*0.6)}),
                 contextoKaplay.body(),
                 contextoKaplay.anchor("center"),
                 "player",
@@ -506,7 +533,6 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
             contextoKaplay.pos(posicionX + (anchoCelda / 2), posicionY  + (altoCelda / 2)),
             contextoKaplay.sprite("arbol"),
             contextoKaplay.scale(escala),
-            contextoKaplay.body({ isStatic: true }),
             contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), (anchoCelda / escala) , (altoCelda / escala))}),
             
             contextoKaplay.anchor("center"),

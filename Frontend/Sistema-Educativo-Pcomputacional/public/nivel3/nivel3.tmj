@@ -353,6 +353,72 @@
                  "width":29.3076077665161,
                  "x":62.132128465014,
                  "y":76.7859323482721
+                }, 
+                {
+                 "height":34.582977164489,
+                 "id":98,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":30.4799120771767,
+                 "x":63.3044327756747,
+                 "y":153.571864696544
+                }, 
+                {
+                 "height":28.1353034558554,
+                 "id":99,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":26.9629991451948,
+                 "x":161.191842715838,
+                 "y":161.777994871169
+                }, 
+                {
+                 "height":21.1014775918916,
+                 "id":100,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":27.5491513005251,
+                 "x":63.3044327756747,
+                 "y":26.3768469898645
+                }, 
+                {
+                 "height":22.2737819025522,
+                 "id":101,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":29.8937599218464,
+                 "x":94.956649163512,
+                 "y":26.3768469898645
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":40,
+         "name":"colisionarbol",
+         "objects":[
+                {
+                 "height":166.467212113811,
+                 "id":97,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":126.022713396019,
+                 "x":62.132128465014,
+                 "y":24.6183905238735
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -738,6 +804,17 @@
                  "width":704.554890707046,
                  "x":4.10306508731225,
                  "y":-46.3060202710954
+                }, 
+                {
+                 "height":33.9968250091586,
+                 "id":102,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":156.502625473196,
+                 "x":383.92966174136,
+                 "y":0.586152155330321
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -953,7 +1030,8 @@
          "visible":true,
          "x":0,
          "y":0
-        }, 
+        },
+    
         {
          "draworder":"topdown",
          "id":39,
@@ -976,8 +1054,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":40,
- "nextobjectid":97,
+ "nextlayerid":41,
+ "nextobjectid":103,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

@@ -157,6 +157,7 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
                   console.log(juegoKaplay.get("player"))
 
                   const player = juegoKaplay.get("player")[0]
+                  const colisionarbol = juegoKaplay.get("colisionarbol")
                   const rock = juegoKaplay.get("rocks")[0]
                   const oveja = juegoKaplay.get("oveja")[0]
                   const hongo = juegoKaplay.get("hongo")[0]
@@ -172,6 +173,7 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
                   const right = juegoKaplay.get("right")[0]
 
                   console.log(oveja)
+                  console.log(colisionarbol)
                   console.log(hongo)
                   console.log(rock)
                   console.log(up)
@@ -222,7 +224,12 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
                       // Itera sobre la lista de árboles y destruye cada uno
                       arboles.forEach((arbol: GameObj<any>) => {
                         arbol.destroy();
+                        
                       });
+
+                      colisionarbol.forEach( (colision: GameObj<any>) => {
+                        colision.destroy();
+                      })
                       // Opcionalmente, puedes vaciar la lista de árboles si ya no los necesitas
                     }
                   });
@@ -234,18 +241,18 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
                   enemigos.forEach( (enemigo: GameObj<any>) => {
 
                     let squareDer = juegoKaplay.add([
-                      juegoKaplay.pos(enemigo.pos.x + (TILED_WIDTH / 2),enemigo.pos.y - (TILED_HEIGHT / 2)),
+                      juegoKaplay.pos(enemigo.pos.x + (TILED_WIDTH / 2),enemigo.pos.y - (TILED_HEIGHT / 2)+10),
                       juegoKaplay.scale(1),
-                      juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2(0,0), TILED_WIDTH, TILED_HEIGHT), // Rectángulo más pequeño
+                      juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2(0,0), TILED_WIDTH, TILED_HEIGHT-20), // Rectángulo más pequeño
                       }),
                       "square",
                       { z: 2 } // Asegura que el jugador esté en una capa superior
                     ]);
   
                     let squareIzq = juegoKaplay.add([
-                      juegoKaplay.pos(enemigo.pos.x - 3*(TILED_WIDTH / 2),enemigo.pos.y - (TILED_HEIGHT / 2)),
+                      juegoKaplay.pos(enemigo.pos.x - 3*(TILED_WIDTH / 2),enemigo.pos.y - (TILED_HEIGHT / 2)+10),
                       juegoKaplay.scale(1),
-                      juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2(0,0), TILED_WIDTH, TILED_HEIGHT), // Rectángulo más pequeño
+                      juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2(0,0), TILED_WIDTH, TILED_HEIGHT-20), // Rectángulo más pequeño
                       }),
                       "square",
                       { z: 2 } // Asegura que el jugador esté en una capa superior
@@ -304,79 +311,16 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
                   ])
 
                   
-                  /*
-                  const live1 = juegoKaplay.add([
-                    juegoKaplay.pos(1210,20),
-                    juegoKaplay.sprite("heart"),
-                    juegoKaplay.scale(2),
-                    juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2( 10,5), 15, 20), // Rectángulo más pequeño
-                    }),
-                    "heart1",
-                    { z: 10 } // Asegura que el jugador esté en una capa superior
-                  ]);
-    
-                  const live2 = juegoKaplay.add([
-                    juegoKaplay.pos(1270,20),
-                    juegoKaplay.sprite("heart"),
-                    juegoKaplay.scale(2),
-                    juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2( 10,5), 15, 20), // Rectángulo más pequeño
-                    }),
-                    "heart2",
-                    { z: 10 } // Asegura que el jugador esté en una capa superior
-                  ]);
-         
-                  const live3 = juegoKaplay.add([
-                    juegoKaplay.pos(1330,20),
-                    juegoKaplay.sprite("heart"),
-                    juegoKaplay.scale(2),
-                    juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2( 10,5), 15, 20), // Rectángulo más pequeño
-                    }),
-
-                    "heart3",
-                    { z: 10 } // Asegura que el jugador esté en una capa superior
-                  ]);
-                  */
-                  // Flechas
-                  /*const arrows = {
-                    up: juegoKaplay.add([
-                      juegoKaplay.pos(juegoKaplay.center().x+570,SCREEN_RESOLUTION_Y - 480 ),
-                      juegoKaplay.sprite("up"),
-                      juegoKaplay.scale(4),
-                      juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2( 10,5), 15, 20), // Rectángulo más pequeño
-                      }),
-                      { z: 1 } // Asegura que el jugador esté en una capa superior
-                    ]),
-                    down: juegoKaplay.add([
-                      juegoKaplay.pos(juegoKaplay.center().x+558,SCREEN_RESOLUTION_Y - 360 ),
-                      juegoKaplay.sprite("down"),
-                      juegoKaplay.scale(4),
-                      juegoKaplay.area(),
-                      { z: 1 } // Asegura que el jugador esté en una capa superior
-                    ]),
-                    left: juegoKaplay.add([
-                      juegoKaplay.pos(juegoKaplay.center().x+510,SCREEN_RESOLUTION_Y - 430 ),
-                      juegoKaplay.sprite("left"),
-                      juegoKaplay.scale(4),
-                      juegoKaplay.area(),
-                      { z: 1 } // Asegura que el jugador esté en una capa superior
-                    ]),
-                    right: juegoKaplay.add([
-                      juegoKaplay.pos(juegoKaplay.center().x+620,SCREEN_RESOLUTION_Y - 430 ),
-                      juegoKaplay.sprite("right"),
-                      juegoKaplay.scale(4),
-                      juegoKaplay.area(),
-                      { z: 1 } // Asegura que el jugador esté en una capa superior
-                    ]),
-                  };
-                  */
+                 
                   const velocidad = 64;
     
                   
     
                   // Movimiento con clic
                   up.onClick(() => {
-                    player.moveBy(juegoKaplay.vec2(0,-velocidad*0.7 ));
-                    //calcularMovimientoPersonaje(player)
+                    console.log(player.pos.x)
+                    console.log(player.pos.y)
+
                     const posicionAnteriorX = player.pos.x
                     const posicionAnteriorY = player.pos.y
                     
@@ -388,16 +332,17 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
                       })
                     })
 
-                    arboles.forEach( (arbol: GameObj<any>) => {
-                      arbol.onCollide("player", (jugador: any) => {
+                    colisionarbol.forEach( (colision: GameObj<any>) => {
+                      colision.onCollide("player", (jugador: any) => {
                         player.pos.x = posicionAnteriorX
                         player.pos.y = posicionAnteriorY
                       })
-  
                     })
+  
+                    
 
                     player.play("up");
-                    player.moveTo(Math.ceil(posicionAnteriorX + TILED_WIDTH),posicionAnteriorY);
+                    player.moveTo(posicionAnteriorX,Math.ceil(posicionAnteriorY - TILED_HEIGHT));
                   });
 
                   down.onClick(() => {
@@ -416,13 +361,15 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
 
                       })
 
-                      arboles.forEach( (arbol: GameObj<any>) => {
-                        arbol.onCollide("player", (jugador: any) => {
+                      
+                      colisionarbol.forEach( (colision: GameObj<any>) => {
+                        colision.onCollide("player", (jugador: any) => {
                           player.pos.x = posicionAnteriorX
                           player.pos.y = posicionAnteriorY
                         })
-    
                       })
+    
+                      
 
                     player.play("down");
                     player.moveTo(posicionAnteriorX,Math.ceil(posicionAnteriorY + TILED_HEIGHT));
@@ -445,13 +392,14 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
                       })
 
                       })
-                      arboles.forEach( (arbol: GameObj<any>) => {
-                        arbol.onCollide("player", (jugador: any) => {
+                      
+                      colisionarbol.forEach( (colision: GameObj<any>) => {
+                        colision.onCollide("player", (jugador: any) => {
                           player.pos.x = posicionAnteriorX
                           player.pos.y = posicionAnteriorY
                         })
-    
                       })
+                      
 
                     player.play("left");
                     player.moveTo(Math.ceil(posicionAnteriorX - TILED_WIDTH),posicionAnteriorY);
@@ -474,13 +422,14 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
                       })
 
                       })
-                      arboles.forEach( (arbol: GameObj<any>) => {
-                        arbol.onCollide("player", (jugador: any) => {
+                      
+                      colisionarbol.forEach( (colision: GameObj<any>) => {
+                        colision.onCollide("player", (jugador: any) => {
                           player.pos.x = posicionAnteriorX
                           player.pos.y = posicionAnteriorY
                         })
-    
                       })
+                      
 
                     player.play("right");
                     player.moveTo(Math.ceil(posicionAnteriorX + TILED_WIDTH),posicionAnteriorY);
@@ -498,29 +447,7 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
                       juegoKaplay.debug.log("Han pasado dos segundos");
                     }, 100); // Espera 2000 milisegundos (2 segundos)
                   });
-                  /*
-                  square.onCollide("player", (jugador: any) => {
-                    setTimeout(() => {
-                      jugador.hurt(1);
-                      lives--;
-                      juegoKaplay.debug.log("¡ouch!");
-                      enemy.play("right_a");
-                      jugador.move(6500, 0);
-                      juegoKaplay.debug.log("Han pasado dos segundos");
-                    }, 100); // Espera 2000 milisegundos (2 segundos)
-                  });
-    
-                  square1.onCollide("player", (jugador: any) => {
-                    setTimeout(() => {
-                      jugador.hurt(1);
-                      juegoKaplay.debug.log("¡ouch!");
-                      enemy.play("left_a");
-                      jugador.move(-6500, 0);
-                      lives--;
-                      juegoKaplay.debug.log("Han pasado dos segundos");
-                    }, 100);
-                  });
-                  */
+                 
                   // Intentando eliminar las vidas
                   juegoKaplay.onUpdate(()=>{
                     if (lives==2){
