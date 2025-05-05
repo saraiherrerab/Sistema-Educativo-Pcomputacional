@@ -1,4 +1,4 @@
 {
-  "/Aestudiantes-lista/page": "app/Aestudiantes-lista/page.js",
-  "/profile/[id]/page": "app/profile/[id]/page.js"
+  "/profile/[id]/page": "app/profile/[id]/page.js",
+  "/Aestudiantes-lista/page": "app/Aestudiantes-lista/page.js"
 }
