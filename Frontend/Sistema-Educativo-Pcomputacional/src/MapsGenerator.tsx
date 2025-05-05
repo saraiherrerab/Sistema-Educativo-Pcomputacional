@@ -176,6 +176,202 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
   
               
           }
+          if(layer.type === "objectgroup" && layer.name === "heart1"){
+  
+            const anchoCelda: number = ( window.innerWidth / dimesionesMapaX)
+            const altoCelda: number = ( window.innerHeight / dimesionesMapaY)
+  
+            let posicionX: number = (layer.objects[0].x / 32) * anchoCelda;
+            let posicionY: number = (layer.objects[0].y / 32) * altoCelda
+
+              // Jugador
+              const heart1 = contextoKaplay.add([
+                contextoKaplay.pos(posicionX + (anchoCelda / 2),posicionY + (altoCelda / 2)),
+                contextoKaplay.sprite("heart1"),
+                contextoKaplay.scale(2),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda*0.7, altoCelda*0.7)}),
+                contextoKaplay.anchor("center"),
+                "heart1",
+                { z: 1 } // Asegura que el jugador esté en una capa superior
+              ]);
+
+              heart1.tag("heart1")
+              
+              console.log(heart1)
+
+              console.log(contextoKaplay.get("heart1"))
+  
+  
+              
+          }
+          if(layer.type === "objectgroup" && layer.name === "heart2"){
+  
+            const anchoCelda: number = ( window.innerWidth / dimesionesMapaX)
+            const altoCelda: number = ( window.innerHeight / dimesionesMapaY)
+  
+            let posicionX: number = (layer.objects[0].x / 32) * anchoCelda;
+            let posicionY: number = (layer.objects[0].y / 32) * altoCelda
+
+              // Jugador
+              const heart2 = contextoKaplay.add([
+                contextoKaplay.pos(posicionX + (anchoCelda / 2),posicionY + (altoCelda / 2)),
+                contextoKaplay.sprite("heart2"),
+                contextoKaplay.scale(2),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda*0.7, altoCelda*0.7)}),
+                contextoKaplay.anchor("center"),
+                "heart2",
+                { z: 1 } // Asegura que el jugador esté en una capa superior
+              ]);
+
+              heart2.tag("heart2")
+              
+              console.log(heart2)
+
+              console.log(contextoKaplay.get("heart2"))
+  
+  
+  
+              
+          }
+          if(layer.type === "objectgroup" && layer.name === "heart3"){
+  
+            const anchoCelda: number = ( window.innerWidth / dimesionesMapaX)
+            const altoCelda: number = ( window.innerHeight / dimesionesMapaY)
+  
+            let posicionX: number = (layer.objects[0].x / 32) * anchoCelda;
+            let posicionY: number = (layer.objects[0].y / 32) * altoCelda
+
+              // Jugador
+              const heart3 = contextoKaplay.add([
+                contextoKaplay.pos(posicionX + (anchoCelda / 2),posicionY + (altoCelda / 2)),
+                contextoKaplay.sprite("heart1"),
+                contextoKaplay.scale(2),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda*0.2, altoCelda*0.2)}),
+                contextoKaplay.anchor("center"),
+                "heart3",
+                { z: 1 } // Asegura que el jugador esté en una capa superior
+              ]);
+
+              heart3.tag("heart3")
+              
+              console.log(heart3)
+
+              console.log(contextoKaplay.get("heart3"))
+  
+  
+  
+              
+          }
+          if(layer.type === "objectgroup" && layer.name === "up"){
+  
+            const anchoCelda: number = ( window.innerWidth / dimesionesMapaX)
+            const altoCelda: number = ( window.innerHeight / dimesionesMapaY)
+  
+            let posicionX: number = (layer.objects[0].x / 32) * anchoCelda;
+            let posicionY: number = (layer.objects[0].y / 32) * altoCelda
+
+              // Jugador
+              const up = contextoKaplay.add([
+                contextoKaplay.pos(posicionX + (anchoCelda / 2),posicionY + (altoCelda / 2)),
+                contextoKaplay.sprite("up"),
+                contextoKaplay.scale(4),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda*0.2, altoCelda*0.2)}),
+                contextoKaplay.anchor("center"),
+                "up",
+                { z: 1 } // Asegura que el jugador esté en una capa superior
+              ]);
+
+              up.tag("player")
+              
+              console.log(up)
+
+              console.log(contextoKaplay.get("up"))
+              
+          }
+          if(layer.type === "objectgroup" && layer.name === "down"){
+  
+            const anchoCelda: number = ( window.innerWidth / dimesionesMapaX)
+            const altoCelda: number = ( window.innerHeight / dimesionesMapaY)
+  
+            let posicionX: number = (layer.objects[0].x / 32) * anchoCelda;
+            let posicionY: number = (layer.objects[0].y / 32) * altoCelda
+
+              // Jugador
+              const down = contextoKaplay.add([
+                contextoKaplay.pos(posicionX + (anchoCelda / 2),posicionY + (altoCelda / 2)),
+                contextoKaplay.sprite("down"),
+                contextoKaplay.scale(4),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda*0.2, altoCelda*0.2)}),
+                contextoKaplay.anchor("center"),
+                "down",
+                { z: 1 } // Asegura que el jugador esté en una capa superior
+              ]);
+
+              down.tag("down")
+              
+              console.log(down)
+
+              console.log(contextoKaplay.get("down"))
+  
+  
+              
+          }
+          if(layer.type === "objectgroup" && layer.name === "left"){
+  
+            const anchoCelda: number = ( window.innerWidth / dimesionesMapaX)
+            const altoCelda: number = ( window.innerHeight / dimesionesMapaY)
+  
+            let posicionX: number = (layer.objects[0].x / 32) * anchoCelda;
+            let posicionY: number = (layer.objects[0].y / 32) * altoCelda
+
+              // Jugador
+              const left = contextoKaplay.add([
+                contextoKaplay.pos(posicionX + (anchoCelda / 2),posicionY + (altoCelda / 2)),
+                contextoKaplay.sprite("left"),
+                contextoKaplay.scale(4),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda*0.2, altoCelda*0.2)}),
+                contextoKaplay.anchor("center"),
+                "left",
+                { z: 1 } // Asegura que el jugador esté en una capa superior
+              ]);
+
+              left.tag("left")
+              
+              console.log(left)
+
+              console.log(contextoKaplay.get("left"))
+  
+  
+              
+          }
+          if(layer.type === "objectgroup" && layer.name === "right"){
+  
+            const anchoCelda: number = ( window.innerWidth / dimesionesMapaX)
+            const altoCelda: number = ( window.innerHeight / dimesionesMapaY)
+  
+            let posicionX: number = (layer.objects[0].x / 32) * anchoCelda;
+            let posicionY: number = (layer.objects[0].y / 32) * altoCelda
+
+              // Jugador
+              const right = contextoKaplay.add([
+                contextoKaplay.pos(posicionX + (anchoCelda / 2),posicionY + (altoCelda / 2) -5),
+                contextoKaplay.sprite("right"),
+                contextoKaplay.scale(4),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda*0.2, altoCelda*0.2)}),
+                contextoKaplay.anchor("center"),
+                "right",
+                { z: 1 } // Asegura que el jugador esté en una capa superior
+              ]);
+
+              right.tag("right")
+              
+              console.log(right)
+
+              console.log(contextoKaplay.get("right"))
+  
+  
+              
+          }
           if(layer.type === "objectgroup" && layer.name === "cartel"){
 
             const anchoCelda: number = ( window.innerWidth / dimesionesMapaX)
@@ -274,8 +470,8 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
 
             castillo.tag("castillo")
             
-        }
-        if(layer.type === "objectgroup" && layer.name === "torre"){
+          }
+          if(layer.type === "objectgroup" && layer.name === "torre"){
   
           let posicionX: number = (layer.objects[0].x / 32) * ( window.innerWidth / 20);
           let posicionY: number = (layer.objects[0].y / 32) * ( window.innerHeight / 15)
@@ -290,8 +486,8 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
 
           torre.tag("castillo")
           
-      }
-      if(layer.type === "objectgroup" && layer.name === "arbol"){
+          }
+          if(layer.type === "objectgroup" && layer.name === "arbol"){
 
         const anchoCelda: number = ( window.innerWidth / 20);
         const altoCelda: number = ( window.innerHeight / 15)
@@ -310,7 +506,9 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
             contextoKaplay.pos(posicionX + (anchoCelda / 2), posicionY  + (altoCelda / 2)),
             contextoKaplay.sprite("arbol"),
             contextoKaplay.scale(escala),
+            contextoKaplay.body({ isStatic: true }),
             contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), (anchoCelda / escala) , (altoCelda / escala))}),
+            
             contextoKaplay.anchor("center"),
             "arbol"
           ]);
@@ -323,8 +521,101 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
 
 
         
-    }
-    if(layer.type === "objectgroup" && layer.name === "enemigo"){
+          }
+          if(layer.type === "objectgroup" && layer.name === "hongo"){
+
+            const anchoCelda: number = ( window.innerWidth / 20);
+            const altoCelda: number = ( window.innerHeight / 15)
+      
+            let posicionX: number = (layer.objects[0].x / 32) * anchoCelda
+            let posicionY: number = (layer.objects[0].y / 32) * altoCelda
+    
+            const escala: number = 0.5
+    
+            layer.objects.forEach( (arbolito: any) => {
+    
+              let posicionX: number = (arbolito.x / 32) * anchoCelda
+              let posicionY: number = (arbolito.y / 32) * altoCelda
+    
+              const hongo = contextoKaplay.add([
+                contextoKaplay.pos(posicionX + (anchoCelda / 2), posicionY  + (altoCelda / 2)),
+                contextoKaplay.sprite("hongo"),
+                contextoKaplay.scale(1),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda*0.7, altoCelda*0.7)}),
+                contextoKaplay.anchor("center"),
+                "hongo"
+              ]);
+      
+              hongo.tag("hongo")
+    
+            })
+      
+            
+    
+    
+            
+              }
+          
+              if(layer.type === "objectgroup" && layer.name === "rock"){
+
+                const anchoCelda: number = ( window.innerWidth / 20);
+                const altoCelda: number = ( window.innerHeight / 15)
+          
+                let posicionX: number = (layer.objects[0].x / 32) * anchoCelda
+                let posicionY: number = (layer.objects[0].y / 32) * altoCelda
+        
+                const escala: number = 0.5
+        
+                layer.objects.forEach( (arbolito: any) => {
+        
+                  let posicionX: number = (arbolito.x / 32) * anchoCelda
+                  let posicionY: number = (arbolito.y / 32) * altoCelda
+        
+                  const rock = contextoKaplay.add([
+                    contextoKaplay.pos(posicionX + (anchoCelda / 2), posicionY  + (altoCelda / 2)),
+                    contextoKaplay.sprite("rock"),
+                    contextoKaplay.scale(1),
+                    contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda*0.7, altoCelda*0.7)}),
+                    contextoKaplay.anchor("center"),
+                    "rock"
+                  ]);
+          
+                  rock.tag("rock")
+        
+                })
+
+                  }
+                  if(layer.type === "objectgroup" && layer.name === "oveja"){
+
+                    const anchoCelda: number = ( window.innerWidth / 20);
+                    const altoCelda: number = ( window.innerHeight / 15)
+              
+                    let posicionX: number = (layer.objects[0].x / 32) * anchoCelda
+                    let posicionY: number = (layer.objects[0].y / 32) * altoCelda
+            
+                    const escala: number = 0.5
+            
+                    layer.objects.forEach( (arbolito: any) => {
+            
+                      let posicionX: number = (arbolito.x / 32) * anchoCelda
+                      let posicionY: number = (arbolito.y / 32) * altoCelda
+            
+                      const oveja = contextoKaplay.add([
+                        contextoKaplay.pos(posicionX + (anchoCelda / 2), posicionY  + (altoCelda / 2)),
+                        contextoKaplay.sprite("oveja"),
+                        contextoKaplay.scale(1),
+                        contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda*0.7, altoCelda*0.7)}),
+                        contextoKaplay.anchor("center"),
+                        "oveja"
+                      ]);
+              
+                      oveja.tag("oveja")
+            
+                    })
+    
+                      }
+                  
+          if(layer.type === "objectgroup" && layer.name === "enemigo"){
   
       let posicionX: number = (layer.objects[0].x / 32) * ( window.innerWidth / 20);
       let posicionY: number = (layer.objects[0].y / 32) * ( window.innerHeight / 15)
@@ -342,7 +633,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
 
       enemigo.tag("enemigo")
       
-    }
+          }
         });
         
       

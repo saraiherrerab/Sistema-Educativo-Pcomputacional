@@ -17,6 +17,8 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
         console.log(juegoKaplay.get("*"))
 
         let lives = 3
+        let cantidadhongos = 0
+        let barraPressed = 0
 
   
         juegoKaplay.loadSprite("knight", "sprites/p_knight_official.png", {
@@ -52,7 +54,38 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
   
 
   
-        juegoKaplay.loadSprite("heart", "sprites/heart.png", {
+        juegoKaplay.loadSprite("heart1", "sprites/heart.png", {
+          sliceX: 1,
+          sliceY: 1,
+        });
+
+        juegoKaplay.loadSprite("rock", "sprites/deco/Rocks_01.png", {
+          sliceX: 8,
+          sliceY: 1,
+          anims: {
+            quiet: { from: 0, to: 7, loop: true },
+          },
+        });
+
+        juegoKaplay.loadSprite("oveja", "sprites/deco/HappySheep_Bouncing.png", {
+          sliceX: 6,
+          sliceY: 1,
+          anims: {
+            quiet: { from: 0, to: 5, loop: true },
+          },
+        });
+
+        juegoKaplay.loadSprite("hongo", "sprites/deco/hongo.png", {
+          sliceX: 1,
+          sliceY: 1,
+        });
+
+        juegoKaplay.loadSprite("heart2", "sprites/heart.png", {
+          sliceX: 1,
+          sliceY: 1,
+        });
+
+        juegoKaplay.loadSprite("heart3", "sprites/heart.png", {
           sliceX: 1,
           sliceY: 1,
         });
@@ -124,11 +157,30 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
                   console.log(juegoKaplay.get("player"))
 
                   const player = juegoKaplay.get("player")[0]
+                  const rock = juegoKaplay.get("rocks")[0]
+                  const oveja = juegoKaplay.get("oveja")[0]
+                  const hongo = juegoKaplay.get("hongo")[0]
                   const enemigo = juegoKaplay.get("enemy")[0]
                   const arbol = juegoKaplay.get("arbol")[0]
                   const cartel = juegoKaplay.get("cartel")[0]
-                  
+                  const heart1 = juegoKaplay.get("heart1")[0]
+                  const heart2 = juegoKaplay.get("heart2")[0]
+                  const heart3 = juegoKaplay.get("heart3")[0]
+                  const up = juegoKaplay.get("up")[0]
+                  const down = juegoKaplay.get("down")[0]
+                  const left = juegoKaplay.get("left")[0]
+                  const right = juegoKaplay.get("right")[0]
 
+                  console.log(oveja)
+                  console.log(hongo)
+                  console.log(rock)
+                  console.log(up)
+                  console.log(down)
+                  console.log(left)
+                  console.log(right)
+                  console.log(heart1)
+                  console.log(heart2)
+                  console.log(heart3)
                   console.log(player)
                   console.log(enemigo)
                   console.log(juegoKaplay.get("enemy"))
@@ -136,14 +188,47 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
                   console.log(cartel)
                   console.log(enemigo.pos.x)
                   console.log(enemigo.pos.y)
-
+                  oveja.play("quiet");
                   const enemigos = juegoKaplay.get("enemy")
+                  const rocks = juegoKaplay.get("rock")
                   const arboles= juegoKaplay.get("arbol")
                   const colisiones = juegoKaplay.get("square-colision")
                   console.log(colisiones)
+
+                  setTimeout(() => {
+                    hongo.onCollide("player", (jugador: any) => {
+                        cantidadhongos++
+                        console.log(cantidadhongos)
+                        juegoKaplay.debug.log(cantidadhongos);
+                        hongo.destroy();
+                    
+                    });
+                  }, 2000); // Espera 2000 milisegundos (2 segundos)
+
+                  // Movimiento con teclado
+                  
+                  
+                  
                   
                   arboles.forEach( (arbol: GameObj<any>) => {
                     arbol.play("quiet");
+
+                  })
+                  
+                 
+
+                  juegoKaplay.onKeyDown("space", () => {
+                    if (cantidadhongos === 1) {
+                      // Itera sobre la lista de árboles y destruye cada uno
+                      arboles.forEach((arbol: GameObj<any>) => {
+                        arbol.destroy();
+                      });
+                      // Opcionalmente, puedes vaciar la lista de árboles si ya no los necesitas
+                    }
+                  });
+
+                  rocks.forEach( (rock: GameObj<any>) => {
+                    rock.play("quiet");
                   })
 
                   enemigos.forEach( (enemigo: GameObj<any>) => {
@@ -167,47 +252,47 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
                     ]);
 
                     
-  
+                    setTimeout(() => {
                     squareDer.onCollide("player", (jugador: any) => {
-                      setTimeout(() => {
-                        lives--;
+                      jugador.move(2875, 0);
+                      
+                     
+                        lives=lives-1;
+                        console.log(lives)
                         juegoKaplay.debug.log("¡ouch!");
                         enemigo.play("right_a");
-                        jugador.move(4875, 0);
                         juegoKaplay.debug.log("Han pasado dos segundos");
-                      }, 100); // Espera 2000 milisegundos (2 segundos)
+                       // Espera 2000 milisegundos (2 segundos)
                     });
+                  }, 100);
   
+                  setTimeout(() => {
                     squareIzq.onCollide("player", (jugador: any) => {
-                      setTimeout(() => {
-                        lives--;
+                      jugador.move(-2875, 0);
+                        lives=lives-1;
+                        console.log(lives)
                         juegoKaplay.debug.log("¡ouch!");
                         enemigo.play("right_a");
-                        jugador.move(-4875, 0);
                         juegoKaplay.debug.log("Han pasado dos segundos");
-                      }, 100); // Espera 2000 milisegundos (2 segundos)
                     });
                   })
+                }, 100); // Espera 2000 milisegundos (2 segundos)
 
-                  const posicionAnteriorX = player.pos.x
-                  const posicionAnteriorY = player.pos.y
-                  colisiones.forEach( (colision: GameObj<any>) => {
-                    
-                    colision.onCollide("player", (jugador: any) => {
-                      player.pos.x = posicionAnteriorX
-                      player.pos.y = posicionAnteriorY
-                    })
+               
+                 
+                  
+              
 
-                    })
+                setTimeout(() => {
                   enemigo.onCollide("player", (jugador: any) => {
-                    setTimeout(() => {
-                      lives--;
+                    jugador.move(0, -3100);
+                      
+                      console.log(lives)
                       juegoKaplay.debug.log("¡ouch!");
                       enemigo.play("right_a");
-                      jugador.move(9750, 0);
                       juegoKaplay.debug.log("Han pasado dos segundos");
-                    }, 100); // Espera 2000 milisegundos (2 segundos)
                   });
+                }, 2000); // Espera 2000 milisegundos (2 segundos)
                   
                   const redRoom = juegoKaplay.add([
                     juegoKaplay.rect(200, 500),
@@ -219,7 +304,7 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
                   ])
 
                   
-    
+                  /*
                   const live1 = juegoKaplay.add([
                     juegoKaplay.pos(1210,20),
                     juegoKaplay.sprite("heart"),
@@ -250,9 +335,9 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
                     "heart3",
                     { z: 10 } // Asegura que el jugador esté en una capa superior
                   ]);
-    
+                  */
                   // Flechas
-                  const arrows = {
+                  /*const arrows = {
                     up: juegoKaplay.add([
                       juegoKaplay.pos(juegoKaplay.center().x+570,SCREEN_RESOLUTION_Y - 480 ),
                       juegoKaplay.sprite("up"),
@@ -283,41 +368,122 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
                       { z: 1 } // Asegura que el jugador esté en una capa superior
                     ]),
                   };
-    
+                  */
                   const velocidad = 64;
     
-                  // Movimiento con teclado
-                  juegoKaplay.onKeyDown("w", () => {
-                    player.move(0, -velocidad);
-                    
-                  });
-                  juegoKaplay.onKeyDown("s", () => {
-                    player.move(0, velocidad);
-                  });
-                  juegoKaplay.onKeyDown("a", () => {
-                    player.move(-velocidad, 0);
-                  });
-                  juegoKaplay.onKeyDown("d", () => {
-                    player.move(velocidad, 0);
-                  });
+                  
     
                   // Movimiento con clic
-                  arrows.up.onClick(() => {
+                  up.onClick(() => {
                     player.moveBy(juegoKaplay.vec2(0,-velocidad*0.7 ));
                     //calcularMovimientoPersonaje(player)
+                    const posicionAnteriorX = player.pos.x
+                    const posicionAnteriorY = player.pos.y
+                    
+                    colisiones.forEach( (colision: GameObj<any>) => {
+                    
+                      colision.onCollide("player", (jugador: any) => {
+                        player.pos.x = posicionAnteriorX
+                        player.pos.y = posicionAnteriorY
+                      })
+                    })
+
+                    arboles.forEach( (arbol: GameObj<any>) => {
+                      arbol.onCollide("player", (jugador: any) => {
+                        player.pos.x = posicionAnteriorX
+                        player.pos.y = posicionAnteriorY
+                      })
+  
+                    })
+
                     player.play("up");
+                    player.moveTo(Math.ceil(posicionAnteriorX + TILED_WIDTH),posicionAnteriorY);
                   });
-                  arrows.down.onClick(() => {
-                    player.moveBy(juegoKaplay.vec2(0,velocidad*0.7));
+
+                  down.onClick(() => {
+                    console.log(player.pos.x)
+                    console.log(player.pos.y)
+
+                    const posicionAnteriorX = player.pos.x
+                    const posicionAnteriorY = player.pos.y
+
+                    colisiones.forEach( (colision: GameObj<any>) => {
+                    
+                      colision.onCollide("player", (jugador: any) => {
+                        player.pos.x = posicionAnteriorX
+                        player.pos.y = posicionAnteriorY
+                      })
+
+                      })
+
+                      arboles.forEach( (arbol: GameObj<any>) => {
+                        arbol.onCollide("player", (jugador: any) => {
+                          player.pos.x = posicionAnteriorX
+                          player.pos.y = posicionAnteriorY
+                        })
+    
+                      })
+
                     player.play("down");
+                    player.moveTo(posicionAnteriorX,Math.ceil(posicionAnteriorY + TILED_HEIGHT));
                   });
-                  arrows.left.onClick(() => {
-                    player.moveBy(juegoKaplay.vec2(-velocidad*1.1 ,0));
+
+
+                  left.onClick(() => {
+                    console.log(player.pos.x)
+                    console.log(player.pos.y)
+
+                    const posicionAnteriorX = player.pos.x
+                    const posicionAnteriorY = player.pos.y
+
+                    
+                    colisiones.forEach( (colision: GameObj<any>) => {
+                    
+                      colision.onCollide("player", (jugador: any) => {
+                        player.pos.x = posicionAnteriorX
+                        player.pos.y = posicionAnteriorY
+                      })
+
+                      })
+                      arboles.forEach( (arbol: GameObj<any>) => {
+                        arbol.onCollide("player", (jugador: any) => {
+                          player.pos.x = posicionAnteriorX
+                          player.pos.y = posicionAnteriorY
+                        })
+    
+                      })
+
                     player.play("left");
+                    player.moveTo(Math.ceil(posicionAnteriorX - TILED_WIDTH),posicionAnteriorY);
                   });
-                  arrows.right.onClick(() => {
-                    player.moveBy(juegoKaplay.vec2(velocidad*1.1,0));
+
+
+                  right.onClick(() => {
+                    console.log(player.pos.x)
+                    console.log(player.pos.y)
+
+                    const posicionAnteriorX = player.pos.x
+                    const posicionAnteriorY = player.pos.y
+
+                    
+                    colisiones.forEach( (colision: GameObj<any>) => {
+                    
+                      colision.onCollide("player", (jugador: any) => {
+                        player.pos.x = posicionAnteriorX
+                        player.pos.y = posicionAnteriorY
+                      })
+
+                      })
+                      arboles.forEach( (arbol: GameObj<any>) => {
+                        arbol.onCollide("player", (jugador: any) => {
+                          player.pos.x = posicionAnteriorX
+                          player.pos.y = posicionAnteriorY
+                        })
+    
+                      })
+
                     player.play("right");
+                    player.moveTo(Math.ceil(posicionAnteriorX + TILED_WIDTH),posicionAnteriorY);
                   });
     
                   enemigo.play("quiet")
@@ -328,6 +494,7 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
                       
                       juegoKaplay.debug.log("¡ouch!");
                       lives--;
+                      console.log(lives)
                       juegoKaplay.debug.log("Han pasado dos segundos");
                     }, 100); // Espera 2000 milisegundos (2 segundos)
                   });
@@ -356,12 +523,12 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
                   */
                   // Intentando eliminar las vidas
                   juegoKaplay.onUpdate(()=>{
-                    if (lives<3){
-                      juegoKaplay.destroy(live1);
-                    }else if(lives<2){
-                      juegoKaplay.destroy(live2);
-                    }else if(lives<1){
-                      juegoKaplay.destroy(live3);
+                    if (lives==2){
+                      juegoKaplay.destroy(heart1);
+                    }else if(lives==1){
+                      juegoKaplay.destroy(heart2);
+                    }else if(lives==0){
+                      juegoKaplay.destroy(heart3);
                       juegoKaplay.destroy(player);
                     };
                   })
