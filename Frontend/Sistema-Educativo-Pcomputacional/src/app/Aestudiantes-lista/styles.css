@@ -113,8 +113,9 @@ th:last-child {
   margin-bottom: 10px;
   width: 80%;
   display: flex;
-  align-items: center; /* Alinea verticalmente los elementos */
+  align-items: end; /* Alinea verticalmente los elementos */
   margin-right:20px;
+  margin-left: 45rem; /* <-- Esto la empuja hacia la derecha */
 }
 
 .search-input-container {
@@ -149,10 +150,9 @@ th:last-child {
 }
 
 .encabezado{
-  display:flex;
   display: flex; /* Habilita Flexbox para alinear el título y la búsqueda */
   justify-content: space-between; /* Espacia el título a la izquierda y la búsqueda a la derecha */
-  align-items: center; /* Alinea verticalmente el título y la búsqueda (opcional) */
+  align-items: end; /* Alinea verticalmente el título y la búsqueda (opcional) */
   width: 100%; /* Ocupa todo el ancho del contenedor .listado */
   margin-bottom: 20px; /* Espacio entre el header y la tabla */
 }

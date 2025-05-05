@@ -5,6 +5,7 @@ import '../login.css'
 import Header from "../../components/header/header";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import { inflateRaw } from "zlib";
 
 interface Estudiante {
     id_usuario: number,
@@ -37,7 +38,6 @@ export default function EstudiantesLista() {
     const [habilitarGuardado, setHabilitarGuardado] = useState<boolean>(true);
     const [nuevaFoto, setNuevaFoto] = useState<boolean>(false);
     const [grupos, setGrupos] = useState<Grupo[]>([])
-    const [informacion, setInformacion] = useState<any>(null)
 
     const validarFormulario = (): boolean => {
         console.log("Validando Entradas de nuevo profesor")
@@ -403,6 +403,19 @@ export default function EstudiantesLista() {
         console.log(resultado_json);
         return resultado_json
     }
+
+    const obtenerInformacionCursoDeGrupo = async (id_grupo: string) => {
+        const resultado= await fetch(`http://localhost:5555/grupos/${id_grupo}/curso`,{
+            method: 'GET', // Método especificado
+            mode: 'cors',   // Habilita CORS
+            headers: {
+              'Content-Type': 'application/json'
+            }
+        });
+        const resultado_json= await resultado.json();
+        console.log(resultado_json);
+        return resultado_json
+    }
     
     // Este useEffect se ejecuta una sola vez al montar el componente
     useEffect(() => {
@@ -530,6 +543,7 @@ export default function EstudiantesLista() {
         console.log(resultado_json);
         return resultado_json
     }
+
     async function gestionarCursosYHorarios(id_estudiante: number){
         console.log("gestionarCursosYHorarios()")
 
@@ -541,9 +555,8 @@ export default function EstudiantesLista() {
 
             const informacionGrupo = informacionGrupoEstudiante ? await cargarInformacionGrupo(informacionGrupoEstudiante.id_grupo) : null
 
-            setInformacion(informacionGrupoEstudiante)
-
             console.log(informacionGrupo)
+
             const optionsHTML = (informacionGrupo) 
             ? grupos.filter( (grupo:Grupo) => grupo.id_grupo !== informacionGrupo.id_grupo).map(grupo => `<option value="${grupo.id_grupo}">${grupo.nombre_grupo}</option>`).join('') 
             : grupos.map(grupo => `<option value="${grupo.id_grupo}">${grupo.nombre_grupo}</option>`).join('');
@@ -552,7 +565,7 @@ export default function EstudiantesLista() {
             `${
                 informacionGrupo == null 
                 ? `<option value="" disabled selected>-- Selecciona un grupo --</option>` 
-                : `<option value=${informacionGrupo.id_grupo}>${informacionGrupo.nombre_grupo}</option>`
+                : `<option value="${informacionGrupo.id_grupo}" selected class="swal2-input">${informacionGrupo.nombre_grupo}</option>`
             }`;
         
             Swal.fire({
@@ -574,52 +587,101 @@ export default function EstudiantesLista() {
                     }
                     return grupoId;
                 }
-            }).then((result) => {
+            }).then(async (result) => {
                 if (result.isConfirmed && result.value) {
                     const grupoSeleccionadoId = result.value;
-                    mostrarInformacionDelGrupo(grupoSeleccionadoId, mostrarSelectorDeGrupos); // Pasar la función para volver
+
+                    const validarCursoGrupo: any[]= await obtenerInformacionCursoDeGrupo(grupoSeleccionadoId);
+                    if(validarCursoGrupo.length > 0 ){
+                        await mostrarInformacionDelGrupo(grupoSeleccionadoId, mostrarSelectorDeGrupos,informacionGrupoEstudiante,id_estudiante); // Pasar la función para volver
+                    }else{
+                        Swal.fire({
+                            icon: "error",
+                            title: "No se encontraron cursos",
+                            text: "El grupo no tiene ningún curso asignado",
+                          });
+                    }
+                    
                 }
             });
         }
         
-        const mostrarInformacionDelGrupo = async (grupoId: string, volverAlSelector: () => void) => {
+        const mostrarInformacionDelGrupo = async (grupoId: string, volverAlSelector: () => void, informacion: any, id_estudiante: number) => {
+        
+            if (grupoId) {
 
-            informacion?.informacionGrupo.forEach( (horario:any) => {
+
+                let informacionHorario: string = ""
+
+                const consultaNueva: boolean = (informacion !== null) ? false : true
+
+                if(informacion !== null && grupoId === informacion.id_grupo){
+                    console.log("ENTRO AQUI")
+                    informacion?.informacionGrupo.forEach( (horario: any) => {
+                        informacionHorario = informacionHorario + `<p><strong>${horario.dia_semana}:</strong> ${horario.hora_inicio} hasta ${horario.hora_fin}</p>`
+                    })
+                }else{
+                    informacion = await obtenerInformacionCursoDeGrupo(grupoId);
+                    console.log(informacion)
+                    informacion.forEach( (horario: any) => {
+                        informacionHorario = informacionHorario + `<p><strong>${horario.dia_semana}:</strong> ${horario.hora_inicio} hasta ${horario.hora_fin}</p>`
+                    })
+                    
+                }
+
+                const nombreCompletoProfesor = 
+                    (!consultaNueva && grupoId === informacion.id_grupo) 
+                    ? informacion.informacionGrupo[0].nombre + " " +  informacion.informacionGrupo[0].apellido 
+                    : informacion[0].nombre + " " +   informacion[0].apellido 
                 
-            });
-            
-            
-            const informacionGrupos: any = {
-                "matematicas-a": { nombre: "Grupo A - Matemáticas", profesor: "Dr. López", horario: "Lunes y Miércoles 16:00 - 18:00" },
-                "historia-1": { nombre: "Grupo 1 - Historia", profesor: "Dra. Pérez", horario: "Martes y Jueves 10:00 - 12:00" },
-                "fisica-b": { nombre: "Grupo B - Física", profesor: "Ing. Vargas", horario: "Viernes 09:00 - 11:00" },
-                "quimica-2": { nombre: "Grupo 2 - Química", profesor: "Lic. Gómez", horario: "Martes y Jueves 14:00 - 16:00" },
-                // Agrega la información para los demás grupos
-            };
-        
-            const infoGrupo = informacionGrupos[grupoId];
-        
-            if (infoGrupo) {
+                const id_grupo_por_asignar = 
+                (!consultaNueva && grupoId === informacion.id_grupo) 
+                ? informacion.id_grupo
+                : informacion[0].id_grupo
+
                 Swal.fire({
-                    title: infoGrupo.nombre,
+                    title: informacion.nombre_grupo,
                     html: `
-                        <p><strong>Profesor:</strong> ${infoGrupo.profesor}</p>
-                        <p><strong>Horario:</strong> ${infoGrupo.horario}</p>
+                        <p><strong>Profesor:</strong> ${ nombreCompletoProfesor }</p>
+                        ${informacionHorario}
                         `,
                     showCancelButton: true,
                     confirmButtonText: "Asignar estudiante a grupo",
                     cancelButtonText: "Salir",
-                    showDenyButton: true, // Agregamos el botón "Volver al Selector"
-                    denyButtonText: "Volver a Grupos",
-                }).then((result) => {
+                }).then(async (result) => {
                     if (result.isDenied) {
-                        volverAlSelector(); // Llamamos a la función para mostrar el selector
+                         
                     } else if (result.isConfirmed) {
+
+                        console.log(informacion.id_grupo)
+                        const response = await fetch('http://localhost:5555/estudiantes/asignar/grupo', {
+                            method: 'PUT',
+                            headers: {
+                              'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ "id_estudiante": id_estudiante, "id_grupo": id_grupo_por_asignar })
+                          });
+                        const data = await response.json();
+                        console.log('Respuesta del servidor:', data);
+
+                        Swal.fire({
+                            title: 'Procesando...',
+                            text: 'Por favor espera',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+
+                         // Simulamos una función asíncrona (puedes reemplazar esto con tu fetch, por ejemplo)
+                        await new Promise(resolve => setTimeout(resolve, 1000)); // Espera de 1 segundos
+
                         Swal.fire("¡Aceptado!", "La información del grupo ha sido aceptada.", "success");
                         // Aquí puedes agregar la lógica para guardar o procesar la aceptación
                     } else if (result.isDismissed && result.dismiss === Swal.DismissReason.cancel) {
                         // Aquí puedes agregar la lógica para volver a la edición
-                        Swal.fire("Edición", "Volviendo a la edición del grupo.", "info");
+                       
                     }
                 });
             } else {
@@ -628,7 +690,7 @@ export default function EstudiantesLista() {
         }
         
 
-        mostrarSelectorDeGrupos();
+       await mostrarSelectorDeGrupos();
 
     }
 
@@ -670,7 +732,7 @@ export default function EstudiantesLista() {
                             style={{ cursor: 'pointer' }}
                         />
                     </div>
-                </div>
+                    </div>
                 </div>
 
                 {mostrarFormulario && (
