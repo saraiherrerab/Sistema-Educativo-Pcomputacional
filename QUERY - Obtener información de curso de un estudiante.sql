@@ -38,3 +38,23 @@ WHERE
 	AND Pc.id_curso = Cu.id_curso
 	AND Hp.id_profesor = Pc.id_profesor
 	AND Hp.id_curso = Cu.id_curso
+
+/* Información de profesor y horarios en la que dicta el curso del estudiante*/
+SELECT
+	Pr.id_profesor,
+	U.nombre, 
+	U.apellido, 
+	Cu.nombre_curso,
+	Hp.*
+FROM 
+	Curso AS Cu, 
+	Usuario AS U,
+	Profesor_curso AS Pc,
+	Profesor AS Pr,
+	Horarios_profesor AS Hp
+WHERE 
+	U.id_usuario = Pr.id_profesor
+	AND Pc.id_profesor = Pr.id_profesor
+	AND Pc.id_curso = Cu.id_curso
+	AND Hp.id_profesor = Pc.id_profesor
+	AND Hp.id_curso = Cu.id_curso

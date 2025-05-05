@@ -6,24 +6,29 @@ import Header from "../../components/header/header";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
+interface Estudiante {
+    id_usuario: number,
+    telefono: string,
+    nombre: string,
+    apellido: string,
+    correo: string,
+    edad: number,
+    foto: string,
+    usuario: string,
+    clave_acceso: string,
+    cedula: string,
+    id_estudiante: number,
+    condicion_medica: string
+}
+
+interface Grupo {
+    id_grupo: number,
+    nombre_grupo: string,
+    id_curso: number | null
+}
 
 export default function EstudiantesLista() {
     const Router = useRouter();
-
-    interface Estudiante {
-        id_usuario: number,
-        telefono: string,
-        nombre: string,
-        apellido: string,
-        correo: string,
-        edad: number,
-        foto: string,
-        usuario: string,
-        clave_acceso: string,
-        cedula: string,
-        id_estudiante: number,
-        condicion_medica: string
-    }
       
     const [estudiantes, setEstudiantes] = useState<Estudiante[]>([]);
     const [estudiantesFiltrados, setEstudiantesFiltrados] = useState<Estudiante[]>([]);
@@ -31,6 +36,8 @@ export default function EstudiantesLista() {
     const [fotoPerfil, setFotoPerfil] = useState<File | null>(null);
     const [habilitarGuardado, setHabilitarGuardado] = useState<boolean>(true);
     const [nuevaFoto, setNuevaFoto] = useState<boolean>(false);
+    const [grupos, setGrupos] = useState<Grupo[]>([])
+    const [informacion, setInformacion] = useState<any>(null)
 
     const validarFormulario = (): boolean => {
         console.log("Validando Entradas de nuevo profesor")
@@ -194,29 +201,58 @@ export default function EstudiantesLista() {
     
         try {
 
-            const confirmacion = confirm("¿Estás seguro de que quieres eliminar este estudiante?");
-            if (!confirmacion) return;
+            Swal.fire({
+                title: "Eliminar estudiante",
+                text: "La siguiente operacion no es reversible",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#df2a0a",
+                cancelButtonColor: "#5d6a7c",
+                confirmButtonText: "Borrar",
+                showLoaderOnConfirm: true,
+                preConfirm: async (login) => {
+                    try {
+                        const response = await fetch(`http://localhost:5555/estudiantes`, {
+                            method: 'DELETE',
+                            mode: 'cors',   // Habilita CORS
+                            headers: {
+                              'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({id: id_estudiante}),
+                        });
+            
+                        console.log(estudiantes)
+            
+                        const resultadoConsulta = await response.json()
+                        console.log(resultadoConsulta)
 
-            console.log("Eliminando")
+                        await sleep(1000)
+            
+                        const arrayActualizado = estudiantes.filter(estudiante => estudiante.id_usuario !== id_estudiante)
+                        console.log(arrayActualizado)
+                        setEstudiantes(arrayActualizado);
+                        setEstudiantesFiltrados(arrayActualizado);
 
-            const response = await fetch(`http://localhost:5555/estudiantes`, {
-                method: 'DELETE',
-                mode: 'cors',   // Habilita CORS
-                headers: {
-                  'Content-Type': 'application/json'
+                        return resultadoConsulta;
+                    } catch (error) {
+                        Swal.showValidationMessage(`
+                            Request failed: ${error}
+                        `);
+                    }
                 },
-                body: JSON.stringify({id: id_estudiante}),
-            });
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed) {
+                  Swal.fire({
+                    title: "El alumno ha sido eliminado",
+                    text: "El alumno ha sido borrado exitosamente",
+                    icon: "success"
+                  });
+                }
+              });
 
-            console.log(estudiantes)
 
-            const resultadoConsulta = await response.json()
-            console.log(resultadoConsulta)
-
-            const arrayActualizado = estudiantes.filter(estudiante => estudiante.id_usuario !== id_estudiante)
-            console.log(arrayActualizado)
-            setEstudiantes(arrayActualizado);
-            setEstudiantesFiltrados(arrayActualizado);
+            
 
         } catch (error) {
             console.error("Error en la petición:", error);
@@ -341,6 +377,32 @@ export default function EstudiantesLista() {
 
         
     };
+
+    const obtenerGrupos = async () => {
+        const resultado= await fetch('http://localhost:5555/grupos',{
+            method: 'GET', // Método especificado
+            mode: 'cors',   // Habilita CORS
+            headers: {
+              'Content-Type': 'application/json'
+            }
+        });
+        const resultado_json= await resultado.json();
+        console.log(resultado_json);
+        return resultado_json
+    }
+
+    const obtenerInformacionGrupoAlumno = async (id_estudiante: number) => {
+        const resultado= await fetch('http://localhost:5555/grupos/estudiante/' + id_estudiante,{
+            method: 'GET', // Método especificado
+            mode: 'cors',   // Habilita CORS
+            headers: {
+              'Content-Type': 'application/json'
+            }
+        });
+        const resultado_json= await resultado.json();
+        console.log(resultado_json);
+        return resultado_json
+    }
     
     // Este useEffect se ejecuta una sola vez al montar el componente
     useEffect(() => {
@@ -348,7 +410,14 @@ export default function EstudiantesLista() {
             const respuesta = await obtenerEstudiantes();
             setEstudiantes(respuesta);
         };
+
+        const cargarGrupos = async () => {
+            const respuesta = await obtenerGrupos();
+            setGrupos([...respuesta])
+        };
+
         cargarEstudiantes();
+        cargarGrupos();
         
     }, []);
     
@@ -449,25 +518,48 @@ export default function EstudiantesLista() {
         }
     }
 
-    async function gestionarCursosYHorarios(){
+    async function cargarInformacionGrupo(id_grupo:number) {
+        const resultado= await fetch('http://localhost:5555/grupos/'+id_grupo,{
+            method: 'GET', // Método especificado
+            mode: 'cors',   // Habilita CORS
+            headers: {
+              'Content-Type': 'application/json'
+            }
+        });
+        const resultado_json= await resultado.json();
+        console.log(resultado_json);
+        return resultado_json
+    }
+    async function gestionarCursosYHorarios(id_estudiante: number){
         console.log("gestionarCursosYHorarios()")
 
-        const mostrarSelectorDeGrupos = () => {
-            const grupos = [
-                { nombre: "Grupo A - Matemáticas", id: "matematicas-a" },
-                { nombre: "Grupo 1 - Historia", id: "historia-1" },
-                { nombre: "Grupo B - Física", id: "fisica-b" },
-                { nombre: "Grupo 2 - Química", id: "quimica-2" },
-                // Agrega aquí más grupos según sea necesario
-            ];
-        
-            const optionsHTML = grupos.map(grupo => `<option value="${grupo.id}">${grupo.nombre}</option>`).join('');
+        const mostrarSelectorDeGrupos = async () => {
+            
+            const informacionGrupoEstudiante: any = await obtenerInformacionGrupoAlumno(id_estudiante);
+
+            console.log(informacionGrupoEstudiante)
+
+            const informacionGrupo = informacionGrupoEstudiante ? await cargarInformacionGrupo(informacionGrupoEstudiante.id_grupo) : null
+
+            setInformacion(informacionGrupoEstudiante)
+
+            console.log(informacionGrupo)
+            const optionsHTML = (informacionGrupo) 
+            ? grupos.filter( (grupo:Grupo) => grupo.id_grupo !== informacionGrupo.id_grupo).map(grupo => `<option value="${grupo.id_grupo}">${grupo.nombre_grupo}</option>`).join('') 
+            : grupos.map(grupo => `<option value="${grupo.id_grupo}">${grupo.nombre_grupo}</option>`).join('');
+
+            const selectHTML: string = 
+            `${
+                informacionGrupo == null 
+                ? `<option value="" disabled selected>-- Selecciona un grupo --</option>` 
+                : `<option value=${informacionGrupo.id_grupo}>${informacionGrupo.nombre_grupo}</option>`
+            }`;
         
             Swal.fire({
                 title: "Selecciona un grupo",
                 html: `
                     <select id="grupo-seleccionado" class="swal2-input">
-                        <option value="" disabled selected>-- Selecciona un grupo --</option>
+                        ${selectHTML}
                         ${optionsHTML}
                     </select>
                 `,
@@ -490,7 +582,13 @@ export default function EstudiantesLista() {
             });
         }
         
-        const mostrarInformacionDelGrupo = (grupoId: string, volverAlSelector: () => void) => {
+        const mostrarInformacionDelGrupo = async (grupoId: string, volverAlSelector: () => void) => {
+
+            informacion?.informacionGrupo.forEach( (horario:any) => {
+                
+            });
+            
+            
             const informacionGrupos: any = {
                 "matematicas-a": { nombre: "Grupo A - Matemáticas", profesor: "Dr. López", horario: "Lunes y Miércoles 16:00 - 18:00" },
                 "historia-1": { nombre: "Grupo 1 - Historia", profesor: "Dra. Pérez", horario: "Martes y Jueves 10:00 - 12:00" },
@@ -533,6 +631,12 @@ export default function EstudiantesLista() {
         mostrarSelectorDeGrupos();
 
     }
+
+    function sleep(ms: number): Promise<void> {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+
     return (
         <>
             <Header
@@ -639,7 +743,7 @@ export default function EstudiantesLista() {
                                         <button onClick={() => onEliminar(estudiante.id_estudiante)}><img src="/icons/delete_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
                                     </td>
                                     <td>
-                                        <button onClick={() => gestionarCursosYHorarios()}>
+                                        <button onClick={() => gestionarCursosYHorarios(estudiante.id_estudiante)}>
                                             <img src="/icons/arrow_forward_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} />
                                         </button>
                                     </td>

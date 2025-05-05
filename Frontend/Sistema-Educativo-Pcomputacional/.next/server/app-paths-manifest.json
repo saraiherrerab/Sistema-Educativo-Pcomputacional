@@ -1,4 +1,5 @@
 {
-  "/videojuego/page": "app/videojuego/page.js",
-  "/Aestudiantes-lista/page": "app/Aestudiantes-lista/page.js"
+  "/page": "app/page.js",
+  "/Aestudiantes-lista/page": "app/Aestudiantes-lista/page.js",
+  "/Amenu/page": "app/Amenu/page.js"
 }

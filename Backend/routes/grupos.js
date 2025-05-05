@@ -19,6 +19,22 @@ router.get('/grupos', async function(req, res, next) {
     
 });
 
+//Obtener todos los grupos de alumnos
+router.get('/grupos/:id', async function(req, res, next) {
+
+    try {
+    const { id } =req.params
+    const findGrupos =  new PQ({text :`SELECT * FROM Grupos WHERE id_grupo = ${id}`});
+     const result = await db.oneOrNone(findGrupos);
+     console.log('Resultado:', result); // { value: 123 }
+     return res.json(result)
+    } catch (error) {
+      console.error('Error al hacer la consulta:', error);
+      res.json({menssage: "Error al obtener profesores"})
+    }
+    
+});
+
 //Obtener la información del grupo de un estudiante dado
 router.get('/grupos/estudiante/:id', async function(req, res, next) {
 
@@ -28,6 +44,16 @@ router.get('/grupos/estudiante/:id', async function(req, res, next) {
         const findGrupo =  new PQ({text: query, values: [id]});
         const result = await db.oneOrNone(findGrupo);
         console.log('Resultado:', result); // { value: 123 }
+
+        if(result !== null){
+            const profesor_query = "SELECT Pr.id_profesor, U.nombre, U.apellido, Cu.nombre_curso, Hp.*,Gr.nombre_grupo FROM Curso AS Cu, Usuario AS U, Profesor_curso AS Pc, Profesor AS Pr, Grupos AS Gr, Horarios_profesor AS Hp WHERE Cu.id_curso = $1 AND Gr.id_grupo = $2 AND Hp.id_grupo = Gr.id_grupo AND U.id_usuario = Pr.id_profesor AND Pc.id_profesor = Pr.id_profesor AND Pc.id_curso = Cu.id_curso AND Hp.id_profesor = Pc.id_profesor AND Hp.id_curso = Cu.id_curso"
+            const findInformacionGrupo =  new PQ({text: profesor_query, values: [result.id_curso, result.id_grupo]});
+            const resultInformacion = await db.manyOrNone(findInformacionGrupo);
+    
+            result.informacionGrupo = resultInformacion;
+        }
+        
+        console.log('Informacion Grupo:', result); // { value: 123 }
         return res.json(result)
     } catch (error) {
         console.error('Error al hacer la consulta:', error);
