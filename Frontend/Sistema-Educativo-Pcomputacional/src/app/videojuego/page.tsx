@@ -35,6 +35,7 @@ import { useRouter } from "next/navigation";
 function CartelA(props:any) {
   // Declaración del estado con useState dentro del cuerpo del componente
  
+  
   console.log(props);
   // Función para manejar el clic del botón
  
@@ -55,7 +56,53 @@ function CartelA(props:any) {
 
 }
 
+function CartelB(props:any) {
+  // Declaración del estado con useState dentro del cuerpo del componente
  
+  
+  console.log(props);
+  // Función para manejar el clic del botón
+ 
+  return (
+    <>
+
+      {props.respuesta ? (
+        <>
+          {props.respuesta && (
+            <div className="message-containerB">
+              
+            </div>
+          )}
+        </>
+      ) : null}
+    </>
+  );
+
+}
+
+function CartelC(props:any) {
+  // Declaración del estado con useState dentro del cuerpo del componente
+ 
+  
+  console.log(props);
+  // Función para manejar el clic del botón
+ 
+  return (
+    <>
+
+      {props.respuesta ? (
+        <>
+          {props.respuesta && (
+            <div className="message-containerC">
+              
+            </div>
+          )}
+        </>
+      ) : null}
+    </>
+  );
+
+}
  function Cartel3(props:any) {
   // Declaración del estado con useState dentro del cuerpo del componente
  
@@ -85,9 +132,13 @@ function CartelA(props:any) {
     const [cambiarMostrar, setState] = useState(false);
     const [cambiarMostrar3, setState3] = useState(false);
     const [cambiarMostrarA, setStateA] = useState(false);
+    const [cambiarMostrarB, setStateB] = useState(false);
+    const [cambiarMostrarC, setStateC] = useState(false);
     const [ganar, cambiarGanar] = useState(true);
     const [ganar3, cambiarGanar3] = useState(true);
     const [ganarA, cambiarGanarA] = useState(true);
+    const [ganarB, cambiarGanarB] = useState(true);
+    const [ganarC, cambiarGanarC] = useState(true);
     const Router= useRouter();
      // Función para cambiar el estado
     const amoALuis = () => {
@@ -98,6 +149,14 @@ function CartelA(props:any) {
     };
     const amoALuisA = () => {
       setStateA(!cambiarMostrarA); // Cambia el estado entre true y false
+    };
+
+    const amoALuisB = () => {
+      setStateB(!cambiarMostrarB); // Cambia el estado entre true y false
+    };
+
+    const amoALuisC = () => {
+      setStateC(!cambiarMostrarC); // Cambia el estado entre true y false
     };
    const juegoKaplayRef = useRef<any>(null);
  
@@ -130,7 +189,8 @@ function CartelA(props:any) {
        juegoKaplay.setBackground(71,171,169)
        juegoKaplay.loadRoot("./");
        // Nivel1(juegoKaplay);
-       Panel(juegoKaplay, setState, cambiarGanar,cambiarGanar3,setState3,cambiarGanarA, setStateA, Router);
+       Panel(juegoKaplay, setState, cambiarGanar,cambiarGanar3,setState3,cambiarGanarA, setStateA,cambiarGanarB, setStateB,
+        cambiarGanarC, setStateC, Router);
 
          
       }
@@ -169,6 +229,13 @@ function CartelA(props:any) {
             cambiarRespuesta={() => amoALuisA()} 
             mensaje={ganarA ? "Correcto, sigue así" : "Oh no, intenta de nuevo"} 
             cambiarGanarA={() => cambiarGanarA(true)} 
+        />
+
+        <CartelB 
+            respuesta={cambiarMostrarB} 
+            cambiarRespuesta={() => amoALuisB()} 
+            mensaje={ganarA ? "Correcto, sigue así" : "Oh no, intenta de nuevo"} 
+            cambiarGanarA={() => cambiarGanarB(true)} 
         />
       </>)
      

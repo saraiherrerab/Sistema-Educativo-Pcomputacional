@@ -53,6 +53,26 @@
     width: 50vw; /* Ajusta el ancho según el contenido o un valor fijo */
     height: 30vw; /* Ajusta el alto según el contenido o un valor fijo *//* 100% de la altura del viewport */
   }
+
+  .message-containerB {
+    position: absolute;
+    top: 40px; /* Ajusta la posición según sea necesario */
+    left: 60%;
+    transform: translateX(-50%); /* Centrar horizontalmente */
+    color: rgb(62, 50, 1);
+    background-image: url('../../../public/nivel2/cartelnivel2.png');  /* Fondo semitransparente */
+    padding:10px;
+    border-radius: 0px;
+    font-size: 35px;
+    font-family: "Jersey 15", sans-serif;
+    font-weight:400;
+    background-repeat: no-repeat;
+    background-size: contain; /* Cambia cover a contain */
+    animation: aparecerDesaparecer 6s ease-in-out forwards;
+     /* Para que empiece desde la parte izquierda */
+    width: 50vw; /* Ajusta el ancho según el contenido o un valor fijo */
+    height: 30vw; /* Ajusta el alto según el contenido o un valor fijo *//* 100% de la altura del viewport */
+  }
   .message-container3 {
     position: absolute;
     top: 40px; /* Ajusta la posición según sea necesario */

@@ -351,6 +351,7 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
     
                   
     
+                  
                   // Movimiento con clic
                   up.onClick(() => {
                     console.log(player.pos.x)
