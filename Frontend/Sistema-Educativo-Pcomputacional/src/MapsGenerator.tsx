@@ -490,7 +490,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
               contextoKaplay.sprite("castillo"),
               contextoKaplay.scale(0.7),
               contextoKaplay.area(),
-              contextoKaplay.body({ isStatic: true }),
+  
               "castillo",
               { z: 1 } // Asegura que el jugador esté en una capa superior
             ]);
@@ -498,6 +498,42 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
             castillo.tag("castillo")
             
           }
+          if(layer.type === "objectgroup" && layer.name === "casa"){
+  
+            let posicionX: number = (layer.objects[0].x / 32) * ( window.innerWidth / 20);
+            let posicionY: number = (layer.objects[0].y / 32) * ( window.innerHeight / 15)
+
+            const casa = contextoKaplay.add([
+              contextoKaplay.pos(posicionX, posicionY - 100),
+              contextoKaplay.sprite("casa"),
+              contextoKaplay.scale(0.7),
+              contextoKaplay.area(),
+              "casa",
+              { z: 1 } // Asegura que el jugador esté en una capa superior
+            ]);
+
+            casa.tag("casa")
+            
+          }
+
+          if(layer.type === "objectgroup" && layer.name === "casa1"){
+  
+            let posicionX: number = (layer.objects[0].x / 32) * ( window.innerWidth / 20);
+            let posicionY: number = (layer.objects[0].y / 32) * ( window.innerHeight / 15)
+
+            const casa1 = contextoKaplay.add([
+              contextoKaplay.pos(posicionX, posicionY - 100),
+              contextoKaplay.sprite("casa1"),
+              contextoKaplay.scale(0.7),
+              contextoKaplay.area(),
+              "casa1",
+              { z: 1 } // Asegura que el jugador esté en una capa superior
+            ]);
+
+            casa1.tag("casa1")
+            
+          }
+
           if(layer.type === "objectgroup" && layer.name === "torre"){
   
           let posicionX: number = (layer.objects[0].x / 32) * ( window.innerWidth / 20);
@@ -512,9 +548,28 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
             "torre"
           ]);
 
-          torre.tag("castillo")
+          torre.tag("torre")
           
           }
+
+          if(layer.type === "objectgroup" && layer.name === "torre1"){
+  
+            let posicionX: number = (layer.objects[0].x / 32) * ( window.innerWidth / 20);
+            let posicionY: number = (layer.objects[0].y / 32) * ( window.innerHeight / 15)
+  
+            const torre1 = contextoKaplay.add([
+              contextoKaplay.pos(posicionX, posicionY - 100),
+              contextoKaplay.sprite("torre1"),
+              
+              contextoKaplay.scale(0.7),
+              contextoKaplay.area(),
+              "torre1"
+            ]);
+  
+            torre1.tag("torre1")
+            
+            }
+
           if(layer.type === "objectgroup" && layer.name === "arbol"){
 
         const anchoCelda: number = ( window.innerWidth / 20);
