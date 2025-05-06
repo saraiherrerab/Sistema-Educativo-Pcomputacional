@@ -5,25 +5,31 @@ import '../login.css'
 import Header from "../../components/header/header";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import { inflateRaw } from "zlib";
 
+interface Estudiante {
+    id_usuario: number,
+    telefono: string,
+    nombre: string,
+    apellido: string,
+    correo: string,
+    edad: number,
+    foto: string,
+    usuario: string,
+    clave_acceso: string,
+    cedula: string,
+    id_estudiante: number,
+    condicion_medica: string
+}
+
+interface Grupo {
+    id_grupo: number,
+    nombre_grupo: string,
+    id_curso: number | null
+}
 
 export default function EstudiantesLista() {
     const Router = useRouter();
-
-    interface Estudiante {
-        id_usuario: number,
-        telefono: string,
-        nombre: string,
-        apellido: string,
-        correo: string,
-        edad: number,
-        foto: string,
-        usuario: string,
-        clave_acceso: string,
-        cedula: string,
-        id_estudiante: number,
-        condicion_medica: string
-    }
       
     const [estudiantes, setEstudiantes] = useState<Estudiante[]>([]);
     const [estudiantesFiltrados, setEstudiantesFiltrados] = useState<Estudiante[]>([]);
@@ -31,6 +37,7 @@ export default function EstudiantesLista() {
     const [fotoPerfil, setFotoPerfil] = useState<File | null>(null);
     const [habilitarGuardado, setHabilitarGuardado] = useState<boolean>(true);
     const [nuevaFoto, setNuevaFoto] = useState<boolean>(false);
+    const [grupos, setGrupos] = useState<Grupo[]>([])
 
     const validarFormulario = (): boolean => {
         console.log("Validando Entradas de nuevo profesor")
@@ -194,29 +201,58 @@ export default function EstudiantesLista() {
     
         try {
 
-            const confirmacion = confirm("¿Estás seguro de que quieres eliminar este estudiante?");
-            if (!confirmacion) return;
+            Swal.fire({
+                title: "Eliminar estudiante",
+                text: "La siguiente operacion no es reversible",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#df2a0a",
+                cancelButtonColor: "#5d6a7c",
+                confirmButtonText: "Borrar",
+                showLoaderOnConfirm: true,
+                preConfirm: async (login) => {
+                    try {
+                        const response = await fetch(`http://localhost:5555/estudiantes`, {
+                            method: 'DELETE',
+                            mode: 'cors',   // Habilita CORS
+                            headers: {
+                              'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({id: id_estudiante}),
+                        });
+            
+                        console.log(estudiantes)
+            
+                        const resultadoConsulta = await response.json()
+                        console.log(resultadoConsulta)
 
-            console.log("Eliminando")
+                        await sleep(1000)
+            
+                        const arrayActualizado = estudiantes.filter(estudiante => estudiante.id_usuario !== id_estudiante)
+                        console.log(arrayActualizado)
+                        setEstudiantes(arrayActualizado);
+                        setEstudiantesFiltrados(arrayActualizado);
 
-            const response = await fetch(`http://localhost:5555/estudiantes`, {
-                method: 'DELETE',
-                mode: 'cors',   // Habilita CORS
-                headers: {
-                  'Content-Type': 'application/json'
+                        return resultadoConsulta;
+                    } catch (error) {
+                        Swal.showValidationMessage(`
+                            Request failed: ${error}
+                        `);
+                    }
                 },
-                body: JSON.stringify({id: id_estudiante}),
-            });
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed) {
+                  Swal.fire({
+                    title: "El alumno ha sido eliminado",
+                    text: "El alumno ha sido borrado exitosamente",
+                    icon: "success"
+                  });
+                }
+              });
 
-            console.log(estudiantes)
 
-            const resultadoConsulta = await response.json()
-            console.log(resultadoConsulta)
-
-            const arrayActualizado = estudiantes.filter(estudiante => estudiante.id_usuario !== id_estudiante)
-            console.log(arrayActualizado)
-            setEstudiantes(arrayActualizado);
-            setEstudiantesFiltrados(arrayActualizado);
+            
 
         } catch (error) {
             console.error("Error en la petición:", error);
@@ -341,6 +377,45 @@ export default function EstudiantesLista() {
 
         
     };
+
+    const obtenerGrupos = async () => {
+        const resultado= await fetch('http://localhost:5555/grupos',{
+            method: 'GET', // Método especificado
+            mode: 'cors',   // Habilita CORS
+            headers: {
+              'Content-Type': 'application/json'
+            }
+        });
+        const resultado_json= await resultado.json();
+        console.log(resultado_json);
+        return resultado_json
+    }
+
+    const obtenerInformacionGrupoAlumno = async (id_estudiante: number) => {
+        const resultado= await fetch('http://localhost:5555/grupos/estudiante/' + id_estudiante,{
+            method: 'GET', // Método especificado
+            mode: 'cors',   // Habilita CORS
+            headers: {
+              'Content-Type': 'application/json'
+            }
+        });
+        const resultado_json= await resultado.json();
+        console.log(resultado_json);
+        return resultado_json
+    }
+
+    const obtenerInformacionCursoDeGrupo = async (id_grupo: string) => {
+        const resultado= await fetch(`http://localhost:5555/grupos/${id_grupo}/curso`,{
+            method: 'GET', // Método especificado
+            mode: 'cors',   // Habilita CORS
+            headers: {
+              'Content-Type': 'application/json'
+            }
+        });
+        const resultado_json= await resultado.json();
+        console.log(resultado_json);
+        return resultado_json
+    }
     
     // Este useEffect se ejecuta una sola vez al montar el componente
     useEffect(() => {
@@ -348,7 +423,14 @@ export default function EstudiantesLista() {
             const respuesta = await obtenerEstudiantes();
             setEstudiantes(respuesta);
         };
+
+        const cargarGrupos = async () => {
+            const respuesta = await obtenerGrupos();
+            setGrupos([...respuesta])
+        };
+
         cargarEstudiantes();
+        cargarGrupos();
         
     }, []);
     
@@ -449,6 +531,174 @@ export default function EstudiantesLista() {
         }
     }
 
+    async function cargarInformacionGrupo(id_grupo:number) {
+        const resultado= await fetch('http://localhost:5555/grupos/'+id_grupo,{
+            method: 'GET', // Método especificado
+            mode: 'cors',   // Habilita CORS
+            headers: {
+              'Content-Type': 'application/json'
+            }
+        });
+        const resultado_json= await resultado.json();
+        console.log(resultado_json);
+        return resultado_json
+    }
+
+    async function gestionarCursosYHorarios(id_estudiante: number){
+        console.log("gestionarCursosYHorarios()")
+
+        const mostrarSelectorDeGrupos = async () => {
+            
+            const informacionGrupoEstudiante: any = await obtenerInformacionGrupoAlumno(id_estudiante);
+
+            console.log(informacionGrupoEstudiante)
+
+            const informacionGrupo = informacionGrupoEstudiante ? await cargarInformacionGrupo(informacionGrupoEstudiante.id_grupo) : null
+
+            console.log(informacionGrupo)
+
+            const optionsHTML = (informacionGrupo) 
+            ? grupos.filter( (grupo:Grupo) => grupo.id_grupo !== informacionGrupo.id_grupo).map(grupo => `<option value="${grupo.id_grupo}">${grupo.nombre_grupo}</option>`).join('') 
+            : grupos.map(grupo => `<option value="${grupo.id_grupo}">${grupo.nombre_grupo}</option>`).join('');
+
+            const selectHTML: string = 
+            `${
+                informacionGrupo == null 
+                ? `<option value="" disabled selected>-- Selecciona un grupo --</option>` 
+                : `<option value="${informacionGrupo.id_grupo}" selected class="swal2-input">${informacionGrupo.nombre_grupo}</option>`
+            }`;
+        
+            Swal.fire({
+                title: "Selecciona un grupo",
+                html: `
+                    <select id="grupo-seleccionado" class="swal2-input">
+                        ${selectHTML}
+                        ${optionsHTML}
+                    </select>
+                `,
+                showCancelButton: true,
+                confirmButtonText: "Ver Grupo",
+                cancelButtonText: "Cerrar",
+                preConfirm: () => {
+                    const grupoId = (document.getElementById("grupo-seleccionado") as HTMLSelectElement)?.value;
+                    if (!grupoId) {
+                        Swal.showValidationMessage('Por favor, selecciona un grupo');
+                        return false;
+                    }
+                    return grupoId;
+                }
+            }).then(async (result) => {
+                if (result.isConfirmed && result.value) {
+                    const grupoSeleccionadoId = result.value;
+
+                    const validarCursoGrupo: any[]= await obtenerInformacionCursoDeGrupo(grupoSeleccionadoId);
+                    if(validarCursoGrupo.length > 0 ){
+                        await mostrarInformacionDelGrupo(grupoSeleccionadoId, mostrarSelectorDeGrupos,informacionGrupoEstudiante,id_estudiante); // Pasar la función para volver
+                    }else{
+                        Swal.fire({
+                            icon: "error",
+                            title: "No se encontraron cursos",
+                            text: "El grupo no tiene ningún curso asignado",
+                          });
+                    }
+                    
+                }
+            });
+        }
+        
+        const mostrarInformacionDelGrupo = async (grupoId: string, volverAlSelector: () => void, informacion: any, id_estudiante: number) => {
+        
+            if (grupoId) {
+
+
+                let informacionHorario: string = ""
+
+                const consultaNueva: boolean = (informacion !== null) ? false : true
+
+                if(informacion !== null && grupoId === informacion.id_grupo){
+                    console.log("ENTRO AQUI")
+                    informacion?.informacionGrupo.forEach( (horario: any) => {
+                        informacionHorario = informacionHorario + `<p><strong>${horario.dia_semana}:</strong> ${horario.hora_inicio} hasta ${horario.hora_fin}</p>`
+                    })
+                }else{
+                    informacion = await obtenerInformacionCursoDeGrupo(grupoId);
+                    console.log(informacion)
+                    informacion.forEach( (horario: any) => {
+                        informacionHorario = informacionHorario + `<p><strong>${horario.dia_semana}:</strong> ${horario.hora_inicio} hasta ${horario.hora_fin}</p>`
+                    })
+                    
+                }
+
+                const nombreCompletoProfesor = 
+                    (!consultaNueva && grupoId === informacion.id_grupo) 
+                    ? informacion.informacionGrupo[0].nombre + " " +  informacion.informacionGrupo[0].apellido 
+                    : informacion[0].nombre + " " +   informacion[0].apellido 
+                
+                const id_grupo_por_asignar = 
+                (!consultaNueva && grupoId === informacion.id_grupo) 
+                ? informacion.id_grupo
+                : informacion[0].id_grupo
+
+                Swal.fire({
+                    title: informacion.nombre_grupo,
+                    html: `
+                        <p><strong>Profesor:</strong> ${ nombreCompletoProfesor }</p>
+                        ${informacionHorario}
+                        `,
+                    showCancelButton: true,
+                    confirmButtonText: "Asignar estudiante a grupo",
+                    cancelButtonText: "Salir",
+                }).then(async (result) => {
+                    if (result.isDenied) {
+                         
+                    } else if (result.isConfirmed) {
+
+                        console.log(informacion.id_grupo)
+                        const response = await fetch('http://localhost:5555/estudiantes/asignar/grupo', {
+                            method: 'PUT',
+                            headers: {
+                              'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ "id_estudiante": id_estudiante, "id_grupo": id_grupo_por_asignar })
+                          });
+                        const data = await response.json();
+                        console.log('Respuesta del servidor:', data);
+
+                        Swal.fire({
+                            title: 'Procesando...',
+                            text: 'Por favor espera',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+
+                         // Simulamos una función asíncrona (puedes reemplazar esto con tu fetch, por ejemplo)
+                        await new Promise(resolve => setTimeout(resolve, 1000)); // Espera de 1 segundos
+
+                        Swal.fire("¡Aceptado!", "La información del grupo ha sido aceptada.", "success");
+                        // Aquí puedes agregar la lógica para guardar o procesar la aceptación
+                    } else if (result.isDismissed && result.dismiss === Swal.DismissReason.cancel) {
+                        // Aquí puedes agregar la lógica para volver a la edición
+                       
+                    }
+                });
+            } else {
+                Swal.fire("Error", "No se encontró información para este grupo.", "error");
+            }
+        }
+        
+
+       await mostrarSelectorDeGrupos();
+
+    }
+
+    function sleep(ms: number): Promise<void> {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+
     return (
         <>
             <Header
@@ -482,7 +732,7 @@ export default function EstudiantesLista() {
                             style={{ cursor: 'pointer' }}
                         />
                     </div>
-                </div>
+                    </div>
                 </div>
 
                 {mostrarFormulario && (
@@ -494,7 +744,22 @@ export default function EstudiantesLista() {
                         <input type="text" placeholder="Clave" value={nuevoEstudiante.clave_acceso} onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, clave_acceso: e.target.value })} />
                         <input type="text" placeholder="Telefono" value={nuevoEstudiante.telefono} onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, telefono: e.target.value })} />
                         <input type="text" placeholder="Correo" value={nuevoEstudiante.correo} onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, correo: e.target.value })} />
-                        <input type="number" placeholder="Edad" value={nuevoEstudiante.edad} onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, edad: (e.target.value) as unknown as number})} />
+                        <input
+                            type="number"
+                            min={0}
+                            placeholder="Edad"
+                            value={nuevoEstudiante.edad}
+                            onChange={e => {
+                                const value = e.target.value;
+                                const numberValue = Number(value);
+                                if (value === '' || (Number.isFinite(numberValue) && numberValue >= 0)) {
+                                setNuevoEstudiante({
+                                    ...nuevoEstudiante,
+                                    edad: value === '' ? 0 : numberValue,
+                                });
+                                }
+                            }}
+                        />
                         <input type="text" placeholder="Cedula" value={nuevoEstudiante.cedula} onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, cedula: e.target.value })} />
                         <input
                             type="file"
@@ -514,10 +779,11 @@ export default function EstudiantesLista() {
                                 <th>Apellido</th>
                                 <th>Usuario</th>
                                 <th>Clave</th>
-                                <th>Correo</th>
-                                <th>Celular</th>
-                                <th>Perfil</th> 
-                                <th>Acciones</th>
+                                <th className="texto_central">Correo</th>
+                                <th className="texto_central">Celular</th>
+                                <th className="texto_central">Perfil</th> 
+                                <th className="texto_central">Acciones</th>
+                                <th className="texto_central">Cursos</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -534,9 +800,14 @@ export default function EstudiantesLista() {
                                     <td>
                                         <button onClick={()=>Router.push("/profile/" + estudiante.id_estudiante)}>Ver Perfil</button>
                                     </td>
+                                    <td className="display_flex">
+                                        <button onClick={() => onEditar(estudiante)}><img src="/icons/edit_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
+                                        <button onClick={() => onEliminar(estudiante.id_estudiante)}><img src="/icons/delete_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
+                                    </td>
                                     <td>
-                                        <button onClick={() => onEditar(estudiante)}>Editar</button>
-                                        <button onClick={() => onEliminar(estudiante.id_estudiante)}>Eliminar</button>
+                                        <button onClick={() => gestionarCursosYHorarios(estudiante.id_estudiante)}>
+                                            <img src="/icons/arrow_forward_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} />
+                                        </button>
                                     </td>
                                 </tr>
                             ))}
@@ -554,7 +825,6 @@ export default function EstudiantesLista() {
                         <input type="text" placeholder="Correo" value={estudianteEditando.correo || ''} onChange={e => setEstudianteEditando({ ...estudianteEditando, correo: e.target.value })} />
                         <input type="number" placeholder="Edad" value={estudianteEditando.edad ?? ''} onChange={e => setEstudianteEditando({ ...estudianteEditando, edad: Number(e.target.value) })} />
                         <input type="text" placeholder="Cedula" value={estudianteEditando.cedula || ''} onChange={e => setEstudianteEditando({ ...estudianteEditando, cedula: e.target.value })} />
-                        <input type="text" placeholder="Foto" value={estudianteEditando.foto || ''} onChange={e => setEstudianteEditando({ ...estudianteEditando, foto: e.target.value })} />
                         <input type="text" placeholder="Condicion" value={estudianteEditando.condicion_medica || ''} onChange={e => setEstudianteEditando({ ...estudianteEditando, condicion_medica: e.target.value })} />
                         {imagenDescargadaUrl && (
                             <div>
@@ -581,7 +851,7 @@ export default function EstudiantesLista() {
                                 }
                                 
                                 }}
-                            />
+                        />
                         <button onClick={() => onGuardarEdicion()}>Guardar</button>
                         <button onClick={() => setEstudianteEditando(null)}>Cancelar</button>
                     </div>

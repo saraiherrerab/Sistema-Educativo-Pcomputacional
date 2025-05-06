@@ -8,8 +8,8 @@ interface MenuButtonProps {
 
 export default function MenuButton({  imageUrl , onClick }: MenuButtonProps) {
   return (
-    <button className="menu-button">
-        <img src={imageUrl}  className="button-image" onClick={onClick}/>
+    <button className="menu-button" onClick={onClick}>
+        <img src={imageUrl}  className="button-image"/>
     </button>
   );
 }

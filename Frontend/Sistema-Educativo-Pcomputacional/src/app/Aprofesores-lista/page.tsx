@@ -23,7 +23,8 @@ export default function ProfesoresLista() {
         clave_acceso: string,
         cedula: string,
         id_profesor: number,
-        curriculum: string
+        curriculum: string,
+        formacion: string
     }
       
     const [profesores, setProfesores] = useState<Profesor[]>([]);
@@ -31,10 +32,25 @@ export default function ProfesoresLista() {
     const [searchTerm, setSearchTerm] = useState('');
     const [fotoPerfil, setFotoPerfil] = useState<File | null>(null);
     const [subiendo, setSubiendo] = useState(false);
-
+    const [nuevaFoto, setNuevaFoto] = useState<boolean>(false);
+    const [nuevoCurriculum, setNuevoCurriculum] = useState<boolean>(false);
 
     async function obtenerProfesores() : Promise<Profesor[]>{
         const resultado= await fetch('http://localhost:5555/profesores',{
+                method: 'GET', // Método especificado
+                mode: 'cors',   // Habilita CORS
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+                    });
+        const resultado_json= await resultado.json();
+        console.log(resultado_json);
+        return resultado_json
+
+    }
+
+    async function obtenerInformacionProfesor(id_profesor: number) : Promise<Profesor>{
+        const resultado= await fetch('http://localhost:5555/profesores/' + id_profesor,{
                 method: 'GET', // Método especificado
                 mode: 'cors',   // Habilita CORS
                 headers: {
@@ -80,8 +96,17 @@ export default function ProfesoresLista() {
         clave_acceso: "",
         cedula: "",
         id_profesor: 0,
-        curriculum: ""
+        curriculum: "",
+        formacion: ""
     });
+
+    const [imagenDescargadaUrl, setImagenDescargadaUrl] = useState<string | null>(null);
+    const [descargandoImagen, setDescargandoImagen] = useState(false);
+
+    const [curriculumDescargadaUrl, setCurriculumDescargadaUrl] = useState<string | null>(null);
+    const [descargandoCurriculum, setDescargandoCurriculum] = useState(false);
+    const [curriculum, setCurriculum] = useState<File | null>(null);
+    const [tieneCurriculum, setTieneCurriculum] = useState<boolean>(true);
 
     const validarFormulario = (): boolean => {
         console.log("Validando Entradas de nuevo profesor")
@@ -110,9 +135,12 @@ export default function ProfesoresLista() {
         setProfesoresFiltrados(results);
     };
       
-    const onEditar = (profesor: any) => {
+    const onEditar = async (profesor: any) => {
         console.log(profesor)
         setProfesorEditando({ ...profesor });
+        await descargarImagenPerfil(`User-${profesor.id_profesor}.png`)
+        await descargarCurriculumPerfil(`User-${profesor.id_profesor}.pdf`)
+        
     };
 
     const onGuardarEdicion = async () => {
@@ -138,11 +166,93 @@ export default function ProfesoresLista() {
                 body: JSON.stringify(profesorEditando),
             });
 
+            const resultadoConsulta = await response.json()
+            console.log(resultadoConsulta)
+
             // Simulamos una función asíncrona (puedes reemplazar esto con tu fetch, por ejemplo)
             await new Promise(resolve => setTimeout(resolve, 1000)); // Espera de 1 segundos
 
-            const resultadoConsulta = await response.json()
-            console.log(resultadoConsulta)
+            if(nuevaFoto){
+                console.log("subiendo foto")
+                setSubiendo(true)
+                const formData = new FormData();
+                let nuevoArchivo = null
+                
+                
+                if (fotoPerfil) {
+
+                    nuevoArchivo = new File([fotoPerfil], `User-${profesorEditando.id_usuario.toString()}.png`, { type: fotoPerfil.type, lastModified: fotoPerfil.lastModified });
+
+                    formData.append('archivo', nuevoArchivo); // Agregar archivo solo si no es null
+                    formData.append('id_usuario', profesorEditando.id_usuario.toString());
+
+                    try {
+                        const response = await fetch('http://localhost:5555/cargar/archivo/imagen', {
+                            method: 'POST',
+                            body: formData,
+                        });
+        
+                        const data = await response.json();
+        
+                        // Simulamos una función asíncrona (puedes reemplazar esto con tu fetch, por ejemplo)
+                        await new Promise(resolve => setTimeout(resolve, 1000)); // Espera de 1 segundos
+        
+                        if (response.ok) {
+                            Swal.fire({ icon: 'success', title: 'Éxito', text: data.mensaje });
+                            // Opcional: Actualizar el estado local con la nueva URL de la foto
+                            console.log('URL de la foto subida:', data.archivo.url);
+                        } else {
+                            Swal.fire({ icon: 'error', title: 'Error', text: data.mensaje || 'Error al subir la imagen.' });
+                        }
+                        } catch (error) {
+                        console.error('Error al enviar la petición:', error);
+                        Swal.fire({ icon: 'error', title: 'Error', text: 'Error al conectar con el servidor.' });
+                        } finally {
+                            setSubiendo(false);
+                        }
+                  }
+
+            }
+
+            if(nuevoCurriculum){
+
+                console.log("subiendo curriculum")
+                setSubiendo(true)
+                const formData = new FormData();
+                let nuevoArchivo = null
+                if (curriculum) {
+
+                    nuevoArchivo = new File([curriculum], `User-${profesorEditando.id_usuario.toString()}.pdf`, { type: curriculum.type, lastModified: curriculum.lastModified });
+
+                    formData.append('archivo', nuevoArchivo); // Agregar archivo solo si no es null
+                    formData.append('id_usuario', profesorEditando.id_usuario.toString());
+
+                    try {
+                        const response = await fetch('http://localhost:5555/cargar/archivo/pdf', {
+                            method: 'POST',
+                            body: formData,
+                        });
+        
+                        const data = await response.json();
+        
+                        // Simulamos una función asíncrona (puedes reemplazar esto con tu fetch, por ejemplo)
+                        await new Promise(resolve => setTimeout(resolve, 1000)); // Espera de 1 segundos
+        
+                        if (response.ok) {
+                            Swal.fire({ icon: 'success', title: 'Éxito', text: data.mensaje });
+                            // Opcional: Actualizar el estado local con la nueva URL de la foto
+                            console.log('URL del curriculum subido:', data.archivo.url);
+                        } else {
+                            Swal.fire({ icon: 'error', title: 'Error', text: data.mensaje || 'Error al subir curriculum.' });
+                        }
+                        } catch (error) {
+                        console.error('Error al enviar la petición:', error);
+                        Swal.fire({ icon: 'error', title: 'Error', text: 'Error al conectar con el servidor.' });
+                        } finally {
+                            setSubiendo(false);
+                        }
+                  }
+            }
 
             // Si todo sale bien, cerramos el loading y mostramos éxito
             Swal.fire({
@@ -156,6 +266,8 @@ export default function ProfesoresLista() {
                   ? { ...profesorEditando }  // Solo cambiamos el atributo necesario
                   : profesor
             );
+
+
 
             setProfesores(updatedList);
             setProfesoresFiltrados(updatedList);
@@ -243,6 +355,27 @@ export default function ProfesoresLista() {
         }
     };
 
+    const handlePdfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+          if (file.type === 'application/pdf') {
+            setNuevoProfesor({...nuevoProfesor, curriculum: file.name})
+            setCurriculum(file);
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Por favor, selecciona solo archivos con formato PDF.',
+            }).then(() => {
+              e.target.value = '';
+              setCurriculum(null);
+            });
+          }
+        } else {
+            setCurriculum(null);
+        }
+    }
+
     const onAgregarProfesor = async () => {
         
         const nuevo = { ...nuevoProfesor };
@@ -319,11 +452,55 @@ export default function ProfesoresLista() {
                   }
                 
             }
+
+            if(nuevo.curriculum){
+                console.log("subiendo curriculum")
+
+                const formData = new FormData();
+                let nuevoArchivo = null
+                
+                if (curriculum) {
+
+                    nuevoArchivo = new File([curriculum], `User-${resultadoConsulta.id_usuario.toString()}.pdf`, { type: curriculum.type, lastModified: curriculum.lastModified });
+
+                    formData.append('archivo', nuevoArchivo); // Agregar archivo solo si no es null
+                    formData.append('id_usuario', resultadoConsulta.id_usuario.toString());
+
+                    try {
+                        const response = await fetch('http://localhost:5555/cargar/archivo/pdf', {
+                            method: 'POST',
+                            body: formData,
+                        });
+        
+                        const data = await response.json();
+        
+                        // Simulamos una función asíncrona (puedes reemplazar esto con tu fetch, por ejemplo)
+                        await new Promise(resolve => setTimeout(resolve, 1000)); // Espera de 1 segundos
+        
+                        if (response.ok) {
+                            Swal.fire({ icon: 'success', title: 'Éxito', text: data.mensaje });
+                            // Opcional: Actualizar el estado local con la nueva URL de la foto
+                            console.log('URL del curriculum subido:', data.archivo.url);
+                        } else {
+                            Swal.fire({ icon: 'error', title: 'Error', text: data.mensaje || 'Error al subir la curriculum.' });
+                        }
+                        } catch (error) {
+                        console.error('Error al enviar la petición:', error);
+                        Swal.fire({ icon: 'error', title: 'Error', text: 'Error al conectar con el servidor.' });
+                        } finally {
+                            setSubiendo(false);
+                        }
+                  }
+                
+            }
     
             if(response.status === 200){
-                setNuevoProfesor({...resultadoConsulta})
-                setProfesores([...profesores, nuevoProfesor]);
-                setProfesoresFiltrados([...profesoresFiltrados, nuevoProfesor]);
+
+
+                const informacionProfesor = await obtenerInformacionProfesor(resultadoConsulta.id_usuario)
+                console.log(informacionProfesor)
+
+                setProfesoresFiltrados([...profesoresFiltrados, informacionProfesor]);
                 setMostrarFormulario(false); // Asegúrate de que el formulario se cierre después de guardar
                 setNuevoProfesor({
                     id_usuario: 0,
@@ -337,7 +514,8 @@ export default function ProfesoresLista() {
                     clave_acceso: "",
                     cedula: "",
                     id_profesor: 0,
-                    curriculum: ""
+                    curriculum: "",
+                    formacion: ""
                 });
             }
             
@@ -384,6 +562,93 @@ export default function ProfesoresLista() {
         console.log(id_usuario)
     }
 
+    async function descargarImagenPerfil(nombreArchivo: string) {
+        setDescargandoImagen(true);
+        const urlDescarga = `/descargar/imagen/${nombreArchivo}`;
+    
+        try {
+          const response = await fetch(`http://localhost:5555${urlDescarga}`);
+          console.log(response);
+    
+          if (!response.ok){
+
+            try {
+                setDescargandoImagen(false);
+                console.log("IMAGEN VACIA")
+                const fotoVacia = await fetch('/imagenvacia.png');
+            
+                if (!fotoVacia.ok) {
+                    throw new Error('No se pudo obtener la imagen.');
+                }
+            
+                const imagenBlob = await fotoVacia.blob();
+            
+                // Ahora tienes la imagen en la variable `imagenBlob`
+                console.log('Imagen obtenida correctamente:', imagenBlob);
+                const archivo = new File([imagenBlob], 'imagenvacia.png', { type: imagenBlob.type });
+                // Crear un objeto File a partir del Blob
+                
+                setImagenDescargadaUrl('imagenvacia.png')
+                setFotoPerfil(archivo)
+            
+                return;
+            } catch (error) {
+                console.error('Error al obtener la imagen:', error);
+                return;
+            }
+            
+          }
+
+          const blob = await response.blob();
+          const urlBlob = window.URL.createObjectURL(blob);
+          setImagenDescargadaUrl(urlBlob);
+          setDescargandoImagen(false);
+          setFotoPerfil(new File([blob], nombreArchivo, { type: blob.type }));
+          console.log('Imagen de perfil descargada y URL creada.');
+    
+        } catch (error) {
+          console.error('Error al realizar la petición de descarga:', error);
+          console.log(error)
+          setDescargandoImagen(false);
+        }
+    }
+
+    async function descargarCurriculumPerfil(nombreArchivo: string) {
+        setDescargandoImagen(true);
+        const urlDescarga = `/descargar/pdf/${nombreArchivo}`;
+    
+        try {
+          const response = await fetch(`http://localhost:5555${urlDescarga}`);
+          console.log(response);
+    
+          if (!response.ok){
+
+            try {
+                setTieneCurriculum(false);
+                setCurriculumDescargadaUrl("");
+                setDescargandoCurriculum(false);
+                return;
+            } catch (error) {
+                console.error('Error al obtener la imagen:', error);
+                return;
+            }
+            
+          }
+
+          const blob = await response.blob();
+          const urlBlob = window.URL.createObjectURL(blob);
+          setCurriculumDescargadaUrl(urlBlob);
+          setDescargandoCurriculum(false);
+          console.log('Curriculum de perfil descargado y URL creada.');
+    
+        } catch (error) {
+          console.error('Error al realizar la petición de descarga:', error);
+          console.log(error)
+          setDescargandoCurriculum(false);
+        }
+    }
+
+
     return (
         <>
             <Header
@@ -429,12 +694,33 @@ export default function ProfesoresLista() {
                     <input type="text" placeholder="Clave" value={nuevoProfesor.clave_acceso} onChange={e => setNuevoProfesor({ ...nuevoProfesor, clave_acceso: e.target.value })} />
                     <input type="text" placeholder="Telefono" value={nuevoProfesor.telefono} onChange={e => setNuevoProfesor({ ...nuevoProfesor, telefono: e.target.value })} />
                     <input type="text" placeholder="Correo" value={nuevoProfesor.correo} onChange={e => setNuevoProfesor({ ...nuevoProfesor, correo: e.target.value })} />
-                    <input type="number" placeholder="Edad" value={nuevoProfesor.edad} onChange={e => setNuevoProfesor({ ...nuevoProfesor, edad: (e.target.value) as unknown as number})} />
+                    <input
+                            type="number"
+                            min={0}
+                            placeholder="Edad"
+                            value={nuevoProfesor.edad}
+                            onChange={e => {
+                                const value = e.target.value;
+                                const numberValue = Number(value);
+                                if (value === '' || (Number.isFinite(numberValue) && numberValue >= 0)) {
+                                setNuevoProfesor({
+                                    ...nuevoProfesor    ,
+                                    edad: value === '' ? 0 : numberValue,
+                                });
+                                }
+                            }}
+                    />
                     <input type="text" placeholder="Cedula" value={nuevoProfesor.cedula} onChange={e => setNuevoProfesor({ ...nuevoProfesor, cedula: e.target.value })} />
+                    <input type="text" placeholder="Formación" value={nuevoProfesor.formacion} onChange={e => setNuevoProfesor({ ...nuevoProfesor, formacion: e.target.value })} />
                     <input
                         type="file"
                         accept=".png"
                         onChange={handleFotoChange}
+                    />
+                    <input
+                        type="file"
+                        accept=".pdf"
+                        onChange={handlePdfChange}
                     />
                     <button onClick={() => onAgregarProfesor()} disabled={habilitarGuardado}>Guardar</button>
                     <button onClick={() => setMostrarFormulario(false)}>Cancelar</button>
@@ -456,8 +742,8 @@ export default function ProfesoresLista() {
                         </tr>
                     </thead>
                     <tbody>
-                        {profesoresFiltrados.map((profesor) => (
-                            <tr key={profesor.id_profesor}>
+                        {profesoresFiltrados.map((profesor,index) => (
+                            <tr key={index}>
                                 <td>{profesor.nombre ? profesor.nombre : "null"}</td>
                                 <td>{profesor.apellido ? profesor.apellido : "null"}</td>
                                 
@@ -472,7 +758,7 @@ export default function ProfesoresLista() {
                                 <td>
                                     <button onClick={() => onEditar(profesor)}>Editar</button>
                                     <button onClick={() => onEliminar(profesor.id_profesor)}>Eliminar</button>
-                                    <button onClick={() => gestionarGrupos(profesor.id_profesor)}><img src="/icons/arrow_forward_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Home icon" width={24} height={24} /></button>
+                                    <button onClick={() => gestionarGrupos(profesor.id_profesor)}><img src="/icons/arrow_forward_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Home icon" width={16} height={16} /></button>
                                 </td>
                             </tr>
                         ))}
@@ -491,7 +777,68 @@ export default function ProfesoresLista() {
                     <input type="email" placeholder="Correo" value={(profesorEditando.correo) ? (profesorEditando.correo) : ""} onChange={e => setProfesorEditando({ ...profesorEditando, correo: e.target.value })} />
                     <input type="number" placeholder="Edad" value={(profesorEditando.edad) ? (profesorEditando.edad) : 0} onChange={e => setProfesorEditando({ ...profesorEditando, edad: (e.target.value) as unknown as number})} />
                     <input type="text" placeholder="Cedula" value={(profesorEditando.cedula) ? (profesorEditando.cedula) : ""} onChange={e => setProfesorEditando({ ...profesorEditando, cedula: e.target.value })} />
-                    <input type="text" placeholder="Foto" value={(profesorEditando.foto) ? profesorEditando.foto : "" } onChange={e => setProfesorEditando({ ...profesorEditando, foto: e.target.value })} />
+                    <input type="text" placeholder="formación" value={(profesorEditando.formacion) ? (profesorEditando.formacion) : ""} onChange={e => setProfesorEditando({ ...profesorEditando, formacion: e.target.value })} />
+                    {imagenDescargadaUrl && (
+                            <div>
+                                <img
+                                    src={imagenDescargadaUrl}
+                                    alt="Imagen de perfil"
+                                    style={{ width: '200px', height: '200px', objectFit: 'cover', borderRadius: '10px' }}
+                                />
+                            </div>
+                    )}
+                    <label htmlFor="editarImagen">Editar imagen de perfil:</label>
+                        <input
+                            type="file"
+                            id="editarImagen"
+                            accept="image/png"
+                            onChange={(e) => {
+                            const archivo = e.target.files?.[0];
+                            if (archivo) {
+                                const nuevaUrl = URL.createObjectURL(archivo);
+                                setNuevaFoto(true)
+                                setImagenDescargadaUrl(nuevaUrl);
+                                setFotoPerfil(archivo)
+                                // Aquí podrías subirla al servidor si deseas
+                            }
+                            
+                            }}
+                    />
+                    {curriculumDescargadaUrl ? (
+                        <div>
+                            <iframe
+                            src={curriculumDescargadaUrl}
+                            title="Vista previa del PDF"
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                borderRadius: '10px',
+                                border: '1px solid #ccc',
+                            }}
+                            />
+                        </div>
+                        ) : (
+                        !descargandoCurriculum && !tieneCurriculum && (
+                            <p style={{ color: 'gray' }}>Este profesor aún no tiene un curriculum subido.</p>
+                        )
+                    )}
+                    <label htmlFor="editarCurriculum">Editar curriculum de profesor:</label>
+                        <input
+                            type="file"
+                            id="editarCurriculum"
+                            accept="application/pdf"
+                            onChange={(e) => {
+                            const archivo = e.target.files?.[0];
+                            if (archivo) {
+                                const nuevaUrl = URL.createObjectURL(archivo);
+                                setNuevoCurriculum(true)
+                                setCurriculumDescargadaUrl(nuevaUrl);
+                                setCurriculum(archivo)
+                                // Aquí podrías subirla al servidor si deseas
+                            }
+                            
+                            }}
+                    />
                     <button onClick={() => onGuardarEdicion()}>Guardar</button>
                     <button onClick={() => setProfesorEditando(null)}>Cancelar</button>
                 </div>
