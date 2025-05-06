@@ -1,7 +1,7 @@
 import { GameObj, KAPLAYCtx } from "kaplay";
 import generarEsquemaMapa from "../../MapsGenerator";
 
-export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGanar3:any, Router:any){
+export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGanar3:any, setStateA:any, cambiarGanarA:any, Router:any){
 
         const SCREEN_RESOLUTION_X: number = window.innerWidth 
         const SCREEN_RESOLUTION_Y: number = window.innerHeight 
@@ -80,6 +80,12 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
           sliceY: 1,
         });
 
+        juegoKaplay.loadSprite("torre", "sprites/buildings/Tower_Blue.png", {
+          sliceX: 1,
+          sliceY: 1,
+        });
+      
+
         juegoKaplay.loadSprite("heart2", "sprites/heart.png", {
           sliceX: 1,
           sliceY: 1,
@@ -155,6 +161,8 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                   
                     cambiarGanar3(true);
                     setState3(true);
+
+                    
                    
                   
                   setTimeout(() => {
@@ -167,6 +175,7 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                   console.log(juegoKaplay.get("player"))
 
                   const player = juegoKaplay.get("player")[0]
+                  const torre = juegoKaplay.get("torre")[0]
                   const colisionarbol = juegoKaplay.get("colisionarbol")
                   const rock = juegoKaplay.get("rocks")[0]
                   const oveja = juegoKaplay.get("oveja")[0]
@@ -197,6 +206,7 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                   console.log(enemigo)
                   console.log(juegoKaplay.get("enemy"))
                   console.log(arbol)
+                  console.log(torre)
                   console.log(cartel)
                   console.log(enemigo.pos.x)
                   console.log(enemigo.pos.y)
@@ -207,6 +217,18 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                   const colisiones = juegoKaplay.get("square-colision")
                   console.log(colisiones)
 
+
+                  torre.onCollide("player", (jugador: GameObj) => {
+                    cambiarGanarA(true); 
+                    setStateA(true);
+                
+                    setTimeout(() => {
+                      setStateA(false);
+                      window.location.href = window.location.href;
+                    }, 5000);
+                    
+                  })
+                  
                   setTimeout(() => {
                     hongo.onCollide("player", (jugador: any) => {
                         cantidadhongos++
