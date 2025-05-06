@@ -144,4 +144,6 @@ th:last-child {
 }
 /* Hemos eliminado los estilos del botón "Buscar" separado */
 
-/* ... otros estilos ... */
+input > .input_formulario {
+  width: 100%;
+}

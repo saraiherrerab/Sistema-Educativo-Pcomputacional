@@ -155,6 +155,21 @@ router.get('/profesores/cursos/faltantes/:id', async function(req, res, next) {
     
 });
 
+router.get('/profesores/cursos/faltantes/:id/datos', async function(req, res, next) {
+
+  try {
+   const { id } = req.params
+   const findCursos =  new PQ({text :`SELECT * FROM obtener_cursos_profesor($1)`, values: [id]});
+   const result = await db.manyOrNone(findCursos);
+   console.log('Resultado:', result); // { value: 123 }
+   return res.json(result)
+  } catch (error) {
+    console.error('Error al hacer la consulta:', error);
+    res.json({menssage: "Error al obtener profesores"})
+  }
+  
+});
+
 router.get('/profesores/cursos/inscritos/:id', async function(req, res, next) {
 
     try {
@@ -185,5 +200,21 @@ router.get('/profesores/:id/horarios/', async function(req, res, next) {
     
 });
 
+
+router.get('/profesores/:id/horarios/curso/:id_curso', async function(req, res, next) {
+
+  try {
+   const { id,id_curso } = req.params
+   const query = "SELECT Pr.id_profesor, U.nombre, U.apellido, Hp.id_curso, Cu.nombre_curso, Hp.id_horario, Gr.id_grupo, Gr.nombre_grupo, Hp.dia_semana, Hp.hora_inicio, Hp.hora_fin FROM Curso AS Cu, Usuario AS U, Profesor_curso AS Pc, Profesor AS Pr, Horarios_profesor AS Hp, Grupos AS Gr WHERE U.id_usuario = Pr.id_profesor AND Pc.id_profesor = Pr.id_profesor AND U.id_usuario = $1 AND Hp.id_profesor = Pr.id_profesor AND Hp.id_curso = Cu.id_curso AND Hp.id_grupo = Gr.id_grupo AND Pc.id_curso = Cu.id_curso AND Gr.id_curso = Cu.id_curso AND Cu.id_curso = $2";
+   const findHorarios =  new PQ({text :query, values: [id,id_curso]});
+   const result = await db.manyOrNone(findHorarios);
+   console.log('Resultado:', result); // { value: 123 }
+   return res.json(result)
+  } catch (error) {
+    console.error('Error al hacer la consulta:', error);
+    res.json({menssage: "Error al obtener horarios de profesor"})
+  }
+  
+});
 
   module.exports = router;

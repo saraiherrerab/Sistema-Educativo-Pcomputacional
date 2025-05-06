@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import './styles.css';
 import '../login.css'
 import Header from "../../components/header/header";
@@ -7,25 +7,42 @@ import { useRouter } from "next/navigation";
 
 import Swal from 'sweetalert2'
 
+interface Cursos {
+    id_curso: number,
+    nombre_curso: string
+}
+
+interface Horarios {
+    dia_semana: string,
+    hora_fin: string,
+    hora_inicio: string,
+    id_curso: number,
+    id_horario: number,
+    id_profesor: number
+}
+
+interface Profesor {
+    id_usuario: number,
+    telefono: string,
+    nombre: string,
+    apellido: string,
+    correo: string,
+    edad: number,
+    foto: string,
+    usuario: string,
+    clave_acceso: string,
+    cedula: string,
+    id_profesor: number,
+    curriculum: string,
+    formacion: string
+}
+
 
 export default function ProfesoresLista() {
     const Router = useRouter();
 
-    interface Profesor {
-        id_usuario: number,
-        telefono: string,
-        nombre: string,
-        apellido: string,
-        correo: string,
-        edad: number,
-        foto: string,
-        usuario: string,
-        clave_acceso: string,
-        cedula: string,
-        id_profesor: number,
-        curriculum: string,
-        formacion: string
-    }
+    
+
       
     const [profesores, setProfesores] = useState<Profesor[]>([]);
     const [profesoresFiltrados, setProfesoresFiltrados] = useState<Profesor[]>([]);
@@ -558,10 +575,6 @@ export default function ProfesoresLista() {
         setProfesorEditando(null); // Asegúrate de que no se muestre el formulario de edición al mismo tiempo
     };
 
-    const gestionarGrupos = (id_usuario: number) => {
-        console.log(id_usuario)
-    }
-
     async function descargarImagenPerfil(nombreArchivo: string) {
         setDescargandoImagen(true);
         const urlDescarga = `/descargar/imagen/${nombreArchivo}`;
@@ -648,6 +661,116 @@ export default function ProfesoresLista() {
         }
     }
 
+    const [mostrarAside, setMostrarAside] = useState(false);
+    const [profesorSeleccionado, setProfesorSeleccionado] = useState<Profesor>(
+        {
+            id_usuario: 0,
+            telefono: "",
+            nombre: "",
+            apellido: "",
+            correo: "",
+            edad: 0,
+            foto: "",
+            usuario: "",
+            clave_acceso: "",
+            cedula: "",
+            id_profesor: 0,
+            curriculum: "",
+            formacion: ""
+          }
+    );
+    const [cursosProfesor,setCursosProfesor] = useState<any[]>([])
+    const [horarios, setHorarios] = useState<Horarios[]>([])
+    const [cursos, setCursos] = useState<Cursos[]>([])
+    const [cursosFaltantes, setCursosFaltantes] = useState<Cursos[]>([])
+    const [mostrarAsideHorarios, setMostrarAsideHorarios] = useState(false);
+    const [cursoSeleccionado, setCursoSeleccionado] = useState<Cursos | null>(null);
+
+    const [agregarCurso, setAgregarCurso] = useState<Boolean>(false);
+    const [agregarHorario, setAgregarHorario] = useState<Boolean>(false);
+    const [mostrarTablaCursos, setMostrarTablaCursos] = useState<Boolean>(true);
+    const [mostrarTablaHorarios, setMostrarTablaHorarios] = useState<Boolean>(true);
+
+    const [seguidorEvento, setSeguidorEvento] = useState<Number>(0);
+    interface DatosHorario {
+        id_horario: number;
+        id_profesor: number;
+        nombre: string;
+        apellido: string;
+        dia_semana: string;
+        hora_inicio: string;
+        hora_fin: string;
+        id_curso: number;
+        nombre_curso: string;
+        id_grupo: number;
+        nombre_grupo: string;
+    }
+
+    const [horariosCursoSeleccionado, setHorariosCursoSeleccionado] = useState<DatosHorario[]>([]);
+
+    const obtenerHorariosCurso = async (id_profesor_seleccionado: number, id_curso_seleccionado: number) => {
+        const datosCursos = await fetch(`http://localhost:5555/profesores/${id_profesor_seleccionado}/horarios/curso/${id_curso_seleccionado}`)
+        const resultadoConsulta = await datosCursos.json()
+        console.log(resultadoConsulta)
+        setHorariosCursoSeleccionado([...resultadoConsulta])
+
+    }
+
+    const gestionarGrupos = async (id_usuario: number) => {
+
+        const obtenerHorariosProfesor = async (id_profesor_seleccionado: number) => {
+      
+            const datosHorario = await fetch(`http://localhost:5555/profesores/${id_profesor_seleccionado}/horarios/`)
+            const resultadoConsulta = await datosHorario.json()
+            console.log(resultadoConsulta)
+            setHorarios([...resultadoConsulta])
+        
+        };
+    
+        const obtenerCursosProfesor = async (id_profesor_seleccionado: number) => {
+          
+            const datosCursos = await fetch(`http://localhost:5555/profesores/cursos/inscritos/${id_profesor_seleccionado}`)
+            const resultadoConsulta = await datosCursos.json()
+            console.log(resultadoConsulta)
+            setCursos([...resultadoConsulta])
+        };
+
+        const obtenerCursosFaltantesProfesor = async (id_profesor_seleccionado: number) => {
+          
+            const datosCursos = await fetch(`http://localhost:5555/profesores/cursos/faltantes/${id_profesor_seleccionado}/datos`)
+            const resultadoConsulta = await datosCursos.json()
+            console.log(resultadoConsulta)
+            setCursosFaltantes([...resultadoConsulta])
+        };
+
+        
+
+        console.log(id_usuario)
+
+        const informacionProfesor = profesores.filter( (profesor: Profesor) => profesor.id_profesor === id_usuario )[0]
+        console.log(informacionProfesor)
+
+        setProfesorSeleccionado({...informacionProfesor})
+
+        await obtenerHorariosProfesor(informacionProfesor.id_usuario)
+        await obtenerCursosProfesor(informacionProfesor.id_usuario)
+        await obtenerCursosFaltantesProfesor(informacionProfesor.id_usuario)
+        
+        setMostrarAside(true);
+        
+    }
+
+    const handleSubmit = (event: FormEvent) => {
+        event.preventDefault();
+        // Aquí puedes agregar la lógica para enviar tus datos con React (por ejemplo, usando fetch o axios)
+        console.log('Formulario enviado sin recargar la página');
+    };
+
+    const handleSubmitHorario = (event: FormEvent) => {
+        event.preventDefault();
+        // Aquí puedes agregar la lógica para enviar tus datos con React (por ejemplo, usando fetch o axios)
+        console.log('Formulario enviado sin recargar la página');
+    };
 
     return (
         <>
@@ -739,6 +862,7 @@ export default function ProfesoresLista() {
                             <th>Celular</th>
                             <th>Perfil</th> 
                             <th>Acciones</th>
+                            <th>Cursos y Horarios</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -758,6 +882,8 @@ export default function ProfesoresLista() {
                                 <td>
                                     <button onClick={() => onEditar(profesor)}>Editar</button>
                                     <button onClick={() => onEliminar(profesor.id_profesor)}>Eliminar</button>
+                                </td>
+                                <td>
                                     <button onClick={() => gestionarGrupos(profesor.id_profesor)}><img src="/icons/arrow_forward_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Home icon" width={16} height={16} /></button>
                                 </td>
                             </tr>
@@ -843,7 +969,244 @@ export default function ProfesoresLista() {
                     <button onClick={() => setProfesorEditando(null)}>Cancelar</button>
                 </div>
             )}
+
+            {mostrarAside && (
+                <aside
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100vh',
+                        backgroundColor: '#f0f0f5',
+                        boxShadow: '2px 0 12px rgba(0, 0, 0, 0.15)',
+                        padding: '24px',
+                        overflowY: 'auto',
+                        zIndex: 1000,
+                        transition: 'all 0.3s ease',
+                    }}
+                >
+                    <h2 style={{ marginTop: 0 }}>Cursos de {profesorSeleccionado?.nombre + " " + profesorSeleccionado?.apellido}</h2>
+                    <button
+                        onClick={() => { setAgregarCurso(!agregarCurso); setSeguidorEvento( (seguidorEvento === 2) ? 0 : 2 ); }}
+                        style={{
+                            marginBottom: '15px',
+                            padding: '8px 12px',
+                            backgroundColor: '#4CAF50',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                        }}
+                    >
+                        + Agregar nuevo curso
+                    </button>
+                    {/* Ejemplo de tabla de grupos */}
+                    {
+                    (seguidorEvento === 0) &&
+                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead>
+                        <tr>
+                            <th>ID - Curso</th>
+                            <th>Nombre</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {/* Aquí deberías mapear los grupos del profesor */}
+                        {(cursos ?? []).map((curso, index) => (
+                            <tr key={index}>
+                                <td>{curso.id_curso }</td>
+                                <td>{curso.nombre_curso}</td>
+                                <td>
+                                <button
+                                    onClick={async () => {  await obtenerHorariosCurso(profesorSeleccionado.id_usuario, curso.id_curso); setCursoSeleccionado(curso); setMostrarAsideHorarios(true); setAgregarHorario(true); setMostrarTablaHorarios(true); setSeguidorEvento(2); }}
+                                    style={{
+                                    padding: '4px 8px',
+                                    backgroundColor: '#2196F3',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer',
+                                    }}
+                                >
+                                    Asignar horario
+                                </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                    </table>
+                    }
+                    {
+                    (seguidorEvento === 2 ) && 
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '100vh',
+                            backgroundColor: '#f0f2f5'
+                        }}
+                        >
+                        <form
+                            style={{
+                            backgroundColor: 'white',
+                            padding: '50px',
+                            borderRadius: '10px',
+                            boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '15px',
+                            width: '40%'
+                            }}
+                            onSubmit={handleSubmit}
+                        >
+                            <h2 style={{ textAlign: 'center', margin: 0 }}>Formulario</h2>
+                            <input type="text" placeholder="Nombre" className="input_formulario"/>
+                            <input type="text" placeholder="Apellido" />
+                            <input type="email" placeholder="Correo electrónico" />
+                            <input type="password" placeholder="Contraseña" />
+                            <button
+                                type="submit"
+                                style={{
+                                    padding: '10px',
+                                    backgroundColor: '#007bff',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer',
+                                    width: '100%'
+                                }}
+                            >
+                            Enviar
+                            </button>
+                        </form>
+                    </div>
+                    }
+                    <button onClick={() => {setMostrarAside(false); setSeguidorEvento(0);}} style={{ marginTop: '20px' }}>
+                    Cerrar
+                    </button>
+                </aside>
+            )}
+            {/* Segundo aside para los horarios */}
+            {mostrarAsideHorarios && (
+            <aside
+                style={{
+                    position: 'fixed',
+                    top: 0,
+                    width: '100%',
+                    height: '100vh',
+                    backgroundColor: '#ffffff',
+                    boxShadow: '-2px 0 10px rgba(0, 0, 0, 0.2)',
+                    padding: '24px',
+                    overflowY: 'auto',
+                    zIndex: 1100,
+                    transition: 'all 0.3s ease',
+                }}
+            >
+                <h3 style={{ marginTop: 0 }}>
+                    Horarios de {cursoSeleccionado?.nombre_curso}
+                </h3>
+
+                <button
+                    onClick={() => { setAgregarHorario(!agregarHorario); setMostrarTablaHorarios(!mostrarTablaHorarios); setSeguidorEvento( (seguidorEvento === 2) ? 3 : 2); console.log({"agregarHorario": agregarHorario, "mostrarTablaHorarios": mostrarTablaHorarios, "agregarCurso": agregarCurso, "mostrarTablaCursos": mostrarTablaCursos});}}
+                    style={{
+                        marginBottom: '15px',
+                        padding: '8px 12px',
+                        backgroundColor: '#4CAF50',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                    }}
+                >
+                    + Agregar horario
+                </button>
+                {
+                
+                    (seguidorEvento === 2) &&
+                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead>
+                        <tr>
+                        <th>Grupo</th>
+                        <th>Día</th>
+                        <th>Inicio</th>
+                        <th>Fin</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {(horariosCursoSeleccionado ?? []).map((horario, index) => (
+                        <tr key={index}>
+                            <td>{horario.nombre_grupo }</td>
+                            <td>{horario.dia_semana}</td>
+                            <td>{horario.hora_inicio}</td>
+                            <td>{horario.hora_fin}</td>
+                        </tr>
+                        ))}
+                    </tbody>
+                    </table>
+                
+                }
+                {
+                    (seguidorEvento === 3) &&
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '100vh',
+                            backgroundColor: '#f0f2f5'
+                        }}
+                        >
+                        <form
+                            style={{
+                            backgroundColor: 'white',
+                            padding: '50px',
+                            borderRadius: '10px',
+                            boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '15px',
+                            width: '40%'
+                            }}
+                            onSubmit={handleSubmitHorario}
+                        >
+                            <h2 style={{ textAlign: 'center', margin: 0 }}>Formulario de Horarios</h2>
+                            <input type="text" placeholder="Nombre" className="input_formulario"/>
+                            <input type="text" placeholder="Apellido" />
+                            <input type="email" placeholder="Correo electrónico" />
+                            <input type="password" placeholder="Contraseña" />
+                            <button
+                                type="submit"
+                                style={{
+                                    padding: '10px',
+                                    backgroundColor: '#007bff',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer',
+                                    width: '100%'
+                                }}
+                            >
+                            Enviar
+                            </button>
+                        </form>
+                    </div>
+                }
+
+                <button onClick={() =>{ setMostrarAsideHorarios(false); setSeguidorEvento(0)}} style={{ marginTop: '20px' }}>
+                Cerrar horarios
+                </button>
+            </aside>
+            )}
+
+            
             </div>
         </>
     );
+}
+
+function async() {
+    throw new Error("Function not implemented.");
 }
