@@ -506,6 +506,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
           const torre = contextoKaplay.add([
             contextoKaplay.pos(posicionX, posicionY - 100),
             contextoKaplay.sprite("torre"),
+            contextoKaplay.body(),
             contextoKaplay.scale(0.7),
             contextoKaplay.area(),
             "torre"

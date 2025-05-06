@@ -1,7 +1,7 @@
 import { GameObj, KAPLAYCtx } from "kaplay";
 import generarEsquemaMapa from "../../MapsGenerator";
 
-export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
+export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGanar3:any, Router:any){
 
         const SCREEN_RESOLUTION_X: number = window.innerWidth 
         const SCREEN_RESOLUTION_Y: number = window.innerHeight 
@@ -151,6 +151,16 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>) {
                 ]
               ).then(
                 (resultado: any) => {
+
+                  
+                    cambiarGanar3(true);
+                    setState3(true);
+                   
+                  
+                  setTimeout(() => {
+                    setState3(false);
+                  }, 10000); 
+
                   
                   console.log("Resultado de generar nivel 2")
                   console.log(juegoKaplay.get("*"))
