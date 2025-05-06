@@ -3,6 +3,143 @@ const db = require('../database');
 var router = express.Router();
 const {ParameterizedQuery: PQ} = require('pg-promise');
 
+/* GET Profesores - Obtener TODOS los profesores. */
+router.get('/profesores', async function(req, res, next) {
+  
+  try {
+    const result = await db.any(`SELECT U.*, P.* FROM Usuario AS U, Profesor as P WHERE id_usuario = id_profesor`);
+    console.log('Resultado:', result); // { value: 123 }
+    return res.json(result)
+  } catch (error) {
+    console.error('Error al hacer la consulta:', error);
+    res.json({menssage: "Error al obtener profesores"})
+  }
+  
+});
+
+/* GET Profesores By ID - Obtener Datos de Profesor y Usuario asociado mediante ID. */
+router.get('/profesores/:id', async function(req, res, next) {
+  
+  try {
+    const id_profesor = req.params.id
+    const findProfesor =  new PQ({text :`SELECT U.*, P.* FROM Usuario AS U, Profesor as P WHERE id_usuario = $1 AND id_usuario = id_profesor`, values: [id_profesor]});
+
+    const result = await db.one(findProfesor);
+    console.log('Resultado:', result); // { value: 123 }
+    return res.json(result)
+  } catch (error) {
+    console.error('Error al hacer la consulta:', error);
+    res.json({menssage: "Error al obtener profesor"})
+  }
+  
+});
+
+router.post('/profesores', async function(req, res, next) {
+  
+  try {
+    
+    const { 
+      telefono,
+      nombre,
+      apellido,
+      correo,
+      edad,
+      foto,
+      usuario,
+      clave_acceso,
+      cedula,
+      curriculum 
+    } = req.body
+
+    const createUsuario = new PQ({text :`INSERT INTO Usuario (nombre, apellido, usuario,clave_acceso) VALUES ($1,$2,$3,$4) RETURNING *`, values: [nombre,apellido,usuario,clave_acceso]});
+    
+    const resultadoCreacionUsuario = await db.one(createUsuario);
+    if (telefono != undefined && telefono != null && telefono !=''){
+      const actualizarTelefono = new PQ({text :`UPDATE Usuario SET telefono=$1  WHERE id_usuario=$2`, values: [telefono,resultadoCreacionUsuario.id_usuario]});
+      const result_Up_Phone= await db.none(actualizarTelefono);
+    }
+    if (correo != undefined && correo != null && correo !=''){
+      const actualizarCorreo = new PQ({text :`UPDATE Usuario SET correo=$1  WHERE id_usuario=$2`, values: [correo,resultadoCreacionUsuario.id_usuario]});
+      const result_Up_Email= await db.none(actualizarCorreo);
+    }
+    if (edad != undefined && edad != null && edad !=''){
+      const actualizarEdad = new PQ({text :`UPDATE Usuario SET edad=$1  WHERE id_usuario=$2`, values: [edad,resultadoCreacionUsuario.id_usuario]});
+      const result_Up_Phone= await db.none(actualizarEdad);
+    }
+    if (foto != undefined && foto != null && foto !=''){
+      const actualizarFoto = new PQ({text :`UPDATE Usuario SET foto=$1  WHERE id_usuario=$2`, values: [foto,resultadoCreacionUsuario.id_usuario]});
+      const result_Up_Phone= await db.none(actualizarFoto);
+    }
+    if (cedula != undefined && cedula != null && cedula !=''){
+      const actualizarTelefono = new PQ({text :`UPDATE Usuario SET cedula=$1 WHERE id_usuario=$2`, values: [cedula,resultadoCreacionUsuario.id_usuario]});
+      const result_Up_Phone= await db.none(actualizarTelefono);
+    }
+   
+    console.log(resultadoCreacionUsuario)
+
+    const findProfesor =  new PQ({text :`INSERT INTO Profesor (id_profesor)  VALUES ($1) RETURNING *`, values: [resultadoCreacionUsuario.id_usuario]});
+    const result = await db.one(findProfesor);
+    
+    if (curriculum != undefined && curriculum != null && curriculum !=''){
+      const actualizarCV = new PQ({text :`UPDATE Profesor SET curriculum=$1 WHERE id_profesor=$2`, values: [curriculum,resultadoCreacionUsuario.id_profesor]});
+      const result_Up_CV= await db.none(actualizarCV);
+    }
+
+    return res.json({mensaje: "El profesor ha sido creado con éxito", id_usuario: resultadoCreacionUsuario.id_usuario})
+  } catch (error) {
+    console.error('Error al hacer la consulta:', error);
+    res.json({menssage: "Error al crear profesor"})
+  }
+  
+})
+
+router.put('/profesores', async function(req, res, next) {
+  try {
+    const { 
+      id_usuario,
+      telefono,
+      nombre,
+      apellido,
+      correo,
+      edad,
+      foto,
+      usuario,
+      clave_acceso,
+      cedula,
+      id_profesor,
+      curriculum,
+      formacion
+    } = req.body
+
+    const updateUser = new PQ({text :`UPDATE Usuario SET nombre = $2, apellido = $3, clave_acceso = $4, usuario=$5, telefono=$6, cedula=$7, correo=$8, edad=$9, foto=$10 WHERE id_usuario = $1`, values: [id_usuario,nombre,apellido,clave_acceso, usuario, telefono, cedula, correo, edad, foto]});
+    const updateProfesor = new PQ({text :`UPDATE Profesor SET curriculum = $2, formacion = $3 WHERE id_profesor = $1`, values: [id_usuario,curriculum,formacion]});
+
+    const resultUsuario = await db.none(updateUser);
+    const result = await db.none(updateProfesor);
+    console.log('Resultado:', result); // { value: 123 }
+    return res.json({mensaje: `El profesor con id: ${id_usuario} ha sido actualizado con éxito `})
+  } catch (error) {
+    console.error('Error al hacer la consulta:', error);
+    res.json({menssage: "Error al actualizar profesor"})
+  }
+  
+});
+
+router.delete('/profesores', async function(req, res, next) {
+  try {
+    const { id } = req.body
+    const deleteProfesor = new PQ({text :`DELETE FROM Usuario WHERE id_usuario = $1`, values: [id]});
+
+    const result = await db.none(deleteProfesor);
+    console.log('Resultado:', result); // { value: 123 }
+    return res.json({mensaje: `El profesor con id: ${id} ha sido eliminado con éxito `})
+  } catch (error) {
+    console.error('Error al hacer la consulta:', error);
+    res.json({menssage: "Error al eliminar profesor"})
+  }
+  
+});
+
 router.get('/profesores/cursos/faltantes/:id', async function(req, res, next) {
 
     try {
@@ -16,9 +153,9 @@ router.get('/profesores/cursos/faltantes/:id', async function(req, res, next) {
       res.json({menssage: "Error al obtener profesores"})
     }
     
-  });
+});
 
-  router.get('/profesores/cursos/inscritos/:id', async function(req, res, next) {
+router.get('/profesores/cursos/inscritos/:id', async function(req, res, next) {
 
     try {
      const { id } = req.params
@@ -31,9 +168,9 @@ router.get('/profesores/cursos/faltantes/:id', async function(req, res, next) {
       res.json({menssage: "Error al obtener profesores"})
     }
     
-  });
+});
 
-  router.get('/profesores/:id/horarios/', async function(req, res, next) {
+router.get('/profesores/:id/horarios/', async function(req, res, next) {
 
     try {
      const { id } = req.params
@@ -46,7 +183,7 @@ router.get('/profesores/cursos/faltantes/:id', async function(req, res, next) {
       res.json({menssage: "Error al obtener horarios de profesor"})
     }
     
-  });
+});
 
 
   module.exports = router;

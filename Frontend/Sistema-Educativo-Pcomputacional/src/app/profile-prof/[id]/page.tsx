@@ -71,15 +71,75 @@ export default function Profileprof() {
 
     const [descargandoImagen, setDescargandoImagen] = useState(false);
     const [imagenDescargadaUrl, setImagenDescargadaUrl] = useState<string | null>(null);
+
+    const [descargandoCurriculum, setDescargandoCurriculum] = useState(false);
+    const [curriculumDescargadaUrl, setCurriculumDescargadaUrl] = useState<string | null>(null);
+    const [tieneCurriculum, setTieneCurriculum] = useState<Boolean>(false)
   
-    async function descargarImagenPerfil(nombreArchivo: string) {
+    async function descargarImagenPerfil(nombreArchivo: string, tieneFoto: boolean) {
       setDescargandoImagen(true);
       const urlDescarga = `/descargar/imagen/${nombreArchivo}`;
   
       try {
-        const response = await fetch(`http://localhost:5555${urlDescarga}`);
-        console.log(response);
+
+        if(tieneFoto){
+          const response = await fetch(`http://localhost:5555${urlDescarga}`);
+          console.log(response);
+    
+          if (!response.ok) {
+            let errorMessage = 'Error desconocido';
+            try {
+              const errorData = await response.json();
+              errorMessage = errorData.mensaje || errorMessage;
+            } catch (e) {
+              console.error('La respuesta de error no era JSON:', e);
+            }
+            console.error('Error al descargar la imagen:', errorMessage);
+            alert(`Error al descargar la imagen: ${errorMessage}`);
+            setDescargandoImagen(false);
+            return;
+          }
+    
+          const blob = await response.blob();
+          const urlBlob = window.URL.createObjectURL(blob);
+          setImagenDescargadaUrl(urlBlob);
+          setDescargandoImagen(false);
+          console.log('Imagen de perfil descargada y URL creada.');
+        }else{
+          setDescargandoImagen(false);
+          console.log("IMAGEN VACIA")
+          const fotoVacia = await fetch('/imagenvacia.png');
+      
+          if (!fotoVacia.ok) {
+              throw new Error('No se pudo obtener la imagen.');
+          }
+      
+          const imagenBlob = await fotoVacia.blob();
+      
+          // Ahora tienes la imagen en la variable `imagenBlob`
+          console.log('Imagen obtenida correctamente:', imagenBlob);
+          const archivo = new File([imagenBlob], 'imagenvacia.png', { type: imagenBlob.type });
+          // Crear un objeto File a partir del Blob
+          
+          setImagenDescargadaUrl('imagenvacia.png')
+      
+          return;
+        }
+        
   
+      } catch (error) {
+        console.error('Error al realizar la petición de descarga:', error);
+        alert('Error al realizar la petición de descarga.');
+        setDescargandoImagen(false);
+      }
+    }
+
+    async function descargarCurriculumPerfil(nombreArchivo: string) {
+      setDescargandoCurriculum(true);
+      const urlDescarga = `/descargar/pdf/${nombreArchivo}`;
+    
+      try {
+        const response = await fetch(`http://localhost:5555${urlDescarga}`);
         if (!response.ok) {
           let errorMessage = 'Error desconocido';
           try {
@@ -88,22 +148,33 @@ export default function Profileprof() {
           } catch (e) {
             console.error('La respuesta de error no era JSON:', e);
           }
-          console.error('Error al descargar la imagen:', errorMessage);
-          alert(`Error al descargar la imagen: ${errorMessage}`);
-          setDescargandoImagen(false);
+          console.error('Error al descargar el archivo:', errorMessage);
+          alert(`Error al descargar el archivo: ${errorMessage}`);
+          setDescargandoCurriculum(false);
+          
           return;
         }
-  
+    
         const blob = await response.blob();
         const urlBlob = window.URL.createObjectURL(blob);
-        setImagenDescargadaUrl(urlBlob);
-        setDescargandoImagen(false);
-        console.log('Imagen de perfil descargada y URL creada.');
-  
+    
+        // ✅ Descargar automáticamente
+        const link = document.createElement('a');
+        link.href = urlBlob;
+        link.download = nombreArchivo;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+    
+        // Opcional: para vista previa si quieres
+        setCurriculumDescargadaUrl(urlBlob);
+    
+        console.log('Archivo PDF descargado.');
       } catch (error) {
         console.error('Error al realizar la petición de descarga:', error);
         alert('Error al realizar la petición de descarga.');
-        setDescargandoImagen(false);
+      } finally {
+        setDescargandoCurriculum(false);
       }
     }
   
@@ -113,7 +184,7 @@ export default function Profileprof() {
       const resultadoConsulta = await datosProfesor.json()
       console.log(resultadoConsulta)
       setUsuario({...resultadoConsulta})
-      await descargarImagenPerfil(`User-${resultadoConsulta.id_usuario}.png`);
+      await descargarImagenPerfil(`User-${resultadoConsulta.id_usuario}.png`, (resultadoConsulta.foto) ? true : false);
       await obtenerHorariosProfesor();
       await obtenerCursosProfesor();
     };
@@ -135,14 +206,20 @@ export default function Profileprof() {
         setCursos([...resultadoConsulta])
     };
   
-    useEffect(() => {
-      obtenerDatosUsuario();
-      return () => {
-        if (imagenDescargadaUrl) {
-          window.URL.revokeObjectURL(imagenDescargadaUrl);
-        }
-      };
-    }, []);
+  useEffect(() => {
+    obtenerDatosUsuario();
+    return () => {
+      if (imagenDescargadaUrl) {
+        window.URL.revokeObjectURL(imagenDescargadaUrl);
+      }
+    };
+  }, []);
+
+  const descargarCVprofesor  = async () => {
+    console.log("descargarCVprofesor")
+    await descargarCurriculumPerfil(`User-${profileId}.pdf`)
+
+  }
 
   const Router = useRouter();
 
@@ -159,6 +236,7 @@ export default function Profileprof() {
                   </div>
                   <Datos titulo="Cedula" descripcion={ usuario.cedula }></Datos>
                   <Datos titulo="Edad" descripcion={ usuario.edad.toString() }></Datos>
+                  <button onClick={() => descargarCVprofesor() } disabled = {(usuario.curriculum) ? false : true}>Descargar Curriculum</button>
             </div>
             <div className="datosBloques">
                 <div className="fila">

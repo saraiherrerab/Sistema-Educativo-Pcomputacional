@@ -851,7 +851,7 @@ export default function EstudiantesLista() {
                                 }
                                 
                                 }}
-                            />
+                        />
                         <button onClick={() => onGuardarEdicion()}>Guardar</button>
                         <button onClick={() => setEstudianteEditando(null)}>Cancelar</button>
                     </div>
