@@ -74,7 +74,7 @@ export default function Amenu() {
               
               <div className="descripcion">
                   <MenuButton imageUrl='./grupo.png' onClick={()=>Router.push("/Aadmins-lista")}/>
-                  <span>ADMINISTRADORES</span>
+                  <span>Cursos</span>
               </div>
 
               

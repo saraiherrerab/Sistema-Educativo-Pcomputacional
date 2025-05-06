@@ -147,3 +147,7 @@ th:last-child {
 input > .input_formulario {
   width: 100%;
 }
+
+.display_flex {
+  display:  flex;
+}

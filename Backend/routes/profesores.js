@@ -217,4 +217,42 @@ router.get('/profesores/:id/horarios/curso/:id_curso', async function(req, res, 
   
 });
 
+router.post('/profesores/curso', async function(req, res, next) {
+  
+  try {
+    
+    const { 
+    id_profesor,
+    id_curso
+    } = req.body
+
+    const asignarCursoProfesor = new PQ({text :`INSERT INTO Profesor_curso (id_profesor, id_curso) VALUES ($1,$2) RETURNING *`, values: [id_profesor,id_curso]});
+    const resultadoAsignarCursoProfesor = await db.one(asignarCursoProfesor);
+    return res.json({mensaje: `El curso ${id_curso} ha sido asignado al profesor ${id_profesor}`})
+  } catch (error) {
+    console.error('Error al hacer la consulta:', error);
+    res.json({menssage: "Error al crear profesor"})
+  }
+  
+})
+
+router.delete('/profesores/:id_profesor/curso/:id_curso/eliminar', async function(req, res, next) {
+  
+  try {
+    
+    const { 
+    id_profesor,
+    id_curso
+    } = req.params
+
+    const asignarCursoProfesor = new PQ({text :`DELETE FROM Profesor_Curso WHERE id_profesor = $1 AND id_curso = $2`, values: [id_profesor,id_curso]});
+    const resultadoAsignarCursoProfesor = await db.none(asignarCursoProfesor);
+    return res.json({mensaje: `El curso ${id_curso} dictado por el profesor ${id_profesor} ha sido eliminado`})
+  } catch (error) {
+    console.error('Error al hacer la consulta:', error);
+    res.json({menssage: "Error al crear profesor"})
+  }
+  
+})
+
   module.exports = router;

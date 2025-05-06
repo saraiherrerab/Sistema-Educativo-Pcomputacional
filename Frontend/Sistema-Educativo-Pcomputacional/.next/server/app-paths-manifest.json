@@ -1,6 +1,3 @@
 {
-  "/Aprofesores-lista/page": "app/Aprofesores-lista/page.js",
-  "/page": "app/page.js",
-  "/Amenu/page": "app/Amenu/page.js",
-  "/profile-prof/[id]/page": "app/profile-prof/[id]/page.js"
+  "/Amenu/page": "app/Amenu/page.js"
 }

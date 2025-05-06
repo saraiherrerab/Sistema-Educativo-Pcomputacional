@@ -692,6 +692,7 @@ export default function ProfesoresLista() {
     const [mostrarTablaHorarios, setMostrarTablaHorarios] = useState<Boolean>(true);
 
     const [seguidorEvento, setSeguidorEvento] = useState<Number>(0);
+
     interface DatosHorario {
         id_horario: number;
         id_profesor: number;
@@ -707,6 +708,10 @@ export default function ProfesoresLista() {
     }
 
     const [horariosCursoSeleccionado, setHorariosCursoSeleccionado] = useState<DatosHorario[]>([]);
+    const [cursoFaltanteSeleccionado, setCursoFaltanteSeleccionado] = useState<Cursos>({
+        id_curso: 0,
+        nombre_curso: ""
+      });
 
     const obtenerHorariosCurso = async (id_profesor_seleccionado: number, id_curso_seleccionado: number) => {
         const datosCursos = await fetch(`http://localhost:5555/profesores/${id_profesor_seleccionado}/horarios/curso/${id_curso_seleccionado}`)
@@ -760,10 +765,36 @@ export default function ProfesoresLista() {
         
     }
 
-    const handleSubmit = (event: FormEvent) => {
+    const eliminarCursoProfesor =async (id_profesor_seleccionado: number, id_curso_seleccionado: number) => {
+        const datosHorario = await fetch(`http://localhost:5555/profesores/${id_profesor_seleccionado}/curso/${id_curso_seleccionado}/eliminar`, {
+            method: 'DELETE', // Método especificado
+            mode: 'cors',   // Habilita CORS
+            headers: {
+              'Content-Type': 'application/json'
+            }
+        })
+        const resultadoConsulta = await datosHorario.json()
+        console.log(resultadoConsulta)
+        setCursos([...cursos.filter(curso => curso.id_curso !== id_curso_seleccionado)])
+    }
+
+    const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
         // Aquí puedes agregar la lógica para enviar tus datos con React (por ejemplo, usando fetch o axios)
+
+        const datosCursos = await fetch(`http://localhost:5555/profesores/curso`,{
+            method: 'POST', // Método especificado
+            mode: 'cors',   // Habilita CORS
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({id_profesor: profesorSeleccionado.id_profesor, id_curso: cursoFaltanteSeleccionado.id_curso})
+        })
+        const resultadoConsulta = await datosCursos.json()
+        console.log(resultadoConsulta)
         console.log('Formulario enviado sin recargar la página');
+        setCursos([...cursos,cursoFaltanteSeleccionado])
+        setSeguidorEvento(0)
     };
 
     const handleSubmitHorario = (event: FormEvent) => {
@@ -1030,8 +1061,10 @@ export default function ProfesoresLista() {
                                     cursor: 'pointer',
                                     }}
                                 >
-                                    Asignar horario
+                                    <img src="/icons/event_list_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Home icon" width={16} height={16} />
                                 </button>
+
+                                <button onClick={async () => await eliminarCursoProfesor(profesorSeleccionado.id_usuario, curso.id_curso)}><img src="/icons/delete_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Home icon" width={16} height={16} /></button>
                                 </td>
                             </tr>
                         ))}
@@ -1063,10 +1096,17 @@ export default function ProfesoresLista() {
                             onSubmit={handleSubmit}
                         >
                             <h2 style={{ textAlign: 'center', margin: 0 }}>Formulario</h2>
-                            <input type="text" placeholder="Nombre" className="input_formulario"/>
-                            <input type="text" placeholder="Apellido" />
-                            <input type="email" placeholder="Correo electrónico" />
-                            <input type="password" placeholder="Contraseña" />
+                            <select
+                                onChange={(e) => {console.log(e.target.value);  const cursoGuardado = cursosFaltantes.filter( (cursoFaltante: Cursos) => cursoFaltante.id_curso.toString() === e.target.value)[0]; setCursoFaltanteSeleccionado(cursoGuardado); console.log(cursoGuardado);}}
+                                style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                                >
+                                <option value={cursoFaltanteSeleccionado.id_curso}>Selecciona un curso</option>
+                                    {cursosFaltantes.map((curso) => (
+                                        <option key={curso.id_curso} value={curso.id_curso}>
+                                        {curso.nombre_curso}
+                                        </option>
+                                    ))}
+                            </select>
                             <button
                                 type="submit"
                                 style={{
@@ -1133,6 +1173,7 @@ export default function ProfesoresLista() {
                         <th>Día</th>
                         <th>Inicio</th>
                         <th>Fin</th>
+                        <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1142,6 +1183,10 @@ export default function ProfesoresLista() {
                             <td>{horario.dia_semana}</td>
                             <td>{horario.hora_inicio}</td>
                             <td>{horario.hora_fin}</td>
+                            <td className="display_flex">
+                                <button onClick={() => null}><img src="/icons/edit_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
+                                <button onClick={() => null}><img src="/icons/delete_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
+                            </td>
                         </tr>
                         ))}
                     </tbody>

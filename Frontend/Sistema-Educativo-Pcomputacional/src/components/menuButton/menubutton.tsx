@@ -7,6 +7,8 @@ interface MenuButtonProps {
 }
 
 export default function MenuButton({  imageUrl , onClick }: MenuButtonProps) {
+
+  console.log(imageUrl)
   return (
     <button className="menu-button" onClick={onClick}>
         <img src={imageUrl}  className="button-image"/>
