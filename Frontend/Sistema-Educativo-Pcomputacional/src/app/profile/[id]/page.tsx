@@ -10,6 +10,7 @@ import Foto from "../../../components/foto/foto";
 import Datos from "../../../components/dbasicos/dbasicos";
 import Nombre from "../../../components/nombre/nombre";
 import { useParams } from 'next/navigation'; // Importa useParams
+import { useRouter } from "next/navigation";
 
 interface Estudiante {
   id_usuario: number,
@@ -33,6 +34,20 @@ interface Estudiante {
   tipo_premiacion: string,
   id_grupo: number,
   rol: string
+}
+
+interface Consulta_Horario {
+  apellido: string;
+  dia_semana: string;
+  hora_fin: string;
+  hora_inicio: string;
+  id_curso: number;
+  id_grupo: number;
+  id_horario: number;
+  id_profesor: number;
+  nombre: string;
+  nombre_curso: string;
+  nombre_grupo: string;
 }
 
 export default function Profile() {
@@ -65,6 +80,7 @@ export default function Profile() {
       rol: ""
     }
   );
+  const [horarios, setHorarios] = useState<Consulta_Horario[]>([])
   const [descargandoImagen, setDescargandoImagen] = useState(false);
   const [imagenDescargadaUrl, setImagenDescargadaUrl] = useState<string | null>(null);
 
@@ -133,8 +149,20 @@ export default function Profile() {
     const dataRol = await responseRol.json();
     console.log(dataRol.obtener_rol_usuario)
 
+    const resultadoHorarios = await obtenerHorariosAlumno(resultadoConsulta.id_grupo)
+    console.log(resultadoHorarios)
+    setHorarios ([...resultadoHorarios])
+    console.log(horarios)
     setUsuario({...resultadoConsulta, rol: dataRol.obtener_rol_usuario})
     await descargarImagenPerfil(`User-${resultadoConsulta.id_usuario}.png`);
+  };
+
+  const obtenerHorariosAlumno = async (id_grupo: number) => {
+    
+    const datosHorario = await fetch(`http://localhost:5555/grupos/${id_grupo}/curso`)
+    const resultadoConsulta = await datosHorario.json()
+    console.log(resultadoConsulta)
+    return resultadoConsulta;
   };
 
   useEffect(() => {
@@ -145,6 +173,8 @@ export default function Profile() {
       }
     };
   }, []);
+
+  const Router = useRouter();
 
   return (
     <div className="perfil body_profile">
@@ -159,7 +189,7 @@ export default function Profile() {
             </div>
             <Datos titulo="Cedula" descripcion={ usuario.cedula }></Datos>
             <Datos titulo="Edad" descripcion={ usuario.edad.toString() }></Datos>
-           
+            <button onClick={()=>Router.push("/reportes")}>Ver Reportes</button>
           </div>
           <div className="datosBloques">
                           <div className="fila">
@@ -178,10 +208,29 @@ export default function Profile() {
           
                           <div className="fila fila_espacio_fondo">
                               <div className="notas">
-                                  <Notas titulo="Nivel" descripcionN={[{titulo: "", descripcion: ""}]}></Notas>
+                                <div className="notas-section">
+                                  <h2 className="tituloNotas"><strong>Curso</strong></h2>
+                                  <h2 className="tituloNotas"><strong>{(horarios[0]) ? horarios[0].nombre_grupo : ""}</strong></h2>
+                                  <p><strong>Profesor: </strong>{(horarios[0]) ? horarios[0].nombre + " " + horarios[0].apellido : ""}</p>
+                                  <p>{(horarios[0]) ? horarios[0].nombre_curso : ""}</p>
+                                  
+                                  
+                                </div>
                               </div>
                               <div className="notas">
-                                  <Notas titulo="Horario" descripcionN={[{titulo: "", descripcion: ""}]}></Notas>
+                                <div className="notas-section">
+                                    <h2 className="tituloNotas"><strong>Horarios: </strong></h2>
+                                    {
+                                      horarios && horarios.length > 0
+                                      ? 
+                                      horarios.map((horario: Consulta_Horario, index: number) => (
+                                              <p key={index}>{`${horario.dia_semana} desde ${horario.hora_inicio} hasta las ${horario.hora_fin}`}</p>
+                                      ))
+                                      : 
+                                      null
+                                  }
+                                  </div>
+                                
                               </div>
                           </div>
                       </div> 

@@ -293,7 +293,8 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                     
                     setTimeout(() => {
                     squareDer.onCollide("player", (jugador: any) => {
-                      jugador.move(2875, 0);
+                      console.log(jugador)
+                      jugador.move(TILED_WIDTH, 0);
                       
                      
                         lives=lives-1;
@@ -307,7 +308,8 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
   
                   setTimeout(() => {
                     squareIzq.onCollide("player", (jugador: any) => {
-                      jugador.move(-2875, 0);
+                      console.log(jugador)
+                      jugador.move(-TILED_WIDTH, 0);
                         lives=lives-1;
                         console.log(lives)
                         juegoKaplay.debug.log("¡ouch!");
@@ -321,10 +323,10 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                  
                   
               
-
+                /*
                 setTimeout(() => {
                   enemigo.onCollide("player", (jugador: any) => {
-                    jugador.move(0, -3100);
+                      jugador.move(0, -3100);
                       
                       console.log(lives)
                       juegoKaplay.debug.log("¡ouch!");
@@ -332,6 +334,7 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                       juegoKaplay.debug.log("Han pasado dos segundos");
                   });
                 }, 2000); // Espera 2000 milisegundos (2 segundos)
+                */
                   
                   const redRoom = juegoKaplay.add([
                     juegoKaplay.rect(200, 500),

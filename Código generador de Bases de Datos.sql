@@ -227,20 +227,23 @@ CREATE TABLE IF NOT EXISTS Usuario_Nivel (
 		ON DELETE CASCADE
 );
 
+DROP TABLE IF EXISTS horarios_profesor;
 CREATE TABLE IF NOT EXISTS horarios_profesor (
   id_horario SERIAL PRIMARY KEY,
   id_profesor INTEGER NOT NULL,
   id_curso INTEGER NOT NULL,
+  id_grupo INTEGER NOT NULL,
   dia_semana VARCHAR(10) NOT NULL CHECK (
-    dia_semana IN ('Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo')
+  dia_semana IN ('Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo')
   ),
   hora_inicio TIME NOT NULL,
   hora_fin TIME NOT NULL,
   FOREIGN KEY (id_profesor) REFERENCES Profesor(id_profesor),
-  FOREIGN KEY (id_curso) REFERENCES curso(id_curso)
+  FOREIGN KEY (id_curso) REFERENCES curso(id_curso),
+  FOREIGN KEY (id_grupo) REFERENCES grupos(id_grupo)
 );
 
-INSERT INTO horarios_profesor (id_profesor, id_curso, dia_semana, hora_inicio, hora_fin)
+INSERT INTO horarios_profesor (id_profesor, id_curso, id_grupo, dia_semana, hora_inicio, hora_fin)
 VALUES
 (2, 2, 'Lunes', '16:00', '18:00'),
 (2, 2, 'Martes', '16:00', '18:00'),
