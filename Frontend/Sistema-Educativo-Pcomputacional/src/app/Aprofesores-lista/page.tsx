@@ -1,9 +1,10 @@
 'use client';
-import { FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import './styles.css';
-import '../login.css'
 import Header from "../../components/header/header";
 import { useRouter } from "next/navigation";
+import TimePicker from 'react-time-picker';
+import 'react-clock/dist/Clock.css';
 
 import Swal from 'sweetalert2'
 
@@ -17,8 +18,9 @@ interface Horarios {
     hora_fin: string,
     hora_inicio: string,
     id_curso: number,
-    id_horario: number,
-    id_profesor: number
+    id_horario?: number,
+    id_profesor: number,
+    id_grupo: number
 }
 
 interface Profesor {
@@ -35,6 +37,20 @@ interface Profesor {
     id_profesor: number,
     curriculum: string,
     formacion: string
+}
+
+interface HorarioCurso {
+    apellido: string | null;
+    dia_semana: string | null;
+    hora_fin: string | null;
+    hora_inicio: string | null;
+    id_curso: number | null;
+    id_grupo: number | null;
+    id_horario: number | null;
+    id_profesor: number | null;
+    nombre: string | null;
+    nombre_curso: string | null;
+    nombre_grupo: string | null;
 }
 
 
@@ -296,7 +312,6 @@ export default function ProfesoresLista() {
             
     };
     
-
     const onEliminar = async (id_profesor: number) => {
     
         try {
@@ -684,13 +699,17 @@ export default function ProfesoresLista() {
     const [cursos, setCursos] = useState<Cursos[]>([])
     const [cursosFaltantes, setCursosFaltantes] = useState<Cursos[]>([])
     const [mostrarAsideHorarios, setMostrarAsideHorarios] = useState(false);
-    const [cursoSeleccionado, setCursoSeleccionado] = useState<Cursos | null>(null);
+    const [cursoSeleccionado, setCursoSeleccionado] = useState<Cursos>({
+        id_curso: 0,
+        nombre_curso: ""
+    });
 
     const [agregarCurso, setAgregarCurso] = useState<Boolean>(false);
     const [agregarHorario, setAgregarHorario] = useState<Boolean>(false);
     const [mostrarTablaCursos, setMostrarTablaCursos] = useState<Boolean>(true);
     const [mostrarTablaHorarios, setMostrarTablaHorarios] = useState<Boolean>(true);
 
+    
     const [seguidorEvento, setSeguidorEvento] = useState<Number>(0);
 
     interface DatosHorario {
@@ -718,6 +737,23 @@ export default function ProfesoresLista() {
         const resultadoConsulta = await datosCursos.json()
         console.log(resultadoConsulta)
         setHorariosCursoSeleccionado([...resultadoConsulta])
+
+    }
+
+    interface Grupos {
+        id_grupo: number,
+        nombre_grupo: string,
+        id_curso: number
+    }
+
+    const [gruposAlumnos, setGruposAlumnos] = useState<Grupos[]>([])
+    const [editandoHorario,setEditandoHorario] = useState(false)
+
+    const obtenerGrupos = async (id_curso_seleccionado:number) => {
+        const datosCursos = await fetch(`http://localhost:5555/grupos/curso/${id_curso_seleccionado}`)
+        const resultadoConsulta = await datosCursos.json()
+        console.log(resultadoConsulta)
+        setGruposAlumnos([...resultadoConsulta])
 
     }
 
@@ -797,12 +833,186 @@ export default function ProfesoresLista() {
         setSeguidorEvento(0)
     };
 
-    const handleSubmitHorario = (event: FormEvent) => {
+    const handleSubmitHorario = async (event: FormEvent) => {
         event.preventDefault();
         // Aquí puedes agregar la lógica para enviar tus datos con React (por ejemplo, usando fetch o axios)
+
+        console.log(horarioSeleccionado)
+        console.log(profesorSeleccionado)
+        console.log(cursoSeleccionado)
+
+        if(!editandoHorario){
+
+            console.log("CREANDO")
+
+            const informacionHorario: Horarios = {
+                dia_semana: horarioSeleccionado.dia_semana as string,
+                hora_fin: horarioSeleccionado.hora_fin as string,
+                hora_inicio: horarioSeleccionado.hora_inicio  as string, 
+                id_curso: cursoSeleccionado?.id_curso,
+                id_profesor: profesorSeleccionado.id_profesor,
+                id_grupo: horarioSeleccionado.id_grupo as number
+            }
+            
+            const response = await fetch(`http://localhost:5555/profesores/agregar/horario/curso`, {
+                method: 'POST',
+                mode: 'cors',   // Habilita CORS
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(informacionHorario)
+            });
+    
+            const resultado_asignacion = await response.json()
+    
+            await obtenerHorariosCurso(profesorSeleccionado.id_profesor,cursoSeleccionado?.id_curso)
+    
+            console.log(resultado_asignacion)
+
+        }else{
+
+            console.log("EDITANDO")
+
+            const response = await fetch(`http://localhost:5555/profesores/editar/horario/curso`, {
+                method: 'PUT',
+                mode: 'cors',   // Habilita CORS
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    {
+                        id_horario:horarioSeleccionado.id_horario,
+                        id_grupo: horarioSeleccionado.id_grupo,
+                        dia_semana: horarioSeleccionado.dia_semana as string,
+                        hora_fin: horarioSeleccionado.hora_fin as string,
+                        hora_inicio: horarioSeleccionado.hora_inicio  as string, 
+                    }
+                )
+            });
+
+            const resultado_asignacion = await response.json()
+    
+            await obtenerHorariosCurso(profesorSeleccionado.id_profesor,cursoSeleccionado?.id_curso)
+
+            console.log(resultado_asignacion)
+
+        }
+
+        setHorarioSeleccionado({
+            apellido: "",
+            dia_semana: "",
+            hora_fin: "",
+            hora_inicio: "",
+            id_curso: 0,
+            id_grupo: 0,
+            id_horario: 0,
+            id_profesor: 0,
+            nombre: "",
+            nombre_curso: "",
+            nombre_grupo: "",
+        })
+        setSeguidorEvento(2)
         console.log('Formulario enviado sin recargar la página');
     };
 
+    const eliminarHorarioProfesor = async (id_horario_seleccionado: number) => {
+
+        const response = await fetch(`http://localhost:5555/profesores/eliminar/horario/curso`, {
+            method: 'DELETE',
+            mode: 'cors',   // Habilita CORS
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id_horario: id_horario_seleccionado
+            })
+        });
+
+        const resultado_asignacion = await response.json()
+
+        await obtenerHorariosCurso(profesorSeleccionado.id_profesor,cursoSeleccionado?.id_curso)
+
+        console.log(resultado_asignacion)
+
+        
+        setSeguidorEvento(2)
+        console.log('Formulario enviado sin recargar la página');
+    };
+
+    const editarHorarioProfesor = async (id_horario_seleccionado: number) => {
+
+        const horario_seleccionado = horariosCursoSeleccionado.filter( (horario) => horario.id_horario === id_horario_seleccionado)[0]
+
+        console.log(horario_seleccionado)
+
+        setHorarioSeleccionado({...horario_seleccionado})
+
+        setEditandoHorario(true)
+        setSeguidorEvento(3)
+
+        console.log('EDITANDO HORARIO PROFESOR');
+    };
+
+    const handleEntradaChange = (value: string | null) => {
+        if (typeof value === 'string') setEntrada(value);
+      };
+    
+    const handleSalidaChange = (value: string | null) => {
+    if (typeof value === 'string') setSalida(value);
+    };
+    
+    const eliminarHorario = (id_horario: number) => {
+        console.log(id_horario)
+        console.log(horariosCursoSeleccionado.filter( (horario) => horario.id_horario === id_horario))
+    }
+
+    const editarHorario = (id_horario: number) => {
+        console.log(id_horario)
+        console.log(horariosCursoSeleccionado.filter( (horario) => horario.id_horario === id_horario))
+
+
+    }
+
+    const [entrada, setEntrada] = useState<string>('10:00');
+    const [salida, setSalida] = useState<string>('18:00');
+    const [horarioSeleccionado, setHorarioSeleccionado] = useState<HorarioCurso>({
+        apellido: "",
+        dia_semana: "",
+        hora_fin: "",
+        hora_inicio: "",
+        id_curso: 0,
+        id_grupo: 0,
+        id_horario: 0,
+        id_profesor: 0,
+        nombre: "",
+        nombre_curso: "",
+        nombre_grupo: "",
+    });
+
+    const handleChangeDia = (event: ChangeEvent<HTMLSelectElement>) => {
+
+        console.log(event.target.value)
+        setHorarioSeleccionado({
+          ...horarioSeleccionado,
+          dia_semana: event.target.value,
+        });
+    };
+
+    const handleChangeGrupo = (event: ChangeEvent<HTMLSelectElement>) => {
+        const grupoIdSeleccionado = parseInt(event.target.value, 10);
+
+        console.log(grupoIdSeleccionado)
+    
+        if (grupoIdSeleccionado) {
+          setHorarioSeleccionado({
+            ...horarioSeleccionado,
+            id_grupo: grupoIdSeleccionado, // Actualiza el id_grupo
+          });
+        } else {
+          // Opcional: Manejar el caso en que no se encuentra el grupo
+          console.error("No se encontró el grupo con ID:", grupoIdSeleccionado);
+        }
+      };
     return (
         <>
             <Header
@@ -1051,7 +1261,7 @@ export default function ProfesoresLista() {
                                 <td>{curso.nombre_curso}</td>
                                 <td>
                                 <button
-                                    onClick={async () => {  await obtenerHorariosCurso(profesorSeleccionado.id_usuario, curso.id_curso); setCursoSeleccionado(curso); setMostrarAsideHorarios(true); setAgregarHorario(true); setMostrarTablaHorarios(true); setSeguidorEvento(2); }}
+                                    onClick={async () => {  await obtenerHorariosCurso(profesorSeleccionado.id_usuario, curso.id_curso); setCursoSeleccionado(curso); setMostrarAsideHorarios(true); setAgregarHorario(true); setMostrarTablaHorarios(true); setSeguidorEvento(2); await obtenerGrupos(curso.id_curso);}}
                                     style={{
                                     padding: '4px 8px',
                                     backgroundColor: '#2196F3',
@@ -1184,8 +1394,8 @@ export default function ProfesoresLista() {
                             <td>{horario.hora_inicio}</td>
                             <td>{horario.hora_fin}</td>
                             <td className="display_flex">
-                                <button onClick={() => null}><img src="/icons/edit_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
-                                <button onClick={() => null}><img src="/icons/delete_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
+                                <button onClick={() => editarHorarioProfesor(horario.id_horario)}><img src="/icons/edit_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
+                                <button onClick={() => eliminarHorarioProfesor(horario.id_horario)}><img src="/icons/delete_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
                             </td>
                         </tr>
                         ))}
@@ -1217,22 +1427,57 @@ export default function ProfesoresLista() {
                             }}
                             onSubmit={handleSubmitHorario}
                         >
-                            <h2 style={{ textAlign: 'center', margin: 0 }}>Formulario de Horarios</h2>
-                            <input type="text" placeholder="Nombre" className="input_formulario"/>
-                            <input type="text" placeholder="Apellido" />
-                            <input type="email" placeholder="Correo electrónico" />
-                            <input type="password" placeholder="Contraseña" />
+                            
+                            <label htmlFor="dia">Día de la semana:</label>
+                            <select id="dia" name="dia" value={(horarioSeleccionado.dia_semana) ? (horarioSeleccionado.dia_semana) : ""} onChange={(e) => handleChangeDia(e)}>
+                                <option value="" disabled>Seleccione un día de la semana</option>
+                                <option value="Lunes">Lunes</option>
+                                <option value="Martes">Martes</option>
+                                <option value="Miércoles">Miércoles</option>
+                                <option value="Jueves">Jueves</option>
+                                <option value="Viernes">Viernes</option>
+                                <option value="Sábado">Sábado</option>
+                                <option value="Domingo">Domingo</option>
+                            </select>
+
+                            <br /><br />
+
+                            <label htmlFor="grupo">Grupo:</label>
+                            <select
+                                id="grupo"
+                                name="grupo"
+                                value={horarioSeleccionado.id_grupo ? horarioSeleccionado.id_grupo : ""}
+                                onChange={(e) => handleChangeGrupo(e)}
+                                >
+                                <option value="" disabled>Seleccione el grupo</option> {/* Opción por defecto */}
+                                {gruposAlumnos.filter((grupo: Grupos) => grupo.id_curso === horariosCursoSeleccionado[0].id_curso)?.map((grupo_alumno: Grupos, index: number) => (
+                                    <option key={grupo_alumno.id_grupo} value={grupo_alumno.id_grupo}>
+                                        {grupo_alumno.nombre_grupo} {/* Asumiendo que tu objeto 'Grupos' tiene un 'nombre' */}
+                                    </option>
+                                ))}
+                            </select>
+
+                            <label htmlFor="entrada">Hora de entrada:</label>
+                            <input
+                                type="time"
+                                id="entrada"
+                                name="entrada"
+                                value={horarioSeleccionado.hora_inicio as string}
+                                onChange={(e) => {setEntrada(e.target.value); setHorarioSeleccionado({...horarioSeleccionado, hora_inicio: e.target.value});}}
+                            />
+
+                            <label htmlFor="salida">Hora de salida:</label>
+                            <input
+                                type="time"
+                                id="salida"
+                                name="salida"
+                                value={horarioSeleccionado.hora_fin as string}
+                                onChange={(e) => {setSalida(e.target.value); setHorarioSeleccionado({...horarioSeleccionado, hora_fin: e.target.value});}}
+                            />
+                            
                             <button
                                 type="submit"
-                                style={{
-                                    padding: '10px',
-                                    backgroundColor: '#007bff',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '5px',
-                                    cursor: 'pointer',
-                                    width: '100%'
-                                }}
+                                disabled={!(horarioSeleccionado.dia_semana !== "" && horarioSeleccionado.hora_inicio !== "" && horarioSeleccionado.hora_fin !== "" && horarioSeleccionado.id_grupo !== null && horarioSeleccionado.id_grupo >= 1)}
                             >
                             Enviar
                             </button>

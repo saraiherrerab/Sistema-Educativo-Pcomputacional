@@ -255,4 +255,69 @@ router.delete('/profesores/:id_profesor/curso/:id_curso/eliminar', async functio
   
 })
 
+
+router.post('/profesores/agregar/horario/curso', async function(req, res, next) {
+  
+  try {
+    
+    const { 
+    id_profesor,
+    id_curso,
+    id_grupo,
+    dia_semana,
+    hora_inicio,
+    hora_fin
+    } = req.body
+
+    const asignarHorarioProfesor = new PQ({text :`INSERT INTO horarios_profesor (id_profesor, id_curso, id_grupo,dia_semana,hora_inicio,hora_fin) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`, values: [id_profesor,id_curso,id_grupo,dia_semana,hora_inicio,hora_fin]});
+    const resultadoAsignarCursoProfesor = await db.one(asignarHorarioProfesor);
+    return res.json({mensaje: `El curso ${id_curso} ha sido asignado al profesor ${id_profesor}`})
+  } catch (error) {
+    console.error('Error al hacer la consulta:', error);
+    res.status(404).json({menssage: "Error al crear profesor"})
+  }
+  
+})
+
+router.delete('/profesores/eliminar/horario/curso', async function(req, res, next) {
+  
+  try {
+    
+    const { 
+      id_horario
+    } = req.body
+
+    const asignarHorarioProfesor = new PQ({text :`DELETE FROM Horarios_profesor WHERE id_horario = $1`, values: [id_horario]});
+    const resultadoAsignarCursoProfesor = await db.none(asignarHorarioProfesor);
+    return res.json({mensaje: `El horario ${id_horario} ha sido eliminado al profesor`})
+  } catch (error) {
+    console.error('Error al hacer la consulta:', error);
+    res.status(404).json({menssage: "Error al crear profesor"})
+  }
+  
+})
+
+router.put('/profesores/editar/horario/curso', async function(req, res, next) {
+  
+  try {
+    
+    const { 
+      id_horario,
+      id_grupo,
+      dia_semana,
+      hora_inicio,
+      hora_fin
+    } = req.body
+
+    const asignarHorarioProfesor = new PQ({text :`UPDATE Horarios_profesor SET id_grupo = $2, dia_semana = $3, hora_inicio = $4, hora_fin = $5 WHERE id_horario = $1`, values: [id_horario,id_grupo,dia_semana,hora_inicio,hora_fin]});
+    const resultadoAsignarCursoProfesor = await db.none(asignarHorarioProfesor);
+    return res.json({mensaje: `El horario ${id_horario} ha sido actualizado`})
+  } catch (error) {
+    console.error('Error al hacer la consulta:', error);
+    res.status(404).json({menssage: "Error al crear profesor"})
+  }
+  
+})
+
+
   module.exports = router;
