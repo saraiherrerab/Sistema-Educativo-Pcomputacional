@@ -8,92 +8,10 @@
   font-family: "Inter", sans-serif;
 }
 
-.body_reporte {
-  font-family: "Inter", sans-serif;
-  background-color: #F6F7F9;
-  margin: 0;
-  padding: 0;
-  height: 100%;
-
-}
-
-.bigContainer {
-  display: flex;
-  width: 100%;
-  height: 100vh; /* o ajusta según tu necesidad */
-}
-
-/* Cada mitad ocupa 50% */
-.container-left,
-.container-right {
-  width: 50%;
-  box-sizing: border-box;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  background-color: #F6F7F9;
-  margin-top: 0;
-  
-}
-
-.container-left{
-    display:flex;
-    flex-direction: column;
-    border: 2px solid #F6F7F9;/* Añadimos un borde de 2 píxeles de grosor y color #D9D9D9 */
-    box-sizing: border-box; 
-    width:70%;
-    padding-right: 0.0001PX;
-    height: 88% !important;
-    margin-left: 20px;
-}
-
-.container-right{
-  
-  padding-left: 0.0001PX !important;
-  height: 88.5% !important;
-  margin-right: 20px;
-}
-
-.container1-1{
-    height: 30%;
-    background-color: white;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-
-
-
-
-.container1-2{
-    height: 70%;
-    background-color: white;
-    padding: 10px;
-    box-sizing: border-box;
-    
-}
-
-.container-right {
-  display: flex;
-  flex-direction: column;
-  height: 100%; /* Asegura que container-right ocupe todo el alto disponible */
-  width: 70%;
-  padding-left: 3px;
-  padding-top: 18px;
-  padding-bottom: 13px;
-}
-
-/* Contenido dentro de container2 */
-.container2 {
-  display: flex;
-  flex-direction: row;
-  height: 50%; /* container2 ocupa la mitad del alto de container-right */
-  border: 2px solid #F6F7F9; /* Añadimos un borde de 2 píxeles de grosor y color #D9D9D9 */
-  box-sizing: border-box; 
-}
-
 /* Parte izquierda del container2 */
 .c2ls {
-  width: 60%;
+  width: 100%;
+  height: 100%;
   background-color: white; /* solo para visualizar */
   padding: 10px;
   box-sizing: border-box;
@@ -122,58 +40,6 @@
   background-color: white;
   border: 2px solid #F6F7F9; /* Añadimos un borde de 2 píxeles de grosor y color #D9D9D9 */
   box-sizing: border-box; 
-}
-
-.container3 {
-  height: 50%; /* container3 ocupa la otra mitad del alto de container-right */
-  border: 2px solid #F6F7F9; /* Añadimos un borde de 2 píxeles de grosor y color #D9D9D9 */
-  box-sizing: border-box; 
-  margin-top: -5px;
-  margin-right:-3px;
-}
-
-.container3-1 {
-  background-color: white; /* Solo para visualizar */
-  height: 50%;
-  padding: 0px;
-  box-sizing: border-box;
-  display: grid; /* Convertimos container3.1 en un contenedor grid */
-  grid-template-columns: 1.5fr 1fr; /* Definimos dos columnas de igual ancho */
-  border: 2px solid #F6F7F9; /* Añadimos un borde de 2 píxeles de grosor y color #D9D9D9 */
-  box-sizing: border-box; 
-  gap: 0px; 
-}
-.container3-2-1{
-  border: 2px solid #F6F7F9; /* Añadimos un borde de 2 píxeles de grosor y color #D9D9D9 */
-  box-sizing: border-box; 
-}
-
-.container3-2-2{
-  border: 2px solid #F6F7F9; /* Añadimos un borde de 2 píxeles de grosor y color #D9D9D9 */
-  box-sizing: border-box; 
-}
-
-.container3-1-1{
-  border: 2px solid #F6F7F9; /* Añadimos un borde de 2 píxeles de grosor y color #D9D9D9 */
-  box-sizing: border-box; 
-}
-
-.container3-1-2{
-  border: 2px solid #F6F7F9; /* Añadimos un borde de 2 píxeles de grosor y color #D9D9D9 */
-  box-sizing: border-box; 
-}
-
-.container3-2 {
-  background-color: white; /* Solo para visualizar */
-  height: 50%;
-  padding: 0px;
-  box-sizing: border-box;
-  display: grid; /* Convertimos container3.2 en un contenedor grid */
-  grid-template-columns: 1.5fr 1fr; /* Definimos dos columnas de igual ancho */
-  border: 2px solid #F6F7F9; /* Añadimos un borde de 2 píxeles de grosor y color #D9D9D9 */
-  box-sizing: border-box; 
-  gap: 0px;
-  margin-top: -3px;
 }
 
 /* Añadir esto a tu CSS existente */
@@ -211,10 +77,10 @@
   font-size: 14px;
   font-family: "Inter", sans-serif;
   text-align: left !important;         /* Alinea el título a la izquierda */
-  margin-bottom: 15px;      /* Espacio entre el texto y el gráfico */
-  padding-left: 10px;       /* Deja un espacio a la izquierda */
+  margin-bottom: 25px;      /* Espacio entre el texto y el gráfico */
   width: 100%;              /* Asegura que el título ocupe todo el ancho */
   box-sizing: border-box;   /* Para manejar el padding correctamente */
+  margin-left: 20px;
 }
 
 .tituloInforme{
@@ -267,11 +133,12 @@
 
 .contenedor_reporte {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: 1fr;
+  grid-template-columns: 1fr;
+  grid-template-rows: 0.1fr 0.9fr;
   grid-column-gap: 30px;
-  grid-row-gap: 10px;
+  grid-row-gap: 10px; 
   min-height: 100%;
+  background-color: #F6F7F9;
 } 
 
 .contenedor_premiaciones_y_actividades {
@@ -280,14 +147,26 @@
   grid-template-rows: 0.3fr 0.7fr;
   grid-column-gap: 30px;
   grid-row-gap: 10px; 
+  box-sizing: border-box;
+  background-color: #F6F7F9;
 }
 
 .contenedor_premiaciones {
   grid-area: 1 / 1 / 2 / 2;
+  background-color: #f9f9f9;       /* blanco con tono gris suave */
+  border-radius: 12px;             /* esquinas redondeadas */
+  padding: 20px;                   /* espaciado interno */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* sombra suave */
+  border: 1px solid #e0e0e0;       /* borde gris claro opcional */
 }
 
 .contenedor_actividades_completadas {
   grid-area: 2 / 1 / 3 / 2;
+  background-color: #f9f9f9;       /* blanco con tono gris suave */
+  border-radius: 12px;             /* esquinas redondeadas */
+  padding: 20px;                   /* espaciado interno */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* sombra suave */
+  border: 1px solid #e0e0e0;       /* borde gris claro opcional */
 }
 
 .contenedor_estadisticas {
@@ -308,7 +187,11 @@
 }
 
 .contenedor_eficiencia_diagrama {
- 
+  background-color: #f9f9f9;       /* blanco con tono gris suave */
+  border-radius: 12px;             /* esquinas redondeadas */
+  padding: 20px;                   /* espaciado interno */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* sombra suave */
+  border: 1px solid #e0e0e0;       /* borde gris claro opcional */
 }
 
 .contenedor_eficiencia_errores {
@@ -317,14 +200,23 @@
   grid-template-rows: repeat(2, 1fr);
   grid-column-gap: 30px;
   grid-row-gap: 10px; 
+  
 }
 
 .contenedor_identificacion_errores {
-  
+  background-color: #f9f9f9;       /* blanco con tono gris suave */
+  border-radius: 12px;             /* esquinas redondeadas */
+  padding: 20px;                   /* espaciado interno */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* sombra suave */
+  border: 1px solid #e0e0e0;       /* borde gris claro opcional */
 }
 
 .contenedor_reconocimiento_patrones {
-  
+  background-color: #f9f9f9;       /* blanco con tono gris suave */
+  border-radius: 12px;             /* esquinas redondeadas */
+  padding: 20px;                   /* espaciado interno */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* sombra suave */
+  border: 1px solid #e0e0e0;       /* borde gris claro opcional */
 }
 
 .contenedor_abstraccion {
@@ -343,7 +235,37 @@
   grid-row-gap: 10px; 
 }
 
+.contenedor_abstraccion_abstraccion { 
+  background-color: #f9f9f9;       /* blanco con tono gris suave */
+  border-radius: 12px;             /* esquinas redondeadas */
+  padding: 20px;                   /* espaciado interno */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* sombra suave */
+  border: 1px solid #e0e0e0;       /* borde gris claro opcional */
+}
 
+.contenedor_abstraccion_asociacion {
+  background-color: #f9f9f9;       /* blanco con tono gris suave */
+  border-radius: 12px;             /* esquinas redondeadas */
+  padding: 20px;                   /* espaciado interno */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* sombra suave */
+  border: 1px solid #e0e0e0;       /* borde gris claro opcional */
+}
+
+.contenedor_construccion_construccion { 
+  background-color: #f9f9f9;       /* blanco con tono gris suave */
+  border-radius: 12px;             /* esquinas redondeadas */
+  padding: 20px;                   /* espaciado interno */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* sombra suave */
+  border: 1px solid #e0e0e0;       /* borde gris claro opcional */
+}
+
+.contenedor_construccion_profesor {
+  background-color: #f9f9f9;       /* blanco con tono gris suave */
+  border-radius: 12px;             /* esquinas redondeadas */
+  padding: 20px;                   /* espaciado interno */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* sombra suave */
+  border: 1px solid #e0e0e0;       /* borde gris claro opcional */
+}
 /* Contenedor de los gráficos */
 .tortaGraph, /* Contenedor de PieChart */
 .pieGraph { /* Contenedor de DonutChart */
@@ -378,3 +300,23 @@
   box-sizing: border-box; 
   
 }
+
+/* Utilidades */
+
+.altura_maxima {
+  height: 100%;
+}
+
+.altura_30 {
+  height: 30%;
+}
+
+.altura_70 {
+  height: 70%;
+}
+
+
+.sangria_20 {
+  padding-left: 20px;
+}
+

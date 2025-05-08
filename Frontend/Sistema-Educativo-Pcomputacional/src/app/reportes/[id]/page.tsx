@@ -31,68 +31,72 @@ export default function Reportes( ) {
             </div>
             
             <div className="contenedor_reporte">
-                <div className=" contenedor_premiaciones_y_actividades altura_maxima">
-                    <div className="contenedor_premiaciones">
-                        <div>
-                            <p className="tituloReporte">PREMIACIONES</p>
-                            <p>Estrellas 1 / 3</p>
-                        </div>
-                        <div>
-                            <Estrellas valores={[true, false, true]} />
-                        </div>
-                    </div>
-                    <div className="contenedor_actividades_completadas">
-                        <div className="tortaGraph">
-                                <p className="tituloReporte">PORCENTAJE DE ACTIVIDADES COMPLETADAS</p>
-                                <div className="leyenda">
-                                        <div className="leyenda-item">
-                                        <span className="color-box completado"></span>
-                                        <span>Completado</span>
-                                        </div>
-                                        <div className="leyenda-item">
-                                        <span className="color-box no-completado"></span>
-                                        <span>No completado</span>
-                                        </div>
-                                    </div>
-                        </div>
-                        <PieChart value1={65} value2={35} />
-                    </div>
+                <div>
+                    <h1 className="tituloInforme">Informe de avance del estudiante</h1>
+                    <NombreEs Nombre="Perrucho" Apellido="Perez"></NombreEs>
                 </div>
-                <div className="contenedor_estadisticas">
-                    <div className="contenedor_eficiencia">
-                        <div className="contenedor_eficiencia_diagrama">
-                        <div className="c2ls">
-                            <div className="pieGraph">
-                                <p className="tituloReporte">EFICIENCIA ALGORÍTMICA</p>
-                                <DonutChart percentage1={60} percentage2={40} />
-                                    
+                <div className="contenedor_informacion">
+                    <div className=" contenedor_premiaciones_y_actividades altura_maxima">
+                        <div className="contenedor_premiaciones">
+                            <div>
+                                <p className="tituloReporte">PREMIACIONES</p>
+                                <p className="sangria_20">Estrellas 1 / 3</p>
                             </div>
-                    </div>
+                            <div>
+                                <Estrellas valores={[true, false, true]} />
+                            </div>
                         </div>
-                        <div className="contenedor_eficiencia_errores">
-                            <div className="contenedor_identificacion_errores">
-                                <Parametros parametroTitulo1="IDENTIFICACIÓN DE ERRORES" parametroTitulo2="DESAPROBADO" />
+                        <div className="contenedor_actividades_completadas">
+                            <div className="tortaGraph">
+                                    <p className="tituloReporte">PORCENTAJE DE ACTIVIDADES COMPLETADAS</p>
+                                    <div className="leyenda">
+                                            <div className="leyenda-item">
+                                            <span className="color-box completado"></span>
+                                            <span>Completado</span>
+                                            </div>
+                                            <div className="leyenda-item">
+                                            <span className="color-box no-completado"></span>
+                                            <span>No completado</span>
+                                            </div>
+                                        </div>
                             </div>
-                            <div className="contenedor_reconocimiento_patrones">
-                                <Parametros parametroTitulo1="IDENTIFICACIÓN DE ERRORES" parametroTitulo2="DESAPROBADO" />
+                            <PieChart value1={65} value2={35} />
+                        </div>
+                    </div>
+                    <div className="contenedor_estadisticas">
+                        <div className="contenedor_eficiencia">
+                            <div className="contenedor_eficiencia_diagrama">
+                                <div className="pieGraph">
+                                    <p className="tituloReporte">EFICIENCIA ALGORÍTMICA</p>
+                                    <DonutChart percentage1={60} percentage2={40} />
+                                        
+                                </div>
                             </div>
+                            <div className="contenedor_eficiencia_errores">
+                                <div className="contenedor_identificacion_errores">
+                                    <Parametros parametroTitulo1="IDENTIFICACIÓN DE ERRORES" parametroTitulo2="DESAPROBADO" />
+                                </div>
+                                <div className="contenedor_reconocimiento_patrones">
+                                    <Parametros parametroTitulo1="IDENTIFICACIÓN DE ERRORES" parametroTitulo2="DESAPROBADO" />
+                                </div>
 
+                            </div>
                         </div>
-                    </div>
-                    <div className="contenedor_abstraccion">
-                        <div>
-                            <Parametros parametroTitulo1="ABSTRACCIÓN" parametroTitulo2="DESAPROBADO" />
+                        <div className="contenedor_abstraccion">
+                            <div className="contenedor_abstraccion_abstraccion">
+                                <Parametros parametroTitulo1="ABSTRACCIÓN" parametroTitulo2="DESAPROBADO" />
+                            </div>
+                            <div className="contenedor_abstraccion_asociacion">
+                                <Parametros parametroTitulo1="ASOCIACIÓN" parametroTitulo2="DESAPROBADO" />
+                            </div>
                         </div>
-                        <div>
-                            <Parametros parametroTitulo1="ASOCIACIÓN" parametroTitulo2="DESAPROBADO" />
-                        </div>
-                    </div>
-                    <div className="contenedor_construccion">
-                        <div>
-                            <Parametros parametroTitulo1="CONSTRUCCIÓN DE ALGORITMOS" parametroTitulo2="DESAPROBADO" />
-                        </div>
-                        <div>
-                            <Notita NotitaTitulo1="Sarai Herrera" NotitaTitulo2="MiniExplorer"/>
+                        <div className="contenedor_construccion">
+                            <div className="contenedor_construccion_construccion">
+                                <Parametros parametroTitulo1="CONSTRUCCIÓN DE ALGORITMOS" parametroTitulo2="DESAPROBADO" />
+                            </div>
+                            <div className="contenedor_construccion_profesor">
+                                <Notita NotitaTitulo1="Sarai Herrera" NotitaTitulo2="MiniExplorer"/>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -103,13 +107,6 @@ export default function Reportes( ) {
 }
 
 /*
-<Header
-                    text="MULTIPLAYER" onClick={() => Router.push("/videojuego")}
-                    text1="Panel de Juegos" onClick1={() => Router.push("/videojuego")}
-                    text2="Menu" onClick2={() => Router.push("/videojuego")}
-                    text3="Mi perfil" onClick3={() => Router.push("/videojuego")}
-                    text4="Salir" onClick4={() => Router.push("/videojuego")}>
-        </Header>
 
 <h1 className="tituloInforme">Informe de avance del estudiante</h1>
         <NombreEs Nombre="Perrucho" Apellido="Perez"></NombreEs>
