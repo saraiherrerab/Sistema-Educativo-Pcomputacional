@@ -1,7 +1,7 @@
 import { GameObj, KAPLAYCtx } from "kaplay";
 import generarEsquemaMapa from "../../MapsGenerator";
 
-export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGanarB:any, setStateA:any, cambiarGanarA:any, Router:any){
+export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGanarB:any, setStateA:any, cambiarGanarA:any,setStateC:any, cambiarGanarC:any, Router:any){
 
         const SCREEN_RESOLUTION_X: number = window.innerWidth 
         const SCREEN_RESOLUTION_Y: number = window.innerHeight 
@@ -205,7 +205,61 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                   const heart2 = juegoKaplay.get("heart2")[0]
                   const heart3 = juegoKaplay.get("heart3")[0]
                   const player = juegoKaplay.get("player")[0]
+                  
+                  const enemigos = juegoKaplay.get("enemy")
+                  enemigos.forEach( (enemigo: GameObj<any>) => {
 
+                    let squareDer = juegoKaplay.add([
+                      juegoKaplay.pos(enemigo.pos.x + (TILED_WIDTH / 2),enemigo.pos.y - (TILED_HEIGHT / 2)+10),
+                      juegoKaplay.scale(1),
+                      juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2(0,0), TILED_WIDTH, TILED_HEIGHT-20), // Rectángulo más pequeño
+                      }),
+                      "square",
+                      { z: 2 } // Asegura que el jugador esté en una capa superior
+                    ]);
+  
+                    let squareIzq = juegoKaplay.add([
+                      juegoKaplay.pos(enemigo.pos.x - 3*(TILED_WIDTH / 2),enemigo.pos.y - (TILED_HEIGHT / 2)+10),
+                      juegoKaplay.scale(1),
+                      juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2(0,0), TILED_WIDTH, TILED_HEIGHT-20), // Rectángulo más pequeño
+                      }),
+                      "square",
+                      { z: 2 } // Asegura que el jugador esté en una capa superior
+                    ]);
+
+                    
+  
+
+                    
+                    setTimeout(() => {
+                      squareDer.onCollide("player", (jugador: any) => {
+                        console.log(jugador)
+                        jugador.move(4875, 0);
+                        
+                       
+                          lives=lives-1;
+                          console.log(lives)
+                          juegoKaplay.debug.log("¡ouch!");
+                          enemigo.play("right_a");
+                          
+                          juegoKaplay.debug.log("Han pasado dos segundos");
+                         // Espera 2000 milisegundos (2 segundos)
+                      });
+                    }, 100);
+    
+                    setTimeout(() => {
+                      squareIzq.onCollide("player", (jugador: any) => {
+                        console.log(jugador)
+                        jugador.move(-4875, 0);
+                          lives=lives-1;
+                          console.log(lives)
+                          juegoKaplay.debug.log("¡ouch!");
+                          
+                          enemigo.play("right_a");
+                          juegoKaplay.debug.log("Han pasado dos segundos");
+                      });
+                    })
+                  }, 100); // Espera 2000 milisegundos (2 segundos)
                   const colisiones = juegoKaplay.get("square-colision")
                   console.log(colisiones)
 
@@ -236,46 +290,11 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
               })
 
                   
-                  const squareDer = juegoKaplay.add([
-                    juegoKaplay.pos(enemy.pos.x + 32,enemy.pos.y - 24),
-                    juegoKaplay.scale(1),
-                    juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2(0,0), 48, 48), // Rectángulo más pequeño
-                    }),
-                    "square",
-                    { z: 2 } // Asegura que el jugador esté en una capa superior
-                  ]);
+                  
 
-                  const squareIzq = juegoKaplay.add([
-                    juegoKaplay.pos(enemy.pos.x - 96,enemy.pos.y - 24),
-                    juegoKaplay.scale(1),
-                    juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2(0,0), 48, 48), // Rectángulo más pequeño
-                    }),
-                    "square",
-                    { z: 2 } // Asegura que el jugador esté en una capa superior
-                  ]);
+                  
 
-                  squareDer.onCollide("player", (jugador: any) => {
-                    setTimeout(() => {
-                      
-                      lives--;
-                      
-                      enemy.play("right_a");
-                      jugador.move(4875, 0);
-                      
-                    }, 100); // Espera 2000 milisegundos (2 segundos)
-                  });
-
-                  squareIzq.onCollide("player", (jugador: any) => {
-                    setTimeout(() => {
-                     
-                      lives--;
-                      
-                      enemy.play("right_a");
-                      jugador.move(-4875, 0);
-                      
-                    }, 100); // Espera 2000 milisegundos (2 segundos)
-                  });
-
+                  
                   
                   /*
                   const redRoom = juegoKaplay.add([
@@ -431,7 +450,13 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                         player.pos.y = posicionAnteriorY
                       })
                     })
-
+                    colisiones.forEach( (colision: GameObj<any>) => {
+                    
+                      colision.onCollide("player", (jugador: any) => {
+                        player.pos.x = posicionAnteriorX
+                        player.pos.y = posicionAnteriorY
+                      })
+                    })
                           
 
                     player.play("up");
@@ -452,6 +477,14 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                         player.pos.y = posicionAnteriorY
                       })
 
+                      })
+
+                      colisiones.forEach( (colision: GameObj<any>) => {
+                    
+                        colision.onCollide("player", (jugador: any) => {
+                          player.pos.x = posicionAnteriorX
+                          player.pos.y = posicionAnteriorY
+                        })
                       })
 
                       
@@ -479,6 +512,14 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                       })
 
                       })
+
+                      colisiones.forEach( (colision: GameObj<any>) => {
+                    
+                        colision.onCollide("player", (jugador: any) => {
+                          player.pos.x = posicionAnteriorX
+                          player.pos.y = posicionAnteriorY
+                        })
+                      })
                       
                       
                       
@@ -495,6 +536,13 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                     }else if(lives==0){
                       juegoKaplay.destroy(heart3);
                       juegoKaplay.destroy(player);
+                      cambiarGanarC(true); 
+                      setStateC(true);
+                  
+                      setTimeout(() => {
+                        setStateC(false);
+                        window.location.href = window.location.href;
+                      }, 5000);
                     };
                   })
 

@@ -1,11 +1,5 @@
 {
-  "/videojuego/page": "app/videojuego/page.js",
-  "/Amenu/page": "app/Amenu/page.js",
-  "/profile-prof/[id]/page": "app/profile-prof/[id]/page.js",
-  "/menu/page": "app/menu/page.js",
   "/page": "app/page.js",
-  "/profile-adm/page": "app/profile-adm/page.js",
-  "/profile/[id]/page": "app/profile/[id]/page.js",
-  "/Aprofesores-lista/page": "app/Aprofesores-lista/page.js",
-  "/Aestudiantes-lista/page": "app/Aestudiantes-lista/page.js"
+  "/Amenu/page": "app/Amenu/page.js",
+  "/videojuego/page": "app/videojuego/page.js"
 }

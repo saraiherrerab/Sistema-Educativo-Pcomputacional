@@ -1,7 +1,7 @@
 import { GameObj, KAPLAYCtx } from "kaplay";
 import generarEsquemaMapa from "../../MapsGenerator";
 
-export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGanar3:any, setStateA:any, cambiarGanarA:any, Router:any){
+export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGanar3:any, setStateA:any, cambiarGanarA:any,setStateC:any, cambiarGanarC:any, Router:any){
 
         const SCREEN_RESOLUTION_X: number = window.innerWidth 
         const SCREEN_RESOLUTION_Y: number = window.innerHeight 
@@ -294,13 +294,14 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                     setTimeout(() => {
                     squareDer.onCollide("player", (jugador: any) => {
                       console.log(jugador)
-                      jugador.move(TILED_WIDTH, 0);
+                      jugador.move(4875, 0);
                       
                      
                         lives=lives-1;
                         console.log(lives)
                         juegoKaplay.debug.log("¡ouch!");
                         enemigo.play("right_a");
+                        
                         juegoKaplay.debug.log("Han pasado dos segundos");
                        // Espera 2000 milisegundos (2 segundos)
                     });
@@ -309,10 +310,11 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                   setTimeout(() => {
                     squareIzq.onCollide("player", (jugador: any) => {
                       console.log(jugador)
-                      jugador.move(-TILED_WIDTH, 0);
+                      jugador.move(-4875, 0);
                         lives=lives-1;
                         console.log(lives)
                         juegoKaplay.debug.log("¡ouch!");
+                        
                         enemigo.play("right_a");
                         juegoKaplay.debug.log("Han pasado dos segundos");
                     });
@@ -493,6 +495,13 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                     }else if(lives==0){
                       juegoKaplay.destroy(heart3);
                       juegoKaplay.destroy(player);
+                      cambiarGanarC(true); 
+                      setStateC(true);
+                  
+                      setTimeout(() => {
+                        setStateC(false);
+                        window.location.href = window.location.href;
+                      }, 5000);
                     };
                   })
     
