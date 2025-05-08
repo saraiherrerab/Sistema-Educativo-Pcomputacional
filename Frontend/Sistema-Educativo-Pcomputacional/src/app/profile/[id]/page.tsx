@@ -4,6 +4,7 @@
 
 import { useEffect, useState } from "react";
 import './styles.css';
+import '../../login.css'
 
 import Notas from "../../../components/dnotas/dnotas";
 import Foto from "../../../components/foto/foto";
@@ -189,7 +190,7 @@ export default function Profile() {
             </div>
             <Datos titulo="Cedula" descripcion={ usuario.cedula }></Datos>
             <Datos titulo="Edad" descripcion={ usuario.edad.toString() }></Datos>
-            <button onClick={()=>Router.push("/reportes")}>Ver Reportes</button>
+            <button onClick={()=>Router.push("/reportes/" + profileId)}>Ver Reportes</button>
           </div>
           <div className="datosBloques">
                           <div className="fila">
