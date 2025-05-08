@@ -342,3 +342,39 @@
   grid-column-gap: 30px;
   grid-row-gap: 10px; 
 }
+
+
+/* Contenedor de los gráficos */
+.tortaGraph, /* Contenedor de PieChart */
+.pieGraph { /* Contenedor de DonutChart */
+  display: flex;
+  flex-direction: column;  /* Asegura que el texto esté arriba y el gráfico abajo */
+  justify-content: center;  /* Centra verticalmente el gráfico */
+  align-items: center;      /* Centra horizontalmente el gráfico */
+  padding: 20px 10px;       /* Añadir algo de espacio alrededor */
+  background-color: #fff;  /* Opcional, para que no quede transparente */
+  width: 100%;
+
+}
+.pieGraph {
+  position: relative; /* 🔥 Clave para controlar hijos */
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Títulos arriba */
+  box-sizing: border-box;
+  padding: 10px;
+  overflow: hidden; /* 🔥 No permitir que se desborde */
+}
+
+.c2ls {
+  width: 60%;
+  background-color: white; /* solo para visualizar */
+  padding: 10px;
+  box-sizing: border-box;
+  border: 2px solid #F6F7F9; /* Añadimos un borde de 2 píxeles de grosor y color #D9D9D9 */
+  box-sizing: border-box; 
+  
+}
