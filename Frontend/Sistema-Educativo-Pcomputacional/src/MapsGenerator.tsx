@@ -43,9 +43,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
       (worldJson:any) => {
 
         console.log("LLAMANDO A LA FUNCION GENERAR MAPA")
-        console.log(contextoKaplay.get("*"))
 
-        //console.log(`${configuracionMapa.nameFolder}/${configuracionMapa.nameFile}`)
 
         contextoKaplay.loadSprite("mundo", `${configuracionMapa.nameFolder}/${configuracionMapa.nameFile}`, {
           sliceX: 1,
@@ -64,7 +62,6 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
 
         //Extraemos los arreglos que contienen el firtsgid (Posición donde comienzan cada una de las imagenes de cada capa)
         const tilesetOrder: any= informacionMapa
-        console.log(tilesetOrder)
   
         //cargamos todas las texturas que seran usadas para generar el mapa en orden
         const spritesCargados:  Asset<SpriteData>[] = []
@@ -157,7 +154,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
               //if(numeroColision === 4){
                 // Zona de caid
 
-                console.log(zonaColision.width)
+
                 
                 contextoKaplay.add([
                   contextoKaplay.pos( (zonaColision.x / 32) *( window.innerWidth / 20), Math.floor((zonaColision.y / 32 )*(window.innerHeight / 15))),
@@ -184,7 +181,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
               //if(numeroColision === 4){
                 // Zona de caid
 
-                console.log(zonaColision.width)
+     
                 
                 contextoKaplay.add([
                   contextoKaplay.pos( (zonaColision.x / 32) *( window.innerWidth / 20), Math.floor((zonaColision.y / 32 )*(window.innerHeight / 15))),
@@ -223,11 +220,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
               ]);
 
               heart1.tag("heart1")
-              
-              console.log(heart1)
-
-              console.log(contextoKaplay.get("heart1"))
-  
+    
   
               
           }
@@ -253,9 +246,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
 
               nomo.tag("nomo")
               
-              console.log(nomo)
 
-              console.log(contextoKaplay.get("nomo"))
   
   
               
@@ -282,9 +273,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
 
               construccion.tag("construccion")
               
-              console.log(construccion)
-
-              console.log(contextoKaplay.get("construccion"))
+        
   
   
               
@@ -310,10 +299,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
               ]);
 
               construccion2.tag("construccion2")
-              
-              console.log(construccion2)
 
-              console.log(contextoKaplay.get("construccion2"))
   
   
               
@@ -340,9 +326,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
 
               construccion3.tag("construccion3")
               
-              console.log(construccion3)
 
-              console.log(contextoKaplay.get("construccion3"))
   
   
               
@@ -369,9 +353,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
 
               boton1.tag("boton1")
               
-              console.log(boton1)
-
-              console.log(contextoKaplay.get("boton1"))
+        
   
   
               
@@ -398,10 +380,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
 
               boton2.tag("boton2")
               
-              console.log(boton2)
 
-              console.log(contextoKaplay.get("boton2"))
-  
   
               
           }
@@ -427,9 +406,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
 
               boton3.tag("boton3")
               
-              console.log(boton3)
-
-              console.log(contextoKaplay.get("boton3"))
+      
   
   
               
@@ -456,10 +433,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
 
               heart2.tag("heart2")
               
-              console.log(heart2)
-
-              console.log(contextoKaplay.get("heart2"))
-  
+     
   
   
               
@@ -485,10 +459,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
 
               heart3.tag("heart3")
               
-              console.log(heart3)
-
-              console.log(contextoKaplay.get("heart3"))
-  
+    
   
   
               
@@ -514,10 +485,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
 
               up.tag("player")
               
-              console.log(up)
-
-              console.log(contextoKaplay.get("up"))
-              
+ 
           }
           if(layer.type === "objectgroup" && layer.name === "down"){
   
@@ -540,9 +508,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
 
               down.tag("down")
               
-              console.log(down)
 
-              console.log(contextoKaplay.get("down"))
   
   
               
@@ -567,10 +533,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
               ]);
 
               left.tag("left")
-              
-              console.log(left)
 
-              console.log(contextoKaplay.get("left"))
   
   
               
@@ -596,9 +559,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
 
               right.tag("right")
               
-              console.log(right)
 
-              console.log(contextoKaplay.get("right"))
   
   
               
@@ -626,9 +587,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
 
               cartel.tag("cartel")
               
-              console.log(cartel)
 
-              console.log(contextoKaplay.get("cartel"))
           }
 
 
@@ -656,9 +615,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
 
               player.tag("player")
               
-              console.log(player)
-
-              console.log(contextoKaplay.get("player"))
+   
           }
           if(layer.type === "objectgroup" && layer.name === "enemy"){
             const anchoCelda: number = ( window.innerWidth / 20);

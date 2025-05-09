@@ -337,23 +337,43 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
       puntoPartidaY= window.innerHeight/2
     }
   
-    function patronesdinamicos() {
-      limpiarNotas();
-    
-      const patrones = [
+    function patronesdinamicos(patrones: number[][] = [
         [0, 1, 2, 0, 1, 2, 0, 1, 2],
         [0, 2, 0, 2, 0, 2, 0, 2, 0],
         [0, 0, 0, 1, 1, 1, 2, 2, 2],
         [1, 2, 0, 1, 2, 0, 1, 2, 0],
         [2, 1, 0, 2, 1, 0, 2, 1, 0],
         [0, 0, 1, 1, 0, 0, 1, 1, 0],
-      ];
+      ], ultimoPatron?: number) {
+
+        limpiarNotas();
+
+        
+
+        const indicesDisponibles = patrones
+        .map((_, idx) => idx)
+        .filter((idx) => idx !== ultimoPatron);
+
+      // Elegir un índice aleatorio diferente al último
+      const nuevoIndice = indicesDisponibles[Math.floor(Math.random() * indicesDisponibles.length)];
+      const patron = patrones[nuevoIndice];
+      const secuencia = patron.slice(0, -1);
+
+      if(!ultimoPatron){
+          console.log("REPRODUCIENDO PRIMER PATRON")
+          console.log(patron)
+        }else{
+          console.log("REPRODUCIENDO PROXIMO PATRON PATRON")
+          console.log(patron)
+        }
     
       const numeros = generarNumerosAzar();
+      const ultimo = patron[patron.length - 1];
+      /*
       const patron = patrones[numeros[0]];
       const ultimo = patron[patron.length - 1];
       const secuencia = patron.slice(0, -1);
-    
+      */
       let delay = esPrimeraRonda ? 5000 : 350; // 10s la primera vez, luego normal
       esPrimeraRonda = false; // Marcar como no primera ronda
     
@@ -402,12 +422,22 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
         delay += 400;
       });
     
-      return ultimo;
+      return [ultimo, (ultimoPatron) ? nuevoIndice : -1 ];
     }
     
   
+
+
+          const patronesJuego = [
+          [0, 1, 2, 0, 1, 2, 0, 1, 2],
+          [0, 2, 0, 2, 0, 2, 0, 2, 0],
+          [0, 0, 0, 1, 1, 1, 2, 2, 2],
+          [1, 2, 0, 1, 2, 0, 1, 2, 0],
+          [2, 1, 0, 2, 1, 0, 2, 1, 0],
+          [0, 0, 1, 1, 0, 0, 1, 1, 0],
+        ]
   
-          let ultimo = patronesdinamicos();
+          let ultimo = patronesdinamicos(patronesJuego);
           
   
           circle1.onClick( () => {
@@ -416,7 +446,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
               speed: 1.5, 
               loop: false, 
             });
-            if(ultimo == 0){
+            if(ultimo[0] == 0){
   
               nomo.play("right");
               arbol.play("bye");
@@ -430,7 +460,8 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
               console.log("Fallaste" +ultimo)
               setState(true);
               cambiarGanar(false);
-              ultimo = patronesdinamicos();
+              const ultimoIndice = ultimo[1]
+              ultimo = patronesdinamicos(patronesJuego,ultimoIndice);
               setTimeout(() => {
                 setState(false);
               }, 2000); 
@@ -442,7 +473,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
               speed: 1.5, 
               loop: false, 
             });
-            if(ultimo == 1){
+            if(ultimo[0] == 1){
   
               nomo.play("right");
               arbol.play("bye");
@@ -457,7 +488,8 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
               console.log("Fallaste"+ultimo)
               setState(true);
               cambiarGanar(false);
-              ultimo = patronesdinamicos();
+              const ultimoIndice = ultimo[1]
+              ultimo = patronesdinamicos(patronesJuego,ultimoIndice);
               setTimeout(() => {
                 setState(false);
               }, 2000); 
@@ -470,7 +502,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
               speed: 1.5, 
               loop: false, 
             });
-            if(ultimo == 2){
+            if(ultimo[0] == 2){
   
               nomo.play("right");
               arbol.play("bye");
@@ -485,7 +517,8 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
               console.log("Fallaste" +ultimo)
               setState(true);
               cambiarGanar(false);
-              ultimo = patronesdinamicos();
+              const ultimoIndice = ultimo[1]
+              ultimo = patronesdinamicos(patronesJuego,ultimoIndice);
               setTimeout(() => {
                 setState(false);
               }, 2000); 

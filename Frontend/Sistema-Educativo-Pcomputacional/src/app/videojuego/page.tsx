@@ -12,7 +12,6 @@ import { useRouter } from "next/navigation";
  function Cartel(props:any) {
   // Declaración del estado con useState dentro del cuerpo del componente
  
-  console.log(props);
   // Función para manejar el clic del botón
  
   return (
@@ -34,8 +33,7 @@ import { useRouter } from "next/navigation";
 
 function CartelNivel1(props:any) {
   // Declaración del estado con useState dentro del cuerpo del componente
- 
-  console.log(props);
+
   // Función para manejar el clic del botón
  
   return (
@@ -58,8 +56,6 @@ function CartelNivel1(props:any) {
 function CartelA(props:any) {
   // Declaración del estado con useState dentro del cuerpo del componente
  
-  
-  console.log(props);
   // Función para manejar el clic del botón
  
   return (
@@ -82,8 +78,7 @@ function CartelA(props:any) {
 function CartelB(props:any) {
   // Declaración del estado con useState dentro del cuerpo del componente
  
-  
-  console.log(props);
+
   // Función para manejar el clic del botón
  
   return (
@@ -106,8 +101,6 @@ function CartelB(props:any) {
 function CartelC(props:any) {
   // Declaración del estado con useState dentro del cuerpo del componente
  
-  
-  console.log(props);
   // Función para manejar el clic del botón
  
   return (
@@ -129,7 +122,6 @@ function CartelC(props:any) {
  function Cartel3(props:any) {
   // Declaración del estado con useState dentro del cuerpo del componente
  
-  console.log(props);
   // Función para manejar el clic del botón
  
   return (

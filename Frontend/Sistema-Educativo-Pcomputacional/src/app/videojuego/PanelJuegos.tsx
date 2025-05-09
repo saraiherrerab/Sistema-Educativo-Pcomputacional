@@ -176,36 +176,28 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
       .then(
         (resultado: any) => {
 
-          console.log("Resultado de generar nivel 2")
-          console.log(juegoKaplay.get("*"))
-          console.log(juegoKaplay.get("player"))
           const oveja = juegoKaplay.get("oveja")[0]
           const arboles= juegoKaplay.get("arbol")
-          console.log(oveja)
+
 
           const hongo = juegoKaplay.get("hongo")[0]
 
-          console.log(hongo)
 
           const rock = juegoKaplay.get("rock")[0]
 
-          console.log(rock)
 
           const casa1 = juegoKaplay.get("casa1")[0]
 
-          console.log(casa1)
-
           const casa = juegoKaplay.get("casa")[0]
 
-          console.log(casa)
 
           const arbol = juegoKaplay.get("arbol")[0]
 
-          console.log(arbol)
+
 
           const torre1 = juegoKaplay.get("torre1")[0]
 
-          console.log(torre1)
+
 
           const player = juegoKaplay.get("player")[0]
 
@@ -340,8 +332,8 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
       const velocidad = 440;
 
 
-      console.log("Resultado de PANEL")
-      console.log(juegoKaplay.get("*"))
+
+    
 
     }) //Fin - Onload()
     
