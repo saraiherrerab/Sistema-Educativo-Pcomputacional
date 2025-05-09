@@ -155,6 +155,21 @@ router.get('/profesores/cursos/faltantes/:id', async function(req, res, next) {
     
 });
 
+router.get('/profesores/cursos/faltantes/:id/datos', async function(req, res, next) {
+
+  try {
+   const { id } = req.params
+   const findCursos =  new PQ({text :`SELECT * FROM obtener_cursos_profesor($1)`, values: [id]});
+   const result = await db.manyOrNone(findCursos);
+   console.log('Resultado:', result); // { value: 123 }
+   return res.json(result)
+  } catch (error) {
+    console.error('Error al hacer la consulta:', error);
+    res.json({menssage: "Error al obtener profesores"})
+  }
+  
+});
+
 router.get('/profesores/cursos/inscritos/:id', async function(req, res, next) {
 
     try {
@@ -184,6 +199,125 @@ router.get('/profesores/:id/horarios/', async function(req, res, next) {
     }
     
 });
+
+
+router.get('/profesores/:id/horarios/curso/:id_curso', async function(req, res, next) {
+
+  try {
+   const { id,id_curso } = req.params
+   const query = "SELECT Pr.id_profesor, U.nombre, U.apellido, Hp.id_curso, Cu.nombre_curso, Hp.id_horario, Gr.id_grupo, Gr.nombre_grupo, Hp.dia_semana, Hp.hora_inicio, Hp.hora_fin FROM Curso AS Cu, Usuario AS U, Profesor_curso AS Pc, Profesor AS Pr, Horarios_profesor AS Hp, Grupos AS Gr WHERE U.id_usuario = Pr.id_profesor AND Pc.id_profesor = Pr.id_profesor AND U.id_usuario = $1 AND Hp.id_profesor = Pr.id_profesor AND Hp.id_curso = Cu.id_curso AND Hp.id_grupo = Gr.id_grupo AND Pc.id_curso = Cu.id_curso AND Gr.id_curso = Cu.id_curso AND Cu.id_curso = $2";
+   const findHorarios =  new PQ({text :query, values: [id,id_curso]});
+   const result = await db.manyOrNone(findHorarios);
+   console.log('Resultado:', result); // { value: 123 }
+   return res.json(result)
+  } catch (error) {
+    console.error('Error al hacer la consulta:', error);
+    res.json({menssage: "Error al obtener horarios de profesor"})
+  }
+  
+});
+
+router.post('/profesores/curso', async function(req, res, next) {
+  
+  try {
+    
+    const { 
+    id_profesor,
+    id_curso
+    } = req.body
+
+    const asignarCursoProfesor = new PQ({text :`INSERT INTO Profesor_curso (id_profesor, id_curso) VALUES ($1,$2) RETURNING *`, values: [id_profesor,id_curso]});
+    const resultadoAsignarCursoProfesor = await db.one(asignarCursoProfesor);
+    return res.json({mensaje: `El curso ${id_curso} ha sido asignado al profesor ${id_profesor}`})
+  } catch (error) {
+    console.error('Error al hacer la consulta:', error);
+    res.json({menssage: "Error al crear profesor"})
+  }
+  
+})
+
+router.delete('/profesores/:id_profesor/curso/:id_curso/eliminar', async function(req, res, next) {
+  
+  try {
+    
+    const { 
+    id_profesor,
+    id_curso
+    } = req.params
+
+    const asignarCursoProfesor = new PQ({text :`DELETE FROM Profesor_Curso WHERE id_profesor = $1 AND id_curso = $2`, values: [id_profesor,id_curso]});
+    const resultadoAsignarCursoProfesor = await db.none(asignarCursoProfesor);
+    return res.json({mensaje: `El curso ${id_curso} dictado por el profesor ${id_profesor} ha sido eliminado`})
+  } catch (error) {
+    console.error('Error al hacer la consulta:', error);
+    res.json({menssage: "Error al crear profesor"})
+  }
+  
+})
+
+
+router.post('/profesores/agregar/horario/curso', async function(req, res, next) {
+  
+  try {
+    
+    const { 
+    id_profesor,
+    id_curso,
+    id_grupo,
+    dia_semana,
+    hora_inicio,
+    hora_fin
+    } = req.body
+
+    const asignarHorarioProfesor = new PQ({text :`INSERT INTO horarios_profesor (id_profesor, id_curso, id_grupo,dia_semana,hora_inicio,hora_fin) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`, values: [id_profesor,id_curso,id_grupo,dia_semana,hora_inicio,hora_fin]});
+    const resultadoAsignarCursoProfesor = await db.one(asignarHorarioProfesor);
+    return res.json({mensaje: `El curso ${id_curso} ha sido asignado al profesor ${id_profesor}`})
+  } catch (error) {
+    console.error('Error al hacer la consulta:', error);
+    res.status(404).json({menssage: "Error al crear profesor"})
+  }
+  
+})
+
+router.delete('/profesores/eliminar/horario/curso', async function(req, res, next) {
+  
+  try {
+    
+    const { 
+      id_horario
+    } = req.body
+
+    const asignarHorarioProfesor = new PQ({text :`DELETE FROM Horarios_profesor WHERE id_horario = $1`, values: [id_horario]});
+    const resultadoAsignarCursoProfesor = await db.none(asignarHorarioProfesor);
+    return res.json({mensaje: `El horario ${id_horario} ha sido eliminado al profesor`})
+  } catch (error) {
+    console.error('Error al hacer la consulta:', error);
+    res.status(404).json({menssage: "Error al crear profesor"})
+  }
+  
+})
+
+router.put('/profesores/editar/horario/curso', async function(req, res, next) {
+  
+  try {
+    
+    const { 
+      id_horario,
+      id_grupo,
+      dia_semana,
+      hora_inicio,
+      hora_fin
+    } = req.body
+
+    const asignarHorarioProfesor = new PQ({text :`UPDATE Horarios_profesor SET id_grupo = $2, dia_semana = $3, hora_inicio = $4, hora_fin = $5 WHERE id_horario = $1`, values: [id_horario,id_grupo,dia_semana,hora_inicio,hora_fin]});
+    const resultadoAsignarCursoProfesor = await db.none(asignarHorarioProfesor);
+    return res.json({mensaje: `El horario ${id_horario} ha sido actualizado`})
+  } catch (error) {
+    console.error('Error al hacer la consulta:', error);
+    res.status(404).json({menssage: "Error al crear profesor"})
+  }
+  
+})
 
 
   module.exports = router;

@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "/Aprofesores-lista/page": "app/Aprofesores-lista/page.js",
   "/videojuego/page": "app/videojuego/page.js",
   "/Amenu/page": "app/Amenu/page.js"
+=======
+  "/reportes/[id]/page": "app/reportes/[id]/page.js"
+>>>>>>> origin/backend
 }
