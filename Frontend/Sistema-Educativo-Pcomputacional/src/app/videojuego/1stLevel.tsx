@@ -200,15 +200,6 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
           console.log(colisiones);
           let esPrimeraRonda = true;
 
-          
-          
-          
-          
-         
-          
-         
-          
-
          /* const casa = juegoKaplay.add([
             juegoKaplay.pos(400,-5),
             juegoKaplay.sprite("casa1"),
