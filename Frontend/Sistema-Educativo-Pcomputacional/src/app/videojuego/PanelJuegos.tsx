@@ -3,8 +3,10 @@ import generarEsquemaMapa from "../../MapsGenerator";
 import { Nivel1 } from "./1stLevel";
 import { Nivel2 } from "./2ndLevel";
 import {Nivel3} from "./3rdLevel";
+import {Nivel4} from "./4thLevel";
 
-export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,cambiarGanar3:any,setState3:any, cambiarGanarA:any, setStateA:any, Router:any) {
+export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,cambiarGanar3:any,setState3:any, cambiarGanarA:any, setStateA:any, 
+  cambiarGanarB:any, setStateB:any,cambiarGanarC:any, setStateC:any,cambiarGanar1:any, setState1:any, Router:any) {
     // Referencia persistente para almacenar la instancia de Kaplay
     const SCREEN_RESOLUTION_X: number = window.innerWidth 
     const SCREEN_RESOLUTION_Y: number = window.innerHeight 
@@ -71,6 +73,51 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
       sliceX: 1,
       sliceY: 1,
     });
+
+    juegoKaplay.loadSprite("oveja", "sprites/deco/HappySheep_Bouncing.png", {
+      sliceX: 6,
+      sliceY: 1,
+      anims: {
+        quiet: { from: 0, to: 5, loop: true },
+      },
+    });
+
+    juegoKaplay.loadSprite("arbol", "sprites/deco/Tree.png", {
+      sliceX: 4,
+      sliceY: 3,
+      anims: {
+        bye: { from: 8, to: 8, loop: false },
+        quiet: { from: 0, to: 3, loop: true },
+      },
+  });
+
+  juegoKaplay.loadSprite("rock", "sprites/deco/Rocks_01.png", {
+    sliceX: 8,
+    sliceY: 1,
+    anims: {
+      quiet: { from: 0, to: 7, loop: true },
+    },
+  });
+
+    juegoKaplay.loadSprite("hongo", "sprites/deco/hongo.png", {
+      sliceX: 1,
+      sliceY: 1,
+    });
+
+    juegoKaplay.loadSprite("torre1", "sprites/buildings/Tower_Yellow.png", {
+      sliceX: 1,
+      sliceY: 1,
+    });
+
+    juegoKaplay.loadSprite("casa", "sprites/buildings/House_Yellow.png", {
+      sliceX: 1,
+      sliceY: 1,
+    });
+
+    juegoKaplay.loadSprite("casa1", "sprites/buildings/House_Blue.png", {
+      sliceX: 1,
+      sliceY: 1,
+    });
   
     // Cargar sprites adicionales
     ["up", "down", "left", "right"].forEach((dir) => {
@@ -129,32 +176,85 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
       .then(
         (resultado: any) => {
 
-          console.log("Resultado de generar nivel 2")
-          console.log(juegoKaplay.get("*"))
-          console.log(juegoKaplay.get("player"))
+          const oveja = juegoKaplay.get("oveja")[0]
+          const arboles= juegoKaplay.get("arbol")
+
+
+          const hongo = juegoKaplay.get("hongo")[0]
+
+
+          const rock = juegoKaplay.get("rock")[0]
+
+
+          const casa1 = juegoKaplay.get("casa1")[0]
+
+          const casa = juegoKaplay.get("casa")[0]
+
+
+          const arbol = juegoKaplay.get("arbol")[0]
+
+
+
+          const torre1 = juegoKaplay.get("torre1")[0]
+
+
 
           const player = juegoKaplay.get("player")[0]
 
           const torre = juegoKaplay.get("torre")[0]
           const castillo = juegoKaplay.get("castillo")[0]
 
-          torre.onClick(()=>{
-            juegoKaplay.destroy(torre);
-            juegoKaplay.destroy(castillo);
-            juegoKaplay.destroy(player);
-            juegoKaplay.destroyAll("*");
-            Nivel1(juegoKaplay, setState, cambiarGanar, Router);
-            // We pass the component id for remove it.
-          });
+          const ovejas= juegoKaplay.get("oveja")
+          const rocks= juegoKaplay.get("rock")
+          const hongos= juegoKaplay.get("hongo")
+
+           ovejas.forEach( (oveja: any) => {
+                oveja.play("quiet");
+          
+            })
+
+            rocks.forEach( (rock: any) => {
+              rock.play("quiet");
+        
+          })
 
           castillo.onClick(()=>{
             juegoKaplay.destroy(torre);
             juegoKaplay.destroy(castillo);
             juegoKaplay.destroy(player);
             juegoKaplay.destroyAll("*");
-            Nivel3(juegoKaplay, setState3, cambiarGanar3,cambiarGanarA, setStateA, Router);
+            Nivel3(juegoKaplay, setState3, cambiarGanar3,cambiarGanarA, setStateA,cambiarGanarC, setStateC, Router);
             // We pass the component id for remove it.
           });
+
+          casa1.onClick(()=>{
+            juegoKaplay.destroy(torre);
+            juegoKaplay.destroy(castillo);
+            juegoKaplay.destroy(player);
+            juegoKaplay.destroyAll("*");
+            Nivel1(juegoKaplay, setState, cambiarGanar, setStateA, cambiarGanarA,setState1, cambiarGanar1, Router);
+            // We pass the component id for remove it.
+          });
+
+          casa.onClick(()=>{
+            juegoKaplay.destroy(torre);
+            juegoKaplay.destroy(castillo);
+            juegoKaplay.destroy(player);
+            juegoKaplay.destroyAll("*");
+            Nivel2(juegoKaplay, setStateB, cambiarGanarB, setStateA, cambiarGanarA,cambiarGanarC, setStateC, Router);
+            // We pass the component id for remove it.
+          });
+
+          torre.onClick(()=>{
+            juegoKaplay.destroy(torre);
+            juegoKaplay.destroy(castillo);
+            juegoKaplay.destroy(player);
+            juegoKaplay.destroyAll("*");
+            Nivel4(juegoKaplay, setState, cambiarGanar, setStateA, cambiarGanarA,setState1, cambiarGanar1, Router);
+            // We pass the component id for remove it.
+          });
+
+          
       
           const velocidad = 200;
 
@@ -173,6 +273,11 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
               
             });
             
+                        arboles.forEach( (arbol: any) => {
+                               arbol.play("quiet");
+           
+                             })
+                             
 
           juegoKaplay.onKeyRelease(()=>{
             player.play("quiet");
@@ -227,8 +332,8 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
       const velocidad = 440;
 
 
-      console.log("Resultado de PANEL")
-      console.log(juegoKaplay.get("*"))
+
+    
 
     }) //Fin - Onload()
     

@@ -12,7 +12,6 @@ import { useRouter } from "next/navigation";
  function Cartel(props:any) {
   // Declaración del estado con useState dentro del cuerpo del componente
  
-  console.log(props);
   // Función para manejar el clic del botón
  
   return (
@@ -32,10 +31,31 @@ import { useRouter } from "next/navigation";
 
 }
 
+function CartelNivel1(props:any) {
+  // Declaración del estado con useState dentro del cuerpo del componente
+
+  // Función para manejar el clic del botón
+ 
+  return (
+    <>
+
+      {props.respuesta ? (
+        <>
+          {props.respuesta && (
+            <div className="message-container-nivel1">
+              
+            </div>
+          )}
+        </>
+      ) : null}
+    </>
+  );
+
+}
+
 function CartelA(props:any) {
   // Declaración del estado con useState dentro del cuerpo del componente
  
-  console.log(props);
   // Función para manejar el clic del botón
  
   return (
@@ -55,11 +75,53 @@ function CartelA(props:any) {
 
 }
 
+function CartelB(props:any) {
+  // Declaración del estado con useState dentro del cuerpo del componente
  
+
+  // Función para manejar el clic del botón
+ 
+  return (
+    <>
+
+      {props.respuesta ? (
+        <>
+          {props.respuesta && (
+            <div className="message-containerB">
+              
+            </div>
+          )}
+        </>
+      ) : null}
+    </>
+  );
+
+}
+
+function CartelC(props:any) {
+  // Declaración del estado con useState dentro del cuerpo del componente
+ 
+  // Función para manejar el clic del botón
+ 
+  return (
+    <>
+
+      {props.respuesta ? (
+        <>
+          {props.respuesta && (
+            <div className="message-containerC">
+              
+            </div>
+          )}
+        </>
+      ) : null}
+    </>
+  );
+
+}
  function Cartel3(props:any) {
   // Declaración del estado con useState dentro del cuerpo del componente
  
-  console.log(props);
   // Función para manejar el clic del botón
  
   return (
@@ -82,15 +144,24 @@ function CartelA(props:any) {
  let SCREEN_RESOLUTION_Y: number = 0;
  
  function Page() {
+    const [cambiarMostrar1, setState1] = useState(false);
+    const [ganar1, cambiarGanar1] = useState(true);
     const [cambiarMostrar, setState] = useState(false);
     const [cambiarMostrar3, setState3] = useState(false);
     const [cambiarMostrarA, setStateA] = useState(false);
+    const [cambiarMostrarB, setStateB] = useState(false);
+    const [cambiarMostrarC, setStateC] = useState(false);
     const [ganar, cambiarGanar] = useState(true);
     const [ganar3, cambiarGanar3] = useState(true);
     const [ganarA, cambiarGanarA] = useState(true);
+    const [ganarB, cambiarGanarB] = useState(true);
+    const [ganarC, cambiarGanarC] = useState(true);
     const Router= useRouter();
      // Función para cambiar el estado
     const amoALuis = () => {
+      setState(!cambiarMostrar); // Cambia el estado entre true y false
+    };
+    const amoALuis1 = () => {
       setState(!cambiarMostrar); // Cambia el estado entre true y false
     };
     const amoALuis3 = () => {
@@ -98,6 +169,14 @@ function CartelA(props:any) {
     };
     const amoALuisA = () => {
       setStateA(!cambiarMostrarA); // Cambia el estado entre true y false
+    };
+
+    const amoALuisB = () => {
+      setStateB(!cambiarMostrarB); // Cambia el estado entre true y false
+    };
+
+    const amoALuisC = () => {
+      setStateC(!cambiarMostrarC); // Cambia el estado entre true y false
     };
    const juegoKaplayRef = useRef<any>(null);
  
@@ -130,7 +209,8 @@ function CartelA(props:any) {
        juegoKaplay.setBackground(71,171,169)
        juegoKaplay.loadRoot("./");
        // Nivel1(juegoKaplay);
-       Panel(juegoKaplay, setState, cambiarGanar,cambiarGanar3,setState3,cambiarGanarA, setStateA, Router);
+       Panel(juegoKaplay, setState, cambiarGanar,cambiarGanar3,setState3,cambiarGanarA, setStateA,cambiarGanarB, setStateB,
+        cambiarGanarC, setStateC,cambiarGanar1, setState1, Router);
 
          
       }
@@ -169,6 +249,27 @@ function CartelA(props:any) {
             cambiarRespuesta={() => amoALuisA()} 
             mensaje={ganarA ? "Correcto, sigue así" : "Oh no, intenta de nuevo"} 
             cambiarGanarA={() => cambiarGanarA(true)} 
+        />
+
+        <CartelB 
+            respuesta={cambiarMostrarB} 
+            cambiarRespuesta={() => amoALuisB()} 
+            mensaje={ganarA ? "Correcto, sigue así" : "Oh no, intenta de nuevo"} 
+            cambiarGanarA={() => cambiarGanarB(true)} 
+        />
+
+        <CartelC 
+            respuesta={cambiarMostrarC} 
+            cambiarRespuesta={() => amoALuisC()} 
+            mensaje={ganarC ? "Correcto, sigue así" : "Oh no, intenta de nuevo"} 
+            cambiarGanarC={() => cambiarGanarC(true)} 
+        />
+
+        <CartelNivel1 
+            respuesta={cambiarMostrar1} 
+            cambiarRespuesta={() => amoALuis1()} 
+            mensaje={ganar1 ? "Correcto, sigue así" : "Oh no, intenta de nuevo"} 
+            cambiarGanar1={() => cambiarGanar1(true)} 
         />
       </>)
      
