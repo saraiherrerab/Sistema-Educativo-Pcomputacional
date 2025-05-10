@@ -7,6 +7,9 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
           return new Promise(resolve => setTimeout(resolve, ms));   
         }
 
+        let posicionAnteriorXGlobal = 0;
+        let posicionAnteriorYGlobal= 0;
+
         const SCREEN_RESOLUTION_X: number = window.innerWidth 
         const SCREEN_RESOLUTION_Y: number = window.innerHeight 
         const TILED_MAP__WIDTH_NUMBER: number = 20
@@ -171,6 +174,8 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                   console.log("Resultado de generar nivel 2")
                   console.log(juegoKaplay.get("*"))
                   console.log(juegoKaplay.get("player"))
+                  console.log(juegoKaplay.get("enemy"))
+
 
                   const player = juegoKaplay.get("player")[0]
                   const torre = juegoKaplay.get("torre")[0]
@@ -300,6 +305,20 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                         juegoKaplay.debug.log("¡ouch!");
                         juegoKaplay.debug.log("Han pasado dos segundos");
                     });
+
+                    enemigo.onCollide("player", (jugador: any) => {
+                        console.log("CHOCO")
+
+                        console.log("Posición después de presionar la tecla ", {
+                          x: player.pos.x,
+                          y: player.pos.y
+                        })
+
+                        player.pos.x = posicionAnteriorXGlobal
+                        player.pos.y = posicionAnteriorYGlobal
+                    })
+
+                    
                   })
 
                   const redRoom = juegoKaplay.add([
@@ -318,6 +337,8 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                   const zonasGolpe = juegoKaplay.get("square")
                   console.log(zonasGolpe)
                   // Movimiento con clic
+
+                  /*
                   up.onClick(() => {
                     console.log(player.pos.x)
                     console.log(player.pos.y)
@@ -422,6 +443,15 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                         })
 
                     })
+
+                    enemigos.forEach( (enemigo: GameObj<any>) => {
+                    
+                      enemigo.onCollide("player", (jugador: any) => {
+                        player.pos.x = posicionAnteriorX
+                        player.pos.y = posicionAnteriorY
+                      })
+
+                    })
                   });
                   right.onClick(() => {
                     console.log(player.pos.x)
@@ -458,7 +488,346 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                     })
                     player.moveTo(Math.ceil(posicionAnteriorX + TILED_WIDTH),posicionAnteriorY);
                   });
-    
+                  */
+
+                  // Movimiento con teclado
+                  juegoKaplay.onKeyPress("w", () => {
+
+                    const objetoPosicionAnterior = {
+                      x: player.pos.x,
+                      y: player.pos.y
+                    }
+
+                    console.log("Posición antes de presionar la tecla ", {
+                      x: player.pos.x,
+                      y: player.pos.y
+                    })
+                    console.log("Posición antes de presionar la tecla ", objetoPosicionAnterior)
+
+                    posicionAnteriorXGlobal = player.pos.x
+                    posicionAnteriorYGlobal = player.pos.y
+
+
+                    player.moveTo(posicionAnteriorXGlobal,posicionAnteriorYGlobal - TILED_HEIGHT);
+                    player.play("up");
+                    
+                    colisiones.forEach( (colision: GameObj<any>) => {
+                    
+                      colision.onCollide("player", (jugador: any) => {
+
+                        
+                        player.pos.x = posicionAnteriorXGlobal
+                        player.pos.y = posicionAnteriorYGlobal
+                        
+                      })
+
+                    })
+
+                    zonasGolpe.forEach( (zona: GameObj<any>) => {
+                    
+                      zona.onCollide("player", async (jugador: any) => {
+
+                        await sleep(100)
+                          
+                        juegoKaplay.debug.log("¡ouch!");
+                        juegoKaplay.debug.log("Han pasado dos segundos");
+                        
+                        player.pos.x = posicionAnteriorXGlobal
+                        player.pos.y = posicionAnteriorYGlobal
+                      })
+
+                    })
+
+                    
+                    
+                    
+                  });
+
+                  juegoKaplay.onKeyPress("s", () => {
+
+                    console.log(player.pos.x)
+                    console.log(player.pos.y)
+
+                    posicionAnteriorXGlobal = player.pos.x
+                    posicionAnteriorYGlobal = player.pos.y
+
+                    player.moveTo(posicionAnteriorXGlobal,posicionAnteriorYGlobal + TILED_HEIGHT);
+                    player.play("down");
+
+                    colisiones.forEach( (colision: GameObj<any>) => {
+                    
+                      colision.onCollide("player", (jugador: any) => {
+                        
+                        player.pos.x = posicionAnteriorXGlobal
+                        player.pos.y = posicionAnteriorYGlobal
+                      })
+
+                    })
+
+                    zonasGolpe.forEach( (zona: GameObj<any>) => {
+                  
+                      zona.onCollide("player", async (jugador: any) => {
+
+                        await sleep(100)
+                        
+                        juegoKaplay.debug.log("¡ouch!");
+                        juegoKaplay.debug.log("Han pasado dos segundos");
+                        
+                        player.pos.x = posicionAnteriorXGlobal
+                        player.pos.y = posicionAnteriorYGlobal
+                      })
+
+                    })
+
+                  });
+
+                  juegoKaplay.onKeyPress("a", () => {
+
+                  
+                    posicionAnteriorXGlobal = player.pos.x
+                    posicionAnteriorYGlobal = player.pos.y
+
+                    player.moveTo(posicionAnteriorXGlobal - TILED_WIDTH,posicionAnteriorYGlobal);
+                    player.play("left");
+
+                    colisiones.forEach( (colision: GameObj<any>) => {
+                    
+                      colision.onCollide("player", (jugador: any) => {
+                        player.pos.x = posicionAnteriorXGlobal
+                        player.pos.y = posicionAnteriorYGlobal
+                      })
+
+                    })
+
+                    zonasGolpe.forEach( (zona: GameObj<any>) => {
+                    
+                        zona.onCollide("player", async (jugador: any) => {
+
+                          await sleep(100)
+
+                          juegoKaplay.debug.log("¡ouch!");
+                          juegoKaplay.debug.log("Han pasado dos segundos");
+                          
+                          player.pos.x = posicionAnteriorXGlobal
+                          player.pos.y = posicionAnteriorYGlobal
+                        })
+
+                    })
+
+                  });
+                  
+                  juegoKaplay.onKeyPress("d", async () => {
+
+                    posicionAnteriorXGlobal = player.pos.x
+                    posicionAnteriorYGlobal = player.pos.y
+
+                    player.moveTo(posicionAnteriorXGlobal + TILED_WIDTH,posicionAnteriorYGlobal);
+                    player.play("right");
+
+                    colisiones.forEach( (colision: GameObj<any>) => {
+                    
+                      colision.onCollide("player", (jugador: any) => {
+                        player.pos.x = posicionAnteriorXGlobal
+                        player.pos.y = posicionAnteriorYGlobal
+                      })
+
+                    })
+
+                    zonasGolpe.forEach( (zona: GameObj<any>) => {
+                    
+                        zona.onCollide("player", async (jugador: any) => {
+
+                          await sleep(100)
+                          
+                          juegoKaplay.debug.log("¡ouch!");
+                          juegoKaplay.debug.log("Han pasado dos segundos");
+
+                          player.pos.x = posicionAnteriorXGlobal
+                          player.pos.y = posicionAnteriorYGlobal
+                        })
+
+                    })
+                    
+                  });
+
+                  // Movimiento con clic
+                  up.onClick(() => {
+                    console.log(player.pos.x)
+                    console.log(player.pos.y)
+
+                    const posicionAnteriorX = player.pos.x
+                    const posicionAnteriorY = player.pos.y
+
+                    player.moveTo(posicionAnteriorX,posicionAnteriorY - TILED_HEIGHT);
+                    player.play("up");
+                    
+                    colisiones.forEach( (colision: GameObj<any>) => {
+                    
+                      colision.onCollide("player", (jugador: any) => {
+
+                        
+                        player.pos.x = posicionAnteriorX
+                        player.pos.y = posicionAnteriorY
+                        
+                      })
+
+                    })
+
+                    enemigos.forEach( (enemigo: GameObj<any>) => {
+                    
+                      enemigo.onCollide("player", (jugador: any) => {
+                        player.pos.x = posicionAnteriorX
+                        player.pos.y = posicionAnteriorY
+                      })
+
+                    })
+
+                    zonasGolpe.forEach( (zona: GameObj<any>) => {
+                    
+                      zona.onCollide("player", async (jugador: any) => {
+
+                        await sleep(100)
+                          
+                        juegoKaplay.debug.log("¡ouch!");
+                        juegoKaplay.debug.log("Han pasado dos segundos");
+                        
+                        player.pos.x = posicionAnteriorX
+                        player.pos.y = posicionAnteriorY
+                      })
+                    });
+                  });
+                  down.onClick(() => {
+                    console.log(player.pos.x)
+                    console.log(player.pos.y)
+
+                    const posicionAnteriorX = player.pos.x
+                    const posicionAnteriorY = player.pos.y
+
+                    player.moveTo(posicionAnteriorX,posicionAnteriorY + TILED_HEIGHT);
+                    player.play("down");
+
+                    colisiones.forEach( (colision: GameObj<any>) => {
+                    
+                      colision.onCollide("player", (jugador: any) => {
+                        
+                        player.pos.x = posicionAnteriorX
+                        player.pos.y = posicionAnteriorY
+                      })
+
+                    })
+
+                    enemigos.forEach( (enemigo: GameObj<any>) => {
+                    
+                      enemigo.onCollide("player", (jugador: any) => {
+                        player.pos.x = posicionAnteriorX
+                        player.pos.y = posicionAnteriorY
+                      })
+
+                    })
+
+                    zonasGolpe.forEach( (zona: GameObj<any>) => {
+                  
+                      zona.onCollide("player", async (jugador: any) => {
+
+                        await sleep(100)
+                        
+                        juegoKaplay.debug.log("¡ouch!");
+                        juegoKaplay.debug.log("Han pasado dos segundos");
+                        
+                        player.pos.x = posicionAnteriorX
+                        player.pos.y = posicionAnteriorY
+                      })
+
+                    })
+                  });
+                  left.onClick(() => {
+                    console.log(player.pos.x)
+                    console.log(player.pos.y)
+
+                    const posicionAnteriorX = player.pos.x
+                    const posicionAnteriorY = player.pos.y
+
+                    player.moveTo(posicionAnteriorX - TILED_WIDTH,posicionAnteriorY);
+                    player.play("left");
+
+                    colisiones.forEach( (colision: GameObj<any>) => {
+                    
+                      colision.onCollide("player", (jugador: any) => {
+                        player.pos.x = posicionAnteriorX
+                        player.pos.y = posicionAnteriorY
+                      })
+
+                    })
+
+                    enemigos.forEach( (enemigo: GameObj<any>) => {
+                    
+                      enemigo.onCollide("player", (jugador: any) => {
+                        player.pos.x = posicionAnteriorX
+                        player.pos.y = posicionAnteriorY
+                      })
+
+                    })
+
+                    zonasGolpe.forEach( (zona: GameObj<any>) => {
+                    
+                        zona.onCollide("player", async (jugador: any) => {
+
+                          await sleep(100)
+
+                          juegoKaplay.debug.log("¡ouch!");
+                          juegoKaplay.debug.log("Han pasado dos segundos");
+                          
+                          player.pos.x = posicionAnteriorX
+                          player.pos.y = posicionAnteriorY
+                        })
+
+                    })
+                  });
+                  right.onClick(() => {
+                    console.log(player.pos.x)
+                    console.log(player.pos.y)
+
+                    const posicionAnteriorX = player.pos.x
+                    const posicionAnteriorY = player.pos.y
+
+                    player.moveTo(posicionAnteriorX + TILED_WIDTH,posicionAnteriorY);
+                    player.play("right");
+
+                    colisiones.forEach( (colision: GameObj<any>) => {
+                    
+                      colision.onCollide("player", (jugador: any) => {
+                        player.pos.x = posicionAnteriorX
+                        player.pos.y = posicionAnteriorY
+                      })
+
+                    })
+
+                    enemigos.forEach( (enemigo: GameObj<any>) => {
+                    
+                      enemigo.onCollide("player", (jugador: any) => {
+                        player.pos.x = posicionAnteriorX
+                        player.pos.y = posicionAnteriorY
+                      })
+
+                    })
+
+                    zonasGolpe.forEach( (zona: GameObj<any>) => {
+                    
+                        zona.onCollide("player", async (jugador: any) => {
+
+                          await sleep(100)
+                          
+                          juegoKaplay.debug.log("¡ouch!");
+                          juegoKaplay.debug.log("Han pasado dos segundos");
+
+                          player.pos.x = posicionAnteriorX
+                          player.pos.y = posicionAnteriorY
+                        })
+
+                    })
+
+                    player.moveTo(posicionAnteriorX + TILED_WIDTH,posicionAnteriorY);
+                  });
                   enemigo.play("quiet")
     
                   // Colisión con el enemigo

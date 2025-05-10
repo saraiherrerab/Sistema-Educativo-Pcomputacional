@@ -626,12 +626,11 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
               let posicionX: number = (enemiguito.x / 32) * ( anchoCelda);
               let posicionY: number = (enemiguito.y / 32) * ( altoCelda)
               let enemy = contextoKaplay.add([
-                contextoKaplay.pos(posicionX+(anchoCelda/2),(posicionY+(altoCelda/2))),
+                contextoKaplay.pos(posicionX + (anchoCelda / 2), posicionY + (altoCelda / 2)),
                 contextoKaplay.sprite("enemy"),
-                contextoKaplay.scale(0.8),
-                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda*0.7, altoCelda*0.7)}),
-                contextoKaplay.body(),
-                contextoKaplay.anchor(contextoKaplay.vec2(0,0)),
+                contextoKaplay.scale(1),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda, altoCelda)}),
+                contextoKaplay.anchor("center"),
                 "enemy",
                 { z: 1 } // Asegura que el jugador esté en una capa superior
               ]);
@@ -859,22 +858,26 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
                       }
                   
           if(layer.type === "objectgroup" && layer.name === "enemigo"){
+
+            const anchoCelda: number = ( window.innerWidth / 20);
+            const altoCelda: number = ( window.innerHeight / 15)
+
+
+            layer.objects.forEach( (enemiguito: any) => {
+              let posicionX: number = (enemiguito.x / 32) * ( anchoCelda);
+              let posicionY: number = (enemiguito.y / 32) * ( altoCelda)
+              let enemy = contextoKaplay.add([
+                contextoKaplay.pos(posicionX + (anchoCelda / 2), posicionY + (altoCelda / 2)),
+                contextoKaplay.sprite("enemigo"),
+                contextoKaplay.scale(1),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda, altoCelda)}),
+                contextoKaplay.anchor("center"),
+                "enemigo",
+                { z: 1 } // Asegura que el jugador esté en una capa superior
+              ]);
   
-      let posicionX: number = (layer.objects[0].x / 32) * ( window.innerWidth / 20);
-      let posicionY: number = (layer.objects[0].y / 32) * ( window.innerHeight / 15)
-
-      const enemigo = contextoKaplay.add([
-        contextoKaplay.pos(posicionX+48,posicionY + 32),
-        contextoKaplay.sprite("enemigo"),
-        contextoKaplay.scale(0.8),
-        contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), 64, 64)}), // Rectángulo más pequeño
-        contextoKaplay.body(),
-        contextoKaplay.anchor(contextoKaplay.vec2(0,0)),
-        "enemigo",
-        { z: 1 } // Asegura que el jugador esté en una capa superior
-      ]);
-
-      enemigo.tag("enemigo")
+              enemy.tag("enemigo")
+            })
       
           }
         });
