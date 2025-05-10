@@ -15,12 +15,36 @@ let aciertos = 0;
 let nuevoSprite: GameObj;
 export let cambioNivel = 0;
 
-
+interface NotasEstudiante {
+  id_estudiante: number;
+  eficiencia_algoritmica: number;
+  reconocimiento_patrones: number;
+  identificacion_errores: number;
+  abstraccion: number;
+  asociacion: number;
+  construccion_algoritmos: number;
+  p_actividades_completadas: number;
+  tipo_premiacion: string; // o string[], si es un arreglo
+}
 
 
 export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,setStateA:any, cambiarGanarA:any,setState1:any, cambiarGanar1:any, Router:any) {
     // Referencia persistente para almacenar la instancia de Kaplay
    // setState(false);
+
+   const estudianteInicial: NotasEstudiante = {
+      id_estudiante: 0,
+      eficiencia_algoritmica: 0,
+      reconocimiento_patrones: 0,
+      identificacion_errores: 0,
+      abstraccion: 0,
+      asociacion: 0,
+      construccion_algoritmos: 0,
+      p_actividades_completadas: 0,
+      tipo_premiacion: ""
+    };
+
+    
    
     juegoKaplay.loadSprite("construccion3", "sprites/buildings/House_Blue.png", {
       sliceX: 1,
@@ -65,26 +89,22 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
       },
     });
 
-     juegoKaplay.loadSprite("rock", "sprites/deco/Rocks_01.png", {
+    juegoKaplay.loadSprite("rock", "sprites/deco/Rocks_01.png", {
           sliceX: 8,
           sliceY: 1,
           anims: {
             quiet: { from: 0, to: 7, loop: true },
           },
-        });
+    });
 
-        juegoKaplay.loadSprite("oveja", "sprites/deco/HappySheep_Bouncing.png", {
-          sliceX: 6,
-          sliceY: 1,
-          anims: {
-            quiet: { from: 0, to: 5, loop: true },
-          },
-        });
+    juegoKaplay.loadSprite("oveja", "sprites/deco/HappySheep_Bouncing.png", {
+      sliceX: 6,
+      sliceY: 1,
+      anims: {
+        quiet: { from: 0, to: 5, loop: true },
+      },
+    });
   
-
-
-
-
     juegoKaplay.loadSprite("heart", "sprites/heart.png", {
       sliceX: 1,
       sliceY: 1,
@@ -105,11 +125,29 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
       sliceY: 1
     });
 
+    const cargarEvaluacionEstudiante = async (datos: NotasEstudiante) => {
+      try {
+        const response = await fetch('http://localhost:3000/estudiantes/establecer/notas', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            // CORS: solo es necesario en el servidor, pero puedes incluir el header Origin si necesario
+          },
+          body: JSON.stringify(datos),
+          mode: 'cors', // Habilita CORS
+        });
+
+        const result = await response.json();
+        console.log(result);
+      } catch (error) {
+        console.error("Error al actualizar las notas:", error);
+      }
+    }
+
     let semicorchea1: GameObj;
     let semicorchea2: GameObj;
     let semicorchea3:GameObj;
-
- 
 
     juegoKaplay.loadSound("sonidoPrueba", "button_09-190435.mp3");
     const P1= juegoKaplay.loadSound("P1", "./sounds/P1.mp3");
@@ -123,8 +161,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
     juegoKaplay.loadSound("A2", "./sounds/A2.mp3");
   
     juegoKaplay.loadSprite("redbox", "red-border-box.png");
-        
-  
+ 
     juegoKaplay.onLoad(async () => {
         //Practicando aqui
         SCREEN_RESOLUTION_X = window.innerWidth 
@@ -140,7 +177,6 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
           pos: juegoKaplay.vec2(0, 0),
         },
         `./fonditosari.json`,   //archivo de donde voy a extraer el mapa
-        
         [ //Aca lo importante es que debo introducir el orden de las texturas en el que va, capa por capa
           {
             urlTextura: "./nivel2/Water.png",  
@@ -177,13 +213,10 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
 
           cambiarGanar1(true);
           setState1(true);
+          setTimeout(() => {
+            setState1(false);
+          }, 10000); 
 
-          
-         
-        
-         setTimeout(() => {
-          setState1(false);
-         }, 10000); 
           console.log("Resultado de generar nivel 2")
           console.log(juegoKaplay.get("*"))
           const ovejas= juegoKaplay.get("oveja")
@@ -200,233 +233,206 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
           console.log(colisiones);
           let esPrimeraRonda = true;
 
-         /* const casa = juegoKaplay.add([
-            juegoKaplay.pos(400,-5),
-            juegoKaplay.sprite("casa1"),
-            juegoKaplay.scale(0.8),
-            juegoKaplay.health(3),
-            juegoKaplay.area(),
-            "casa",
-            { z: 1 } // Asegura que el jugador esté en una capa superior
-          ]);*/
-
-
-
-
-
-
           const velocidad = 440;
 
-
-
-          
           const circle1 = juegoKaplay.add([
             juegoKaplay.pos(juegoKaplay.center().x - juegoKaplay.center().x / 4 -30, juegoKaplay.center().y + juegoKaplay.center().y / 2 + juegoKaplay.center().y / 6),
             juegoKaplay.sprite("notas_circulo", {frame: 0}),
             juegoKaplay.area(),
             juegoKaplay.scale(0.20),
             { z: 1},// Asegura que el jugador esté en una capa superior,
-            ])
+          ])
   
-            const circle2 = juegoKaplay.add([
-            juegoKaplay.pos(juegoKaplay.center().x -30, juegoKaplay.center().y + juegoKaplay.center().y / 2 + juegoKaplay.center().y / 6),
-            juegoKaplay.sprite("notas_circulo", {frame: 1}),
-            juegoKaplay.area(),
-            juegoKaplay.scale(0.20),
-            { z: 1},// Asegura que el jugador esté en una capa superior,
-            ])
+          const circle2 = juegoKaplay.add([
+          juegoKaplay.pos(juegoKaplay.center().x -30, juegoKaplay.center().y + juegoKaplay.center().y / 2 + juegoKaplay.center().y / 6),
+          juegoKaplay.sprite("notas_circulo", {frame: 1}),
+          juegoKaplay.area(),
+          juegoKaplay.scale(0.20),
+          { z: 1},// Asegura que el jugador esté en una capa superior,
+          ])
   
-            const circle3 = juegoKaplay.add([
-            juegoKaplay.pos(juegoKaplay.center().x + juegoKaplay.center().x / 4 -30, juegoKaplay.center().y + juegoKaplay.center().y / 2 + juegoKaplay.center().y / 6),
-            juegoKaplay.sprite("notas_circulo", {frame: 2}),
-            juegoKaplay.area(),
-            juegoKaplay.scale(0.20),
-            { z: 1},// Asegura que el jugador esté en una capa superior,
-            ])
+          const circle3 = juegoKaplay.add([
+          juegoKaplay.pos(juegoKaplay.center().x + juegoKaplay.center().x / 4 -30, juegoKaplay.center().y + juegoKaplay.center().y / 2 + juegoKaplay.center().y / 6),
+          juegoKaplay.sprite("notas_circulo", {frame: 2}),
+          juegoKaplay.area(),
+          juegoKaplay.scale(0.20),
+          { z: 1},// Asegura que el jugador esté en una capa superior,
+          ])
   
           let puntoPartida: number = window.innerWidth/3
           let puntoPartidaY:number = window.innerHeight/2
-          //let spritecito="";
+
+          // Array para almacenar los sprites de notas creados
+          let spritesNotas: GameObj[] = []; // Asegúrate de usar el tipo correcto para los sprites en Kaboom.js
   
-           /* function clean(spritecito: any){
-              juegoKaplay.destroy(spritecito);
-            };*/
-  
-  // Array para almacenar los sprites de notas creados
-    let spritesNotas: GameObj[] = []; // Asegúrate de usar el tipo correcto para los sprites en Kaboom.js
-  
-    function validarAciertos(){
-      if(aciertos==1){
+          function validarAciertos(){
+            if(aciertos==1){
+                      
+              
+              construccion.destroy();
                 
+              console.log("El mensaje es: " + aciertos);
+              cambiarGanar(true);
+              setState(true);
+              setTimeout(() => {
+                setState(false);
+              }, 4000); 
+              
+            
+              ultimo = patronesdinamicos();
+            
         
-        construccion.destroy();
-          
-        console.log("El mensaje es: " + aciertos);
-        cambiarGanar(true);
-        setState(true);
-        setTimeout(() => {
-          setState(false);
-        }, 4000); 
+            }else if(aciertos==2){
+              
+            
+              console.log("El mensaje es: " + aciertos);
+              setState(true);
+              cambiarGanar(true);
+              setTimeout(() => {
+                setState(false);
+              }, 4000); 
+              
+              ultimo = patronesdinamicos();
         
-       
-        ultimo = patronesdinamicos();
-       
-  
-      }else if(aciertos==2){
-        
-       
-        console.log("El mensaje es: " + aciertos);
-        setState(true);
-        cambiarGanar(true);
-        setTimeout(() => {
-          setState(false);
-        }, 4000); 
-        
-        ultimo = patronesdinamicos();
-  
-      }else if(aciertos==3){
-        
-        console.log("El mensaje es: " + aciertos);
-        //patronesdinamicos().clear;
-        
-        cambiarGanar(true);
-        /*window.location.href=window.location.href;*/
-        
-       //setTimeout(()=>{
-        construccion2.destroy();
-        ovejas.forEach( (oveja: GameObj<any>) => {
-          oveja.play("quiet");
+            }else if(aciertos==3){
+              
+              console.log("El mensaje es: " + aciertos);
+              //patronesdinamicos().clear;
+              
+              cambiarGanar(true);
+              /*window.location.href=window.location.href;*/
+              
+            //setTimeout(()=>{
+              construccion2.destroy();
+              ovejas.forEach( (oveja: GameObj<any>) => {
+                oveja.play("quiet");
 
-        })
+              })
 
-        cambiarGanarA(true); 
-        setStateA(true);
+              cambiarGanarA(true); 
+              setStateA(true);
+                      
+              setTimeout(() => {
+                setStateA(false);
+                window.location.href = window.location.href;
+              }, 5000);
+                          
                 
-        setTimeout(() => {
-          setStateA(false);
-          window.location.href = window.location.href;
-        }, 5000);
-                    
-          
-       // },200);
-       
-       
-       colisiones.forEach( (colision: GameObj<any>) => {
-                    
-        colision.destroy();
-      })
+            // },200);
+            
+            
+            colisiones.forEach( (colision: GameObj<any>) => {
+                          
+              colision.destroy();
+            })
+              
+              
         
+              
         
-  
+              
         
-  
-        
-  
-      }
-    };
-  
-  
-    function limpiarNotas() {
-      
-      spritesNotas = juegoKaplay.get("notas");
-      console.log(spritesNotas);
-      spritesNotas.forEach((spritesNotas:any)=>{
-        spritesNotas.destroy();
-      })
-      puntoPartida = window.innerWidth/3
-      puntoPartidaY= window.innerHeight/2
-    }
-  
-    function patronesdinamicos(patrones: number[][] = [
-        [0, 1, 2, 0, 1, 2, 0, 1, 2],
-        [0, 2, 0, 2, 0, 2, 0, 2, 0],
-        [0, 0, 0, 1, 1, 1, 2, 2, 2],
-        [1, 2, 0, 1, 2, 0, 1, 2, 0],
-        [2, 1, 0, 2, 1, 0, 2, 1, 0],
-        [0, 0, 1, 1, 0, 0, 1, 1, 0],
-      ], ultimoPatron?: number) {
+            }
+          };
 
-        limpiarNotas();
-
-        
-
-        const indicesDisponibles = patrones
-        .map((_, idx) => idx)
-        .filter((idx) => idx !== ultimoPatron);
-
-      // Elegir un índice aleatorio diferente al último
-      const nuevoIndice = indicesDisponibles[Math.floor(Math.random() * indicesDisponibles.length)];
-      const patron = patrones[nuevoIndice];
-      const secuencia = patron.slice(0, -1);
-
-      if(!ultimoPatron){
-          console.log("REPRODUCIENDO PRIMER PATRON")
-          console.log(patron)
-        }else{
-          console.log("REPRODUCIENDO PROXIMO PATRON PATRON")
-          console.log(patron)
-        }
-    
-      const numeros = generarNumerosAzar();
-      const ultimo = patron[patron.length - 1];
-      /*
-      const patron = patrones[numeros[0]];
-      const ultimo = patron[patron.length - 1];
-      const secuencia = patron.slice(0, -1);
-      */
-      let delay = esPrimeraRonda ? 5000 : 350; // 10s la primera vez, luego normal
-      esPrimeraRonda = false; // Marcar como no primera ronda
-    
-      secuencia.forEach((numeroAzar: number) => {
-        setTimeout(() => {
-          switch (numeroAzar) {
-            case 0:
-              nuevoSprite = juegoKaplay.add([
-                juegoKaplay.pos(puntoPartida, juegoKaplay.center().y / 2 + puntoPartidaY - 80),
-                juegoKaplay.sprite("notas"),
-                juegoKaplay.scale(0.1),
-                { z: 2 },
-                "notas"
-              ]);
-              nuevoSprite.frame = 1;
-              juegoKaplay.play("A0", { volume: 1, speed: 1.5, loop: false });
-              break;
-            case 1:
-              nuevoSprite = juegoKaplay.add([
-                juegoKaplay.pos(puntoPartida, juegoKaplay.center().y / 2 + puntoPartidaY - 80),
-                juegoKaplay.sprite("notas"),
-                juegoKaplay.scale(0.1),
-                { z: 2 },
-                "notas"
-              ]);
-              nuevoSprite.frame = 0;
-              juegoKaplay.play("A1", { volume: 1, speed: 1.5, loop: false });
-              break;
-            case 2:
-              nuevoSprite = juegoKaplay.add([
-                juegoKaplay.pos(puntoPartida, juegoKaplay.center().y / 2 + puntoPartidaY - 80),
-                juegoKaplay.sprite("notas"),
-                juegoKaplay.scale(0.1),
-                { z: 2 },
-                "notas"
-              ]);
-              nuevoSprite.frame = 2;
-              juegoKaplay.play("A2", { volume: 1, speed: 1.5, loop: false });
-              break;
+          function limpiarNotas() {
+            
+            spritesNotas = juegoKaplay.get("notas");
+            console.log(spritesNotas);
+            spritesNotas.forEach((spritesNotas:any)=>{
+              spritesNotas.destroy();
+            })
+            puntoPartida = window.innerWidth/3
+            puntoPartidaY= window.innerHeight/2
           }
-    
-          puntoPartida += 70;
-          if (nuevoSprite) spritesNotas.push(nuevoSprite);
-        }, delay);
-    
-        delay += 400;
-      });
-    
-      return [ultimo, (ultimoPatron) ? nuevoIndice : -1 ];
-    }
-    
-  
+        
+          function patronesdinamicos(patrones: number[][] = [
+              [0, 1, 2, 0, 1, 2, 0, 1, 2],
+              [0, 2, 0, 2, 0, 2, 0, 2, 0],
+              [0, 0, 0, 1, 1, 1, 2, 2, 2],
+              [1, 2, 0, 1, 2, 0, 1, 2, 0],
+              [2, 1, 0, 2, 1, 0, 2, 1, 0],
+              [0, 0, 1, 1, 0, 0, 1, 1, 0],
+            ], ultimoPatron?: number) {
 
+              limpiarNotas();
+
+              
+
+              const indicesDisponibles = patrones
+              .map((_, idx) => idx)
+              .filter((idx) => idx !== ultimoPatron);
+
+            // Elegir un índice aleatorio diferente al último
+            const nuevoIndice = indicesDisponibles[Math.floor(Math.random() * indicesDisponibles.length)];
+            const patron = patrones[nuevoIndice];
+            const secuencia = patron.slice(0, -1);
+
+            if(!ultimoPatron){
+                console.log("REPRODUCIENDO PRIMER PATRON")
+                console.log(patron)
+              }else{
+                console.log("REPRODUCIENDO PROXIMO PATRON PATRON")
+                console.log(patron)
+              }
+          
+            const numeros = generarNumerosAzar();
+            const ultimo = patron[patron.length - 1];
+            /*
+            const patron = patrones[numeros[0]];
+            const ultimo = patron[patron.length - 1];
+            const secuencia = patron.slice(0, -1);
+            */
+            let delay = esPrimeraRonda ? 5000 : 350; // 10s la primera vez, luego normal
+            esPrimeraRonda = false; // Marcar como no primera ronda
+          
+            secuencia.forEach((numeroAzar: number) => {
+              setTimeout(() => {
+                switch (numeroAzar) {
+                  case 0:
+                    nuevoSprite = juegoKaplay.add([
+                      juegoKaplay.pos(puntoPartida, juegoKaplay.center().y / 2 + puntoPartidaY - 80),
+                      juegoKaplay.sprite("notas"),
+                      juegoKaplay.scale(0.1),
+                      { z: 2 },
+                      "notas"
+                    ]);
+                    nuevoSprite.frame = 1;
+                    juegoKaplay.play("A0", { volume: 1, speed: 1.5, loop: false });
+                    break;
+                  case 1:
+                    nuevoSprite = juegoKaplay.add([
+                      juegoKaplay.pos(puntoPartida, juegoKaplay.center().y / 2 + puntoPartidaY - 80),
+                      juegoKaplay.sprite("notas"),
+                      juegoKaplay.scale(0.1),
+                      { z: 2 },
+                      "notas"
+                    ]);
+                    nuevoSprite.frame = 0;
+                    juegoKaplay.play("A1", { volume: 1, speed: 1.5, loop: false });
+                    break;
+                  case 2:
+                    nuevoSprite = juegoKaplay.add([
+                      juegoKaplay.pos(puntoPartida, juegoKaplay.center().y / 2 + puntoPartidaY - 80),
+                      juegoKaplay.sprite("notas"),
+                      juegoKaplay.scale(0.1),
+                      { z: 2 },
+                      "notas"
+                    ]);
+                    nuevoSprite.frame = 2;
+                    juegoKaplay.play("A2", { volume: 1, speed: 1.5, loop: false });
+                    break;
+                }
+          
+                puntoPartida += 70;
+                if (nuevoSprite) spritesNotas.push(nuevoSprite);
+              }, delay);
+          
+              delay += 400;
+            });
+          
+            return [ultimo, (ultimoPatron) ? nuevoIndice : -1 ];
+          }
 
           const patronesJuego = [
           [0, 1, 2, 0, 1, 2, 0, 1, 2],
@@ -435,11 +441,10 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
           [1, 2, 0, 1, 2, 0, 1, 2, 0],
           [2, 1, 0, 2, 1, 0, 2, 1, 0],
           [0, 0, 1, 1, 0, 0, 1, 1, 0],
-        ]
+          ]
   
           let ultimo = patronesdinamicos(patronesJuego);
-          
-  
+
           circle1.onClick( () => {
             juegoKaplay.play("A0", {
               volume: 1, 
@@ -466,64 +471,65 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
                 setState(false);
               }, 2000); 
             }
-            })
-            circle2.onClick( () => {
-            juegoKaplay.play("A1", {
-              volume: 1, 
-              speed: 1.5, 
-              loop: false, 
-            });
-            if(ultimo[0] == 1){
-  
-              nomo.play("right");
-              arbol.play("bye");
-              aciertos++;
-              validarAciertos();
-              //console.log("El mensaje es: " + aciertos);
-              setTimeout(() => {
-                arbol.play("quiet");
-              }, 2000); 
-             
-            }else{
-              console.log("Fallaste"+ultimo)
-              setState(true);
-              cambiarGanar(false);
-              const ultimoIndice = ultimo[1]
-              ultimo = patronesdinamicos(patronesJuego,ultimoIndice);
-              setTimeout(() => {
-                setState(false);
-              }, 2000); 
-            }
-            })
-  
-            circle3.onClick( () => {
-            juegoKaplay.play("A2", {
-              volume: 1, 
-              speed: 1.5, 
-              loop: false, 
-            });
-            if(ultimo[0] == 2){
-  
-              nomo.play("right");
-              arbol.play("bye");
-              aciertos++;
-              validarAciertos();
-              //console.log("El mensaje es: " + aciertos);
-              setTimeout(() => {
-                arbol.play("quiet");
-              }, 2000); 
-              
-            }else{
-              console.log("Fallaste" +ultimo)
-              setState(true);
-              cambiarGanar(false);
-              const ultimoIndice = ultimo[1]
-              ultimo = patronesdinamicos(patronesJuego,ultimoIndice);
-              setTimeout(() => {
-                setState(false);
-              }, 2000); 
-            }
-            })
+          })
+
+          circle2.onClick( () => {
+          juegoKaplay.play("A1", {
+            volume: 1, 
+            speed: 1.5, 
+            loop: false, 
+          });
+          if(ultimo[0] == 1){
+
+            nomo.play("right");
+            arbol.play("bye");
+            aciertos++;
+            validarAciertos();
+            //console.log("El mensaje es: " + aciertos);
+            setTimeout(() => {
+              arbol.play("quiet");
+            }, 2000); 
+            
+          }else{
+            console.log("Fallaste"+ultimo)
+            setState(true);
+            cambiarGanar(false);
+            const ultimoIndice = ultimo[1]
+            ultimo = patronesdinamicos(patronesJuego,ultimoIndice);
+            setTimeout(() => {
+              setState(false);
+            }, 2000); 
+          }
+          })
+
+          circle3.onClick( () => {
+          juegoKaplay.play("A2", {
+            volume: 1, 
+            speed: 1.5, 
+            loop: false, 
+          });
+          if(ultimo[0] == 2){
+
+            nomo.play("right");
+            arbol.play("bye");
+            aciertos++;
+            validarAciertos();
+            //console.log("El mensaje es: " + aciertos);
+            setTimeout(() => {
+              arbol.play("quiet");
+            }, 2000); 
+            
+          }else{
+            console.log("Fallaste" +ultimo)
+            setState(true);
+            cambiarGanar(false);
+            const ultimoIndice = ultimo[1]
+            ultimo = patronesdinamicos(patronesJuego,ultimoIndice);
+            setTimeout(() => {
+              setState(false);
+            }, 2000); 
+          }
+          })
   
            
   

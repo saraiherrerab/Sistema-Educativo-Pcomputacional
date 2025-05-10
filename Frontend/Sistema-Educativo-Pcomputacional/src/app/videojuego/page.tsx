@@ -6,7 +6,29 @@
  import './styles.css';
 import { useRouter } from "next/navigation";
 
-
+interface Estudiante {
+  id_usuario: number;
+  telefono: string;
+  nombre: string;
+  apellido: string;
+  correo: string;
+  edad: number;
+  foto: string;
+  usuario: string;
+  clave_acceso: string;
+  cedula: string;
+  id_estudiante: number;
+  condicion_medica: string;
+  eficiencia_algoritmica: number;
+  reconocimiento_patrones: string; 
+  abstraccion: string;
+  asociacion: string;
+  identificacion_errores: string;
+  construccion_algoritmos: string;
+  p_actividades_completadas: number;
+  tipo_premiacion: string;
+  id_grupo: number;
+}
 
  //let respuesta=1;
  function Cartel(props:any) {
@@ -140,10 +162,13 @@ function CartelC(props:any) {
   );
 
 }
+
  let SCREEN_RESOLUTION_X: number = 0;
  let SCREEN_RESOLUTION_Y: number = 0;
+
  
  function Page() {
+
     const [cambiarMostrar1, setState1] = useState(false);
     const [ganar1, cambiarGanar1] = useState(true);
     const [cambiarMostrar, setState] = useState(false);
@@ -170,19 +195,48 @@ function CartelC(props:any) {
     const amoALuisA = () => {
       setStateA(!cambiarMostrarA); // Cambia el estado entre true y false
     };
-
     const amoALuisB = () => {
       setStateB(!cambiarMostrarB); // Cambia el estado entre true y false
     };
-
     const amoALuisC = () => {
       setStateC(!cambiarMostrarC); // Cambia el estado entre true y false
     };
+
    const juegoKaplayRef = useRef<any>(null);
+
+   const [usuario, setUsuario] = useState<Estudiante>(() => {
+    const usuarioGuardado = localStorage.getItem('usuario');
+    return usuarioGuardado ? JSON.parse(usuarioGuardado) : {
+      id_usuario: 0,
+      telefono: "",
+      nombre: "",
+      apellido: "",
+      correo: "",
+      edad: 0,
+      foto: "",
+      usuario: "",
+      clave_acceso: "",
+      cedula: "",
+      id_estudiante: 0,
+      condicion_medica: "",
+      eficiencia_algoritmica: 0,
+      reconocimiento_patrones: "", 
+      abstraccion: "",
+      asociacion: "",
+      identificacion_errores: "",
+      construccion_algoritmos: "",
+      p_actividades_completadas: 0,
+      tipo_premiacion: "",
+      id_grupo: 0,
+    };
+  });
  
    useEffect(() => {
     SCREEN_RESOLUTION_X = window.innerWidth 
     SCREEN_RESOLUTION_Y = window.innerHeight 
+
+    console.log(usuario)
+
     const resizeCanvas = () => {
       const canvas = document.getElementById("game") as HTMLCanvasElement;
       if (canvas) {

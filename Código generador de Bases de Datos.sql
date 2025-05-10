@@ -7,14 +7,14 @@ DROP TABLE IF EXISTS Estudiante;
 DROP TABLE IF EXISTS Grupos;
 DROP TABLE IF EXISTS Curso;
 DROP TABLE IF EXISTS Profesor;
-
-
-
-
 DROP TABLE IF EXISTS Usuario_Nivel;
 DROP TABLE IF EXISTS Nivel;
 
 DROP TABLE IF EXISTS Administrador;
+
+DROP TABLE IF EXISTS juego;
+DROP TABLE IF EXISTS prueba;
+DROP TABLE IF EXISTS usuario;
 
 
 
@@ -134,18 +134,18 @@ CREATE TABLE IF NOT EXISTS Grupos (
 INSERT INTO Grupos (nombre_grupo, id_curso)
 VALUES 
 ('Grupo Alpha - Programación Básica', 1),   -- Introducción a la Programación
-('Grupo Beta - Robótica con Arduino', 3),   -- Robótica con Arduino
-('Grupo Gamma - Machine Learning', 9);      -- Machine Learning Aplicado a la Robótica
+('Grupo Beta - Robótica con Arduino', 2),   -- Robótica con Arduino
+('Grupo Gamma - Machine Learning', 3);      -- Machine Learning Aplicado a la Robótica
 
 CREATE TABLE IF NOT EXISTS Estudiante (
 	id_estudiante INTEGER NOT NULL,
 	condicion_medica TEXT,
 	eficiencia_algoritmica INTEGER DEFAULT 0,
-	reconocimiento_patrones BOOLEAN DEFAULT FALSE,
-	identificacion_errores BOOLEAN DEFAULT FALSE,
-	abstraccion BOOLEAN DEFAULT FALSE,
-	asociacion BOOLEAN DEFAULT FALSE,
-	construccion_algoritmos BOOLEAN DEFAULT FALSE,
+	reconocimiento_patrones TEXT DEFAULT 'NO CURSADO',
+	identificacion_errores TEXT DEFAULT 'NO CURSADO',
+	abstraccion TEXT DEFAULT 'NO CURSADO',
+	asociacion TEXT DEFAULT 'NO CURSADO',
+	construccion_algoritmos TEXT DEFAULT 'NO CURSADO',
 	p_actividades_completadas INTEGER DEFAULT 0,
 	tipo_premiacion TEXT,
 	id_grupo INTEGER,
@@ -161,13 +161,13 @@ CREATE TABLE IF NOT EXISTS Estudiante (
 -- Estudiantes (IDs del 4 al 10) asignados a grupos
 INSERT INTO Estudiante (id_estudiante, condicion_medica, tipo_premiacion, id_grupo)
 VALUES 
-(4, NULL, 'Diploma', 1),
-(5, NULL, 'Insignia', 1),
-(6, NULL, 'Medalla', 2),
-(7, NULL, 'Reconocimiento', 2),
-(8, NULL, 'Insignia', 3),
-(9, NULL, 'Medalla', 3),
-(10, NULL, 'Certificado', 1);
+(4, 'No tiene condiciones médicas', 'Diploma', 1),
+(5, 'No tiene condiciones médicas', 'Insignia', 1),
+(6, 'No tiene condiciones médicas', 'Medalla', 2),
+(7, 'No tiene condiciones médicas', 'Reconocimiento', 2),
+(8, 'No tiene condiciones médicas', 'Insignia', 3),
+(9, 'No tiene condiciones médicas', 'Medalla', 3),
+(10, 'No tiene condiciones médicas', 'Certificado', 1);
 
 /* Lógica de Juegos y Niveles */
 DROP TABLE IF EXISTS Juego;
@@ -238,16 +238,16 @@ CREATE TABLE IF NOT EXISTS horarios_profesor (
   ),
   hora_inicio TIME NOT NULL,
   hora_fin TIME NOT NULL,
-  FOREIGN KEY (id_profesor) REFERENCES Profesor(id_profesor),
-  FOREIGN KEY (id_curso) REFERENCES curso(id_curso),
+  FOREIGN KEY (id_profesor,id_curso) REFERENCES Profesor_Curso(id_profesor,id_curso),
   FOREIGN KEY (id_grupo) REFERENCES grupos(id_grupo)
+	
 );
 
 INSERT INTO horarios_profesor (id_profesor, id_curso, id_grupo, dia_semana, hora_inicio, hora_fin)
 VALUES
-(2, 2, 'Lunes', '16:00', '18:00'),
-(2, 2, 'Martes', '16:00', '18:00'),
-(2, 2, 'Miércoles', '16:00', '18:00');
+(2, 1, 1,'Lunes', '16:00', '18:00'),
+(2, 2, 2,'Martes', '16:00', '18:00'),
+(2, 3, 3,'Miércoles', '16:00', '18:00');
 
 CREATE OR REPLACE FUNCTION obtener_cursos_profesor(p_id_usuario INT)
 RETURNS SETOF Curso AS $$
