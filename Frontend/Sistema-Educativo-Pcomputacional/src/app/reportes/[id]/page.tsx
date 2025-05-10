@@ -25,11 +25,11 @@ interface Estudiante {
   id_estudiante: number,
   condicion_medica: string,
   eficiencia_algoritmica: number,
-  reconocimiento_patrones: boolean, 
-  abstraccion: boolean,
-  asociacion: boolean,
-  identificacion_errores: boolean,
-  construccion_algoritmos: boolean,
+  reconocimiento_patrones: string, 
+  abstraccion: string,
+  asociacion: string,
+  identificacion_errores: string,
+  construccion_algoritmos: string,
   p_actividades_completadas: number,
   tipo_premiacion: string,
   id_grupo: number,
@@ -86,11 +86,11 @@ export default function Reportes( ) {
           id_estudiante: 0,
           condicion_medica: "",
           eficiencia_algoritmica: 0,
-          reconocimiento_patrones: false,
-          abstraccion: false,
-          asociacion: false,
-          identificacion_errores: false,
-          construccion_algoritmos: false,
+          reconocimiento_patrones: "",
+          abstraccion: "",
+          asociacion: "",
+          identificacion_errores: "",
+          construccion_algoritmos: "",
           p_actividades_completadas: 0,
           tipo_premiacion: "",
           id_grupo: 0,
@@ -125,12 +125,13 @@ export default function Reportes( ) {
         const resultadoHorarios = await obtenerHorariosAlumno(resultadoConsulta.id_grupo)
         console.log(resultadoHorarios)
 
-        const resultadoProfesor = (resultadoHorarios ?? []) ? await obtenerDatosProfesor(resultadoHorarios[0].id_profesor) : null
+        const resultadoProfesor = (resultadoHorarios.length > 0)
+        ? await obtenerDatosProfesor(resultadoHorarios[0].id_profesor)
+        : null;
 
-        if(resultadoProfesor){
-            console.log(resultadoProfesor)
-            setProfesor(resultadoProfesor)
-        }
+        if (resultadoProfesor) {
+        setProfesor(resultadoProfesor); // solo aquí
+}
 
         setHorarios ([...resultadoHorarios])
 
@@ -144,8 +145,7 @@ export default function Reportes( ) {
         const datosProfesor = await fetch("http://localhost:5555/profesores/" + id_profesor_alumno)
         const resultadoConsulta = await datosProfesor.json()
         console.log(resultadoConsulta)
-
-        setProfesor(resultadoConsulta)
+        return resultadoConsulta
 
     };
 
@@ -221,25 +221,25 @@ export default function Reportes( ) {
                             </div>
                             <div className="contenedor_eficiencia_errores">
                                 <div className="contenedor_identificacion_errores">
-                                    <Parametros parametroTitulo1="IDENTIFICACIÓN DE ERRORES" parametroTitulo2={(usuario.identificacion_errores) ? "APROBADO" : "DESAPROBADO"} />
+                                    <Parametros parametroTitulo1="IDENTIFICACIÓN DE ERRORES" parametroTitulo2={(usuario.identificacion_errores) ? usuario.identificacion_errores : ""} />
                                 </div>
                                 <div className="contenedor_reconocimiento_patrones">
-                                    <Parametros parametroTitulo1="RECONOCIMIENTO DE PATRONES" parametroTitulo2={(usuario.reconocimiento_patrones) ? "APROBADO" : "DESAPROBADO"} />
+                                    <Parametros parametroTitulo1="RECONOCIMIENTO DE PATRONES" parametroTitulo2={(usuario.reconocimiento_patrones) ? usuario.reconocimiento_patrones : ""} />
                                 </div>
 
                             </div>
                         </div>
                         <div className="contenedor_abstraccion">
                             <div className="contenedor_abstraccion_abstraccion">
-                                <Parametros parametroTitulo1="ABSTRACCIÓN" parametroTitulo2={(usuario.abstraccion) ? "APROBADO" : "DESAPROBADO"} />
+                                <Parametros parametroTitulo1="ABSTRACCIÓN" parametroTitulo2={(usuario.abstraccion) ? usuario.abstraccion : ""} />
                             </div>
                             <div className="contenedor_abstraccion_asociacion">
-                                <Parametros parametroTitulo1="ASOCIACIÓN" parametroTitulo2={(usuario.asociacion) ? "APROBADO" : "DESAPROBADO"} />
+                                <Parametros parametroTitulo1="ASOCIACIÓN" parametroTitulo2={(usuario.asociacion) ? usuario.asociacion : ""} />
                             </div>
                         </div>
                         <div className="contenedor_construccion">
                             <div className="contenedor_construccion_construccion">
-                                <Parametros parametroTitulo1="CONSTRUCCIÓN DE ALGORITMOS" parametroTitulo2={(usuario.construccion_algoritmos) ? "APROBADO" : "DESAPROBADO"} />
+                                <Parametros parametroTitulo1="CONSTRUCCIÓN DE ALGORITMOS" parametroTitulo2={(usuario.construccion_algoritmos) ? usuario.construccion_algoritmos : ""} />
                             </div>
                             <div className="contenedor_construccion_profesor">
                                 <Notita NotitaTitulo1={(profesor.id_profesor) ? profesor.nombre + " " + profesor.apellido : "" } NotitaTitulo2={(horarios.length > 0) ? horarios[0].nombre_curso : "No está en un curso"}/>

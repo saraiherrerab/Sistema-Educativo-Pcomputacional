@@ -12,7 +12,7 @@ router.get('/estudiantes', async function(req, res, next) {
       res.json({menssage: "Error al obtener estudiantes"})
     }
     
-  });
+});
   
   /* GET Estudiantes By ID - Obtener Datos de Estudiante y Usuario asociado mediante ID. */
 router.get('/estudiantes/:id', async function(req, res, next) {
