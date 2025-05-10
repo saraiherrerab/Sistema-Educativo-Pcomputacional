@@ -10,6 +10,10 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
         const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
         const TILED_HEIGHT: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGHT_NUMBER
 
+        let posicionAnteriorXGlobal = 0;
+        let posicionAnteriorYGlobal= 0;
+
+
         function sleep(ms: number) {
           return new Promise(resolve => setTimeout(resolve, ms));   
         }
@@ -200,7 +204,6 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                   const down = juegoKaplay.get("down")[0]
                   const left = juegoKaplay.get("left")[0]
                   const right = juegoKaplay.get("right")[0]
-                  const enemy = juegoKaplay.get("enemy")[0]
                   const heart1 = juegoKaplay.get("heart1")[0]
                   const heart2 = juegoKaplay.get("heart2")[0]
                   const heart3 = juegoKaplay.get("heart3")[0]
@@ -210,24 +213,25 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                   enemigos.forEach( (enemigo: GameObj<any>) => {
 
                     let squareDer = juegoKaplay.add([
-                      juegoKaplay.pos(enemigo.pos.x + (TILED_WIDTH / 2),enemigo.pos.y - (TILED_HEIGHT / 2)+10),
+                      juegoKaplay.pos(enemigo.pos.x + TILED_WIDTH, enemigo.pos.y),
                       juegoKaplay.scale(1),
-                      juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2(0,0), TILED_WIDTH, TILED_HEIGHT-20), // Rectángulo más pequeño
+                      juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2(0,0), TILED_WIDTH, TILED_HEIGHT), // Rectángulo más pequeño
                       }),
+                      juegoKaplay.anchor("center"),
                       "square",
                       { z: 2 } // Asegura que el jugador esté en una capa superior
                     ]);
   
                     let squareIzq = juegoKaplay.add([
-                      juegoKaplay.pos(enemigo.pos.x - 3*(TILED_WIDTH / 2),enemigo.pos.y - (TILED_HEIGHT / 2)+10),
+                      juegoKaplay.pos(enemigo.pos.x - TILED_WIDTH,enemigo.pos.y),
                       juegoKaplay.scale(1),
-                      juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2(0,0), TILED_WIDTH, TILED_HEIGHT-20), // Rectángulo más pequeño
+                      juegoKaplay.area({shape: new juegoKaplay.Rect(juegoKaplay.vec2(0,0), TILED_WIDTH, TILED_HEIGHT), // Rectángulo más pequeño
                       }),
+                      juegoKaplay.anchor("center"),
                       "square",
                       { z: 2 } // Asegura que el jugador esté en una capa superior
                     ]);
-
-                      
+      
                     squareDer.onCollide("player", (jugador: any) => {
                         enemigo.play("right_a");    
                         lives=lives-1;
@@ -237,13 +241,25 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                         enemigo.play("right_a");
                         lives=lives-1;
                     });
+
+                    enemigo.onCollide("player", (jugador: any) => {
+                        console.log("CHOCO")
+
+                        console.log("Posición después de presionar la tecla ", {
+                          x: player.pos.x,
+                          y: player.pos.y
+                        })
+
+                        player.pos.x = posicionAnteriorXGlobal
+                        player.pos.y = posicionAnteriorYGlobal
+                    })
+
+
                     
                   })
 
                   const colisiones = juegoKaplay.get("square-colision")
                   console.log(colisiones)
-
-                  console.log(enemy)
                   
                   console.log(heart1)
                   console.log(heart2)
@@ -279,13 +295,22 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                   // Movimiento con teclado
                   juegoKaplay.onKeyPress("w", () => {
 
-                    console.log(player.pos.x)
-                    console.log(player.pos.y)
+                    const objetoPosicionAnterior = {
+                      x: player.pos.x,
+                      y: player.pos.y
+                    }
 
-                    const posicionAnteriorX = player.pos.x
-                    const posicionAnteriorY = player.pos.y
+                    console.log("Posición antes de presionar la tecla ", {
+                      x: player.pos.x,
+                      y: player.pos.y
+                    })
+                    console.log("Posición antes de presionar la tecla ", objetoPosicionAnterior)
 
-                    player.moveTo(posicionAnteriorX,Math.ceil(posicionAnteriorY - TILED_HEIGHT));
+                    posicionAnteriorXGlobal = player.pos.x
+                    posicionAnteriorYGlobal = player.pos.y
+
+
+                    player.moveTo(posicionAnteriorXGlobal,posicionAnteriorYGlobal - TILED_HEIGHT);
                     player.play("up");
                     
                     colisiones.forEach( (colision: GameObj<any>) => {
@@ -293,8 +318,8 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                       colision.onCollide("player", (jugador: any) => {
 
                         
-                        player.pos.x = posicionAnteriorX
-                        player.pos.y = posicionAnteriorY
+                        player.pos.x = posicionAnteriorXGlobal
+                        player.pos.y = posicionAnteriorYGlobal
                         
                       })
 
@@ -309,8 +334,8 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                         juegoKaplay.debug.log("¡ouch!");
                         juegoKaplay.debug.log("Han pasado dos segundos");
                         
-                        player.pos.x = posicionAnteriorX
-                        player.pos.y = posicionAnteriorY
+                        player.pos.x = posicionAnteriorXGlobal
+                        player.pos.y = posicionAnteriorYGlobal
                       })
 
                     })
@@ -319,58 +344,59 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                     
                     
                   });
+
                   juegoKaplay.onKeyPress("s", () => {
 
                     console.log(player.pos.x)
                     console.log(player.pos.y)
 
-                    const posicionAnteriorX = player.pos.x
-                    const posicionAnteriorY = player.pos.y
+                    posicionAnteriorXGlobal = player.pos.x
+                    posicionAnteriorYGlobal = player.pos.y
 
-                    player.moveTo(posicionAnteriorX,Math.ceil(posicionAnteriorY + TILED_HEIGHT));
+                    player.moveTo(posicionAnteriorXGlobal,posicionAnteriorYGlobal + TILED_HEIGHT);
                     player.play("down");
 
                     colisiones.forEach( (colision: GameObj<any>) => {
                     
                       colision.onCollide("player", (jugador: any) => {
                         
-                        player.pos.x = posicionAnteriorX
-                        player.pos.y = posicionAnteriorY
+                        player.pos.x = posicionAnteriorXGlobal
+                        player.pos.y = posicionAnteriorYGlobal
                       })
 
+                    })
+
+                    zonasGolpe.forEach( (zona: GameObj<any>) => {
+                  
+                      zona.onCollide("player", async (jugador: any) => {
+
+                        await sleep(100)
+                        
+                        juegoKaplay.debug.log("¡ouch!");
+                        juegoKaplay.debug.log("Han pasado dos segundos");
+                        
+                        player.pos.x = posicionAnteriorXGlobal
+                        player.pos.y = posicionAnteriorYGlobal
                       })
 
-                      zonasGolpe.forEach( (zona: GameObj<any>) => {
-                    
-                        zona.onCollide("player", async (jugador: any) => {
+                    })
 
-                          await sleep(100)
-                          
-                          juegoKaplay.debug.log("¡ouch!");
-                          juegoKaplay.debug.log("Han pasado dos segundos");
-                          
-                          player.pos.x = posicionAnteriorX
-                          player.pos.y = posicionAnteriorY
-                        })
-
-                      })
                   });
+
                   juegoKaplay.onKeyPress("a", () => {
 
-                    console.log(player.pos.x)
-                    console.log(player.pos.y)
+                  
+                    posicionAnteriorXGlobal = player.pos.x
+                    posicionAnteriorYGlobal = player.pos.y
 
-                    const posicionAnteriorX = player.pos.x
-                    const posicionAnteriorY = player.pos.y
-
-                    player.moveTo(Math.ceil(posicionAnteriorX - TILED_WIDTH),posicionAnteriorY);
+                    player.moveTo(posicionAnteriorXGlobal - TILED_WIDTH,posicionAnteriorYGlobal);
                     player.play("left");
 
                     colisiones.forEach( (colision: GameObj<any>) => {
                     
                       colision.onCollide("player", (jugador: any) => {
-                        player.pos.x = posicionAnteriorX
-                        player.pos.y = posicionAnteriorY
+                        player.pos.x = posicionAnteriorXGlobal
+                        player.pos.y = posicionAnteriorYGlobal
                       })
 
                     })
@@ -384,29 +410,27 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                           juegoKaplay.debug.log("¡ouch!");
                           juegoKaplay.debug.log("Han pasado dos segundos");
                           
-                          player.pos.x = posicionAnteriorX
-                          player.pos.y = posicionAnteriorY
+                          player.pos.x = posicionAnteriorXGlobal
+                          player.pos.y = posicionAnteriorYGlobal
                         })
 
                     })
 
                   });
+                  
                   juegoKaplay.onKeyPress("d", async () => {
 
-                    console.log(player.pos.x)
-                    console.log(player.pos.y)
+                    posicionAnteriorXGlobal = player.pos.x
+                    posicionAnteriorYGlobal = player.pos.y
 
-                    const posicionAnteriorX = player.pos.x
-                    const posicionAnteriorY = player.pos.y
-
-                    player.moveTo(Math.ceil(posicionAnteriorX + TILED_WIDTH),posicionAnteriorY);
+                    player.moveTo(posicionAnteriorXGlobal + TILED_WIDTH,posicionAnteriorYGlobal);
                     player.play("right");
 
                     colisiones.forEach( (colision: GameObj<any>) => {
                     
                       colision.onCollide("player", (jugador: any) => {
-                        player.pos.x = posicionAnteriorX
-                        player.pos.y = posicionAnteriorY
+                        player.pos.x = posicionAnteriorXGlobal
+                        player.pos.y = posicionAnteriorYGlobal
                       })
 
                     })
@@ -420,8 +444,8 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                           juegoKaplay.debug.log("¡ouch!");
                           juegoKaplay.debug.log("Han pasado dos segundos");
 
-                          player.pos.x = posicionAnteriorX
-                          player.pos.y = posicionAnteriorY
+                          player.pos.x = posicionAnteriorXGlobal
+                          player.pos.y = posicionAnteriorYGlobal
                         })
 
                     })
@@ -436,7 +460,7 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                     const posicionAnteriorX = player.pos.x
                     const posicionAnteriorY = player.pos.y
 
-                    player.moveTo(posicionAnteriorX,Math.ceil(posicionAnteriorY - TILED_HEIGHT));
+                    player.moveTo(posicionAnteriorX,posicionAnteriorY - TILED_HEIGHT);
                     player.play("up");
                     
                     colisiones.forEach( (colision: GameObj<any>) => {
@@ -447,6 +471,15 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                         player.pos.x = posicionAnteriorX
                         player.pos.y = posicionAnteriorY
                         
+                      })
+
+                    })
+
+                    enemigos.forEach( (enemigo: GameObj<any>) => {
+                    
+                      enemigo.onCollide("player", (jugador: any) => {
+                        player.pos.x = posicionAnteriorX
+                        player.pos.y = posicionAnteriorY
                       })
 
                     })
@@ -472,13 +505,22 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                     const posicionAnteriorX = player.pos.x
                     const posicionAnteriorY = player.pos.y
 
-                    player.moveTo(posicionAnteriorX,Math.ceil(posicionAnteriorY + TILED_HEIGHT));
+                    player.moveTo(posicionAnteriorX,posicionAnteriorY + TILED_HEIGHT);
                     player.play("down");
 
                     colisiones.forEach( (colision: GameObj<any>) => {
                     
                       colision.onCollide("player", (jugador: any) => {
                         
+                        player.pos.x = posicionAnteriorX
+                        player.pos.y = posicionAnteriorY
+                      })
+
+                    })
+
+                    enemigos.forEach( (enemigo: GameObj<any>) => {
+                    
+                      enemigo.onCollide("player", (jugador: any) => {
                         player.pos.x = posicionAnteriorX
                         player.pos.y = posicionAnteriorY
                       })
@@ -507,12 +549,21 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                     const posicionAnteriorX = player.pos.x
                     const posicionAnteriorY = player.pos.y
 
-                    player.moveTo(Math.ceil(posicionAnteriorX - TILED_WIDTH),posicionAnteriorY);
+                    player.moveTo(posicionAnteriorX - TILED_WIDTH,posicionAnteriorY);
                     player.play("left");
 
                     colisiones.forEach( (colision: GameObj<any>) => {
                     
                       colision.onCollide("player", (jugador: any) => {
+                        player.pos.x = posicionAnteriorX
+                        player.pos.y = posicionAnteriorY
+                      })
+
+                    })
+
+                    enemigos.forEach( (enemigo: GameObj<any>) => {
+                    
+                      enemigo.onCollide("player", (jugador: any) => {
                         player.pos.x = posicionAnteriorX
                         player.pos.y = posicionAnteriorY
                       })
@@ -541,12 +592,21 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                     const posicionAnteriorX = player.pos.x
                     const posicionAnteriorY = player.pos.y
 
-                    player.moveTo(Math.ceil(posicionAnteriorX + TILED_WIDTH),posicionAnteriorY);
+                    player.moveTo(posicionAnteriorX + TILED_WIDTH,posicionAnteriorY);
                     player.play("right");
 
                     colisiones.forEach( (colision: GameObj<any>) => {
                     
                       colision.onCollide("player", (jugador: any) => {
+                        player.pos.x = posicionAnteriorX
+                        player.pos.y = posicionAnteriorY
+                      })
+
+                    })
+
+                    enemigos.forEach( (enemigo: GameObj<any>) => {
+                    
+                      enemigo.onCollide("player", (jugador: any) => {
                         player.pos.x = posicionAnteriorX
                         player.pos.y = posicionAnteriorY
                       })
@@ -567,7 +627,8 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                         })
 
                     })
-                    player.moveTo(Math.ceil(posicionAnteriorX + TILED_WIDTH),posicionAnteriorY);
+
+                    player.moveTo(posicionAnteriorX + TILED_WIDTH,posicionAnteriorY);
                   });
 
                   juegoKaplay.onUpdate(()=>{
