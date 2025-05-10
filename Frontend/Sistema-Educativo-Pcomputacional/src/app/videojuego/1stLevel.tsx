@@ -18,34 +18,18 @@ export let cambioNivel = 0;
 interface NotasEstudiante {
   id_estudiante: number;
   eficiencia_algoritmica: number;
-  reconocimiento_patrones: number;
-  identificacion_errores: number;
-  abstraccion: number;
-  asociacion: number;
-  construccion_algoritmos: number;
+  reconocimiento_patrones: string;
+  identificacion_errores: string;
+  abstraccion: string;
+  asociacion: string;
+  construccion_algoritmos: string;
   p_actividades_completadas: number;
   tipo_premiacion: string; // o string[], si es un arreglo
 }
 
 
-export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,setStateA:any, cambiarGanarA:any,setState1:any, cambiarGanar1:any, Router:any) {
-    // Referencia persistente para almacenar la instancia de Kaplay
-   // setState(false);
+export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,setStateA:any, cambiarGanarA:any,setState1:any, cambiarGanar1:any, Router:any, usuario: any) {
 
-   const estudianteInicial: NotasEstudiante = {
-      id_estudiante: 0,
-      eficiencia_algoritmica: 0,
-      reconocimiento_patrones: 0,
-      identificacion_errores: 0,
-      abstraccion: 0,
-      asociacion: 0,
-      construccion_algoritmos: 0,
-      p_actividades_completadas: 0,
-      tipo_premiacion: ""
-    };
-
-    
-   
     juegoKaplay.loadSprite("construccion3", "sprites/buildings/House_Blue.png", {
       sliceX: 1,
       sliceY: 1,
@@ -127,7 +111,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
 
     const cargarEvaluacionEstudiante = async (datos: NotasEstudiante) => {
       try {
-        const response = await fetch('http://localhost:3000/estudiantes/establecer/notas', {
+        const response = await fetch('http://localhost:5555/estudiantes/establecer/notas', {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -166,6 +150,8 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
         //Practicando aqui
         SCREEN_RESOLUTION_X = window.innerWidth 
         SCREEN_RESOLUTION_Y = window.innerHeight 
+
+        console.log(usuario)
 
       const nivelPrincipal = generarEsquemaMapa(
         juegoKaplay,
@@ -265,7 +251,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
           // Array para almacenar los sprites de notas creados
           let spritesNotas: GameObj[] = []; // Asegúrate de usar el tipo correcto para los sprites en Kaboom.js
   
-          function validarAciertos(){
+          async function validarAciertos(){
             if(aciertos==1){
                       
               
@@ -311,27 +297,51 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
 
               cambiarGanarA(true); 
               setStateA(true);
-                      
-              setTimeout(() => {
-                setStateA(false);
-                window.location.href = window.location.href;
-              }, 5000);
-                          
+
+              if(usuario.rol === "ESTUDIANTE"){
+
+                const obtenerDatosUsuario = async (estudiante_seleccionado: number) => {
+    
+                  const datosEstudiante = await fetch("http://localhost:5555/estudiantes/" + estudiante_seleccionado)
+                  const resultadoConsulta = await datosEstudiante.json()
+                  console.log(resultadoConsulta)
+
+                  return resultadoConsulta
+
+                };
+
+                const datosEstudiante = await obtenerDatosUsuario(usuario.id_usuario)
+
+                console.log(datosEstudiante)
                 
-            // },200);
+                const datosUsuario: NotasEstudiante = {
+                  id_estudiante: datosEstudiante.id_usuario,
+                  eficiencia_algoritmica: datosEstudiante.eficiencia_algoritmica,
+                  reconocimiento_patrones: "EN PROCESO",
+                  identificacion_errores: datosEstudiante.identificacion_errores,
+                  abstraccion: datosEstudiante.abstraccion,
+                  asociacion: datosEstudiante.asociacion,
+                  construccion_algoritmos: datosEstudiante.construccion_algoritmos,
+                  p_actividades_completadas: datosEstudiante.p_actividades_completadas,
+                  tipo_premiacion: datosEstudiante.tipo_premiacion // o string[], si es un arreglo
+                }
+
+                const respuestaEvaluacion = await cargarEvaluacionEstudiante(datosUsuario)
+                console.log(respuestaEvaluacion)
+              
+              }else{
+                console.log("GANO PERO NO ES ESTUDIANTE")
+              }
             
-            
-            colisiones.forEach( (colision: GameObj<any>) => {
-                          
-              colision.destroy();
-            })
-              
-              
-        
-              
-        
-              
-        
+              colisiones.forEach( (colision: GameObj<any>) => { 
+                colision.destroy();
+              })
+                      
+              const esperar = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+              await esperar(5000); // espera 5 segundos
+              setStateA(false);
+              //window.location.href = window.location.href
+
             }
           };
 

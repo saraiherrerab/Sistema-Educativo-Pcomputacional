@@ -168,7 +168,6 @@ function CartelC(props:any) {
 
  
  function Page() {
-
     const [cambiarMostrar1, setState1] = useState(false);
     const [ganar1, cambiarGanar1] = useState(true);
     const [cambiarMostrar, setState] = useState(false);
@@ -204,38 +203,13 @@ function CartelC(props:any) {
 
    const juegoKaplayRef = useRef<any>(null);
 
-   const [usuario, setUsuario] = useState<Estudiante>(() => {
-    const usuarioGuardado = localStorage.getItem('usuario');
-    return usuarioGuardado ? JSON.parse(usuarioGuardado) : {
-      id_usuario: 0,
-      telefono: "",
-      nombre: "",
-      apellido: "",
-      correo: "",
-      edad: 0,
-      foto: "",
-      usuario: "",
-      clave_acceso: "",
-      cedula: "",
-      id_estudiante: 0,
-      condicion_medica: "",
-      eficiencia_algoritmica: 0,
-      reconocimiento_patrones: "", 
-      abstraccion: "",
-      asociacion: "",
-      identificacion_errores: "",
-      construccion_algoritmos: "",
-      p_actividades_completadas: 0,
-      tipo_premiacion: "",
-      id_grupo: 0,
-    };
-  });
+   const [usuario, setUsuario] = useState<Estudiante | null>(null); // inicia como null
+
+
  
    useEffect(() => {
     SCREEN_RESOLUTION_X = window.innerWidth 
     SCREEN_RESOLUTION_Y = window.innerHeight 
-
-    console.log(usuario)
 
     const resizeCanvas = () => {
       const canvas = document.getElementById("game") as HTMLCanvasElement;
@@ -244,6 +218,35 @@ function CartelC(props:any) {
         canvas.height = window.innerHeight 
       }
     };
+
+    const usuarioGuardado = localStorage.getItem("usuario");
+      const informacionUsuario = usuarioGuardado
+        ? JSON.parse(usuarioGuardado)
+        : {
+            id_usuario: 0,
+            telefono: "",
+            nombre: "",
+            apellido: "",
+            correo: "",
+            edad: 0,
+            foto: "",
+            usuario: "",
+            clave_acceso: "",
+            cedula: "",
+            id_estudiante: 0,
+            condicion_medica: "",
+            eficiencia_algoritmica: 0,
+            reconocimiento_patrones: "", 
+            abstraccion: "",
+            asociacion: "",
+            identificacion_errores: "",
+            construccion_algoritmos: "",
+            p_actividades_completadas: 0,
+            tipo_premiacion: "",
+            id_grupo: 0,
+          };
+
+      setUsuario(informacionUsuario);
      
      
      // Inicializar Kaplay solo si no está creado
@@ -264,7 +267,7 @@ function CartelC(props:any) {
        juegoKaplay.loadRoot("./");
        // Nivel1(juegoKaplay);
        Panel(juegoKaplay, setState, cambiarGanar,cambiarGanar3,setState3,cambiarGanarA, setStateA,cambiarGanarB, setStateB,
-        cambiarGanarC, setStateC,cambiarGanar1, setState1, Router);
+        cambiarGanarC, setStateC,cambiarGanar1, setState1, Router,informacionUsuario);
 
          
       }

@@ -20,7 +20,7 @@ router.put('/estudiantes/establecer/notas', async function(req, res, next) {
   
      const updateEstudiante = new PQ(
         {
-            text :`UPDATE Usuario SET eficiencia_algoritmica = $2, reconocimiento_patrones = $3, identificacion_errores = $4, abstraccion=$5, asociacion=$6, construccion_algoritmos=$7, p_actividades_completadas=$8, tipo_premiacion=$9 WHERE id_estudiante = $1`, 
+            text :`UPDATE Estudiante SET eficiencia_algoritmica = $2, reconocimiento_patrones = $3, identificacion_errores = $4, abstraccion=$5, asociacion=$6, construccion_algoritmos=$7, p_actividades_completadas=$8, tipo_premiacion=$9 WHERE id_estudiante = $1`, 
             values: [
                 id_estudiante,
                 eficiencia_algoritmica,

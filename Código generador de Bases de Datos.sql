@@ -1,7 +1,8 @@
 DROP FUNCTION IF EXISTS obtener_cursos_profesor;
 DROP FUNCTION IF EXISTS obtener_horarios_profesor;
-DROP TABLE IF EXISTS Profesor_Curso;
 DROP TABLE IF EXISTS horarios_profesor;
+DROP TABLE IF EXISTS Profesor_Curso;
+
 /*Tablas principales*/
 DROP TABLE IF EXISTS Estudiante;
 DROP TABLE IF EXISTS Grupos;
@@ -115,7 +116,7 @@ CREATE TABLE IF NOT EXISTS Profesor_Curso (
 -- Asignar cursos 1 al 5 al profesor 2
 INSERT INTO Profesor_Curso (id_curso, id_profesor) VALUES (1, 2);
 INSERT INTO Profesor_Curso (id_curso, id_profesor) VALUES (2, 2);
-INSERT INTO Profesor_Curso (id_curso, id_profesor) VALUES (3, 2);
+INSERT INTO Profesor_Curso (id_curso, id_profesor) VALUES (3, 3);
 INSERT INTO Profesor_Curso (id_curso, id_profesor) VALUES (4, 2);
 INSERT INTO Profesor_Curso (id_curso, id_profesor) VALUES (5, 2);
 
@@ -141,11 +142,21 @@ CREATE TABLE IF NOT EXISTS Estudiante (
 	id_estudiante INTEGER NOT NULL,
 	condicion_medica TEXT,
 	eficiencia_algoritmica INTEGER DEFAULT 0,
-	reconocimiento_patrones TEXT DEFAULT 'NO CURSADO',
-	identificacion_errores TEXT DEFAULT 'NO CURSADO',
-	abstraccion TEXT DEFAULT 'NO CURSADO',
-	asociacion TEXT DEFAULT 'NO CURSADO',
-	construccion_algoritmos TEXT DEFAULT 'NO CURSADO',
+	reconocimiento_patrones TEXT DEFAULT 'NO CURSADO' CHECK (
+        reconocimiento_patrones IN ('NO CURSADO', 'EN PROCESO', 'REPROBADO', 'APROBADO')
+    ),
+	identificacion_errores TEXT DEFAULT 'NO CURSADO' CHECK (
+        identificacion_errores IN ('NO CURSADO', 'EN PROCESO', 'REPROBADO', 'APROBADO')
+    ),
+	abstraccion TEXT DEFAULT 'NO CURSADO' CHECK (
+        abstraccion IN ('NO CURSADO', 'EN PROCESO', 'REPROBADO', 'APROBADO')
+    ),
+	asociacion TEXT DEFAULT 'NO CURSADO' CHECK (
+        asociacion IN ('NO CURSADO', 'EN PROCESO', 'REPROBADO', 'APROBADO')
+    ),
+	construccion_algoritmos TEXT DEFAULT 'NO CURSADO' CHECK (
+        construccion_algoritmos IN ('NO CURSADO', 'EN PROCESO', 'REPROBADO', 'APROBADO')
+    ),
 	p_actividades_completadas INTEGER DEFAULT 0,
 	tipo_premiacion TEXT,
 	id_grupo INTEGER,
@@ -247,7 +258,7 @@ INSERT INTO horarios_profesor (id_profesor, id_curso, id_grupo, dia_semana, hora
 VALUES
 (2, 1, 1,'Lunes', '16:00', '18:00'),
 (2, 2, 2,'Martes', '16:00', '18:00'),
-(2, 3, 3,'Miércoles', '16:00', '18:00');
+(3, 3, 3,'Miércoles', '16:00', '18:00');
 
 CREATE OR REPLACE FUNCTION obtener_cursos_profesor(p_id_usuario INT)
 RETURNS SETOF Curso AS $$
@@ -288,4 +299,4 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-SELECT * FROM obtener_horarios_profesor(2)
+SELECT * FROM obtener_horarios_profesor(3)

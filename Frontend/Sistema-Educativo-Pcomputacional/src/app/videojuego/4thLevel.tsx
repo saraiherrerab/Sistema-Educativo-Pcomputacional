@@ -18,7 +18,7 @@ export let cambioNivel = 0;
 
 
 
-export function Nivel4(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,setStateA:any, cambiarGanarA:any,setState1:any, cambiarGanar1:any, Router:any) {
+export function Nivel4(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,setStateA:any, cambiarGanarA:any,setState1:any, cambiarGanar1:any, Router:any,usuario: any) {
     // Referencia persistente para almacenar la instancia de Kaplay
    // setState(false);
 

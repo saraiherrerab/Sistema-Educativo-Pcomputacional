@@ -1,7 +1,7 @@
 import { GameObj, KAPLAYCtx } from "kaplay";
 import generarEsquemaMapa from "../../MapsGenerator";
 
-export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGanarB:any, setStateA:any, cambiarGanarA:any,setStateC:any, cambiarGanarC:any, Router:any){
+export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGanarB:any, setStateA:any, cambiarGanarA:any,setStateC:any, cambiarGanarC:any, Router:any,usuario: any){
 
         const SCREEN_RESOLUTION_X: number = window.innerWidth 
         const SCREEN_RESOLUTION_Y: number = window.innerHeight 
