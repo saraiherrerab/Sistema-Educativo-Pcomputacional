@@ -4,6 +4,7 @@ import { Nivel1 } from "./1stLevel";
 import { Nivel2 } from "./2ndLevel";
 import {Nivel3} from "./3rdLevel";
 import {Nivel4} from "./4thLevel";
+import {Nivel5} from "./5thLevel";
 
 export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,cambiarGanar3:any,setState3:any, cambiarGanarA:any, setStateA:any, 
   cambiarGanarB:any, setStateB:any,cambiarGanarC:any, setStateC:any,cambiarGanar1:any, setState1:any, Router:any) {
@@ -251,6 +252,15 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
             juegoKaplay.destroy(player);
             juegoKaplay.destroyAll("*");
             Nivel4(juegoKaplay, setState, cambiarGanar, setStateA, cambiarGanarA,setState1, cambiarGanar1, Router);
+            // We pass the component id for remove it.
+          });
+
+          torre1.onClick(()=>{
+            juegoKaplay.destroy(torre);
+            juegoKaplay.destroy(castillo);
+            juegoKaplay.destroy(player);
+            juegoKaplay.destroyAll("*");
+            Nivel5(juegoKaplay, setState, cambiarGanar, setStateA, cambiarGanarA,setState1, cambiarGanar1, Router);
             // We pass the component id for remove it.
           });
 
