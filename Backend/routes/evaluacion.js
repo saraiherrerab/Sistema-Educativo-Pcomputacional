@@ -17,6 +17,8 @@ router.put('/estudiantes/establecer/notas', async function(req, res, next) {
             p_actividades_completadas,
             tipo_premiacion
         } = req.body
+
+    console.log(req.body)
   
      const updateEstudiante = new PQ(
         {

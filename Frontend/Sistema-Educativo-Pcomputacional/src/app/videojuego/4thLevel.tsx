@@ -3,6 +3,8 @@
 import {GameObj, KAPLAYCtx} from "kaplay";
 import generarEsquemaMapa from "../../MapsGenerator";
 import generarNumerosAzar from "../../utils/generarNumerosAzar";
+import Evaluacion_Estudiante from "./interfaces/informacion_estudiante.interface";
+import cargarEvaluacionEstudiante from "./functions/cargarEvaluacionEstudiante";
 
 let SCREEN_RESOLUTION_X = 0;
 let SCREEN_RESOLUTION_Y = 0;
@@ -534,15 +536,47 @@ export function Nivel4(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
               construccion2.destroy();
               ovejas.forEach( (oveja: GameObj<any>) => {
                 oveja.play("quiet");
-
               })
 
               setStateA(true);
                       
-              setTimeout(() => {
-                setStateA(false);
-                window.location.href = window.location.href;
-              }, 5000);
+              if(usuario.rol === "ESTUDIANTE"){
+                                  
+                                    const obtenerDatosUsuario = async (estudiante_seleccionado: number) => {
+                        
+                                      const datosEstudiante = await fetch("http://localhost:5555/estudiantes/" + estudiante_seleccionado)
+                                      const resultadoConsulta = await datosEstudiante.json()
+                                      console.log(resultadoConsulta)
+              
+                                      return resultadoConsulta
+              
+                                    };
+                                  
+                                    const datosEstudiante = await obtenerDatosUsuario(usuario.id_usuario)
+                                  
+                                    console.log(datosEstudiante)
+                            
+                                    const datosUsuario: Evaluacion_Estudiante = {
+                                      id_estudiante: datosEstudiante.id_usuario,
+                                      eficiencia_algoritmica: datosEstudiante.eficiencia_algoritmica,
+                                      reconocimiento_patrones: datosEstudiante.reconocimiento_patrones,
+                                      identificacion_errores: datosEstudiante.identificacion_errores,
+                                      abstraccion: datosEstudiante.abstraccion,
+                                      asociacion: datosEstudiante.asociacion,
+                                      construccion_algoritmos: datosEstudiante.construccion_algoritmos,
+                                      p_actividades_completadas: datosEstudiante.p_actividades_completadas,
+                                      tipo_premiacion: datosEstudiante.tipo_premiacion // o string[], si es un arreglo
+                                    }
+                                  
+                                    const respuestaEvaluacion = await cargarEvaluacionEstudiante(datosUsuario)
+                                    console.log(respuestaEvaluacion)
+                                                
+              }else{
+                console.log("GANO PERO NO ES ESTUDIANTE")
+              }
+                                
+              await new Promise(resolve => setTimeout(resolve, 5000));
+              window.location.href = window.location.href;
                           
                 
             // },200);

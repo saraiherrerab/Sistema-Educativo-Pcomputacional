@@ -1,5 +1,7 @@
 import { GameObj, KAPLAYCtx } from "kaplay";
 import generarEsquemaMapa from "../../MapsGenerator";
+import Evaluacion_Estudiante from "./interfaces/informacion_estudiante.interface";
+import cargarEvaluacionEstudiante from "./functions/cargarEvaluacionEstudiante";
 
 export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGanarB:any, setStateA:any, cambiarGanarA:any,setStateC:any, cambiarGanarC:any, Router:any,usuario: any){
 
@@ -13,12 +15,18 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
         let posicionAnteriorXGlobal = 0;
         let posicionAnteriorYGlobal= 0;
 
+        const NUMERO_MINIMO_MOVIMIENTOS: number = 26;
+        let contadorMovimientos: number = 0;
+        let movimientoValido: boolean = true;
+
 
         function sleep(ms: number) {
           return new Promise(resolve => setTimeout(resolve, ms));   
         }
 
-        console.log("Comenzando a generar nivel 2")
+        console.log("Comenzando a generar para llegar a ovejas")
+
+        console.log(usuario)
         console.log(juegoKaplay.get("*"))
 
         let lives = 3
@@ -41,7 +49,6 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
             quiet: { from: 0, to: 7, loop: true },
           },
         });
-
         juegoKaplay.loadSprite("oveja", "sprites/deco/HappySheep_Bouncing.png", {
           sliceX: 6,
           sliceY: 1,
@@ -49,7 +56,6 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
             quiet: { from: 0, to: 5, loop: true },
           },
         });
-  
         juegoKaplay.loadSprite("knight", "sprites/p_knight_official.png", {
           sliceX: 6,
           sliceY: 8,
@@ -61,7 +67,6 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
             quiet: { from: 31, to: 31, loop: false },
           },
         });
-  
         juegoKaplay.loadSprite("enemy", "sprites/TNT_Blue (1).png", {
           sliceX: 7,
           sliceY: 3,
@@ -71,39 +76,31 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
             quiet: { from: 0, to: 0, loop: false },
           },
         });
-
         juegoKaplay.loadSprite("heart1", "sprites/heart.png", {
           sliceX: 1,
           sliceY: 1,
         });
-
         juegoKaplay.loadSprite("heart2", "sprites/heart.png", {
           sliceX: 1,
           sliceY: 1,
         });
-
         juegoKaplay.loadSprite("heart3", "sprites/heart.png", {
           sliceX: 1,
           sliceY: 1,
-        });
-
-  
+        }); 
         juegoKaplay.loadSprite("scarecrow", "sprites/scarecrow.png", {
           sliceX: 1,
           sliceY: 1,
-        });
-  
+        }); 
         juegoKaplay.loadSprite("heart", "sprites/heart.png", {
           sliceX: 1,
           sliceY: 1,
         });
-  
         juegoKaplay.loadSprite("title-0", "prueba/title-0.png", {
           sliceX: 1,
           sliceY: 1,
         });
 
-        
         // Cargar sprites adicionales
         ["up", "down", "left", "right"].forEach((dir) => {
           juegoKaplay.loadSprite(dir, `sprites/${dir}-arrow.png`);
@@ -267,14 +264,50 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
 
                   ovejas.forEach( (oveja: any) => {
                     oveja.play("quiet");
-                    oveja.onCollide("player", (jugador: GameObj) => {
+                    oveja.onCollide("player", async (jugador: GameObj) => {
+
                       cambiarGanarA(true); 
                       setStateA(true);
+
+                      if(usuario.rol === "ESTUDIANTE"){
+
+                        const obtenerDatosUsuario = async (estudiante_seleccionado: number) => {
+            
+                          const datosEstudiante = await fetch("http://localhost:5555/estudiantes/" + estudiante_seleccionado)
+                          const resultadoConsulta = await datosEstudiante.json()
+                          console.log(resultadoConsulta)
+
+                          return resultadoConsulta
+
+                        };
+
+                        const datosEstudiante = await obtenerDatosUsuario(usuario.id_usuario)
+
+                        console.log(datosEstudiante)
+
+                        console.log((contadorMovimientos <= 26) ? 100 : Math.ceil((26 / contadorMovimientos) * 100))
+                
+                        const datosUsuario: Evaluacion_Estudiante = {
+                          id_estudiante: datosEstudiante.id_usuario,
+                          eficiencia_algoritmica: (contadorMovimientos <= 26) ? 100 : Math.ceil((26 / contadorMovimientos) * 100),
+                          reconocimiento_patrones: datosEstudiante.reconocimiento_patrones,
+                          identificacion_errores: datosEstudiante.identificacion_errores,
+                          abstraccion: datosEstudiante.abstraccion,
+                          asociacion: datosEstudiante.asociacion,
+                          construccion_algoritmos: datosEstudiante.construccion_algoritmos,
+                          p_actividades_completadas: datosEstudiante.p_actividades_completadas,
+                          tipo_premiacion: datosEstudiante.tipo_premiacion // o string[], si es un arreglo
+                        }
+
+                        const respuestaEvaluacion = await cargarEvaluacionEstudiante(datosUsuario)
+                        console.log(respuestaEvaluacion)
+              
+                      }else{
+                        console.log("GANO PERO NO ES ESTUDIANTE")
+                      }
                   
-                      setTimeout(() => {
-                        setStateA(false);
-                        window.location.href = window.location.href;
-                      }, 5000);
+                      await new Promise(resolve => setTimeout(resolve, 5000));
+                      window.location.href = window.location.href;
                       
                     })
               
@@ -317,9 +350,10 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                     
                       colision.onCollide("player", (jugador: any) => {
 
-                        
                         player.pos.x = posicionAnteriorXGlobal
                         player.pos.y = posicionAnteriorYGlobal
+
+                        movimientoValido = false
                         
                       })
 
@@ -336,11 +370,18 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                         
                         player.pos.x = posicionAnteriorXGlobal
                         player.pos.y = posicionAnteriorYGlobal
+
                       })
 
                     })
 
-                    
+                    if(movimientoValido){
+                      contadorMovimientos = contadorMovimientos + 1;
+                      console.log("MOVIMIENTO VALIDO - CONTADOR ", contadorMovimientos)
+                    }else{
+                      console.log("MOVIMIENTO INVALIDO - CONTADOR ", contadorMovimientos)
+                      movimientoValido = true;
+                    }
                     
                     
                   });
@@ -362,6 +403,9 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                         
                         player.pos.x = posicionAnteriorXGlobal
                         player.pos.y = posicionAnteriorYGlobal
+
+                        movimientoValido = false
+
                       })
 
                     })
@@ -377,9 +421,20 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                         
                         player.pos.x = posicionAnteriorXGlobal
                         player.pos.y = posicionAnteriorYGlobal
+
+                        movimientoValido = false
+
                       })
 
                     })
+
+                    if(movimientoValido){
+                      contadorMovimientos = contadorMovimientos + 1;
+                      console.log("MOVIMIENTO VALIDO - CONTADOR ", contadorMovimientos)
+                    }else{
+                      console.log("MOVIMIENTO INVALIDO - CONTADOR ", contadorMovimientos)
+                      movimientoValido = true;
+                    }
 
                   });
 
@@ -397,6 +452,9 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                       colision.onCollide("player", (jugador: any) => {
                         player.pos.x = posicionAnteriorXGlobal
                         player.pos.y = posicionAnteriorYGlobal
+
+                        movimientoValido = false
+
                       })
 
                     })
@@ -412,9 +470,20 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                           
                           player.pos.x = posicionAnteriorXGlobal
                           player.pos.y = posicionAnteriorYGlobal
+
+                          movimientoValido = false
+
                         })
 
                     })
+
+                    if(movimientoValido){
+                      contadorMovimientos = contadorMovimientos + 1;
+                      console.log("MOVIMIENTO VALIDO - CONTADOR ", contadorMovimientos)
+                    }else{
+                      console.log("MOVIMIENTO INVALIDO - CONTADOR ", contadorMovimientos)
+                      movimientoValido = true;
+                    }
 
                   });
                   
@@ -431,6 +500,9 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                       colision.onCollide("player", (jugador: any) => {
                         player.pos.x = posicionAnteriorXGlobal
                         player.pos.y = posicionAnteriorYGlobal
+
+                        movimientoValido = false
+
                       })
 
                     })
@@ -446,14 +518,26 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
 
                           player.pos.x = posicionAnteriorXGlobal
                           player.pos.y = posicionAnteriorYGlobal
+
+                          movimientoValido = false
+
                         })
 
                     })
+
+                    if(movimientoValido){
+                      contadorMovimientos = contadorMovimientos + 1;
+                      console.log("MOVIMIENTO VALIDO - CONTADOR ", contadorMovimientos)
+                    }else{
+                      console.log("MOVIMIENTO INVALIDO - CONTADOR ", contadorMovimientos)
+                      movimientoValido = true;
+                    }
                     
                   });
 
                   // Movimiento con clic
                   up.onClick(() => {
+
                     console.log(player.pos.x)
                     console.log(player.pos.y)
 
@@ -467,9 +551,10 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                     
                       colision.onCollide("player", (jugador: any) => {
 
-                        
                         player.pos.x = posicionAnteriorX
                         player.pos.y = posicionAnteriorY
+
+                        movimientoValido = false;
                         
                       })
 
@@ -480,6 +565,9 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                       enemigo.onCollide("player", (jugador: any) => {
                         player.pos.x = posicionAnteriorX
                         player.pos.y = posicionAnteriorY
+
+                        movimientoValido = false;
+
                       })
 
                     })
@@ -495,8 +583,20 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                         
                         player.pos.x = posicionAnteriorX
                         player.pos.y = posicionAnteriorY
+
+                        movimientoValido = false;
+
                       })
                     });
+
+                    if(movimientoValido){
+                      contadorMovimientos = contadorMovimientos + 1;
+                      console.log("MOVIMIENTO VALIDO - CONTADOR ", contadorMovimientos)
+                    }else{
+                      console.log("MOVIMIENTO INVALIDO - CONTADOR ", contadorMovimientos)
+                      movimientoValido = false;
+                    }
+
                   });
                   down.onClick(() => {
                     console.log(player.pos.x)
@@ -514,6 +614,9 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                         
                         player.pos.x = posicionAnteriorX
                         player.pos.y = posicionAnteriorY
+
+                        movimientoValido = false;
+
                       })
 
                     })
@@ -523,6 +626,9 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                       enemigo.onCollide("player", (jugador: any) => {
                         player.pos.x = posicionAnteriorX
                         player.pos.y = posicionAnteriorY
+
+                        movimientoValido = false;
+
                       })
 
                     })
@@ -538,9 +644,21 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                         
                         player.pos.x = posicionAnteriorX
                         player.pos.y = posicionAnteriorY
+
+                        movimientoValido = false;
+
                       })
 
                     })
+
+                    if(movimientoValido){
+                      contadorMovimientos = contadorMovimientos + 1;
+                      console.log("MOVIMIENTO VALIDO - CONTADOR ", contadorMovimientos)
+                    }else{
+                      console.log("MOVIMIENTO INVALIDO - CONTADOR ", contadorMovimientos)
+                      movimientoValido = false;
+                    }
+
                   });
                   left.onClick(() => {
                     console.log(player.pos.x)
@@ -557,6 +675,8 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                       colision.onCollide("player", (jugador: any) => {
                         player.pos.x = posicionAnteriorX
                         player.pos.y = posicionAnteriorY
+
+                        movimientoValido = false;
                       })
 
                     })
@@ -566,6 +686,8 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                       enemigo.onCollide("player", (jugador: any) => {
                         player.pos.x = posicionAnteriorX
                         player.pos.y = posicionAnteriorY
+
+                        movimientoValido = false;
                       })
 
                     })
@@ -581,9 +703,20 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                           
                           player.pos.x = posicionAnteriorX
                           player.pos.y = posicionAnteriorY
+
+                          movimientoValido = false;
                         })
 
                     })
+
+                    if(movimientoValido){
+                      contadorMovimientos = contadorMovimientos + 1;
+                      console.log("MOVIMIENTO VALIDO - CONTADOR ", contadorMovimientos)
+                    }else{
+                      console.log("MOVIMIENTO INVALIDO - CONTADOR ", contadorMovimientos)
+                      movimientoValido = false;
+                    }
+
                   });
                   right.onClick(() => {
                     console.log(player.pos.x)
@@ -600,6 +733,8 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                       colision.onCollide("player", (jugador: any) => {
                         player.pos.x = posicionAnteriorX
                         player.pos.y = posicionAnteriorY
+
+                        movimientoValido = false;
                       })
 
                     })
@@ -609,6 +744,8 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                       enemigo.onCollide("player", (jugador: any) => {
                         player.pos.x = posicionAnteriorX
                         player.pos.y = posicionAnteriorY
+
+                        movimientoValido = false;
                       })
 
                     })
@@ -624,11 +761,19 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
 
                           player.pos.x = posicionAnteriorX
                           player.pos.y = posicionAnteriorY
+
+                          movimientoValido = false;
                         })
 
                     })
 
-                    player.moveTo(posicionAnteriorX + TILED_WIDTH,posicionAnteriorY);
+                    if(movimientoValido){
+                      contadorMovimientos = contadorMovimientos + 1;
+                      console.log("MOVIMIENTO VALIDO - CONTADOR ", contadorMovimientos)
+                    }else{
+                      console.log("MOVIMIENTO INVALIDO - CONTADOR ", contadorMovimientos)
+                      movimientoValido = false;
+                    }
                   });
 
                   juegoKaplay.onUpdate(()=>{
