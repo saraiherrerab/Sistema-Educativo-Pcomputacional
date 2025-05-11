@@ -3,6 +3,7 @@
 import {GameObj, KAPLAYCtx} from "kaplay";
 import generarEsquemaMapa from "../../MapsGenerator";
 import generarNumerosAzar from "../../utils/generarNumerosAzar";
+import Evaluacion_Estudiante from "./interfaces/informacion_estudiante.interface";
 
 let SCREEN_RESOLUTION_X = 0;
 let SCREEN_RESOLUTION_Y = 0;
@@ -14,18 +15,6 @@ const TILED_HEIGHT: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGHT_NUMBER
 let aciertos = 0;
 let nuevoSprite: GameObj;
 export let cambioNivel = 0;
-
-interface NotasEstudiante {
-  id_estudiante: number;
-  eficiencia_algoritmica: number;
-  reconocimiento_patrones: string;
-  identificacion_errores: string;
-  abstraccion: string;
-  asociacion: string;
-  construccion_algoritmos: string;
-  p_actividades_completadas: number;
-  tipo_premiacion: string; // o string[], si es un arreglo
-}
 
 
 export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,setStateA:any, cambiarGanarA:any,setState1:any, cambiarGanar1:any, Router:any, usuario: any) {
@@ -109,7 +98,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
       sliceY: 1
     });
 
-    const cargarEvaluacionEstudiante = async (datos: NotasEstudiante) => {
+    const cargarEvaluacionEstudiante = async (datos: Evaluacion_Estudiante) => {
       try {
         const response = await fetch('http://localhost:5555/estudiantes/establecer/notas', {
           method: 'PUT',
@@ -151,7 +140,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
         SCREEN_RESOLUTION_X = window.innerWidth 
         SCREEN_RESOLUTION_Y = window.innerHeight 
 
-        console.log(usuario)
+        
 
       const nivelPrincipal = generarEsquemaMapa(
         juegoKaplay,
@@ -202,6 +191,8 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
           setTimeout(() => {
             setState1(false);
           }, 10000); 
+
+          console.log(usuario)
 
           console.log("Resultado de generar nivel 2")
           console.log(juegoKaplay.get("*"))
@@ -314,7 +305,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
 
                 console.log(datosEstudiante)
                 
-                const datosUsuario: NotasEstudiante = {
+                const datosUsuario: Evaluacion_Estudiante = {
                   id_estudiante: datosEstudiante.id_usuario,
                   eficiencia_algoritmica: datosEstudiante.eficiencia_algoritmica,
                   reconocimiento_patrones: "EN PROCESO",
