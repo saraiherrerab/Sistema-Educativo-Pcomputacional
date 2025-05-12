@@ -179,6 +179,37 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                 ]
               ).then(
                 (resultado: any) => {
+
+                  async function terminarJuego () {
+                    window.location.href = window.location.href
+                  }
+
+                  async function validarVidas(){
+
+                      if (lives === 2){
+                          juegoKaplay.destroy(heart1);
+                      }
+
+                      if(lives === 1){
+                        juegoKaplay.destroy(heart2);
+                      }
+
+                      if( lives ===0 ){
+
+                        juegoKaplay.destroy(heart3);
+                        juegoKaplay.destroy(player)
+                        cambiarGanarC(true); 
+                        setStateC(true);
+
+                        await sleep(2000)
+
+                        setStateC(false);
+
+                        await sleep(500)
+                    
+                        await terminarJuego();
+                      };        
+                  }
                   
                   cambiarGanarB(true);
                   setStateB(true);
@@ -205,6 +236,7 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                   const heart2 = juegoKaplay.get("heart2")[0]
                   const heart3 = juegoKaplay.get("heart3")[0]
                   const player = juegoKaplay.get("player")[0]
+                  const zonasGolpe = juegoKaplay.get("square")
                   
                   const enemigos = juegoKaplay.get("enemy")
                   enemigos.forEach( (enemigo: GameObj<any>) => {
@@ -229,23 +261,38 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                       { z: 2 } // Asegura que el jugador esté en una capa superior
                     ]);
       
-                    squareDer.onCollide("player", (jugador: any) => {
-                        enemigo.play("right_a");    
+                    squareDer.onCollide("player", async (jugador: any) => {
                         lives=lives-1;
-                    });
-    
-                    squareIzq.onCollide("player", (jugador: any) => {
+                        //console.log(lives)
                         enemigo.play("right_a");
+                        await validarVidas()
+
+                        player.pos.x = posicionAnteriorXGlobal
+                        player.pos.y = posicionAnteriorYGlobal
+                       // Espera 2000 milisegundos (2 segundos)
+                    });
+ 
+                    squareIzq.onCollide("player", async (jugador: any) => {
                         lives=lives-1;
+                        //console.log(lives)
+                        enemigo.play("right_a");
+                        await validarVidas()
+
+                        player.pos.x = posicionAnteriorXGlobal
+                        player.pos.y = posicionAnteriorYGlobal
+                      
                     });
 
-                    enemigo.onCollide("player", (jugador: any) => {
+                    enemigo.onCollide("player", async (jugador: any) => {
                         console.log("CHOCO")
 
                         console.log("Posición después de presionar la tecla ", {
                           x: player.pos.x,
                           y: player.pos.y
                         })
+
+                        lives--
+                        await validarVidas()
 
                         player.pos.x = posicionAnteriorXGlobal
                         player.pos.y = posicionAnteriorYGlobal
@@ -306,8 +353,7 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                         console.log("GANO PERO NO ES ESTUDIANTE")
                       }
                   
-                      await new Promise(resolve => setTimeout(resolve, 5000));
-                      window.location.href = window.location.href;
+                      await terminarJuego()
                       
                     })
               
@@ -319,7 +365,6 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
 
                   // Flechas
 
-                  const zonasGolpe = juegoKaplay.get("square")
 
                   console.log(zonasGolpe)
 
@@ -333,10 +378,6 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                       y: player.pos.y
                     }
 
-                    console.log("Posición antes de presionar la tecla ", {
-                      x: player.pos.x,
-                      y: player.pos.y
-                    })
                     console.log("Posición antes de presionar la tecla ", objetoPosicionAnterior)
 
                     posicionAnteriorXGlobal = player.pos.x
@@ -363,11 +404,6 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                     
                       zona.onCollide("player", async (jugador: any) => {
 
-                        await sleep(100)
-                          
-                        juegoKaplay.debug.log("¡ouch!");
-                        juegoKaplay.debug.log("Han pasado dos segundos");
-                        
                         player.pos.x = posicionAnteriorXGlobal
                         player.pos.y = posicionAnteriorYGlobal
 
@@ -411,18 +447,11 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                     })
 
                     zonasGolpe.forEach( (zona: GameObj<any>) => {
-                  
+                    
                       zona.onCollide("player", async (jugador: any) => {
 
-                        await sleep(100)
-                        
-                        juegoKaplay.debug.log("¡ouch!");
-                        juegoKaplay.debug.log("Han pasado dos segundos");
-                        
                         player.pos.x = posicionAnteriorXGlobal
                         player.pos.y = posicionAnteriorYGlobal
-
-                        movimientoValido = false
 
                       })
 
@@ -461,19 +490,12 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
 
                     zonasGolpe.forEach( (zona: GameObj<any>) => {
                     
-                        zona.onCollide("player", async (jugador: any) => {
+                      zona.onCollide("player", async (jugador: any) => {
 
-                          await sleep(100)
+                        player.pos.x = posicionAnteriorXGlobal
+                        player.pos.y = posicionAnteriorYGlobal
 
-                          juegoKaplay.debug.log("¡ouch!");
-                          juegoKaplay.debug.log("Han pasado dos segundos");
-                          
-                          player.pos.x = posicionAnteriorXGlobal
-                          player.pos.y = posicionAnteriorYGlobal
-
-                          movimientoValido = false
-
-                        })
+                      })
 
                     })
 
@@ -509,19 +531,12 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
 
                     zonasGolpe.forEach( (zona: GameObj<any>) => {
                     
-                        zona.onCollide("player", async (jugador: any) => {
+                      zona.onCollide("player", async (jugador: any) => {
 
-                          await sleep(100)
-                          
-                          juegoKaplay.debug.log("¡ouch!");
-                          juegoKaplay.debug.log("Han pasado dos segundos");
+                        player.pos.x = posicionAnteriorXGlobal
+                        player.pos.y = posicionAnteriorYGlobal
 
-                          player.pos.x = posicionAnteriorXGlobal
-                          player.pos.y = posicionAnteriorYGlobal
-
-                          movimientoValido = false
-
-                        })
+                      })
 
                     })
 
@@ -577,9 +592,6 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                       zona.onCollide("player", async (jugador: any) => {
 
                         await sleep(100)
-                          
-                        juegoKaplay.debug.log("¡ouch!");
-                        juegoKaplay.debug.log("Han pasado dos segundos");
                         
                         player.pos.x = posicionAnteriorX
                         player.pos.y = posicionAnteriorY
@@ -639,9 +651,6 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
 
                         await sleep(100)
                         
-                        juegoKaplay.debug.log("¡ouch!");
-                        juegoKaplay.debug.log("Han pasado dos segundos");
-                        
                         player.pos.x = posicionAnteriorX
                         player.pos.y = posicionAnteriorY
 
@@ -697,9 +706,6 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                         zona.onCollide("player", async (jugador: any) => {
 
                           await sleep(100)
-
-                          juegoKaplay.debug.log("¡ouch!");
-                          juegoKaplay.debug.log("Han pasado dos segundos");
                           
                           player.pos.x = posicionAnteriorX
                           player.pos.y = posicionAnteriorY
@@ -755,9 +761,6 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                         zona.onCollide("player", async (jugador: any) => {
 
                           await sleep(100)
-                          
-                          juegoKaplay.debug.log("¡ouch!");
-                          juegoKaplay.debug.log("Han pasado dos segundos");
 
                           player.pos.x = posicionAnteriorX
                           player.pos.y = posicionAnteriorY

@@ -9,6 +9,10 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
           return new Promise(resolve => setTimeout(resolve, ms));   
         }
 
+        let terminoJuego: boolean = false;
+        
+        
+
         let posicionAnteriorXGlobal = 0;
         let posicionAnteriorYGlobal= 0;
 
@@ -171,6 +175,37 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                     setState3(false);
                   }, 10000); 
 
+                  async function terminarJuego () {
+                    window.location.href = window.location.href
+                  }
+
+                  async function validarVidas(){
+
+                      if (lives === 2){
+                          juegoKaplay.destroy(heart1);
+                      }
+
+                      if(lives === 1){
+                        juegoKaplay.destroy(heart2);
+                      }
+
+                      if( lives ===0 ){
+
+                        juegoKaplay.destroy(heart3);
+                        juegoKaplay.destroy(player)
+                        cambiarGanarC(true); 
+                        setStateC(true);
+
+                        await sleep(2000)
+
+                        setStateC(false);
+
+                        await sleep(500)
+                    
+                        await terminarJuego();
+                      };        
+                  }
+
                   
                   console.log("Resultado de generar nivel 2")
                   console.log(juegoKaplay.get("*"))
@@ -194,6 +229,12 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                   const down = juegoKaplay.get("down")[0]
                   const left = juegoKaplay.get("left")[0]
                   const right = juegoKaplay.get("right")[0]
+
+                  const arregloVidas: GameObj[] = []
+
+                  arregloVidas.push(heart1)
+                  arregloVidas.push(heart2)
+                  arregloVidas.push(heart3)
 
                   console.log(oveja)
                   console.log(colisionarbol)
@@ -262,9 +303,9 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                     }else{
                       console.log("GANO PERO NO ES ESTUDIANTE")
                     }
-                                      
-                    await new Promise(resolve => setTimeout(resolve, 5000));
-                    window.location.href = window.location.href;
+
+                    terminoJuego = true
+                    
                     
                   })
                   
@@ -272,7 +313,7 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                     hongo.onCollide("player", (jugador: any) => {
                         cantidadhongos++
                         console.log(cantidadhongos)
-                        juegoKaplay.debug.log(cantidadhongos);
+                      
                         hongo.destroy();
                     
                     });
@@ -325,24 +366,23 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                       { z: 2 } // Asegura que el jugador esté en una capa superior
                     ]);
 
-                    squareDer.onCollide("player", (jugador: any) => {
-                        //lives=lives-1;
+                    squareDer.onCollide("player", async (jugador: any) => {
+                        lives=lives-1;
                         //console.log(lives)
                         enemigo.play("right_a");
-                        juegoKaplay.debug.log("¡ouch!");
-                        juegoKaplay.debug.log("Han pasado dos segundos");
+                        await validarVidas()
                        // Espera 2000 milisegundos (2 segundos)
                     });
  
-                    squareIzq.onCollide("player", (jugador: any) => {
-                        //lives=lives-1;
+                    squareIzq.onCollide("player", async (jugador: any) => {
+                        lives=lives-1;
                         //console.log(lives)
                         enemigo.play("right_a");
-                        juegoKaplay.debug.log("¡ouch!");
-                        juegoKaplay.debug.log("Han pasado dos segundos");
+                        await validarVidas()
+                      
                     });
 
-                    enemigo.onCollide("player", (jugador: any) => {
+                    enemigo.onCollide("player", async (jugador: any) => {
                         console.log("CHOCO")
 
                         console.log("Posición después de presionar la tecla ", {
@@ -350,23 +390,16 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                           y: player.pos.y
                         })
 
+                        lives--
+
+                        await validarVidas()
+
                         player.pos.x = posicionAnteriorXGlobal
                         player.pos.y = posicionAnteriorYGlobal
                     })
 
                     
                   })
-
-                  const redRoom = juegoKaplay.add([
-                    juegoKaplay.rect(200, 500),
-                    juegoKaplay.area(),
-                    juegoKaplay.color(255, 0, 0),
-                    juegoKaplay.pos(1920 - 200,juegoKaplay.center().y - 250),
-                    "redRoom",
-                    { z: 10 } // Asegura que el jugador esté en una capa superior
-                  ])
-
-                  
                  
                   const velocidad = 64;
     
@@ -412,10 +445,7 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                       zona.onCollide("player", async (jugador: any) => {
 
                         await sleep(100)
-                          
-                        juegoKaplay.debug.log("¡ouch!");
-                        juegoKaplay.debug.log("Han pasado dos segundos");
-                        
+
                         player.pos.x = posicionAnteriorXGlobal
                         player.pos.y = posicionAnteriorYGlobal
 
@@ -463,10 +493,7 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                       zona.onCollide("player", async (jugador: any) => {
 
                         await sleep(100)
-                        
-                        juegoKaplay.debug.log("¡ouch!");
-                        juegoKaplay.debug.log("Han pasado dos segundos");
-                        
+ 
                         player.pos.x = posicionAnteriorXGlobal
                         player.pos.y = posicionAnteriorYGlobal
 
@@ -512,9 +539,6 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                         zona.onCollide("player", async (jugador: any) => {
 
                           await sleep(100)
-
-                          juegoKaplay.debug.log("¡ouch!");
-                          juegoKaplay.debug.log("Han pasado dos segundos");
                           
                           player.pos.x = posicionAnteriorXGlobal
                           player.pos.y = posicionAnteriorYGlobal
@@ -560,10 +584,7 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                         zona.onCollide("player", async (jugador: any) => {
 
                           await sleep(100)
-                          
-                          juegoKaplay.debug.log("¡ouch!");
-                          juegoKaplay.debug.log("Han pasado dos segundos");
-
+                      
                           player.pos.x = posicionAnteriorXGlobal
                           player.pos.y = posicionAnteriorYGlobal
 
@@ -625,9 +646,6 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                       zona.onCollide("player", async (jugador: any) => {
 
                         await sleep(100)
-                          
-                        juegoKaplay.debug.log("¡ouch!");
-                        juegoKaplay.debug.log("Han pasado dos segundos");
                         
                         player.pos.x = posicionAnteriorX
                         player.pos.y = posicionAnteriorY
@@ -686,10 +704,7 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                       zona.onCollide("player", async (jugador: any) => {
 
                         await sleep(100)
-                        
-                        juegoKaplay.debug.log("¡ouch!");
-                        juegoKaplay.debug.log("Han pasado dos segundos");
-                        
+               
                         player.pos.x = posicionAnteriorX
                         player.pos.y = posicionAnteriorY
 
@@ -745,9 +760,6 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                         zona.onCollide("player", async (jugador: any) => {
 
                           await sleep(100)
-
-                          juegoKaplay.debug.log("¡ouch!");
-                          juegoKaplay.debug.log("Han pasado dos segundos");
                           
                           player.pos.x = posicionAnteriorX
                           player.pos.y = posicionAnteriorY
@@ -803,9 +815,6 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                         zona.onCollide("player", async (jugador: any) => {
 
                           await sleep(100)
-                          
-                          juegoKaplay.debug.log("¡ouch!");
-                          juegoKaplay.debug.log("Han pasado dos segundos");
 
                           player.pos.x = posicionAnteriorX
                           player.pos.y = posicionAnteriorY
@@ -824,54 +833,12 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                     }
                   });
 
-
-
-
                   enemigo.play("quiet")
-    
-                  // Colisión con el enemigo
-                  enemigo.onCollide("player", (jugador: any) => {
-                    setTimeout(() => {
-                      
-                      juegoKaplay.debug.log("¡ouch!");
-                      lives--;
-                      console.log(lives)
-                      juegoKaplay.debug.log("Han pasado dos segundos");
-                    }, 100); // Espera 2000 milisegundos (2 segundos)
-                  });
                  
-                  // Intentando eliminar las vidas
-                  juegoKaplay.onUpdate(()=>{
-                    if (lives==2){
-                      juegoKaplay.destroy(heart1);
-                    }else if(lives==1){
-                      juegoKaplay.destroy(heart2);
-                    }else if(lives==0){
-                      juegoKaplay.destroy(heart3);
-                      juegoKaplay.destroy(player);
-                      cambiarGanarC(true); 
-                      setStateC(true);
-                  
-                      setTimeout(() => {
-                        setStateC(false);
-                        window.location.href = window.location.href;
-                      }, 5000);
-                    };
-                  })
-    
-    
-    
                   player.onDeath(() => {
                     juegoKaplay.destroy(player);
                   });
                   
-                  console.log("IMPRIMIENDO COORDENADAS DE BORDE")
-                  console.log({
-                    1: {x: redRoom.pos.x, y: 0},
-                    2: {x: redRoom.pos.x + redRoom.width, y: 0},
-                    3: {x:0,y:redRoom.pos.y + redRoom.height},
-                    4: {x: redRoom.pos.x + redRoom.width, y: redRoom.pos.y + redRoom.height}
-                  })
     
                   console.log("IMPRIMIENDO COORDENADAS DE JUGADOR")
                   console.log({
