@@ -22,12 +22,6 @@ export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
     // Referencia persistente para almacenar la instancia de Kaplay
    // setState(false);
 
-    
-   
-   
-
-
-
     juegoKaplay.loadSprite("arbol", "sprites/a-arbol/arbolicon.jpg", {
       sliceX: 1,
       sliceY: 1,
@@ -165,24 +159,61 @@ export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
           tileHeight: TILED_HEIGHT,
           pos: juegoKaplay.vec2(0, 0),
         },
-        `./nivel5/fondo.json`,   //archivo de donde voy a extraer el mapa
+        `./nivel5/prueba.json`,   //archivo de donde voy a extraer el mapa
         
         [ //Aca lo importante es que debo introducir el orden de las texturas en el que va, capa por capa
           {
-            urlTextura: "./nivel1/fondo.jpg",  
-            dimensionTexturasX: 32, //Dimensiones de tiled
-            dimensionTexturasY: 21,
+            urlTextura: "./nivel5/Water.png",  
+            dimensionTexturasX: 2, //Dimensiones de tiled
+            dimensionTexturasY: 2,
             firstgid: 1 //orden en el que tiled extrae esas imagenes (esta llega a cuatro)
-          },
-          
-              
-  
+          }
         ]
       )
       .then(  
         async (resultado: any) => {
-        
 
+          function numeroAleatorio1a5() {
+            const numeroGenerado: number = Math.floor(Math.random() * 3) + 1;
+            console.log("numeroGenerado -> ", numeroGenerado)
+            return numeroGenerado
+          }
+
+          const opcionEscogida = numeroAleatorio1a5();
+        
+          const imagen1 = juegoKaplay.get("imagen1")[0]
+          const imagen2 = juegoKaplay.get("imagen2")[0]
+          const imagen3 = juegoKaplay.get("imagen3")[0]
+
+          imagen1.onClick(
+            () => {
+              console.log("PRESIONANDO OPCIÓN 1")
+              console.log(opcionEscogida)
+              if(opcionEscogida === 1){
+                console.log("GANASTE")
+              }
+            }
+          )
+
+          imagen2.onClick(
+            () => {
+              console.log("PRESIONANDO OPCIÓN 2")
+              console.log(opcionEscogida)
+              if(opcionEscogida === 2){
+                console.log("GANASTE")
+              }
+            }
+          )
+
+          imagen3.onClick(
+            () => {
+              console.log("PRESIONANDO OPCIÓN 3")
+              console.log(opcionEscogida)
+              if(opcionEscogida === 3){
+                console.log("GANASTE")
+              }
+            }
+          )
           
 
             
