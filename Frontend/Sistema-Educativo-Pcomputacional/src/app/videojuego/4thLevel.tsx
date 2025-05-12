@@ -382,17 +382,10 @@ export function Nivel4(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
 
           
 
-          juegoKaplay.wait(1, () => {
-            setState1(true);
-            setTimeout(() => {
-              setState1(false);
-            }, 10000); 
-            circle1.play("default");
-          });
+          
 
           cambiarGanar1(true);
 
-          await sleep(1000)
 
           async function patronesdinamicos(patrones_numeros: number[][], ultimoPatron?: number
           ) {
@@ -610,7 +603,21 @@ export function Nivel4(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
               [0, 0, 1, 1, 0, 0, 1, 1, 0],
           ];
 
+
+
+
+            setState1(true);
+
+            await sleep (3000);
+
+            setState1(false);
+
+            circle1.play("default");
+
+
           let respuestaPatronesDinamicos = await patronesdinamicos(patrones);
+
+
 
           let ultimo = respuestaPatronesDinamicos.ultimo_elemento
           let indiceAlAzar = respuestaPatronesDinamicos.indice_aleatorio

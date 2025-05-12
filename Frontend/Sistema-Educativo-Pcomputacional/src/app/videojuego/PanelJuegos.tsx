@@ -178,32 +178,15 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
 
           const oveja = juegoKaplay.get("oveja")[0]
           const arboles= juegoKaplay.get("arbol")
-
-
           const hongo = juegoKaplay.get("hongo")[0]
-
-
           const rock = juegoKaplay.get("rock")[0]
-
-
           const casa1 = juegoKaplay.get("casa1")[0]
-
           const casa = juegoKaplay.get("casa")[0]
-
-
           const arbol = juegoKaplay.get("arbol")[0]
-
-
-
           const torre1 = juegoKaplay.get("torre1")[0]
-
-
-
           const player = juegoKaplay.get("player")[0]
-
           const torre = juegoKaplay.get("torre")[0]
           const castillo = juegoKaplay.get("castillo")[0]
-
           const ovejas= juegoKaplay.get("oveja")
           const rocks= juegoKaplay.get("rock")
           const hongos= juegoKaplay.get("hongo")
