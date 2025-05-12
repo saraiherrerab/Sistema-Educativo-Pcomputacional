@@ -162,6 +162,17 @@ export default function Reportes( ) {
     obtenerDatosUsuario()
   }, []);
 
+  function evaluarPremios(cadena:string) {
+    const premios = cadena ? cadena.split(',') : [];
+    const cantidad = premios.length;
+
+    return [
+        cantidad >= 1,
+        cantidad >= 2,
+        cantidad >= 3
+    ];
+    }
+
 
     console.log("ID de la ruta dinámica:", profileId);
   return (
@@ -187,10 +198,10 @@ export default function Reportes( ) {
                         <div className="contenedor_premiaciones">
                             <div>
                                 <p className="tituloReporte">PREMIACIONES</p>
-                                <p className="sangria_20">Estrellas {usuario.tipo_premiacion.split(',').length} / 3</p>
+                                <p className="sangria_20">Estrellas {(usuario.tipo_premiacion) ? usuario.tipo_premiacion.split(',').length : 0} / 3</p>
                             </div>
                             <div>
-                                <Estrellas valores={[true, false, false]} />
+                                <Estrellas valores={evaluarPremios(usuario.tipo_premiacion)} />
                             </div>
                         </div>
                         <div className="contenedor_actividades_completadas">
