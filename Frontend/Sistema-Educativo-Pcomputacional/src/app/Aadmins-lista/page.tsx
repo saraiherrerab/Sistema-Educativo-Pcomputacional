@@ -241,27 +241,8 @@ export default function AdministradoresLista() {
                 <div className="encabezado">
                     <div className="tituloListado" style={{ cursor: 'pointer' }}>
                         <h2 className="administradores" onClick={() => handleTitleClick()}>ADMINISTRADORES</h2>
-                        <button onClick={() => mostrarFormularioAgregar()}>Agregar Administradores</button>
-                    </div>
-                    <div className="barraBusqueda">
-                    <div className="search-input-container">
-                        <input
-                            type="text"
-                            placeholder="Buscar administradores..."
-                            value={searchTerm}
-                            onChange={ e => handleSearchChange(e)}
-                            className="search-input"
-                        />
-                        <img
-                            src="./lupa-icon.png"
-                            alt="Buscar"
-                            className="search-icon"
-                            onClick={() => handleSearchClick()}
-                            style={{ cursor: 'pointer' }}
-                        />
                     </div>
                 </div>
-            </div>
 
             {mostrarFormulario && (
                 <div className="formulario-agregar">
@@ -290,7 +271,6 @@ export default function AdministradoresLista() {
                             <th>Clave</th>
                             <th>Correo</th>
                             <th>Celular</th>
-                            <th>Perfil</th> 
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -306,11 +286,7 @@ export default function AdministradoresLista() {
                                 <td>{administrador.correo ? administrador.correo : "null"}</td>
                                 <td>{administrador.telefono ? administrador.telefono : "null"}</td>
                                 <td>
-                                    <button onClick={()=>Router.push("/profile")}>Ver Perfil</button>
-                                </td>
-                                <td>
                                     <button onClick={() => onEditar(administrador)}>Editar</button>
-                                    <button onClick={() => onEliminar(administrador.id_admin)}>Eliminar</button>
                                 </td>
                             </tr>
                         ))}
