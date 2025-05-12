@@ -16,6 +16,12 @@ let aciertos = 0;
 let nuevoSprite: GameObj;
 export let cambioNivel = 0;
 
+let vidas = 3
+
+function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));   
+}
+
 
 export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,setStateA:any, cambiarGanarA:any,setState1:any, cambiarGanar1:any, Router:any, usuario: any) {
 
@@ -311,9 +317,9 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
                   reconocimiento_patrones: "EN PROCESO",
                   identificacion_errores: datosEstudiante.identificacion_errores,
                   abstraccion: datosEstudiante.abstraccion,
-                  asociacion: datosEstudiante.asociacion,
+                  asociacion: "EN PROCESO",
                   construccion_algoritmos: datosEstudiante.construccion_algoritmos,
-                  p_actividades_completadas: datosEstudiante.p_actividades_completadas,
+                  p_actividades_completadas: (datosEstudiante.reconocimiento_patrones !== "EN PROCESO" && datosEstudiante.reconocimiento_patrones != "APROBADO") ? (datosEstudiante.p_actividades_completadas + (1 / 5) * 100): ((datosEstudiante.p_actividades_completadas) / 5) * 100,
                   tipo_premiacion: datosEstudiante.tipo_premiacion // o string[], si es un arreglo
                 }
 
@@ -331,7 +337,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
               const esperar = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
               await esperar(5000); // espera 5 segundos
               setStateA(false);
-              //window.location.href = window.location.href
+              window.location.href = window.location.href
 
             }
           };
@@ -446,7 +452,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
   
           let ultimo = patronesdinamicos(patronesJuego);
 
-          circle1.onClick( () => {
+          circle1.onClick( async () => {
             juegoKaplay.play("A0", {
               volume: 1, 
               speed: 1.5, 
@@ -466,11 +472,55 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
               console.log("Fallaste" +ultimo)
               setState(true);
               cambiarGanar(false);
+              vidas--
+              if(vidas <= 0) {
+                            console.log("TE MORISTE")
+                            if(usuario.rol === "ESTUDIANTE"){
+                                                
+                              const obtenerDatosUsuario = async (estudiante_seleccionado: number) => {
+                  
+                                const datosEstudiante = await fetch("http://localhost:5555/estudiantes/" + estudiante_seleccionado)
+                                const resultadoConsulta = await datosEstudiante.json()
+                                console.log(resultadoConsulta)
+              
+                                return resultadoConsulta
+              
+                              };
+                            
+                              const datosEstudiante = await obtenerDatosUsuario(usuario.id_usuario)
+                            
+                              console.log(datosEstudiante)
+              
+              
+                      
+                              const datosUsuario: Evaluacion_Estudiante = {
+                                id_estudiante: datosEstudiante.id_usuario,
+                                eficiencia_algoritmica: datosEstudiante.eficiencia_algoritmica,
+                                reconocimiento_patrones: (datosEstudiante.reconocimiento_patrones !== "APROBADO") ? "EN PROCESO" : datosEstudiante.reconocimiento_patrones,
+                                identificacion_errores: datosEstudiante.identificacion_errores,
+                                abstraccion: datosEstudiante.abstraccion,
+                                asociacion: (datosEstudiante.asociacion !== "APROBADO") ? "EN PROCESO" : datosEstudiante.asociacion,
+                                construccion_algoritmos: datosEstudiante.construccion_algoritmos,
+                                p_actividades_completadas: datosEstudiante.p_actividades_completadas,
+                                tipo_premiacion: datosEstudiante.tipo_premiacion
+                              }
+                            
+                              const respuestaEvaluacion = await cargarEvaluacionEstudiante(datosUsuario)
+                              console.log(respuestaEvaluacion)
+                                                              
+                            }else{
+                              console.log("GANO PERO NO ES ESTUDIANTE")
+                            }
+                                              
+                            await sleep(1000)
+                            window.location.href = window.location.href;
+              }
               const ultimoIndice = ultimo[1]
               ultimo = patronesdinamicos(patronesJuego,ultimoIndice);
               setTimeout(() => {
                 setState(false);
               }, 2000); 
+              
             }
           })
 

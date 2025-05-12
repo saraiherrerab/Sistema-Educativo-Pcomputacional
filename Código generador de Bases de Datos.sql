@@ -300,3 +300,36 @@ END;
 $$ LANGUAGE plpgsql;
 
 SELECT * FROM obtener_horarios_profesor(3)
+
+
+
+
+-- Elimina el trigger si existe
+DROP TRIGGER IF EXISTS trg_actualizar_premio_algoritmo ON estudiante;
+
+-- Elimina la función si existe
+DROP FUNCTION IF EXISTS actualizar_premio_algoritmo();
+
+CREATE OR REPLACE FUNCTION actualizar_premio_algoritmo()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Solo actúa si el nuevo valor es 'APROBADO'
+  IF NEW.construccion_algoritmos = 'APROBADO' THEN
+    -- Si la columna premio está vacía o es nula
+    IF NEW.tipo_premio IS NULL OR TRIM(NEW.tipo_premio) = '' THEN
+      NEW.tipo_premio := 'Constructor de algoritmos PRO';
+    ELSE
+      -- Si ya hay algún premio, lo agrega al final
+      NEW.tipo_premio := NEW.tipo_premio || ', Constructor de algoritmos PRO';
+    END IF;
+  END IF;
+  
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_actualizar_premio_algoritmo
+BEFORE UPDATE ON estudiante
+FOR EACH ROW
+WHEN (OLD.construccion_algoritmos IS DISTINCT FROM NEW.construccion_algoritmos)
+EXECUTE FUNCTION actualizar_premio_algoritmo();

@@ -196,6 +196,41 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
 
                       if( lives ===0 ){
 
+                        if(usuario.rol === "ESTUDIANTE"){
+                                                          
+                          const obtenerDatosUsuario = async (estudiante_seleccionado: number) => {
+              
+                            const datosEstudiante = await fetch("http://localhost:5555/estudiantes/" + estudiante_seleccionado)
+                            const resultadoConsulta = await datosEstudiante.json()
+                            console.log(resultadoConsulta)
+          
+                            return resultadoConsulta
+          
+                          };
+                        
+                          const datosEstudiante = await obtenerDatosUsuario(usuario.id_usuario)
+                        
+                          console.log(datosEstudiante)
+
+                          const datosUsuario: Evaluacion_Estudiante = {
+                            id_estudiante: datosEstudiante.id_usuario,
+                            eficiencia_algoritmica: datosEstudiante.eficiencia_algoritmica,
+                            reconocimiento_patrones: datosEstudiante.reconocimiento_patrones,
+                            identificacion_errores: ( datosEstudiante.identificacion_errores !== "APROBADO") ? "EN PROCESO" : datosEstudiante.identificacion_errores,
+                            abstraccion: datosEstudiante.abstraccion,
+                            asociacion:datosEstudiante.asociacion,
+                            construccion_algoritmos: ( datosEstudiante.construccion_algoritmos !== "APROBADO") ? "EN PROCESO" : datosEstudiante.construccion_algoritmos,
+                            p_actividades_completadas: datosEstudiante.p_actividades_completadas,
+                            tipo_premiacion: datosEstudiante.tipo_premiacion
+                          }
+                        
+                          const respuestaEvaluacion = await cargarEvaluacionEstudiante(datosUsuario)
+                          console.log(respuestaEvaluacion)
+                                                                        
+                        }else{
+                          console.log("GANO PERO NO ES ESTUDIANTE")
+                        }
+
                         juegoKaplay.destroy(heart3);
                         juegoKaplay.destroy(player)
                         cambiarGanarC(true); 
@@ -338,11 +373,11 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                           id_estudiante: datosEstudiante.id_usuario,
                           eficiencia_algoritmica: (contadorMovimientos <= 26) ? 100 : Math.ceil((26 / contadorMovimientos) * 100),
                           reconocimiento_patrones: datosEstudiante.reconocimiento_patrones,
-                          identificacion_errores: datosEstudiante.identificacion_errores,
+                          identificacion_errores: (datosEstudiante.identificacion_errores !== "APROBADO") ? "EN PROCESO" : datosEstudiante.identificacion_errores,
                           abstraccion: datosEstudiante.abstraccion,
                           asociacion: datosEstudiante.asociacion,
-                          construccion_algoritmos: datosEstudiante.construccion_algoritmos,
-                          p_actividades_completadas: datosEstudiante.p_actividades_completadas,
+                          construccion_algoritmos:  (datosEstudiante.construccion_algoritmos !== "APROBADO") ? "EN PROCESO" : datosEstudiante.identificacion_errores,
+                          p_actividades_completadas: (datosEstudiante.construccion_algoritmos !== "EN PROCESO" && datosEstudiante.construccion_algoritmos != "APROBADO") ? (datosEstudiante.p_actividades_completadas + (1 / 5) * 100) : ((datosEstudiante.p_actividades_completadas) / 5) * 100,
                           tipo_premiacion: datosEstudiante.tipo_premiacion // o string[], si es un arreglo
                         }
 
