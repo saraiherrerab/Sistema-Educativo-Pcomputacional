@@ -1450,11 +1450,14 @@ export default function ProfesoresLista() {
                                 onChange={(e) => handleChangeGrupo(e)}
                                 >
                                 <option value="" disabled>Seleccione el grupo</option> {/* Opción por defecto */}
-                                {gruposAlumnos.filter((grupo: Grupos) => grupo.id_curso === horariosCursoSeleccionado[0].id_curso)?.map((grupo_alumno: Grupos, index: number) => (
-                                    <option key={grupo_alumno.id_grupo} value={grupo_alumno.id_grupo}>
-                                        {grupo_alumno.nombre_grupo} {/* Asumiendo que tu objeto 'Grupos' tiene un 'nombre' */}
-                                    </option>
-                                ))}
+                                {  
+                                    horariosCursoSeleccionado?.[0] &&
+                                    gruposAlumnos.filter((grupo: Grupos) => grupo.id_curso === horariosCursoSeleccionado[0].id_curso)?.map((grupo_alumno: Grupos, index: number) => (
+                                        <option key={grupo_alumno.id_grupo} value={grupo_alumno.id_grupo}>
+                                            {grupo_alumno.nombre_grupo} {/* Asumiendo que tu objeto 'Grupos' tiene un 'nombre' */}
+                                        </option>
+                                    ))
+                                }
                             </select>
 
                             <label htmlFor="entrada">Hora de entrada:</label>

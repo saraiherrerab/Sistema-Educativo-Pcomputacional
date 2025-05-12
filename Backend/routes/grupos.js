@@ -62,7 +62,7 @@ router.get('/grupos/estudiante/:id', async function(req, res, next) {
     
 });
 
-//Obtener la información del grupo que ve un curso dado
+//Obtener la información del grupo que ve un curso dado con su informacion de profesor
 router.get('/grupos/:id/curso', async function(req, res, next) {
 
     try {
@@ -84,7 +84,8 @@ router.get('/grupos/curso/:id', async function(req, res, next) {
 
     try {
         const { id } = req.params  
-        const query = "SELECT Gr.* FROM Grupos AS Gr WHERE Gr.id_curso = $1";        const findGrupo =  new PQ({text: query, values: [id]});
+        const query = "SELECT Gr.* FROM Grupos AS Gr WHERE Gr.id_curso = $1";        
+        const findGrupo =  new PQ({text: query, values: [id]});
         const result = await db.manyOrNone(findGrupo);
         console.log('Resultado:', result);
 
@@ -95,5 +96,96 @@ router.get('/grupos/curso/:id', async function(req, res, next) {
     }
     
 });
+
+//Obtener Todos los Estudiantes de un grupo Dado
+router.get('/grupos/:id/estudiantes', async function(req, res, next) {
+
+    try {
+        const { id } = req.params  
+        const query = "SELECT Us.*, Est.id_grupo FROM Estudiante AS Est, Grupos AS Gr, Usuario AS Us WHERE Est.id_grupo = Gr.id_grupo AND Est.id_estudiante = Us.id_usuario AND Gr.id_grupo = $1";        
+        const findGrupo =  new PQ({text: query, values: [id]});
+        const result = await db.manyOrNone(findGrupo);
+        console.log('Resultado:', result);
+
+        return res.json(result)
+    } catch (error) {
+        console.error('Error al hacer la consulta:', error);
+        res.json({menssage: "Error al obtener profesores"}) 
+    }
+    
+});
+
+//Obtener la información del grupo que ve un curso dado
+router.get('/grupos/curso/:id', async function(req, res, next) {
+
+    try {
+        const { id } = req.params  
+        const query = "SELECT Gr.* FROM Grupos AS Gr WHERE Gr.id_curso = $1";        
+        const findGrupo =  new PQ({text: query, values: [id]});
+        const result = await db.manyOrNone(findGrupo);
+        console.log('Resultado:', result);
+
+        return res.json(result)
+    } catch (error) {
+        console.error('Error al hacer la consulta:', error);
+        res.json({menssage: "Error al obtener profesores"})
+    }
+    
+});
+
+//Obtener Todos los grupos que NO están incritos en un curso dado
+router.get('/grupos/curso/:id/faltantes', async function(req, res, next) {
+
+    try {
+        const { id } = req.params  
+        const query = "SELECT Gr.* FROM Grupos AS Gr WHERE Gr.id_curso != $1";        
+        const findGrupo =  new PQ({text: query, values: [id]});
+        const result = await db.manyOrNone(findGrupo);
+        console.log('Resultado:', result);
+
+        return res.json(result)
+    } catch (error) {
+        console.error('Error al hacer la consulta:', error);
+        res.json({menssage: "Error al obtener profesores"})
+    }
+    
+});
+
+//Obtener Todos los grupos que NO están incritos en un curso dado
+router.put('/curso/asignar/grupo', async function(req, res, next) {
+
+    try {
+        const { id_grupo, id_curso } = req.body  
+        const query = "UPDATE Grupos SET id_curso = $2 WHERE id_grupo = $1";        
+        const findGrupo =  new PQ({text: query, values: [id_grupo,id_curso]});
+        const result = await db.manyOrNone(findGrupo);
+        console.log('Resultado:', result);
+
+        return res.json(result)
+    } catch (error) {
+        console.error('Error al hacer la consulta:', error);
+        res.json({menssage: "Error al obtener profesores"})
+    }
+    
+});
+
+//Obtener Todos los grupos que NO están incritos en un curso dado
+router.post('/grupos', async function(req, res, next) {
+
+    try {
+        const { nombre_grupo } = req.body  
+        const query = "INSERT INTO GRUPOS (nombre_grupo) VALUES ($1)";        
+        const findGrupo =  new PQ({text: query, values: [nombre_grupo]});
+        const result = await db.manyOrNone(findGrupo);
+        console.log('Resultado:', result);
+
+        return res.json(result)
+    } catch (error) {
+        console.error('Error al hacer la consulta:', error);
+        res.json({menssage: "Error al obtener profesores"})
+    }
+    
+});
+
 
 module.exports = router;

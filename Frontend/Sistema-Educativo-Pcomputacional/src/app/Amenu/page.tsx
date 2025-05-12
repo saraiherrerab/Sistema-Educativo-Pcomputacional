@@ -56,7 +56,7 @@ export default function Amenu() {
       <div className= "MButtonsContainer">
 
               <div className="descripcion">
-                  <MenuButton imageUrl='./educacion-fisica.png' onClick={()=>Router.push("/profile-adm")}/>
+                  <MenuButton imageUrl='./educacion-fisica.png' onClick={()=>Router.push("/Aadmins-lista")}/>
                   <span>MI PERFIL</span>
               </div>
               <div className="descripcion">
@@ -73,7 +73,7 @@ export default function Amenu() {
               </div>
               
               <div className="descripcion">
-                  <MenuButton imageUrl='./grupo.png' onClick={()=>Router.push("/Aadmins-lista")}/>
+                  <MenuButton imageUrl='./grupo.png' onClick={()=>Router.push("/Curso")}/>
                   <span>Cursos</span>
               </div>
 
