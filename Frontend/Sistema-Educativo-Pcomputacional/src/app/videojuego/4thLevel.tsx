@@ -493,6 +493,43 @@ export function Nivel4(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
 
             if(vidas <= 0) {
               console.log("TE MORISTE")
+              if(usuario.rol === "ESTUDIANTE"){
+                                  
+                const obtenerDatosUsuario = async (estudiante_seleccionado: number) => {
+    
+                  const datosEstudiante = await fetch("http://localhost:5555/estudiantes/" + estudiante_seleccionado)
+                  const resultadoConsulta = await datosEstudiante.json()
+                  console.log(resultadoConsulta)
+
+                  return resultadoConsulta
+
+                };
+              
+                const datosEstudiante = await obtenerDatosUsuario(usuario.id_usuario)
+              
+                console.log(datosEstudiante)
+
+
+        
+                const datosUsuario: Evaluacion_Estudiante = {
+                  id_estudiante: datosEstudiante.id_usuario,
+                  eficiencia_algoritmica: datosEstudiante.eficiencia_algoritmica,
+                  reconocimiento_patrones: "EN PROCESO",
+                  identificacion_errores: "EN PROCESO",
+                  abstraccion: datosEstudiante.abstraccion,
+                  asociacion: (datosEstudiante.asociacion !== "APROBADO") ? "EN PROCESO" : datosEstudiante.asociacion,
+                  construccion_algoritmos: datosEstudiante.construccion_algoritmos,
+                  p_actividades_completadas: datosEstudiante.p_actividades_completadas,
+                  tipo_premiacion: datosEstudiante.tipo_premiacion
+                }
+              
+                const respuestaEvaluacion = await cargarEvaluacionEstudiante(datosUsuario)
+                console.log(respuestaEvaluacion)
+                                                
+              }else{
+                console.log("GANO PERO NO ES ESTUDIANTE")
+              }
+                                
               await sleep(1000)
               window.location.href = window.location.href;
             }
@@ -535,34 +572,40 @@ export function Nivel4(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
                       
               if(usuario.rol === "ESTUDIANTE"){
                                   
-                                    const obtenerDatosUsuario = async (estudiante_seleccionado: number) => {
-                        
-                                      const datosEstudiante = await fetch("http://localhost:5555/estudiantes/" + estudiante_seleccionado)
-                                      const resultadoConsulta = await datosEstudiante.json()
-                                      console.log(resultadoConsulta)
+                const obtenerDatosUsuario = async (estudiante_seleccionado: number) => {
+    
+                  const datosEstudiante = await fetch("http://localhost:5555/estudiantes/" + estudiante_seleccionado)
+                  const resultadoConsulta = await datosEstudiante.json()
+                  console.log(resultadoConsulta)
+
+                  return resultadoConsulta
+
+                };
               
-                                      return resultadoConsulta
+                const datosEstudiante = await obtenerDatosUsuario(usuario.id_usuario)
               
-                                    };
-                                  
-                                    const datosEstudiante = await obtenerDatosUsuario(usuario.id_usuario)
-                                  
-                                    console.log(datosEstudiante)
-                            
-                                    const datosUsuario: Evaluacion_Estudiante = {
-                                      id_estudiante: datosEstudiante.id_usuario,
-                                      eficiencia_algoritmica: datosEstudiante.eficiencia_algoritmica,
-                                      reconocimiento_patrones: datosEstudiante.reconocimiento_patrones,
-                                      identificacion_errores: datosEstudiante.identificacion_errores,
-                                      abstraccion: datosEstudiante.abstraccion,
-                                      asociacion: datosEstudiante.asociacion,
-                                      construccion_algoritmos: datosEstudiante.construccion_algoritmos,
-                                      p_actividades_completadas: datosEstudiante.p_actividades_completadas,
-                                      tipo_premiacion: datosEstudiante.tipo_premiacion // o string[], si es un arreglo
-                                    }
-                                  
-                                    const respuestaEvaluacion = await cargarEvaluacionEstudiante(datosUsuario)
-                                    console.log(respuestaEvaluacion)
+                console.log(datosEstudiante)
+
+                const ganoIdenticacionErrores: string = 
+                      (datosEstudiante.identificacion_errores !== "APROBADO" && datosEstudiante.construccion_algoritmos == "APROBADO" && datosEstudiante.abstraccion == "APROBADO")
+                        ? "APROBADO" 
+                        :
+                        ((datosEstudiante.identificacion_errores == "APROBADO") ? "APROBADO": "EN PROCESO");
+        
+                const datosUsuario: Evaluacion_Estudiante = {
+                  id_estudiante: datosEstudiante.id_usuario,
+                  eficiencia_algoritmica: datosEstudiante.eficiencia_algoritmica,
+                  reconocimiento_patrones: "APROBADO",
+                  identificacion_errores: ganoIdenticacionErrores,
+                  abstraccion: datosEstudiante.abstraccion,
+                  asociacion: (datosEstudiante.asociacion !== "APROBADO") ? "EN PROCESO" : datosEstudiante.asociacion,
+                  construccion_algoritmos: datosEstudiante.construccion_algoritmos,
+                  p_actividades_completadas: (datosEstudiante.reconocimiento_patrones != "APROBADO") ? (datosEstudiante.p_actividades_completadas + (1 / 5) * 100) : ((datosEstudiante.p_actividades_completadas) / 5) * 100,
+                  tipo_premiacion: (datosEstudiante.tipo_premiacion.length > 0) ? datosEstudiante.tipo_premiacion + ", " + "Corrector de melodías" : "Corrector de melodías" // o string[], si es un arreglo
+                }
+              
+                const respuestaEvaluacion = await cargarEvaluacionEstudiante(datosUsuario)
+                console.log(respuestaEvaluacion)
                                                 
               }else{
                 console.log("GANO PERO NO ES ESTUDIANTE")
