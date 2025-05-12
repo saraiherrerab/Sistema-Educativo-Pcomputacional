@@ -3,6 +3,20 @@
  "infinite":false,
  "layers":[
         {
+         "compression":"zlib",
+         "data":"eJxjYGBgYGQYBaNgFIyCwQ8ACVwAAg==",
+         "encoding":"base64",
+         "height":15,
+         "id":7,
+         "name":"Capa de patrones 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":20,
+         "x":0,
+         "y":0
+        }, 
+        {
          "draworder":"topdown",
          "id":3,
          "name":"imagen1",
@@ -90,7 +104,7 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":7,
+ "nextlayerid":8,
  "nextobjectid":7,
  "orientation":"orthogonal",
  "renderorder":"right-down",
@@ -99,7 +113,7 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"..\/nivel1\/fondo.tsx"
+         "source":"Water.tsx"
         }],
  "tilewidth":32,
  "type":"map",
