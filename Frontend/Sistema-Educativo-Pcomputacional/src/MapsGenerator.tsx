@@ -93,53 +93,60 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
           if(layer.type === "tilelayer"){
   
             //Luego por cada uno de los números que representan una capa realizamos lo siguiente:
-            layer.data.forEach( (tileNumber: number, index: number) => {
-  
-              
-              //Validamos que el TileMap el cual contiene una relación llave valor con el caracter 
-              //y su equivalente en la capa, por ejemplo $: 36, esté inicializado.
-              if (!(numeroLayer >= 0 && numeroLayer < tileMap.length)) {
-                tileMap.push({})
-              }
-  
-              //Si el "Tilemap" en la capa actual no ha mapeado el número
-              if(Object.values(tileMap[numeroLayer]).includes(tileNumber) === false){
-  
-                //Validmos si es un número de dos dígitos y en caso de que lo sea, debemos validar el
-                //ultimo valor posible del contador.
-                contador = devolverSiguienteNumeroValido(contador,valoresProhibidos)
-  
-                //Una vez validado, si el número a evaluar es de dos digitos y el contador está entre
-                //los numeros validos
-                if(tileNumber.toString().length > 1 && contador >= 33 && contador <=165 ){
-              
-                  //Al mapeo de la capa evaluada le asignamos una correspondencia entre el valor ASCCI y el numero
-                  (tileMap[numeroLayer])[String.fromCharCode(contador)] = tileNumber as number;
-  
-                  //Actualizamos el mapa de la misma posicion con el nuevo caracter
-                  worldJson.layers[numeroLayer].data[index] = String.fromCharCode(contador);
-  
-                  //Avanzamos el contador para tomar el nuevo valor ASCII
-                  contador++;
-                }else if(contador > 165){
-                  //En caso de que el contador haya superado el límite de asignaciones
-                  throw new Error("La cantidad de cuadros a superado el limite establecido");
-                }else {
-  
-                  //Si el mapeo realizado es de un número de un sólo digito entonces asignamos directamente ese numero 
-                  (tileMap[numeroLayer])[tileNumber.toString() as string] = tileNumber as number
+            if (Array.isArray(layer.data) && layer.data.length > 0) {
+              console.log("HAGAMOS ALGO")
+              layer.data?.forEach( (tileNumber: number, index: number) => {
+    
+                
+                //Validamos que el TileMap el cual contiene una relación llave valor con el caracter 
+                //y su equivalente en la capa, por ejemplo $: 36, esté inicializado.
+                if (!(numeroLayer >= 0 && numeroLayer < tileMap.length)) {
+                  tileMap.push({})
                 }
-  
-              }else{
-  
-                //En la caso de extraer un número que ya ha sido mapeado y ya tiene asignado un valor ASCII
-                //Buscamos la llave a la que le corresponde ese valor
-                //Y actualizamos el mapa con ese caracter encontrado.
-                const keyEncontrada = Object.entries(tileMap[numeroLayer]).find(([_, value]) => value === tileNumber)?.[0];
-                worldJson.layers[numeroLayer].data[index] = keyEncontrada
-              }
-        
-            });
+    
+                //Si el "Tilemap" en la capa actual no ha mapeado el número
+                if(Object.values(tileMap[numeroLayer]).includes(tileNumber) === false){
+    
+                  //Validmos si es un número de dos dígitos y en caso de que lo sea, debemos validar el
+                  //ultimo valor posible del contador.
+                  contador = devolverSiguienteNumeroValido(contador,valoresProhibidos)
+    
+                  //Una vez validado, si el número a evaluar es de dos digitos y el contador está entre
+                  //los numeros validos
+                  if(tileNumber.toString().length > 1 && contador >= 33 && contador <=165 ){
+                
+                    //Al mapeo de la capa evaluada le asignamos una correspondencia entre el valor ASCCI y el numero
+                    (tileMap[numeroLayer])[String.fromCharCode(contador)] = tileNumber as number;
+    
+                    //Actualizamos el mapa de la misma posicion con el nuevo caracter
+                    worldJson.layers[numeroLayer].data[index] = String.fromCharCode(contador);
+    
+                    //Avanzamos el contador para tomar el nuevo valor ASCII
+                    contador++;
+                  }else if(contador > 165){
+                    //En caso de que el contador haya superado el límite de asignaciones
+                    throw new Error("La cantidad de cuadros a superado el limite establecido");
+                  }else {
+    
+                    //Si el mapeo realizado es de un número de un sólo digito entonces asignamos directamente ese numero 
+                    (tileMap[numeroLayer])[tileNumber.toString() as string] = tileNumber as number
+                  }
+    
+                }else{
+    
+                  //En la caso de extraer un número que ya ha sido mapeado y ya tiene asignado un valor ASCII
+                  //Buscamos la llave a la que le corresponde ese valor
+                  //Y actualizamos el mapa con ese caracter encontrado.
+                  const keyEncontrada = Object.entries(tileMap[numeroLayer]).find(([_, value]) => value === tileNumber)?.[0];
+                  worldJson.layers[numeroLayer].data[index] = keyEncontrada
+                }
+          
+              });
+            }else{
+              console.log("NO HAGA NADA")
+            }
+
+            
   
   
           }
@@ -590,8 +597,6 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
 
           }
 
-
-
           if(layer.type === "objectgroup" && layer.name === "player"){
 
             const anchoCelda: number = ( window.innerWidth / dimesionesMapaX)
@@ -728,7 +733,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
   
             torre1.tag("torre1")
             
-            }
+          }
 
           if(layer.type === "objectgroup" && layer.name === "arbol"){
 
@@ -796,66 +801,66 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
     
     
             
-              }
-          
-              if(layer.type === "objectgroup" && layer.name === "rock"){
+          }
 
-                const anchoCelda: number = ( window.innerWidth / 20);
-                const altoCelda: number = ( window.innerHeight / 15)
-          
-                let posicionX: number = (layer.objects[0].x / 32) * anchoCelda
-                let posicionY: number = (layer.objects[0].y / 32) * altoCelda
-        
-                const escala: number = 0.5
-        
-                layer.objects.forEach( (arbolito: any) => {
-        
-                  let posicionX: number = (arbolito.x / 32) * anchoCelda
-                  let posicionY: number = (arbolito.y / 32) * altoCelda
-        
-                  const rock = contextoKaplay.add([
-                    contextoKaplay.pos(posicionX + (anchoCelda / 2), posicionY  + (altoCelda / 2)),
-                    contextoKaplay.sprite("rock"),
-                    contextoKaplay.scale(1),
-                    contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda*0.7, altoCelda*0.7)}),
-                    contextoKaplay.anchor("center"),
-                    "rock"
-                  ]);
-          
-                  rock.tag("rock")
-        
-                })
+          if(layer.type === "objectgroup" && layer.name === "rock"){
 
-                  }
-                  if(layer.type === "objectgroup" && layer.name === "oveja"){
-
-                    const anchoCelda: number = ( window.innerWidth / 20);
-                    const altoCelda: number = ( window.innerHeight / 15)
-              
-                    let posicionX: number = (layer.objects[0].x / 32) * anchoCelda
-                    let posicionY: number = (layer.objects[0].y / 32) * altoCelda
-            
-                    const escala: number = 0.5
-            
-                    layer.objects.forEach( (arbolito: any) => {
-            
-                      let posicionX: number = (arbolito.x / 32) * anchoCelda
-                      let posicionY: number = (arbolito.y / 32) * altoCelda
-            
-                      const oveja = contextoKaplay.add([
-                        contextoKaplay.pos(posicionX + (anchoCelda / 2), posicionY  + (altoCelda / 2)),
-                        contextoKaplay.sprite("oveja"),
-                        contextoKaplay.scale(1),
-                        contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda*0.7, altoCelda*0.7)}),
-                        contextoKaplay.anchor("center"),
-                        "oveja"
-                      ]);
-              
-                      oveja.tag("oveja")
-            
-                    })
+            const anchoCelda: number = ( window.innerWidth / 20);
+            const altoCelda: number = ( window.innerHeight / 15)
+      
+            let posicionX: number = (layer.objects[0].x / 32) * anchoCelda
+            let posicionY: number = (layer.objects[0].y / 32) * altoCelda
     
-                      }
+            const escala: number = 0.5
+    
+            layer.objects.forEach( (arbolito: any) => {
+    
+              let posicionX: number = (arbolito.x / 32) * anchoCelda
+              let posicionY: number = (arbolito.y / 32) * altoCelda
+    
+              const rock = contextoKaplay.add([
+                contextoKaplay.pos(posicionX + (anchoCelda / 2), posicionY  + (altoCelda / 2)),
+                contextoKaplay.sprite("rock"),
+                contextoKaplay.scale(1),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda*0.7, altoCelda*0.7)}),
+                contextoKaplay.anchor("center"),
+                "rock"
+              ]);
+      
+              rock.tag("rock")
+    
+            })
+
+          }
+          if(layer.type === "objectgroup" && layer.name === "oveja"){
+
+            const anchoCelda: number = ( window.innerWidth / 20);
+            const altoCelda: number = ( window.innerHeight / 15)
+      
+            let posicionX: number = (layer.objects[0].x / 32) * anchoCelda
+            let posicionY: number = (layer.objects[0].y / 32) * altoCelda
+    
+            const escala: number = 0.5
+    
+            layer.objects.forEach( (arbolito: any) => {
+    
+              let posicionX: number = (arbolito.x / 32) * anchoCelda
+              let posicionY: number = (arbolito.y / 32) * altoCelda
+    
+              const oveja = contextoKaplay.add([
+                contextoKaplay.pos(posicionX + (anchoCelda / 2), posicionY  + (altoCelda / 2)),
+                contextoKaplay.sprite("oveja"),
+                contextoKaplay.scale(1),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda*0.7, altoCelda*0.7)}),
+                contextoKaplay.anchor("center"),
+                "oveja"
+              ]);
+      
+              oveja.tag("oveja")
+    
+            })
+
+          }
                   
           if(layer.type === "objectgroup" && layer.name === "enemigo"){
 
@@ -880,6 +885,114 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
             })
       
           }
+
+
+          if(layer.type === "objectgroup" && layer.name === "imagen1"){
+
+            const anchoCelda: number = ( window.innerWidth / 20);
+            const altoCelda: number = ( window.innerHeight / 15)
+
+
+            layer.objects.forEach( (imagenNivel: any) => {
+              
+              console.log(imagenNivel)
+              let posicionX: number = (imagenNivel.x / 32) * ( anchoCelda);
+              let posicionY: number = (imagenNivel.y / 32) * ( altoCelda)
+
+              let imagen = contextoKaplay.add([
+                contextoKaplay.pos(((posicionX) + ((imagenNivel.width / 32) * anchoCelda)/2), ((posicionY) + (imagenNivel.height / 32) * altoCelda) - (3/2) * altoCelda ),
+                contextoKaplay.sprite("arbol"),
+                contextoKaplay.scale(0.8),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), (imagenNivel.width / 32) * anchoCelda, (imagenNivel.height / 32) * altoCelda)}),
+                contextoKaplay.anchor("center"),
+                "imagen1",
+                { z: 1 } // Asegura que el jugador esté en una capa superior
+              ]);
+  
+              imagen.tag("imagen1")
+            })
+      
+          }
+
+          if(layer.type === "objectgroup" && layer.name === "imagen2"){
+
+            const anchoCelda: number = ( window.innerWidth / 20);
+            const altoCelda: number = ( window.innerHeight / 15)
+
+
+            layer.objects.forEach( (imagenNivel: any) => {
+              
+              console.log(imagenNivel)
+              let posicionX: number = (imagenNivel.x / 32) * ( anchoCelda);
+              let posicionY: number = (imagenNivel.y / 32) * ( altoCelda)
+
+              let imagen = contextoKaplay.add([
+                contextoKaplay.pos(((posicionX) + ((imagenNivel.width / 32) * anchoCelda)/2), ((posicionY) + (imagenNivel.height / 32) * altoCelda) - (3/2) * altoCelda ),
+                contextoKaplay.sprite("arbol"),
+                contextoKaplay.scale(0.8),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), (imagenNivel.width / 32) * anchoCelda, (imagenNivel.height / 32) * altoCelda)}),
+                contextoKaplay.anchor("center"),
+                "imagen2",
+                { z: 1 } // Asegura que el jugador esté en una capa superior
+              ]);
+  
+              imagen.tag("imagen2")
+            })
+      
+          }
+
+          if(layer.type === "objectgroup" && layer.name === "imagen3"){
+
+            const anchoCelda: number = ( window.innerWidth / 20);
+            const altoCelda: number = ( window.innerHeight / 15)
+
+
+            layer.objects.forEach( (imagenNivel: any) => {
+              
+              console.log(imagenNivel)
+              let posicionX: number = (imagenNivel.x / 32) * ( anchoCelda);
+              let posicionY: number = (imagenNivel.y / 32) * ( altoCelda)
+
+              let imagen = contextoKaplay.add([
+                contextoKaplay.pos(((posicionX) + ((imagenNivel.width / 32) * anchoCelda)/2), ((posicionY) + (imagenNivel.height / 32) * altoCelda) - (3/2) * altoCelda ),
+                contextoKaplay.sprite("arbol"),
+                contextoKaplay.scale(0.8),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), (imagenNivel.width / 32) * anchoCelda, (imagenNivel.height / 32) * altoCelda)}),
+                contextoKaplay.anchor("center"),
+                "imagen3",
+                { z: 1 } // Asegura que el jugador esté en una capa superior
+              ]);
+  
+              imagen.tag("imagen3")
+            })
+      
+          }
+
+          if(layer.type === "objectgroup" && layer.name === "imagengrande"){
+
+            const anchoCelda: number = ( window.innerWidth / 20);
+            const altoCelda: number = ( window.innerHeight / 15)
+
+
+            layer.objects.forEach( (imagengrande: any) => {
+              let posicionX: number = (imagengrande.x / 32) * ( anchoCelda);
+              let posicionY: number = (imagengrande.y / 32) * ( altoCelda)
+
+              let imagen_g = contextoKaplay.add([
+                contextoKaplay.pos(((posicionX) + ((imagengrande.width / 32) * anchoCelda)/2), ((posicionY) + (imagengrande.height / 32) * altoCelda) - (3/2) * altoCelda ),
+                contextoKaplay.sprite("arbol"),
+                contextoKaplay.scale(1),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda, altoCelda)}),
+                contextoKaplay.anchor("center"),
+                "imagen_grande",
+                { z: 1 } // Asegura que el jugador esté en una capa superior
+              ]);
+  
+              imagen_g.tag("imagen_grande")
+            })
+      
+          }
+
         });
         
       
