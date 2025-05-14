@@ -124,10 +124,6 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
       }
     }
 
-    let semicorchea1: GameObj;
-    let semicorchea2: GameObj;
-    let semicorchea3:GameObj;
-
     juegoKaplay.loadSound("sonidoPrueba", "button_09-190435.mp3");
     const P1= juegoKaplay.loadSound("P1", "./sounds/P1.mp3");
     juegoKaplay.loadSound("P2", "./sounds/P2.mp3");
@@ -252,100 +248,83 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
           // Array para almacenar los sprites de notas creados
           let spritesNotas: GameObj[] = []; // Asegúrate de usar el tipo correcto para los sprites en Kaboom.js
   
-          async function validarAciertos(){
-            if(aciertos==1){
-                      
-              
-              construccion.destroy();
-                
-              console.log("El mensaje es: " + aciertos);
+          async function validarAciertos() {
+            const mostrarGananciaTemporal = () => {
               cambiarGanar(true);
               setState(true);
-              setTimeout(() => {
-                setState(false);
-              }, 4000); 
-              
-            
-              ultimo = patronesdinamicos();
-            
-        
-            }else if(aciertos==2){
-              
-            
-              console.log("El mensaje es: " + aciertos);
-              setState(true);
-              cambiarGanar(true);
-              setTimeout(() => {
-                setState(false);
-              }, 4000); 
-              
-              ultimo = patronesdinamicos();
-        
-            }else if(aciertos==3){
-              
-              console.log("El mensaje es: " + aciertos);
-              //patronesdinamicos().clear;
-              
-              cambiarGanar(true);
-              /*window.location.href=window.location.href;*/
-              
-            //setTimeout(()=>{
-              construccion2.destroy();
-              ovejas.forEach( (oveja: GameObj<any>) => {
-                oveja.play("quiet");
+              setTimeout(() => setState(false), 4000);
+            };
 
-              })
+            const esperar = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-              cambiarGanarA(true); 
-              juegoKaplay.play("aprobado", { volume: 1, speed: 1, loop: false });
-              setStateA(true);
+            switch (aciertos) {
+              case 1:
+                construccion.destroy();
+                console.log("El mensaje es: " + aciertos);
+                mostrarGananciaTemporal();
+                ultimo = patronesdinamicos(patronesJuego);
+                break;
 
-              if(usuario.rol === "ESTUDIANTE"){
+              case 2:
+                console.log("El mensaje es: " + aciertos);
+                mostrarGananciaTemporal();
+                ultimo = patronesdinamicos(patronesJuego);
+                break;
 
-                const obtenerDatosUsuario = async (estudiante_seleccionado: number) => {
-    
-                  const datosEstudiante = await fetch("http://localhost:5555/estudiantes/" + estudiante_seleccionado)
-                  const resultadoConsulta = await datosEstudiante.json()
-                  console.log(resultadoConsulta)
+              case 3:
+                console.log("El mensaje es: " + aciertos);
+                construccion2.destroy();
 
-                  return resultadoConsulta
+                ovejas.forEach((oveja: GameObj<any>) => {
+                  oveja.play("quiet");
+                });
 
-                };
+                cambiarGanarA(true);
+                setStateA(true);
 
-                const datosEstudiante = await obtenerDatosUsuario(usuario.id_usuario)
+                if (usuario.rol === "ESTUDIANTE") {
+                  const obtenerDatosUsuario = async (id: number) => {
+                    const response = await fetch(`http://localhost:5555/estudiantes/${id}`);
+                    return await response.json();
+                  };
 
-                console.log(datosEstudiante)
-                
-                const datosUsuario: Evaluacion_Estudiante = {
-                  id_estudiante: datosEstudiante.id_usuario,
-                  eficiencia_algoritmica: datosEstudiante.eficiencia_algoritmica,
-                  reconocimiento_patrones: "EN PROCESO",
-                  identificacion_errores: datosEstudiante.identificacion_errores,
-                  abstraccion: datosEstudiante.abstraccion,
-                  asociacion: "EN PROCESO",
-                  construccion_algoritmos: datosEstudiante.construccion_algoritmos,
-                  p_actividades_completadas: (datosEstudiante.reconocimiento_patrones !== "EN PROCESO" && datosEstudiante.reconocimiento_patrones != "APROBADO") ? (datosEstudiante.p_actividades_completadas + (1 / 5) * 100): ((datosEstudiante.p_actividades_completadas) / 5) * 100,
-                  tipo_premiacion: datosEstudiante.tipo_premiacion // o string[], si es un arreglo
+                  const datosEstudiante = await obtenerDatosUsuario(usuario.id_usuario);
+
+                  const porcentajeAumentado =
+                    datosEstudiante.reconocimiento_patrones !== "EN PROCESO" &&
+                    datosEstudiante.reconocimiento_patrones !== "APROBADO"
+                      ? datosEstudiante.p_actividades_completadas + (1 / 5) * 100
+                      : (datosEstudiante.p_actividades_completadas / 5) * 100;
+
+                  const datosUsuario: Evaluacion_Estudiante = {
+                    id_estudiante: datosEstudiante.id_usuario,
+                    eficiencia_algoritmica: datosEstudiante.eficiencia_algoritmica,
+                    reconocimiento_patrones: "EN PROCESO",
+                    identificacion_errores: datosEstudiante.identificacion_errores,
+                    abstraccion: datosEstudiante.abstraccion,
+                    asociacion: "EN PROCESO",
+                    construccion_algoritmos: datosEstudiante.construccion_algoritmos,
+                    p_actividades_completadas: porcentajeAumentado,
+                    tipo_premiacion: datosEstudiante.tipo_premiacion,
+                  };
+
+                  const respuestaEvaluacion = await cargarEvaluacionEstudiante(datosUsuario);
+                  console.log(respuestaEvaluacion);
+                } else {
+                  console.log("GANO PERO NO ES ESTUDIANTE");
                 }
 
-                const respuestaEvaluacion = await cargarEvaluacionEstudiante(datosUsuario)
-                console.log(respuestaEvaluacion)
-              
-              }else{
-                console.log("GANO PERO NO ES ESTUDIANTE")
-              }
-            
-              colisiones.forEach( (colision: GameObj<any>) => { 
-                colision.destroy();
-              })
-                      
-              const esperar = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-              await esperar(5000); // espera 5 segundos
-              setStateA(false);
-              window.location.href = window.location.href
+                colisiones.forEach((colision: GameObj<any>) => colision.destroy());
 
+                await esperar(5000);
+                setStateA(false);
+                window.location.href = window.location.href;
+                break;
+
+              default:
+                console.warn("Aciertos fuera de rango esperado:", aciertos);
             }
-          };
+          }
 
           function limpiarNotas() {
             
@@ -358,234 +337,270 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
             puntoPartidaY= window.innerHeight/2
           }
         
-          function patronesdinamicos(patrones: number[][] = [
-              [0, 1, 2, 0, 1, 2, 0, 1, 2],
-              [0, 2, 0, 2, 0, 2, 0, 2, 0],
-              [0, 0, 0, 1, 1, 1, 2, 2, 2],
-              [1, 2, 0, 1, 2, 0, 1, 2, 0],
-              [2, 1, 0, 2, 1, 0, 2, 1, 0],
-              [0, 0, 1, 1, 0, 0, 1, 1, 0],
-            ], ultimoPatron?: number) {
+          function patronesdinamicos(
+            patrones: number[][],
+            ultimoPatron?: number
+          ): [number, number] | null {
+            
+            limpiarNotas();
 
-              limpiarNotas();
+            // Si no quedan patrones, termina el juego o devuelve null
+            if (patrones.length === 0) {
+              console.warn("No quedan más patrones disponibles.");
+              return null;
+            }
 
-              
+            // Elegir un patrón aleatorio diferente al último
+            let nuevoIndice: number;
+            do {
+              nuevoIndice = Math.floor(Math.random() * patrones.length);
+            } while (patrones.length > 1 && nuevoIndice === ultimoPatron);
 
-              const indicesDisponibles = patrones
-              .map((_, idx) => idx)
-              .filter((idx) => idx !== ultimoPatron);
+            const nuevoPatron = patrones.splice(nuevoIndice, 1)[0]; // elimina y obtiene el patrón
+            const secuencia = nuevoPatron.slice(0, -1);
+            const ultimo = nuevoPatron[nuevoPatron.length - 1];
 
-            // Elegir un índice aleatorio diferente al último
-            const nuevoIndice = indicesDisponibles[Math.floor(Math.random() * indicesDisponibles.length)];
-            const patron = patrones[nuevoIndice];
-            const secuencia = patron.slice(0, -1);
+            if (ultimoPatron === undefined) {
+              console.log("REPRODUCIENDO PRIMER PATRÓN");
+            } else {
+              console.log("PROXIMO PATRÓN:");
+            }
 
-            if(!ultimoPatron){
-                console.log("REPRODUCIENDO PRIMER PATRON")
-                console.log(patron)
-              }else{
-                console.log("REPRODUCIENDO PROXIMO PATRON PATRON")
-                console.log(patron)
-              }
-          
-            const numeros = generarNumerosAzar();
-            const ultimo = patron[patron.length - 1];
-            /*
-            const patron = patrones[numeros[0]];
-            const ultimo = patron[patron.length - 1];
-            const secuencia = patron.slice(0, -1);
-            */
-            let delay = esPrimeraRonda ? 5000 : 350; // 10s la primera vez, luego normal
-            esPrimeraRonda = false; // Marcar como no primera ronda
-          
+            console.log(nuevoPatron);
+
+            let delay = esPrimeraRonda ? 5000 : 350;
+            esPrimeraRonda = false;
+
+            function crearNota(frame: number, sonido: string) {
+              const sprite = juegoKaplay.add([
+                juegoKaplay.pos(puntoPartida, juegoKaplay.center().y / 2 + puntoPartidaY - 80),
+                juegoKaplay.sprite("notas"),
+                juegoKaplay.scale(0.1),
+                { z: 2 },
+                "notas",
+              ]);
+              sprite.frame = frame;
+              juegoKaplay.play(sonido, { volume: 1, speed: 1.5, loop: false });
+              spritesNotas.push(sprite);
+              puntoPartida += 70;
+            }
+
             secuencia.forEach((numeroAzar: number) => {
               setTimeout(() => {
                 switch (numeroAzar) {
-                  case 0:
-                    nuevoSprite = juegoKaplay.add([
-                      juegoKaplay.pos(puntoPartida, juegoKaplay.center().y / 2 + puntoPartidaY - 80),
-                      juegoKaplay.sprite("notas"),
-                      juegoKaplay.scale(0.1),
-                      { z: 2 },
-                      "notas"
-                    ]);
-                    nuevoSprite.frame = 1;
-                    juegoKaplay.play("A0", { volume: 1, speed: 1.5, loop: false });
-                    break;
-                  case 1:
-                    nuevoSprite = juegoKaplay.add([
-                      juegoKaplay.pos(puntoPartida, juegoKaplay.center().y / 2 + puntoPartidaY - 80),
-                      juegoKaplay.sprite("notas"),
-                      juegoKaplay.scale(0.1),
-                      { z: 2 },
-                      "notas"
-                    ]);
-                    nuevoSprite.frame = 0;
-                    juegoKaplay.play("A1", { volume: 1, speed: 1.5, loop: false });
-                    break;
-                  case 2:
-                    nuevoSprite = juegoKaplay.add([
-                      juegoKaplay.pos(puntoPartida, juegoKaplay.center().y / 2 + puntoPartidaY - 80),
-                      juegoKaplay.sprite("notas"),
-                      juegoKaplay.scale(0.1),
-                      { z: 2 },
-                      "notas"
-                    ]);
-                    nuevoSprite.frame = 2;
-                    juegoKaplay.play("A2", { volume: 1, speed: 1.5, loop: false });
-                    break;
+                  case 0: crearNota(1, "A0"); break;
+                  case 1: crearNota(0, "A1"); break;
+                  case 2: crearNota(2, "A2"); break;
                 }
-          
-                puntoPartida += 70;
-                if (nuevoSprite) spritesNotas.push(nuevoSprite);
               }, delay);
-          
               delay += 400;
             });
-          
-            return [ultimo, (ultimoPatron) ? nuevoIndice : -1 ];
+
+            return [ultimo, nuevoIndice];
           }
 
           const patronesJuego = [
-          [0, 1, 2, 0, 1, 2, 0, 1, 2],
-          [0, 2, 0, 2, 0, 2, 0, 2, 0],
-          [0, 0, 0, 1, 1, 1, 2, 2, 2],
-          [1, 2, 0, 1, 2, 0, 1, 2, 0],
-          [2, 1, 0, 2, 1, 0, 2, 1, 0],
-          [0, 0, 1, 1, 0, 0, 1, 1, 0],
+            [0, 1, 2, 0, 1, 2, 0, 1, 2],
+            [0, 2, 0, 2, 0, 2, 0, 2, 0],
+            [0, 0, 0, 1, 1, 1, 2, 2, 2],
+            [1, 2, 0, 1, 2, 0, 1, 2, 0],
+            [2, 1, 0, 2, 1, 0, 2, 1, 0],
+            [0, 0, 1, 1, 0, 0, 1, 1, 0],
           ]
   
           let ultimo = patronesdinamicos(patronesJuego);
 
-          circle1.onClick( async () => {
-            juegoKaplay.play("A0", {
-              volume: 1, 
-              speed: 1.5, 
-              loop: false, 
-            });
-            if(ultimo[0] == 0){
-  
+          circle1.onClick(async () => {
+            juegoKaplay.play("A0", { volume: 1, speed: 1.5, loop: false });
+
+            if (ultimo && ultimo[0] === 0) {
               nomo.play("right");
               arbol.play("bye");
               aciertos++;
               validarAciertos();
+
               setTimeout(() => {
                 arbol.play("quiet");
-              }, 2000); 
-              
-            }else{
-              console.log("Fallaste" +ultimo)
+              }, 2000);
+            } else {
+              console.log("Fallaste", ultimo);
               setState(true);
               cambiarGanar(false);
-              vidas--
-              if(vidas <= 0) {
-                            console.log("TE MORISTE")
-                            if(usuario.rol === "ESTUDIANTE"){
-                                                
-                              const obtenerDatosUsuario = async (estudiante_seleccionado: number) => {
-                  
-                                const datosEstudiante = await fetch("http://localhost:5555/estudiantes/" + estudiante_seleccionado)
-                                const resultadoConsulta = await datosEstudiante.json()
-                                console.log(resultadoConsulta)
-              
-                                return resultadoConsulta
-              
-                              };
-                            
-                              const datosEstudiante = await obtenerDatosUsuario(usuario.id_usuario)
-                            
-                              console.log(datosEstudiante)
-              
-              
-                      
-                              const datosUsuario: Evaluacion_Estudiante = {
-                                id_estudiante: datosEstudiante.id_usuario,
-                                eficiencia_algoritmica: datosEstudiante.eficiencia_algoritmica,
-                                reconocimiento_patrones: (datosEstudiante.reconocimiento_patrones !== "APROBADO") ? "EN PROCESO" : datosEstudiante.reconocimiento_patrones,
-                                identificacion_errores: datosEstudiante.identificacion_errores,
-                                abstraccion: datosEstudiante.abstraccion,
-                                asociacion: (datosEstudiante.asociacion !== "APROBADO") ? "EN PROCESO" : datosEstudiante.asociacion,
-                                construccion_algoritmos: datosEstudiante.construccion_algoritmos,
-                                p_actividades_completadas: datosEstudiante.p_actividades_completadas,
-                                tipo_premiacion: datosEstudiante.tipo_premiacion
-                              }
-                            
-                              const respuestaEvaluacion = await cargarEvaluacionEstudiante(datosUsuario)
-                              console.log(respuestaEvaluacion)
-                                                              
-                            }else{
-                              console.log("GANO PERO NO ES ESTUDIANTE")
-                            }
-                                              
-                            await sleep(1000)
-                            window.location.href = window.location.href;
+              vidas--;
+
+              if (vidas <= 0) {
+
+                console.log("TE MORISTE");
+
+                if (usuario.rol === "ESTUDIANTE") {
+                  const obtenerDatosUsuario = async (estudiante_seleccionado: number) => {
+                    const datosEstudiante = await fetch("http://localhost:5555/estudiantes/" + estudiante_seleccionado);
+                    const resultadoConsulta = await datosEstudiante.json();
+                    console.log(resultadoConsulta);
+                    return resultadoConsulta;
+                  };
+
+                  const datosEstudiante = await obtenerDatosUsuario(usuario.id_usuario);
+
+                  const datosUsuario: Evaluacion_Estudiante = {
+                    id_estudiante: datosEstudiante.id_usuario,
+                    eficiencia_algoritmica: datosEstudiante.eficiencia_algoritmica,
+                    reconocimiento_patrones: (datosEstudiante.reconocimiento_patrones !== "APROBADO") ? "EN PROCESO" : datosEstudiante.reconocimiento_patrones,
+                    identificacion_errores: datosEstudiante.identificacion_errores,
+                    abstraccion: datosEstudiante.abstraccion,
+                    asociacion: (datosEstudiante.asociacion !== "APROBADO") ? "EN PROCESO" : datosEstudiante.asociacion,
+                    construccion_algoritmos: datosEstudiante.construccion_algoritmos,
+                    p_actividades_completadas: datosEstudiante.p_actividades_completadas,
+                    tipo_premiacion: datosEstudiante.tipo_premiacion
+                  };
+
+                  const respuestaEvaluacion = await cargarEvaluacionEstudiante(datosUsuario);
+                  console.log(respuestaEvaluacion);
+                } else {
+                  console.log("GANO PERO NO ES ESTUDIANTE");
+                }
+
+                await sleep(1000);
+                window.location.href = window.location.href;
+
               }
-              const ultimoIndice = ultimo[1]
-              ultimo = patronesdinamicos(patronesJuego,ultimoIndice);
+
+              const ultimoIndice = (ultimo != null) ? ultimo[1] : undefined;
+              ultimo = patronesdinamicos(patronesJuego, ultimoIndice);
+
               setTimeout(() => {
                 setState(false);
-              }, 2000); 
-              
+              }, 2000);
             }
-          })
-
-          circle2.onClick( () => {
-          juegoKaplay.play("A1", {
-            volume: 1, 
-            speed: 1.5, 
-            loop: false, 
           });
-          if(ultimo[0] == 1){
 
-            nomo.play("right");
-            arbol.play("bye");
-            aciertos++;
-            validarAciertos();
-            //console.log("El mensaje es: " + aciertos);
-            setTimeout(() => {
-              arbol.play("quiet");
-            }, 2000); 
-            
-          }else{
-            console.log("Fallaste"+ultimo)
-            setState(true);
-            cambiarGanar(false);
-            const ultimoIndice = ultimo[1]
-            ultimo = patronesdinamicos(patronesJuego,ultimoIndice);
-            setTimeout(() => {
-              setState(false);
-            }, 2000); 
-          }
-          })
+          circle2.onClick(async () => {
+            juegoKaplay.play("A1", { volume: 1, speed: 1.5, loop: false });
 
-          circle3.onClick( () => {
-          juegoKaplay.play("A2", {
-            volume: 1, 
-            speed: 1.5, 
-            loop: false, 
+            if (ultimo && ultimo[0] === 1) {
+              nomo.play("right");
+              arbol.play("bye");
+              aciertos++;
+              validarAciertos();
+
+              setTimeout(() => {
+                arbol.play("quiet");
+              }, 2000);
+            } else {
+              console.log("Fallaste", ultimo);
+              setState(true);
+              cambiarGanar(false);
+              vidas--;
+
+              if (vidas <= 0) {
+
+                console.log("TE MORISTE");
+
+                if (usuario.rol === "ESTUDIANTE") {
+                  const obtenerDatosUsuario = async (estudiante_seleccionado: number) => {
+                    const datosEstudiante = await fetch("http://localhost:5555/estudiantes/" + estudiante_seleccionado);
+                    const resultadoConsulta = await datosEstudiante.json();
+                    console.log(resultadoConsulta);
+                    return resultadoConsulta;
+                  };
+
+                  const datosEstudiante = await obtenerDatosUsuario(usuario.id_usuario);
+
+                  const datosUsuario: Evaluacion_Estudiante = {
+                    id_estudiante: datosEstudiante.id_usuario,
+                    eficiencia_algoritmica: datosEstudiante.eficiencia_algoritmica,
+                    reconocimiento_patrones: (datosEstudiante.reconocimiento_patrones !== "APROBADO") ? "EN PROCESO" : datosEstudiante.reconocimiento_patrones,
+                    identificacion_errores: datosEstudiante.identificacion_errores,
+                    abstraccion: datosEstudiante.abstraccion,
+                    asociacion: (datosEstudiante.asociacion !== "APROBADO") ? "EN PROCESO" : datosEstudiante.asociacion,
+                    construccion_algoritmos: datosEstudiante.construccion_algoritmos,
+                    p_actividades_completadas: datosEstudiante.p_actividades_completadas,
+                    tipo_premiacion: datosEstudiante.tipo_premiacion
+                  };
+
+                  const respuestaEvaluacion = await cargarEvaluacionEstudiante(datosUsuario);
+                  console.log(respuestaEvaluacion);
+                } else {
+                  console.log("GANO PERO NO ES ESTUDIANTE");
+                }
+
+                await sleep(1000);
+                window.location.href = window.location.href;
+
+              }
+
+              const ultimoIndice = (ultimo != null) ? ultimo[1] : undefined;
+              ultimo = patronesdinamicos(patronesJuego, ultimoIndice);
+
+              setTimeout(() => {
+                setState(false);
+              }, 2000);
+            }
           });
-          if(ultimo[0] == 2){
 
-            nomo.play("right");
-            arbol.play("bye");
-            aciertos++;
-            validarAciertos();
-            //console.log("El mensaje es: " + aciertos);
-            setTimeout(() => {
-              arbol.play("quiet");
-            }, 2000); 
-            
-          }else{
-            console.log("Fallaste" +ultimo)
-            setState(true);
-            cambiarGanar(false);
-            const ultimoIndice = ultimo[1]
-            ultimo = patronesdinamicos(patronesJuego,ultimoIndice);
-            setTimeout(() => {
-              setState(false);
-            }, 2000); 
-          }
-          })
+          circle3.onClick(async () => {
+            juegoKaplay.play("A2", { volume: 1, speed: 1.5, loop: false });
+
+            if (ultimo && ultimo[0] === 2) {
+              nomo.play("right");
+              arbol.play("bye");
+              aciertos++;
+              validarAciertos();
+
+              setTimeout(() => {
+                arbol.play("quiet");
+              }, 2000);
+            } else {
+              console.log("Fallaste", ultimo);
+              setState(true);
+              cambiarGanar(false);
+              vidas--;
+
+              if (vidas <= 0) {
+
+                console.log("TE MORISTE");
+
+                if (usuario.rol === "ESTUDIANTE") {
+                  const obtenerDatosUsuario = async (estudiante_seleccionado: number) => {
+                    const datosEstudiante = await fetch("http://localhost:5555/estudiantes/" + estudiante_seleccionado);
+                    const resultadoConsulta = await datosEstudiante.json();
+                    console.log(resultadoConsulta);
+                    return resultadoConsulta;
+                  };
+
+                  const datosEstudiante = await obtenerDatosUsuario(usuario.id_usuario);
+
+                  const datosUsuario: Evaluacion_Estudiante = {
+                    id_estudiante: datosEstudiante.id_usuario,
+                    eficiencia_algoritmica: datosEstudiante.eficiencia_algoritmica,
+                    reconocimiento_patrones: (datosEstudiante.reconocimiento_patrones !== "APROBADO") ? "EN PROCESO" : datosEstudiante.reconocimiento_patrones,
+                    identificacion_errores: datosEstudiante.identificacion_errores,
+                    abstraccion: datosEstudiante.abstraccion,
+                    asociacion: (datosEstudiante.asociacion !== "APROBADO") ? "EN PROCESO" : datosEstudiante.asociacion,
+                    construccion_algoritmos: datosEstudiante.construccion_algoritmos,
+                    p_actividades_completadas: datosEstudiante.p_actividades_completadas,
+                    tipo_premiacion: datosEstudiante.tipo_premiacion
+                  };
+
+                  const respuestaEvaluacion = await cargarEvaluacionEstudiante(datosUsuario);
+                  console.log(respuestaEvaluacion);
+                } else {
+                  console.log("GANO PERO NO ES ESTUDIANTE");
+                }
+
+                await sleep(1000);
+                window.location.href = window.location.href;
+
+              }
+
+              const ultimoIndice = (ultimo != null) ? ultimo[1] : undefined;
+              ultimo = patronesdinamicos(patronesJuego, ultimoIndice);
+
+              setTimeout(() => {
+                setState(false);
+              }, 2000);
+            }
+          });
   
            
   
@@ -607,7 +622,6 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
          
     
   }
-    
-      //return <canvas id="game" style={{ width: "100vw", height: "100vh" }} />;;
+  
       
     

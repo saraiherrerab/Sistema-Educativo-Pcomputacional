@@ -2,7 +2,10 @@
 
 import {GameObj, KAPLAYCtx} from "kaplay";
 import generarEsquemaMapa from "../../MapsGenerator";
-import generarNumerosAzar from "../../utils/generarNumerosAzar";
+import generarNumerosAleatorios from './functions/generarNumerosAleatorios'
+import Evaluacion_Estudiante from "./interfaces/informacion_estudiante.interface";
+import cargarEvaluacionEstudiante from "./functions/cargarEvaluacionEstudiante";
+import sleep from "./functions/sleep";
 
 let SCREEN_RESOLUTION_X = 0;
 let SCREEN_RESOLUTION_Y = 0;
@@ -11,17 +14,17 @@ const TILED_MAP__WIDTH_NUMBER: number = 21
 const TILED_MAP_HEIGHT_NUMBER: number = 16
 const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
 const TILED_HEIGHT: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGHT_NUMBER
-let aciertos = 0;
-let nuevoSprite: GameObj;
+
 export let cambioNivel = 0;
 
 
 
 
-export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,setStateA:any, cambiarGanarA:any,setState1:any, cambiarGanar1:any, Router:any) {
+export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,setStateA:any, cambiarGanarA:any,setState1:any, cambiarGanar1:any, Router:any,usuario: any) {
     // Referencia persistente para almacenar la instancia de Kaplay
    // setState(false);
 
+   /* EJERCICIO DE ARBOLES  */
     juegoKaplay.loadSprite("arbol", "sprites/a-arbol/arbolicon.jpg", {
       sliceX: 1,
       sliceY: 1,
@@ -39,116 +42,120 @@ export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
       sliceY: 1,
     });
 
-    juegoKaplay.loadSprite("arco", "sprites/a-paraguas/arcoicon.jpg", {
-      sliceX: 1,
-      sliceY: 1,
-    });
-    
-    juegoKaplay.loadSprite("gota", "sprites/a-paraguas/gotaicon.jpg", {
-      sliceX: 1,
-      sliceY: 1,
-    });
-
-    juegoKaplay.loadSprite("nube", "sprites/a-paraguas/nubeicon.jpg", {
-      sliceX: 1,
-      sliceY: 1,
-    });
+    /* EJERCICIO DE PARAGUAS */
 
     juegoKaplay.loadSprite("paraguas", "sprites/a-paraguas/paraguasicon.jpg", {
       sliceX: 1,
       sliceY: 1,
     });
-
-    juegoKaplay.loadSprite("espatula", "sprites/a-pizza/espatulaicon.jpg", {
+    juegoKaplay.loadSprite("arco", "sprites/a-paraguas/arcoicon.jpg", {
+      sliceX: 1,
+      sliceY: 1,
+    });  
+    juegoKaplay.loadSprite("gota", "sprites/a-paraguas/gotaicon.jpg", {
+      sliceX: 1,
+      sliceY: 1,
+    });
+    juegoKaplay.loadSprite("nube", "sprites/a-paraguas/nubeicon.jpg", {
       sliceX: 1,
       sliceY: 1,
     });
 
-    juegoKaplay.loadSprite("hamburguesa", "sprites/a-pizza/hamburguesaicon.jpg", {
-      sliceX: 1,
-      sliceY: 1,
-    });
+    /* ACTIVIDAD DE LA PIZZA */
 
     juegoKaplay.loadSprite("pizza", "sprites/a-pizza/pizzaicon.jpg", {
       sliceX: 1,
       sliceY: 1,
     });
-
+    juegoKaplay.loadSprite("espatula", "sprites/a-pizza/espatulaicon.jpg", {
+      sliceX: 1,
+      sliceY: 1,
+    });
+    juegoKaplay.loadSprite("hamburguesa", "sprites/a-pizza/hamburguesaicon.jpg", {
+      sliceX: 1,
+      sliceY: 1,
+    });
     juegoKaplay.loadSprite("rebanada", "sprites/a-pizza/rebanadaicon.jpg", {
       sliceX: 1,
       sliceY: 1,
     });
 
-    juegoKaplay.loadSprite("miniplaneta", "sprites/a-planeta/planetachiquiicon.jpg", {
-      sliceX: 1,
-      sliceY: 1,
-    });
-
-    juegoKaplay.loadSprite("planeta", "sprites/a-planeta/planetaicon.jpg", {
-      sliceX: 1,
-      sliceY: 1,
-    });
+    /* ACTIVIDAD DEL PLANETA */
 
     juegoKaplay.loadSprite("satelite", "sprites/a-planeta/sateliteicon.jpg", {
       sliceX: 1,
       sliceY: 1,
     });
-
+    juegoKaplay.loadSprite("miniplaneta", "sprites/a-planeta/planetachiquiicon.jpg", {
+      sliceX: 1,
+      sliceY: 1,
+    });
+    juegoKaplay.loadSprite("planeta", "sprites/a-planeta/planetaicon.jpg", {
+      sliceX: 1,
+      sliceY: 1,
+    });
     juegoKaplay.loadSprite("sol", "sprites/a-planeta/solicon.jpg", {
       sliceX: 1,
       sliceY: 1,
     });
 
-    juegoKaplay.loadSprite("carro", "sprites/a-semaforo/carroicon.jpg", {
-      sliceX: 1,
-      sliceY: 1,
-    });
-
-    juegoKaplay.loadSprite("cruce", "sprites/a-semaforo/cruceicon.jpg", {
-      sliceX: 1,
-      sliceY: 1,
-    });
-
-    juegoKaplay.loadSprite("luces", "sprites/a-semaforo/lucesicon.jpg", {
-      sliceX: 1,
-      sliceY: 1,
-    });
+    /* ACTIVIDAD DEL SEMAFORO */
 
     juegoKaplay.loadSprite("semaforo", "sprites/a-semaforo/semaforoicon.jpg", {
       sliceX: 1,
       sliceY: 1,
     });
+    juegoKaplay.loadSprite("carro", "sprites/a-semaforo/carroicon.jpg", {
+      sliceX: 1,
+      sliceY: 1,
+    });
+    juegoKaplay.loadSprite("cruce", "sprites/a-semaforo/cruceicon.jpg", {
+      sliceX: 1,
+      sliceY: 1,
+    });
+    juegoKaplay.loadSprite("luces", "sprites/a-semaforo/lucesicon.jpg", {
+      sliceX: 1,
+      sliceY: 1,
+    });
+
+    /* EN CASO DE CUADRO VACIOS  */
 
     juegoKaplay.loadSprite("title-0", "prueba/title-0.png", {
       sliceX: 1,
       sliceY: 1,
     });
 
-    juegoKaplay.loadSprite("notas1", "nivel2/notas_musicales1.png", {
-      sliceX: 3,
-      sliceY: 1
-    });
-  
-    juegoKaplay.loadSprite("notas_circulo1", "nivel4/Activacion_notas.png", {
-      sliceX: 3,
-      sliceY: 2,
-      anims: {
-        default: { from: 0, to: 0, loop: false } ,
-        hover: { from: 0, to: 2, loop: false},
+    const arregloActividades = [
+      {
+        respuesta: "palito",
+        imagenes: ["arbol","ardilla","manzana","palito"]
       },
-    });
+      {
+        respuesta: "arco",
+        imagenes: ["paraguas","arco","gota","nube"],
+      },
+      {
+        respuesta: "rebanada",
+        imagenes: ["pizza","espatula","hamburguesa","rebanada"],
+      },
+      {
+        respuesta: "miniplaneta",
+        imagenes: ["planeta","miniplaneta","satelite","sol"],
+      },
+      {
+        respuesta: "luces",
+        imagenes: ["semaforo","carro","cruce","luces"]
+      }
+    ]
 
-   
+    let vidas = 3;
+    let aciertos = 0;
 
-    
-
-    let puedePresionar: boolean = false;
-        
-  
     juegoKaplay.onLoad(async () => {
-        //Practicando aqui
-        SCREEN_RESOLUTION_X = window.innerWidth 
-        SCREEN_RESOLUTION_Y = window.innerHeight 
+
+      //Practicando aqui
+      SCREEN_RESOLUTION_X = window.innerWidth 
+      SCREEN_RESOLUTION_Y = window.innerHeight 
 
       const nivelPrincipal = generarEsquemaMapa(
         juegoKaplay,
@@ -173,45 +180,260 @@ export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
       .then(  
         async (resultado: any) => {
 
-          function numeroAleatorio1a5() {
-            const numeroGenerado: number = Math.floor(Math.random() * 3) + 1;
-            console.log("numeroGenerado -> ", numeroGenerado)
-            return numeroGenerado
-          }
 
-          const opcionEscogida = numeroAleatorio1a5();
+
+          let opcionEscogida = generarNumerosAleatorios(1,3)
+
+          console.log("Número Aleatorio Generado: ", opcionEscogida);
+
+          const imagen_central = juegoKaplay.get("imagen_grande")[0]
         
           const imagen1 = juegoKaplay.get("imagen1")[0]
           const imagen2 = juegoKaplay.get("imagen2")[0]
           const imagen3 = juegoKaplay.get("imagen3")[0]
 
+          console.log(imagen_central)
+
+          /* Cargamos las imagenes de la primera actividad */
+
+          const arregloAuxiliarActividades = [...arregloActividades]
+
+          let indiceActividad: number = generarNumerosAleatorios(0,vidas + 1)
+
+          let actividadGeneradaAzar = arregloAuxiliarActividades[indiceActividad]
+
+          imagen_central.sprite = actividadGeneradaAzar.imagenes[0]
+          imagen1.sprite = actividadGeneradaAzar.imagenes[1]
+          imagen2.sprite = actividadGeneradaAzar.imagenes[2]
+          imagen3.sprite = actividadGeneradaAzar.imagenes[3]
+
           imagen1.onClick(
-            () => {
+            async () => {
+
               console.log("PRESIONANDO OPCIÓN 1")
-              console.log(opcionEscogida)
-              if(opcionEscogida === 1){
-                console.log("GANASTE")
+
+              if(arregloAuxiliarActividades[indiceActividad].imagenes.indexOf(arregloAuxiliarActividades[indiceActividad].respuesta) === 1){
+                console.log("SUMANDO")
+                aciertos++
+              }else{
+                vidas--
+                if(vidas <= 0){
+                  console.log("MORISTE")
+                  window.location.href = window.location.href
+                }
               }
+
+              if( aciertos === 3 ){
+                if(usuario.rol === "ESTUDIANTE"){
+
+                  console.log("GANASTE")
+                                                  
+                  const obtenerDatosUsuario = async (estudiante_seleccionado: number) => {
+      
+                    const datosEstudiante = await fetch("http://localhost:5555/estudiantes/" + estudiante_seleccionado)
+                    const resultadoConsulta = await datosEstudiante.json()
+                    console.log(resultadoConsulta)
+  
+                    return resultadoConsulta
+  
+                  };
+                              
+                  const datosEstudiante = await obtenerDatosUsuario(usuario.id_usuario)
+                
+                  console.log(datosEstudiante)
+
+                  const ganoIdenticacionErrores: string = 
+                  (datosEstudiante.identificacion_errores !== "APROBADO" && datosEstudiante.construccion_algoritmos == "APROBADO" && datosEstudiante.reconocimiento_patrones == "APROBADO")
+                  ? "APROBADO" 
+                  :
+                  ((datosEstudiante.identificacion_errores == "APROBADO") ? "APROBADO": "EN PROCESO");
+                
+                  const datosUsuario: Evaluacion_Estudiante = {
+                    id_estudiante: datosEstudiante.id_usuario,
+                    eficiencia_algoritmica: datosEstudiante.eficiencia_algoritmica,
+                    reconocimiento_patrones: datosEstudiante.reconocimiento_patrones,
+                    identificacion_errores: ganoIdenticacionErrores,
+                    abstraccion: "APROBADO",
+                    asociacion: datosEstudiante.asociacion,
+                    construccion_algoritmos: datosEstudiante.construccion_algoritmos,
+                    p_actividades_completadas:  (datosEstudiante.abstraccion !== "APROBADO") ? (datosEstudiante.p_actividades_completadas + (1 / 5) * 100) : ((datosEstudiante.p_actividades_completadas) / 5) * 100,
+                    tipo_premiacion: (datosEstudiante.tipo_premiacion.length > 0) ? datosEstudiante.tipo_premiacion + ", " + "Crítico del Arte Abstracto" : "Crítico del Arte Abstracto"
+                  }
+                              
+                  const respuestaEvaluacion = await cargarEvaluacionEstudiante(datosUsuario)
+                  console.log(respuestaEvaluacion)
+
+                  await sleep(3000)
+
+                  window.location.href = window.location.href
+                                                                
+                }else{
+                  console.log("GANO PERO NO ES ESTUDIANTE")
+                }
+              }
+
+              arregloAuxiliarActividades.splice(indiceActividad, 1);
+              indiceActividad = generarNumerosAleatorios(0,vidas + 1)
+              actividadGeneradaAzar = arregloAuxiliarActividades[indiceActividad]
+              opcionEscogida = actividadGeneradaAzar.imagenes.indexOf(actividadGeneradaAzar.respuesta)
+              imagen_central.sprite = actividadGeneradaAzar.imagenes[0]
+              imagen1.sprite = actividadGeneradaAzar.imagenes[1]
+              imagen2.sprite = actividadGeneradaAzar.imagenes[2]
+              imagen3.sprite = actividadGeneradaAzar.imagenes[3]
+
             }
           )
 
           imagen2.onClick(
-            () => {
+            async () => {
+              
               console.log("PRESIONANDO OPCIÓN 2")
-              console.log(opcionEscogida)
-              if(opcionEscogida === 2){
-                console.log("GANASTE")
+
+              if(arregloAuxiliarActividades[indiceActividad].imagenes.indexOf(arregloAuxiliarActividades[indiceActividad].respuesta) === 2){
+                console.log("SUMANDO")
+                aciertos++
+              }else{
+                vidas--
+                
+                if(vidas <= 0){
+                  console.log("MORISTE")
+                  window.location.href = window.location.href
+                }
               }
+
+              if( aciertos === 3 ){
+                if(usuario.rol === "ESTUDIANTE"){
+
+                  console.log("GANASTE")
+                                                  
+                  const obtenerDatosUsuario = async (estudiante_seleccionado: number) => {
+      
+                    const datosEstudiante = await fetch("http://localhost:5555/estudiantes/" + estudiante_seleccionado)
+                    const resultadoConsulta = await datosEstudiante.json()
+                    console.log(resultadoConsulta)
+  
+                    return resultadoConsulta
+  
+                  };
+                              
+                  const datosEstudiante = await obtenerDatosUsuario(usuario.id_usuario)
+                
+                  console.log(datosEstudiante)
+
+                  const ganoIdenticacionErrores: string = 
+                  (datosEstudiante.identificacion_errores !== "APROBADO" && datosEstudiante.construccion_algoritmos == "APROBADO" && datosEstudiante.reconocimiento_patrones == "APROBADO")
+                  ? "APROBADO" 
+                  :
+                  ((datosEstudiante.identificacion_errores == "APROBADO") ? "APROBADO": "EN PROCESO");
+                
+                  const datosUsuario: Evaluacion_Estudiante = {
+                    id_estudiante: datosEstudiante.id_usuario,
+                    eficiencia_algoritmica: datosEstudiante.eficiencia_algoritmica,
+                    reconocimiento_patrones: datosEstudiante.reconocimiento_patrones,
+                    identificacion_errores: ganoIdenticacionErrores,
+                    abstraccion: "APROBADO",
+                    asociacion: datosEstudiante.asociacion,
+                    construccion_algoritmos: datosEstudiante.construccion_algoritmos,
+                    p_actividades_completadas:  (datosEstudiante.abstraccion !== "APROBADO") ? (datosEstudiante.p_actividades_completadas + (1 / 5) * 100) : ((datosEstudiante.p_actividades_completadas) / 5) * 100,
+                    tipo_premiacion: (datosEstudiante.tipo_premiacion.length > 0) ? datosEstudiante.tipo_premiacion + ", " + "Crítico del Arte Abstracto" : "Crítico del Arte Abstracto"
+                  }
+                              
+                  const respuestaEvaluacion = await cargarEvaluacionEstudiante(datosUsuario)
+                  console.log(respuestaEvaluacion)
+
+                  await sleep(3000)
+
+                  window.location.href = window.location.href
+                                                                
+                }else{
+                  console.log("GANO PERO NO ES ESTUDIANTE")
+                }
+              }
+
+              arregloAuxiliarActividades.splice(indiceActividad, 1);
+              indiceActividad = generarNumerosAleatorios(0,vidas + 1)
+              actividadGeneradaAzar = arregloAuxiliarActividades[indiceActividad]
+              imagen_central.sprite = actividadGeneradaAzar.imagenes[0]
+              imagen1.sprite = actividadGeneradaAzar.imagenes[1]
+              imagen2.sprite = actividadGeneradaAzar.imagenes[2]
+              imagen3.sprite = actividadGeneradaAzar.imagenes[3]
+
             }
           )
 
           imagen3.onClick(
-            () => {
+            async () => {
+
               console.log("PRESIONANDO OPCIÓN 3")
-              console.log(opcionEscogida)
-              if(opcionEscogida === 3){
-                console.log("GANASTE")
+
+              if(arregloAuxiliarActividades[indiceActividad].imagenes.indexOf(arregloAuxiliarActividades[indiceActividad].respuesta) === 3){
+                console.log("SUMANDO")
+                aciertos++
+              }else{
+                vidas--
+                if(vidas <= 0){
+                  console.log("MORISTE")
+                  window.location.href = window.location.href
+                }
               }
+
+              if( aciertos === 3 ){
+                if(usuario.rol === "ESTUDIANTE"){
+
+                  console.log("GANASTE")
+                                                  
+                  const obtenerDatosUsuario = async (estudiante_seleccionado: number) => {
+      
+                    const datosEstudiante = await fetch("http://localhost:5555/estudiantes/" + estudiante_seleccionado)
+                    const resultadoConsulta = await datosEstudiante.json()
+                    console.log(resultadoConsulta)
+  
+                    return resultadoConsulta
+  
+                  };
+                              
+                  const datosEstudiante = await obtenerDatosUsuario(usuario.id_usuario)
+                
+                  console.log(datosEstudiante)
+
+                  const ganoIdenticacionErrores: string = 
+                  (datosEstudiante.identificacion_errores !== "APROBADO" && datosEstudiante.construccion_algoritmos == "APROBADO" && datosEstudiante.reconocimiento_patrones == "APROBADO")
+                  ? "APROBADO" 
+                  :
+                  ((datosEstudiante.identificacion_errores == "APROBADO") ? "APROBADO": "EN PROCESO");
+                
+                  const datosUsuario: Evaluacion_Estudiante = {
+                    id_estudiante: datosEstudiante.id_usuario,
+                    eficiencia_algoritmica: datosEstudiante.eficiencia_algoritmica,
+                    reconocimiento_patrones: datosEstudiante.reconocimiento_patrones,
+                    identificacion_errores: ganoIdenticacionErrores,
+                    abstraccion: "APROBADO",
+                    asociacion: datosEstudiante.asociacion,
+                    construccion_algoritmos: datosEstudiante.construccion_algoritmos,
+                    p_actividades_completadas:  (datosEstudiante.abstraccion !== "APROBADO") ? (datosEstudiante.p_actividades_completadas + (1 / 5) * 100) : ((datosEstudiante.p_actividades_completadas) / 5) * 100,
+                    tipo_premiacion: (datosEstudiante.tipo_premiacion.length > 0) ? datosEstudiante.tipo_premiacion + ", " + "Crítico del Arte Abstracto" : "Crítico del Arte Abstracto"
+                  }
+                              
+                  const respuestaEvaluacion = await cargarEvaluacionEstudiante(datosUsuario)
+                  console.log(respuestaEvaluacion)
+
+                  await sleep(3000)
+
+                  window.location.href = window.location.href
+                                                                
+                }else{
+                  console.log("GANO PERO NO ES ESTUDIANTE")
+                }
+              }
+
+              arregloAuxiliarActividades.splice(indiceActividad, 1);
+              indiceActividad = generarNumerosAleatorios(0,vidas + 1)
+              actividadGeneradaAzar = arregloAuxiliarActividades[indiceActividad]
+              imagen_central.sprite = actividadGeneradaAzar.imagenes[0]
+              imagen1.sprite = actividadGeneradaAzar.imagenes[1]
+              imagen2.sprite = actividadGeneradaAzar.imagenes[2]
+              imagen3.sprite = actividadGeneradaAzar.imagenes[3]
+
             }
           )
           

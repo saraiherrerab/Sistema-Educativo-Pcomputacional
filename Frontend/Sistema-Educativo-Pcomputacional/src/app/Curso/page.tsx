@@ -316,11 +316,13 @@ export default function AdministradoresLista() {
         console.log(nuevoCurso)
 
         setMostrarFormularioGrupo(!mostrarFormularioGrupo)
+
     };
 
 
     const asignarGrupoACurso = async () => {
         console.log("asignarGrupoACurso")
+
         const response = await fetch(`http://localhost:5555/curso/asignar/grupo`, {
             method: 'PUT',
             mode: 'cors',   // Habilita CORS
@@ -333,18 +335,43 @@ export default function AdministradoresLista() {
                     id_curso: cursoEscogido.id_curso
                 }
             )
-        });
+        }); 
 
         const resultadoConsulta = await response.json()
         console.log(resultadoConsulta)
 
         setMostrarAsignacion(!mostrarAsignacion)
+        setMostrarAsignacion(!mostrarAsignacion)
+        console.log(
+                {
+                    id_grupo: grupoSeleccionado.id_grupo,
+                    id_curso: cursoEscogido.id_curso
+                }
+        )
+
+
     }
 
     const agregarNuevoCurso = async () => {
         console.log("agregarNuevoCurso()")
         setMostrarFormularioGrupo(!mostrarFormularioGrupo)
     }
+
+    const [cambioValorCurso, SetCambioValorCurso] = useState(false)
+
+    const handleChangeCurso = (e: React.ChangeEvent<HTMLSelectElement>) => {
+
+
+        SetCambioValorCurso(!cambioValorCurso)
+        const idSeleccionado = Number(e.target.value);
+        const grupo = grupos.find(g => g.id_grupo === idSeleccionado);
+
+        if (grupo) {
+            console.log(grupo
+                    )
+            //setGrupoSeleccionado(grupo);
+        }
+    };
 
     return (
         <>
@@ -444,27 +471,46 @@ export default function AdministradoresLista() {
                         <h2>Lista de Grupos</h2>
                         <button onClick={() => buscarGruposConCursoFaltante()}>Asignar Grupo a Curso</button>
                         <button onClick={() => agregarNuevoCurso()}>Agregar Nuevo Grupo</button>
-                        {grupos.map(grupo => (
-                            <div key={grupo.id_grupo} style={{ marginBottom: '10px' }}>
-                            <h3
-                                onClick={() => toggleGrupo(grupo.id_grupo,grupo.nombre_grupo)}
-                                style={{ cursor: 'pointer', color: 'blue' }}
-                            >
-                                {grupo.nombre_grupo}
-                            </h3>
-                            {grupoActivo === grupo.nombre_grupo && (
-                                <div>
-                                    <button onClick={() => null}>Agregar Estudiante a Grupo "Nota: FUNCION YA IMPLEMENTADA"</button>
-                                    <ul>
-                                    {listaEstudiantes.map(estudiante => (
-                                        <li key={estudiante.id_usuario}>{estudiante.nombre + " " + estudiante.apellido }</li>
-                                    ))}
-                                    </ul>
-                                </div>
-                                
-                            )}
-                            </div>
-                        ))}
+                        <table cellPadding="10" style={{ borderCollapse: 'collapse', width: '100%' }}>
+                        <thead>
+                            <tr>
+                                <th>Nombre del Grupo</th>
+                                <th>Acciones</th>
+                                <th>Estudiantes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {grupos.map((grupo) => (
+                                <tr key={grupo.id_grupo}>
+                                    <td>
+                                        {grupo.nombre_grupo}
+                                    </td>
+                                    <td >
+                                        <div>
+                                            <button onClick={() => null}>Editar</button>
+                                            <button onClick={() => null}>Borrar</button>
+                                        </div>
+                                        
+                                    </td>
+                                    <td >
+                                         <button onClick={() => toggleGrupo(grupo.id_grupo,grupo.nombre_grupo)}>Estudiantes</button>
+                                        {
+                                            grupoActivo === grupo.nombre_grupo &&
+                                            (
+                                                <ul style={{ margin: 0, paddingLeft: '20px' }}>
+                                                    {listaEstudiantes.map((estudiante) => (
+                                                    <li key={estudiante.id_usuario} >
+                                                        {estudiante.nombre + ' ' + estudiante.apellido}
+                                                    </li>
+                                                    ))}
+                                                </ul>
+                                            )
+                                        }
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                        </table>
                     </div>
                     
                 )
