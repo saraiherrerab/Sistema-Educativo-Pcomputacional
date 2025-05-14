@@ -167,6 +167,8 @@ function CartelC(props:any) {
  let SCREEN_RESOLUTION_Y: number = 0;
 
  
+
+ 
  function Page() {
     const [cambiarMostrar1, setState1] = useState(false);
     const [ganar1, cambiarGanar1] = useState(true);

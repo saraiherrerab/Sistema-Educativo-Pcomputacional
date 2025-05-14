@@ -138,7 +138,10 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
     juegoKaplay.loadSound("A0", "./sounds/A0.mp3");
     juegoKaplay.loadSound("A1", "./sounds/A1.mp3");
     juegoKaplay.loadSound("A2", "./sounds/A2.mp3");
-  
+    juegoKaplay.loadSound("nivel1", "./oveja-dialogos/Nivel1.wav");
+    juegoKaplay.loadSound("aprobado", "./oveja-dialogos/aprobado.wav");
+    juegoKaplay.loadSound("perdido", "./oveja-dialogos/perdido.wav");
+
     juegoKaplay.loadSprite("redbox", "red-border-box.png");
  
     juegoKaplay.onLoad(async () => {
@@ -193,6 +196,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
         (resultado: any) => {
 
           cambiarGanar1(true);
+          juegoKaplay.play("nivel1", { volume: 1, speed: 1.5, loop: false });
           setState1(true);
           setTimeout(() => {
             setState1(false);
@@ -293,6 +297,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
               })
 
               cambiarGanarA(true); 
+              juegoKaplay.play("aprobado", { volume: 1, speed: 1, loop: false });
               setStateA(true);
 
               if(usuario.rol === "ESTUDIANTE"){
