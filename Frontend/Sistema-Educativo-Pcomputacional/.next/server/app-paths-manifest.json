@@ -1,5 +1,10 @@
 {
   "/page": "app/page.js",
+<<<<<<< HEAD
   "/Curso/page": "app/Curso/page.js",
   "/Amenu/page": "app/Amenu/page.js"
+=======
+  "/Amenu/page": "app/Amenu/page.js",
+  "/videojuego/page": "app/videojuego/page.js"
+>>>>>>> origin/LaSaraRama
 }
