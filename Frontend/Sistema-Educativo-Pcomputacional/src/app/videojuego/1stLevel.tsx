@@ -23,7 +23,7 @@ function sleep(ms: number) {
 }
 
 
-export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,setStateA:any, cambiarGanarA:any,setState1:any, cambiarGanar1:any, Router:any, usuario: any) {
+export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,setStateA:any, cambiarGanarA:any,setState1:any, cambiarGanar1:any,setStateI:any, cambiarGanarI:any,setStateC:any, cambiarGanarC:any, Router:any, usuario: any) {
 
     juegoKaplay.loadSprite("construccion3", "sprites/buildings/House_Blue.png", {
       sliceX: 1,
@@ -137,7 +137,8 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
     juegoKaplay.loadSound("nivel1", "./oveja-dialogos/Nivel1.wav");
     juegoKaplay.loadSound("aprobado", "./oveja-dialogos/aprobado.wav");
     juegoKaplay.loadSound("perdido", "./oveja-dialogos/perdido.wav");
-
+    juegoKaplay.loadSound("fallaste", "./oveja-dialogos/fallaste.wav");
+    juegoKaplay.loadSound("bien", "./oveja-dialogos/bien.wav");
     juegoKaplay.loadSprite("redbox", "red-border-box.png");
  
     juegoKaplay.onLoad(async () => {
@@ -251,6 +252,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
           async function validarAciertos() {
             const mostrarGananciaTemporal = () => {
               cambiarGanar(true);
+              juegoKaplay.play("bien", { volume: 1, speed: 1.5, loop: false });
               setState(true);
               setTimeout(() => setState(false), 4000);
             };
@@ -280,6 +282,7 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
                 });
 
                 cambiarGanarA(true);
+                juegoKaplay.play("aprobado", { volume: 1, speed: 1.5, loop: false });
                 setStateA(true);
 
                 if (usuario.rol === "ESTUDIANTE") {
@@ -424,14 +427,18 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
               }, 2000);
             } else {
               console.log("Fallaste", ultimo);
-              setState(true);
-              cambiarGanar(false);
+             
               vidas--;
+              cambiarGanarI(true);
 
               if (vidas <= 0) {
-
+                setTimeout(() => {
                 console.log("TE MORISTE");
-
+              }, 5000);
+                
+                juegoKaplay.play("perdido", { volume: 1, speed: 1.5, loop: false });
+                cambiarGanarC(true);
+                setStateC(true);
                 if (usuario.rol === "ESTUDIANTE") {
                   const obtenerDatosUsuario = async (estudiante_seleccionado: number) => {
                     const datosEstudiante = await fetch("http://localhost:5555/estudiantes/" + estudiante_seleccionado);
@@ -463,6 +470,10 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
                 await sleep(1000);
                 window.location.href = window.location.href;
 
+              } else{
+                
+                juegoKaplay.play("fallaste", { volume: 1, speed: 1.5, loop: false });
+                setStateI(true);
               }
 
               const ultimoIndice = (ultimo != null) ? ultimo[1] : undefined;
@@ -488,14 +499,18 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
               }, 2000);
             } else {
               console.log("Fallaste", ultimo);
-              setState(true);
-              cambiarGanar(false);
+              
               vidas--;
+              cambiarGanarI(true);
 
               if (vidas <= 0) {
-
+                setTimeout(() => {
                 console.log("TE MORISTE");
-
+              }, 5000);
+                
+                juegoKaplay.play("perdido", { volume: 1, speed: 1.5, loop: false });
+                cambiarGanarC(true);
+                setStateC(true);
                 if (usuario.rol === "ESTUDIANTE") {
                   const obtenerDatosUsuario = async (estudiante_seleccionado: number) => {
                     const datosEstudiante = await fetch("http://localhost:5555/estudiantes/" + estudiante_seleccionado);
@@ -527,6 +542,10 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
                 await sleep(1000);
                 window.location.href = window.location.href;
 
+              } else{
+                
+                juegoKaplay.play("fallaste", { volume: 1, speed: 1.5, loop: false });
+                setStateI(true);
               }
 
               const ultimoIndice = (ultimo != null) ? ultimo[1] : undefined;
@@ -552,14 +571,17 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
               }, 2000);
             } else {
               console.log("Fallaste", ultimo);
-              setState(true);
-              cambiarGanar(false);
-              vidas--;
+               vidas--;
+              cambiarGanarI(true);
 
               if (vidas <= 0) {
-
+                setTimeout(() => {
                 console.log("TE MORISTE");
-
+              }, 5000);
+                
+                juegoKaplay.play("perdido", { volume: 1, speed: 1.5, loop: false });
+                cambiarGanarC(true);
+                setStateC(true);
                 if (usuario.rol === "ESTUDIANTE") {
                   const obtenerDatosUsuario = async (estudiante_seleccionado: number) => {
                     const datosEstudiante = await fetch("http://localhost:5555/estudiantes/" + estudiante_seleccionado);
@@ -591,6 +613,10 @@ export function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
                 await sleep(1000);
                 window.location.href = window.location.href;
 
+              } else{
+                
+                juegoKaplay.play("fallaste", { volume: 1, speed: 1.5, loop: false });
+                setStateI(true);
               }
 
               const ultimoIndice = (ultimo != null) ? ultimo[1] : undefined;
