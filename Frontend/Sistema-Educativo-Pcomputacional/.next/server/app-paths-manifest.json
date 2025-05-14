@@ -1,12 +1,5 @@
 {
-<<<<<<< HEAD
   "/page": "app/page.js",
-  "/menu/page": "app/menu/page.js",
-  "/Amenu/page": "app/Amenu/page.js",
   "/Curso/page": "app/Curso/page.js",
-  "/Aprofesores-lista/page": "app/Aprofesores-lista/page.js"
-=======
-  "/videojuego/page": "app/videojuego/page.js",
-  "/page": "app/page.js"
->>>>>>> origin/LaSaraRama
+  "/Amenu/page": "app/Amenu/page.js"
 }

@@ -262,7 +262,6 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                   const ovejas= juegoKaplay.get("oveja")
                   const rocks= juegoKaplay.get("rock")
                   
-                  
                   const up = juegoKaplay.get("up")[0]
                   const down = juegoKaplay.get("down")[0]
                   const left = juegoKaplay.get("left")[0]

@@ -243,7 +243,7 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
             juegoKaplay.destroy(castillo);
             juegoKaplay.destroy(player);
             juegoKaplay.destroyAll("*");
-            Nivel5(juegoKaplay, setState, cambiarGanar, setStateA, cambiarGanarA,setState1, cambiarGanar1, Router);
+            Nivel5(juegoKaplay, setState, cambiarGanar, setStateA, cambiarGanarA,setState1, cambiarGanar1, Router,usuario);
             // We pass the component id for remove it.
           });
 
