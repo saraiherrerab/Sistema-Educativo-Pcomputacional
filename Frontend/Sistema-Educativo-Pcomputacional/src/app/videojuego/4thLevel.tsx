@@ -20,7 +20,7 @@ export let cambioNivel = 0;
 
 
 
-export function Nivel4(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,setStateA:any, cambiarGanarA:any,setState1:any, cambiarGanar1:any, Router:any,usuario: any) {
+export function Nivel4(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,setStateA:any, cambiarGanarA:any,setState1:any, cambiarGanar1:any, setStateC:any, cambiarGanarC:any,setStateI:any, cambiarGanarI:any, Router:any,usuario: any) {
     // Referencia persistente para almacenar la instancia de Kaplay
    // setState(false);
 
@@ -131,7 +131,13 @@ export function Nivel4(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
     juegoKaplay.loadSound("A0", "./sounds/A0.mp3");
     juegoKaplay.loadSound("A1", "./sounds/A1.mp3");
     juegoKaplay.loadSound("A2", "./sounds/A2.mp3");
-  
+    juegoKaplay.loadSound("nivel1", "./oveja-dialogos/nivel1.wav");
+    juegoKaplay.loadSound("aprobado", "./oveja-dialogos/aprobado.wav");
+    juegoKaplay.loadSound("perdido", "./oveja-dialogos/perdido.wav");
+    juegoKaplay.loadSound("fallaste", "./oveja-dialogos/fallaste.wav");
+    juegoKaplay.loadSound("bien", "./oveja-dialogos/bien.wav");
+
+
     juegoKaplay.loadSprite("redbox", "red-border-box.png");
 
     let puedePresionar: boolean = false;
@@ -185,7 +191,10 @@ export function Nivel4(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
       .then(  
         async (resultado: any) => {
         
-
+          juegoKaplay.play("nivel1", { volume: 1, speed: 1.5, loop: false });
+          cambiarGanar1(true);
+          setState1(true);
+          await sleep(2000)
           const ovejas= juegoKaplay.get("oveja")
 
 
@@ -384,7 +393,7 @@ export function Nivel4(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
 
           
 
-          cambiarGanar1(true);
+          
 
 
           async function patronesdinamicos(patrones_numeros: number[][], ultimoPatron?: number
@@ -493,6 +502,11 @@ export function Nivel4(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
 
             if(vidas <= 0) {
               console.log("TE MORISTE")
+              cambiarGanarC(true);
+              setStateC(true);
+              juegoKaplay.play("perdido", { volume: 1, speed: 1.5, loop: false });
+              await sleep(2000)
+                
               if(usuario.rol === "ESTUDIANTE"){
                                   
                 const obtenerDatosUsuario = async (estudiante_seleccionado: number) => {
@@ -540,19 +554,16 @@ export function Nivel4(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
                 
               cambiarGanar(true);
               setState(true);
-              setTimeout(() => {
-                setState(false);
-              }, 4000); 
+              juegoKaplay.play("bien", { volume: 1, speed: 1.5, loop: false });
+              await sleep(2000)
+              
 
             }else if(aciertos==2){
               
             
-              console.log("El mensaje es: " + aciertos);
-              setState(true);
               cambiarGanar(true);
-              setTimeout(() => {
-                setState(false);
-              }, 4000); 
+              setState(true);
+              
         
             }else if(aciertos==3){
               
@@ -560,7 +571,9 @@ export function Nivel4(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
               //patronesdinamicos().clear;
               
               cambiarGanar(true);
-              /*window.location.href=window.location.href;*/
+              setState(true);
+              juegoKaplay.play("aprobado", { volume: 1, speed: 1.5, loop: false });
+              await sleep(2000)
               
             //setTimeout(()=>{
               construccion2.destroy();
@@ -649,11 +662,7 @@ export function Nivel4(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
 
 
 
-            setState1(true);
-
-            await sleep (3000);
-
-            setState1(false);
+            
 
             circle1.play("default");
 
@@ -696,6 +705,8 @@ export function Nivel4(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
               arbol.play("bye");
 
               aciertos = aciertos + 1;
+              juegoKaplay.play("bien", { volume: 1, speed: 1.5, loop: false });
+              await sleep(2000)
               
               setTimeout(() => {
                 arbol.play("quiet");
@@ -703,12 +714,11 @@ export function Nivel4(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
               
             }else{
               console.log("Fallaste" +ultimo)
-              setState(true);
-              cambiarGanar(false);
               vidas--
-              setTimeout(() => {
-                setState(false);
-              }, 2000); 
+              cambiarGanarI(true);
+              setStateI(true);
+              juegoKaplay.play("fallaste", { volume: 1, speed: 1.5, loop: false });
+              await sleep(2000)
             }
 
             await validarAciertos(patrones,indiceAlAzar);
@@ -738,6 +748,8 @@ circle2.play("hover");
   
               nomo.play("right");
               arbol.play("bye");
+              juegoKaplay.play("bien", { volume: 1, speed: 1.5, loop: false });
+              await sleep(2000)
 
               aciertos = aciertos + 1;
 
@@ -749,12 +761,12 @@ circle2.play("hover");
               
             }else{
               console.log("Fallaste" + ultimo)
-              setState(true);
-              cambiarGanar(false);
+              
               vidas--
-              setTimeout(() => {
-                setState(false);
-              }, 2000); 
+              cambiarGanarI(true);
+              setStateI(true);
+              juegoKaplay.play("fallaste", { volume: 1, speed: 1.5, loop: false });
+              await sleep(2000)
             }
 
             await validarAciertos(patrones,indiceAlAzar);
@@ -780,6 +792,8 @@ circle2.play("hover");
               nomo.play("right");
               arbol.play("bye");
               aciertos = aciertos + 1;
+              juegoKaplay.play("bien", { volume: 1, speed: 1.5, loop: false });
+              await sleep(2000)
 
               setTimeout(() => {
                 arbol.play("quiet");
@@ -787,12 +801,12 @@ circle2.play("hover");
               
             }else{
        
-              setState(true);
-              cambiarGanar(false);
+              
               vidas--
-              setTimeout(() => {
-                setState(false);
-              }, 2000); 
+              cambiarGanarI(true);
+              setStateI(true);
+              juegoKaplay.play("fallaste", { volume: 1, speed: 1.5, loop: false });
+              await sleep(2000)
             }
 
             

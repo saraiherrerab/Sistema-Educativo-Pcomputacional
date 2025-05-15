@@ -38,6 +38,27 @@
     
   }
 
+    .message-container-inicial{
+    position: absolute;
+    top: 40px; /* Ajusta la posición según sea necesario */
+    left: 50%;
+    transform: translateX(-50%); /* Centrar horizontalmente */
+    color: rgb(62, 50, 1);
+    background-image: url('../../../public/nivel1/cartelinicial.png');  /* Fondo semitransparente */
+    padding:10px;
+    border-radius: 0px;
+    font-size: 35px;
+    font-family: "Jersey 15", sans-serif;
+    font-weight:400;
+    background-repeat: no-repeat;
+    background-size: cover;
+    animation: aparecerDesaparecer 6s ease-in-out forwards;
+    line-height: 1.6; /* Ajusta este valor según el espaciado que desees */
+    width: 50vw; /* Ajusta el ancho según el contenido o un valor fijo */
+    height: 50vw; /* Ajusta el alto según el contenido o un valor fijo *//* 100% de la altura del viewport */
+    
+  }
+
   .message-container-incorrecto {
     position: absolute;
     top: 40px; /* Ajusta la posición según sea necesario */

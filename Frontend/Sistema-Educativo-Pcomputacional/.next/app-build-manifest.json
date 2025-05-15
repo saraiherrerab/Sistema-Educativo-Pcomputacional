@@ -5,6 +5,18 @@
       "static/chunks/main-app.js",
       "static/chunks/app/layout.js"
     ],
+    "/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/page.css",
+      "static/chunks/app/page.js"
+    ],
+    "/Amenu/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/Amenu/page.css",
+      "static/chunks/app/Amenu/page.js"
+    ],
     "/videojuego/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",

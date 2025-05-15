@@ -7,7 +7,7 @@ import {Nivel4} from "./4thLevel";
 import {Nivel5} from "./5thLevel";
 
 export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,cambiarGanar3:any,setState3:any, cambiarGanarA:any, setStateA:any, 
-  cambiarGanarB:any, setStateB:any,cambiarGanarC:any, setStateC:any,cambiarGanar1:any,setState1:any, setStateI:any,cambiarGanarI:any,   Router:any, usuario?: any) {
+  cambiarGanarB:any, setStateB:any,cambiarGanarC:any, setStateC:any,cambiarGanar1:any,setState1:any, setStateI:any,cambiarGanarI:any, setStateIni:any,cambiarGanarIni:any,    Router:any, usuario?: any) {
     // Referencia persistente para almacenar la instancia de Kaplay
     const SCREEN_RESOLUTION_X: number = window.innerWidth 
     const SCREEN_RESOLUTION_Y: number = window.innerHeight 
@@ -16,6 +16,8 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
     const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
     const TILED_HEIGHT: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGHT_NUMBER
      
+
+    
     juegoKaplay.loadSprite("robot", "sprites/robotin.png", {
       sliceX: 4,
       sliceY: 12,
@@ -119,15 +121,23 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
       sliceX: 1,
       sliceY: 1,
     });
-  
+    
+
+    juegoKaplay.loadSound("bienvenida", "bienvenida.wav");
+
     // Cargar sprites adicionales
     ["up", "down", "left", "right"].forEach((dir) => {
       juegoKaplay.loadSprite(dir, `sprites/${dir}-arrow.png`);
     });
 
     juegoKaplay.loadSprite("redbox", "red-border-box.png");
-    
 
+     juegoKaplay.loadSound("bien", "./oveja-dialogos/bien.wav");
+    
+    juegoKaplay.onLoad(() => {
+      juegoKaplay.loadSound("bien", "./oveja-dialogos/bien.wav");
+      juegoKaplay.play("bien");
+    })
     juegoKaplay.onLoad(() => {
         //Practicando aqui
       generarEsquemaMapa(
@@ -176,6 +186,14 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
       )
       .then(
         (resultado: any) => {
+
+            cambiarGanarIni(true);
+            
+            setStateIni(true);
+
+            juegoKaplay.play("bien")
+
+        
 
           const oveja = juegoKaplay.get("oveja")[0]
           const arboles= juegoKaplay.get("arbol")
@@ -234,7 +252,7 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
             juegoKaplay.destroy(castillo);
             juegoKaplay.destroy(player);
             juegoKaplay.destroyAll("*");
-            Nivel4(juegoKaplay, setState, cambiarGanar, setStateA, cambiarGanarA,setState1, cambiarGanar1, Router,usuario);
+            Nivel4(juegoKaplay, setState, cambiarGanar, setStateA, cambiarGanarA,setState1, cambiarGanar1,setStateC, cambiarGanarC,setStateI, cambiarGanarI, Router,usuario);
             // We pass the component id for remove it.
           });
 

@@ -30,6 +30,29 @@ interface Estudiante {
   id_grupo: number;
 }
 
+//let respuesta=1;
+ function Inicial(props:any) {
+  // Declaración del estado con useState dentro del cuerpo del componente
+ 
+  // Función para manejar el clic del botón
+ 
+  return (
+    <>
+
+      {props.respuesta ? (
+        <>
+          {props.respuesta && (
+            <div className="message-container-inicial">
+              
+            </div>
+          )}
+        </>
+      ) : null}
+    </>
+  );
+
+}
+
  //let respuesta=1;
  function Cartel(props:any) {
   // Declaración del estado con useState dentro del cuerpo del componente
@@ -194,6 +217,8 @@ function CartelC(props:any) {
  function Page() {
     const [cambiarMostrar1, setState1] = useState(false);
     const [ganar1, cambiarGanar1] = useState(true);
+    const [cambiarMostrarIni, setStateIni] = useState(false);
+    const [ganarIni, cambiarGanarIni] = useState(true);
     const [cambiarMostrarI, setStateI] = useState(false);
     const [ganarI, cambiarGanarI] = useState(true);
     const [cambiarMostrar, setState] = useState(false);
@@ -228,6 +253,9 @@ function CartelC(props:any) {
     };
     const amoALuisC = () => {
       setStateC(!cambiarMostrarC); // Cambia el estado entre true y false
+    };
+    const amoALuisIni = () => {
+      setStateIni(!cambiarMostrarIni); // Cambia el estado entre true y false
     };
 
    const juegoKaplayRef = useRef<any>(null);
@@ -294,9 +322,10 @@ function CartelC(props:any) {
        const juegoKaplay = juegoKaplayRef.current;
        juegoKaplay.setBackground(71,171,169)
        juegoKaplay.loadRoot("./");
+       
        // Nivel1(juegoKaplay);
        Panel(juegoKaplay, setState, cambiarGanar,cambiarGanar3,setState3,cambiarGanarA, setStateA,cambiarGanarB, setStateB,
-        cambiarGanarC, setStateC,cambiarGanar1, setState1,cambiarGanarI, setStateI, Router,informacionUsuario);
+        cambiarGanarC, setStateC,cambiarGanar1, setState1,cambiarGanarI, setStateI,cambiarGanarIni, setStateIni, Router,informacionUsuario);
 
          
       }
@@ -320,6 +349,12 @@ function CartelC(props:any) {
             respuesta={cambiarMostrar} 
             cambiarRespuesta={() => amoALuis()} 
             cambiarGanar={() => cambiarGanar(true)} 
+        />
+
+        <Inicial 
+            respuesta={cambiarMostrarIni} 
+            cambiarRespuesta={() => amoALuisIni()} 
+            cambiarGanar={() => cambiarGanarIni(true)} 
         />
 
         <CartelIncorrecto 
