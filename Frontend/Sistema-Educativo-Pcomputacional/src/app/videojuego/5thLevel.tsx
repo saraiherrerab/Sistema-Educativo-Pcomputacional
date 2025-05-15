@@ -366,6 +366,10 @@ export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
 
               console.log("PRESIONANDO OPCIÓN 3")
 
+              const valorsignado = arregloAuxiliarActividades[indiceActividad].imagenes.indexOf(arregloAuxiliarActividades[indiceActividad].respuesta)
+
+              console.log()
+
               if(arregloAuxiliarActividades[indiceActividad].imagenes.indexOf(arregloAuxiliarActividades[indiceActividad].respuesta) === 3){
                 console.log("SUMANDO")
                 aciertos++
