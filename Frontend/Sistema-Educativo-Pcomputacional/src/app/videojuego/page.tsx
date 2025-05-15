@@ -43,7 +43,7 @@ interface Estudiante {
         <>
           {props.respuesta && (
             <div className="message-container">
-              <p className="elmensaje">  {props.mensaje}</p>
+              
             </div>
           )}
         </>
@@ -52,6 +52,28 @@ interface Estudiante {
   );
 
 }
+ function CartelIncorrecto(props:any) {
+  // Declaración del estado con useState dentro del cuerpo del componente
+ 
+  // Función para manejar el clic del botón
+ 
+  return (
+    <>
+
+      {props.respuesta ? (
+        <>
+          {props.respuesta && (
+            <div className="message-container-incorrecto">
+              
+            </div>
+          )}
+        </>
+      ) : null}
+    </>
+  );
+
+}
+
 
 function CartelNivel1(props:any) {
   // Declaración del estado con useState dentro del cuerpo del componente
@@ -172,6 +194,8 @@ function CartelC(props:any) {
  function Page() {
     const [cambiarMostrar1, setState1] = useState(false);
     const [ganar1, cambiarGanar1] = useState(true);
+    const [cambiarMostrarI, setStateI] = useState(false);
+    const [ganarI, cambiarGanarI] = useState(true);
     const [cambiarMostrar, setState] = useState(false);
     const [cambiarMostrar3, setState3] = useState(false);
     const [cambiarMostrarA, setStateA] = useState(false);
@@ -186,6 +210,9 @@ function CartelC(props:any) {
      // Función para cambiar el estado
     const amoALuis = () => {
       setState(!cambiarMostrar); // Cambia el estado entre true y false
+    };
+    const amoALuisI = () => {
+      setStateI(!cambiarMostrarI); // Cambia el estado entre true y false
     };
     const amoALuis1 = () => {
       setState(!cambiarMostrar); // Cambia el estado entre true y false
@@ -269,7 +296,7 @@ function CartelC(props:any) {
        juegoKaplay.loadRoot("./");
        // Nivel1(juegoKaplay);
        Panel(juegoKaplay, setState, cambiarGanar,cambiarGanar3,setState3,cambiarGanarA, setStateA,cambiarGanarB, setStateB,
-        cambiarGanarC, setStateC,cambiarGanar1, setState1, Router,informacionUsuario);
+        cambiarGanarC, setStateC,cambiarGanar1, setState1,cambiarGanarI, setStateI, Router,informacionUsuario);
 
          
       }
@@ -292,8 +319,13 @@ function CartelC(props:any) {
         <Cartel 
             respuesta={cambiarMostrar} 
             cambiarRespuesta={() => amoALuis()} 
-            mensaje={ganar ? "Correcto, sigue así" : "Oh no, intenta de nuevo"} 
             cambiarGanar={() => cambiarGanar(true)} 
+        />
+
+        <CartelIncorrecto 
+            respuesta={cambiarMostrarI} 
+            cambiarRespuesta={() => amoALuisI()} 
+            cambiarGanar={() => cambiarGanarI(true)} 
         />
 
         <Cartel3 
