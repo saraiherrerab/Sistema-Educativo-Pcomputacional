@@ -212,7 +212,7 @@ export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
 
               console.log("PRESIONANDO OPCIÓN 1")
 
-              if(arregloAuxiliarActividades[indiceActividad].imagenes.indexOf(arregloAuxiliarActividades[indiceActividad].respuesta) === 1){
+              if(aciertos < 3 && arregloAuxiliarActividades[indiceActividad].imagenes.indexOf(arregloAuxiliarActividades[indiceActividad].respuesta) === 1){
                 console.log("SUMANDO")
                 aciertos++
               }else{
@@ -270,11 +270,17 @@ export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
                 }else{
                   console.log("GANO PERO NO ES ESTUDIANTE")
                 }
+
+                 window.location.href = window.location.href
               }
 
               arregloAuxiliarActividades.splice(indiceActividad, 1);
-              indiceActividad = generarNumerosAleatorios(0,vidas + 1)
-              actividadGeneradaAzar = arregloAuxiliarActividades[indiceActividad]
+              console.log("ELIMINADO OPCION DE ARREGLO")
+              console.log(arregloAuxiliarActividades)
+              indiceActividad = (arregloAuxiliarActividades.length === 1) ? 0 : generarNumerosAleatorios(0,vidas -1)
+              console.log("EL INDICE DE LA ACTIVIDAD ES:", indiceActividad)
+              actividadGeneradaAzar = (arregloAuxiliarActividades.length > 0) ? arregloAuxiliarActividades[indiceActividad] : arregloActividades[0]
+              console.log(actividadGeneradaAzar)
               opcionEscogida = actividadGeneradaAzar.imagenes.indexOf(actividadGeneradaAzar.respuesta)
               imagen_central.sprite = actividadGeneradaAzar.imagenes[0]
               imagen1.sprite = actividadGeneradaAzar.imagenes[1]
@@ -289,7 +295,7 @@ export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
               
               console.log("PRESIONANDO OPCIÓN 2")
 
-              if(arregloAuxiliarActividades[indiceActividad].imagenes.indexOf(arregloAuxiliarActividades[indiceActividad].respuesta) === 2){
+              if(aciertos < 3 && arregloAuxiliarActividades[indiceActividad].imagenes.indexOf(arregloAuxiliarActividades[indiceActividad].respuesta) === 2){
                 console.log("SUMANDO")
                 aciertos++
               }else{
@@ -348,11 +354,17 @@ export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
                 }else{
                   console.log("GANO PERO NO ES ESTUDIANTE")
                 }
+
+                 window.location.href = window.location.href
               }
 
               arregloAuxiliarActividades.splice(indiceActividad, 1);
-              indiceActividad = generarNumerosAleatorios(0,vidas + 1)
-              actividadGeneradaAzar = arregloAuxiliarActividades[indiceActividad]
+              console.log("ELIMINADO OPCION DE ARREGLO")
+              console.log(arregloAuxiliarActividades)
+              indiceActividad = (arregloAuxiliarActividades.length === 1) ? 0 :  generarNumerosAleatorios(0,vidas -1)
+              console.log("EL INDICE DE LA ACTIVIDAD ES:", indiceActividad)
+              actividadGeneradaAzar = (arregloAuxiliarActividades.length > 0) ? arregloAuxiliarActividades[indiceActividad] : arregloActividades[0]
+              console.log(actividadGeneradaAzar)
               imagen_central.sprite = actividadGeneradaAzar.imagenes[0]
               imagen1.sprite = actividadGeneradaAzar.imagenes[1]
               imagen2.sprite = actividadGeneradaAzar.imagenes[2]
@@ -366,11 +378,7 @@ export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
 
               console.log("PRESIONANDO OPCIÓN 3")
 
-              const valorsignado = arregloAuxiliarActividades[indiceActividad].imagenes.indexOf(arregloAuxiliarActividades[indiceActividad].respuesta)
-
-              console.log()
-
-              if(arregloAuxiliarActividades[indiceActividad].imagenes.indexOf(arregloAuxiliarActividades[indiceActividad].respuesta) === 3){
+              if( aciertos < 3 && arregloAuxiliarActividades[indiceActividad].imagenes.indexOf(arregloAuxiliarActividades[indiceActividad].respuesta) === 3){
                 console.log("SUMANDO")
                 aciertos++
               }else{
@@ -428,11 +436,17 @@ export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
                 }else{
                   console.log("GANO PERO NO ES ESTUDIANTE")
                 }
+
+                 window.location.href = window.location.href
               }
 
               arregloAuxiliarActividades.splice(indiceActividad, 1);
-              indiceActividad = generarNumerosAleatorios(0,vidas + 1)
-              actividadGeneradaAzar = arregloAuxiliarActividades[indiceActividad]
+              console.log("ELIMINADO OPCION DE ARREGLO")
+              console.log(arregloAuxiliarActividades)
+              indiceActividad = (arregloAuxiliarActividades.length === 1) ? 0 :  generarNumerosAleatorios(0,vidas-1 )
+              console.log("EL INDICE DE LA ACTIVIDAD ES:", indiceActividad)
+              actividadGeneradaAzar = (arregloAuxiliarActividades.length > 0) ? arregloAuxiliarActividades[indiceActividad] : arregloActividades[0]
+              console.log(actividadGeneradaAzar)
               imagen_central.sprite = actividadGeneradaAzar.imagenes[0]
               imagen1.sprite = actividadGeneradaAzar.imagenes[1]
               imagen2.sprite = actividadGeneradaAzar.imagenes[2]
