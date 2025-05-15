@@ -202,7 +202,7 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
         
           })
 
-          castillo.onClick(()=>{
+          castillo.onCollide("player", ()=>{
             juegoKaplay.destroy(torre);
             juegoKaplay.destroy(castillo);
             juegoKaplay.destroy(player);
@@ -211,7 +211,7 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
             // We pass the component id for remove it.
           });
 
-          casa1.onClick(()=>{
+          casa1.onCollide("player",()=>{
             juegoKaplay.destroy(torre);
             juegoKaplay.destroy(castillo);
             juegoKaplay.destroy(player);
@@ -220,7 +220,7 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
             // We pass the component id for remove it.
           });
 
-          casa.onClick(()=>{
+          casa.onCollide("player",()=>{
             juegoKaplay.destroy(torre);
             juegoKaplay.destroy(castillo);
             juegoKaplay.destroy(player);
@@ -229,7 +229,7 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
             // We pass the component id for remove it.
           });
 
-          torre.onClick(()=>{
+          torre.onCollide("player",()=>{
             juegoKaplay.destroy(torre);
             juegoKaplay.destroy(castillo);
             juegoKaplay.destroy(player);
@@ -238,7 +238,7 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
             // We pass the component id for remove it.
           });
 
-          torre1.onClick(()=>{
+          torre1.onCollide("player",()=>{
             juegoKaplay.destroy(torre);
             juegoKaplay.destroy(castillo);
             juegoKaplay.destroy(player);

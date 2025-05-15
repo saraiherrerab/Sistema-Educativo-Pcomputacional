@@ -173,19 +173,50 @@ router.put('/curso/asignar/grupo', async function(req, res, next) {
 router.post('/grupos', async function(req, res, next) {
 
     try {
-        const { nombre_grupo } = req.body  
-        const query = "INSERT INTO GRUPOS (nombre_grupo) VALUES ($1)";        
-        const findGrupo =  new PQ({text: query, values: [nombre_grupo]});
-        const result = await db.manyOrNone(findGrupo);
+        const { nombre_grupo,id_curso } = req.body  
+        const query = "INSERT INTO GRUPOS (nombre_grupo,id_curso) VALUES ($1,$2) RETURNING *";        
+        const findGrupo =  new PQ({text: query, values: [nombre_grupo,id_curso]});
+        const result = await db.oneOrNone(findGrupo);
         console.log('Resultado:', result);
 
         return res.json(result)
     } catch (error) {
         console.error('Error al hacer la consulta:', error);
-        res.json({menssage: "Error al obtener profesores"})
+        res.json({menssage: "Error al crear grupo"})
     }
     
 });
 
+
+router.delete('/grupos/:id', async function(req, res, next) {
+
+    try {
+    const { id } =req.params
+    const findGrupos =  new PQ({text :`DELETE FROM Grupos WHERE id_grupo = ${id}`});
+     const result = await db.none(findGrupos);
+     return res.json({mensaje: "Grupo eliminado correctamente"})
+    } catch (error) {
+      console.error('Error al hacer la consulta:', error);
+      res.json({menssage: "Error al obtener profesores"})
+    }
+    
+});
+
+router.put('/grupos', async function(req, res, next) {
+
+    try {
+        const { nombre_grupo, id_grupo } = req.body  
+        const query = "UPDATE Grupos SET nombre_grupo = $2 WHERE id_grupo = $1";        
+        const findGrupo =  new PQ({text: query, values: [id_grupo,nombre_grupo]});
+        const result = await db.none(findGrupo);
+
+        return res.json({mensaje: "Grupo actualizado con éxito"})
+
+    } catch (error) {
+        console.error('Error al hacer la consulta:', error);
+        res.json({menssage: "Error al crear grupo"})
+    }
+    
+});
 
 module.exports = router;

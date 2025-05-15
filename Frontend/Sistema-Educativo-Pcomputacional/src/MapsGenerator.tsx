@@ -651,11 +651,12 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
             let posicionY: number = (layer.objects[0].y / 32) * ( window.innerHeight / 15)
 
             const castillo = contextoKaplay.add([
-              contextoKaplay.pos(posicionX, posicionY - 100),
+              contextoKaplay.pos(posicionX + (( window.innerWidth / 20) / 2), posicionY +  ( window.innerHeight / 15)),
               contextoKaplay.sprite("castillo"),
-              contextoKaplay.scale(0.7),
+              contextoKaplay.scale(0.5),
               contextoKaplay.area(),
-  
+              contextoKaplay.anchor("center"),
+              contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), layer.objects[0].width * 5, layer.objects[0].height * 5)}),
               "castillo",
               { z: 1 } // Asegura que el jugador esté en una capa superior
             ]);
