@@ -5,29 +5,17 @@
       "static/chunks/main-app.js",
       "static/chunks/app/layout.js"
     ],
-    "/videojuego/page": [
+    "/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/videojuego/page.css",
-      "static/chunks/app/videojuego/page.js"
+      "static/css/app/page.css",
+      "static/chunks/app/page.js"
     ],
     "/Amenu/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/Amenu/page.css",
       "static/chunks/app/Amenu/page.js"
-    ],
-    "/Curso/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/Curso/page.css",
-      "static/chunks/app/Curso/page.js"
-    ],
-    "/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/page.css",
-      "static/chunks/app/page.js"
     ],
     "/Aprofesores-lista/page": [
       "static/chunks/webpack.js",
@@ -41,23 +29,23 @@
       "static/css/app/profile-prof/[id]/page.css",
       "static/chunks/app/profile-prof/[id]/page.js"
     ],
+    "/Curso/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/Curso/page.css",
+      "static/chunks/app/Curso/page.js"
+    ],
     "/Aestudiantes-lista/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/Aestudiantes-lista/page.css",
       "static/chunks/app/Aestudiantes-lista/page.js"
     ],
-    "/profile/[id]/page": [
+    "/videojuego/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/profile/[id]/page.css",
-      "static/chunks/app/profile/[id]/page.js"
-    ],
-    "/reportes/[id]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/reportes/[id]/page.css",
-      "static/chunks/app/reportes/[id]/page.js"
+      "static/css/app/videojuego/page.css",
+      "static/chunks/app/videojuego/page.js"
     ]
   }
 }
