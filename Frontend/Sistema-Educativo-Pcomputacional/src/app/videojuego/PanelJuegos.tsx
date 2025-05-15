@@ -8,7 +8,7 @@ import {Nivel5} from "./5thLevel";
 import sleep from "./functions/sleep";
 
 export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,cambiarGanar3:any,setState3:any, cambiarGanarA:any, setStateA:any, 
-  cambiarGanarB:any, setStateB:any,cambiarGanarC:any, setStateC:any,cambiarGanar1:any,setState1:any, setStateI:any,cambiarGanarI:any, setStateIni:any,cambiarGanarIni:any,    Router:any, usuario?: any) {
+  cambiarGanarB:any, setStateB:any,cambiarGanarC:any, setStateC:any,cambiarGanar1:any,setState1:any, setStateI:any,cambiarGanarI:any, setStateIni:any,cambiarGanarIni:any, setState5:any,cambiarGanar5:any,     Router:any, usuario?: any) {
     // Referencia persistente para almacenar la instancia de Kaplay
     const SCREEN_RESOLUTION_X: number = window.innerWidth 
     const SCREEN_RESOLUTION_Y: number = window.innerHeight 
@@ -258,7 +258,7 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
             juegoKaplay.destroy(castillo);
             juegoKaplay.destroy(player);
             juegoKaplay.destroyAll("*");
-            Nivel5(juegoKaplay, setState, cambiarGanar, setStateA, cambiarGanarA,setState1, cambiarGanar1, Router,usuario);
+            Nivel5(juegoKaplay, setState5, cambiarGanar5, setStateA, cambiarGanarA,setStateC, cambiarGanarC, Router,usuario);
             // We pass the component id for remove it.
           });
 

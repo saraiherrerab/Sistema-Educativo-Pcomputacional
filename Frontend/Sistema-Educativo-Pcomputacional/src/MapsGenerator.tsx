@@ -982,7 +982,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
               let imagen_g = contextoKaplay.add([
                 contextoKaplay.pos(((posicionX) + ((imagengrande.width / 32) * anchoCelda)/2), ((posicionY) + (imagengrande.height / 32) * altoCelda) - (3/2) * altoCelda ),
                 contextoKaplay.sprite("arbol"),
-                contextoKaplay.scale(1),
+                contextoKaplay.scale(0.8),
                 contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda, altoCelda)}),
                 contextoKaplay.anchor("center"),
                 "imagen_grande",

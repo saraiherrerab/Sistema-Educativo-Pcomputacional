@@ -75,6 +75,29 @@ interface Estudiante {
   );
 
 }
+
+ function Cartel5(props:any) {
+  // Declaración del estado con useState dentro del cuerpo del componente
+ 
+  // Función para manejar el clic del botón
+ 
+  return (
+    <>
+
+      {props.respuesta ? (
+        <>
+          {props.respuesta && (
+            <div className="message-container5">
+              
+            </div>
+          )}
+        </>
+      ) : null}
+    </>
+  );
+
+}
+
  function CartelIncorrecto(props:any) {
   // Declaración del estado con useState dentro del cuerpo del componente
  
@@ -217,6 +240,8 @@ function CartelC(props:any) {
  function Page() {
     const [cambiarMostrar1, setState1] = useState(false);
     const [ganar1, cambiarGanar1] = useState(true);
+    const [cambiarMostrar5, setState5] = useState(false);
+    const [ganar5, cambiarGanar5] = useState(true);
     const [cambiarMostrarIni, setStateIni] = useState(false);
     const [ganarIni, cambiarGanarIni] = useState(true);
     const [cambiarMostrarI, setStateI] = useState(false);
@@ -256,6 +281,9 @@ function CartelC(props:any) {
     };
     const amoALuisIni = () => {
       setStateIni(!cambiarMostrarIni); // Cambia el estado entre true y false
+    };
+    const amoALuis5 = () => {
+      setState5(!cambiarMostrar5); // Cambia el estado entre true y false
     };
 
    const juegoKaplayRef = useRef<any>(null);
@@ -326,7 +354,7 @@ function CartelC(props:any) {
        
        // Nivel1(juegoKaplay);
        Panel(juegoKaplay, setState, cambiarGanar,cambiarGanar3,setState3,cambiarGanarA, setStateA,cambiarGanarB, setStateB,
-        cambiarGanarC, setStateC,cambiarGanar1, setState1,cambiarGanarI, setStateI,cambiarGanarIni, setStateIni, Router,informacionUsuario);
+        cambiarGanarC, setStateC,cambiarGanar1, setState1,cambiarGanarI, setStateI,cambiarGanarIni, setStateIni,cambiarGanar5, setState5, Router,informacionUsuario);
          
       }
    
@@ -389,6 +417,13 @@ function CartelC(props:any) {
             cambiarRespuesta={() => amoALuisC()} 
             mensaje={ganarC ? "Correcto, sigue así" : "Oh no, intenta de nuevo"} 
             cambiarGanarC={() => cambiarGanarC(true)} 
+        />
+
+        <Cartel5 
+            respuesta={cambiarMostrar5} 
+            cambiarRespuesta={() => amoALuis5()} 
+            mensaje={ganar5 ? "Correcto, sigue así" : "Oh no, intenta de nuevo"} 
+            cambiarGanar5={() => cambiarGanar5(true)} 
         />
 
         <CartelNivel1 

@@ -20,7 +20,7 @@ export let cambioNivel = 0;
 
 
 
-export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,setStateA:any, cambiarGanarA:any,setState1:any, cambiarGanar1:any, Router:any,usuario: any) {
+export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState5:any, cambiarGanar5:any,setStateA:any, cambiarGanarA:any,setStateC:any, cambiarGanarC:any, Router:any,usuario: any) {
     // Referencia persistente para almacenar la instancia de Kaplay
    // setState(false);
 
@@ -118,6 +118,13 @@ export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
       sliceY: 1,
     });
 
+    juegoKaplay.loadSound("nivel5", "./oveja-dialogos/nivel5.wav");
+    juegoKaplay.loadSound("aprobado", "./oveja-dialogos/aprobado.wav");
+    juegoKaplay.loadSound("perdido", "./oveja-dialogos/perdido.wav");
+    juegoKaplay.loadSound("fallaste", "./oveja-dialogos/fallaste.wav");
+    juegoKaplay.loadSound("bien", "./oveja-dialogos/bien.wav");
+
+
     /* EN CASO DE CUADRO VACIOS  */
 
     juegoKaplay.loadSprite("title-0", "prueba/title-0.png", {
@@ -179,7 +186,10 @@ export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
       )
       .then(  
         async (resultado: any) => {
-
+          juegoKaplay.play("nivel5", { volume: 1, speed: 1.5, loop: false });
+          cambiarGanar5(true);
+          setState5(true);
+          await sleep(2000)
 
 
           let opcionEscogida = generarNumerosAleatorios(1,3)
@@ -215,15 +225,31 @@ export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
               if(aciertos < 3 && arregloAuxiliarActividades[indiceActividad].imagenes.indexOf(arregloAuxiliarActividades[indiceActividad].respuesta) === 1){
                 console.log("SUMANDO")
                 aciertos++
+                juegoKaplay.play("bien", { volume: 1, speed: 1.5, loop: false });
+                await sleep(2000)
               }else{
-                vidas--
+                  vidas--
+                  juegoKaplay.play("fallaste", { volume: 1, speed: 1.5, loop: false });
+                  await sleep(2000)
+                
                 if(vidas <= 0){
                   console.log("MORISTE")
+                  cambiarGanarC(true);
+                  setStateC(true);
+                  juegoKaplay.play("perdido", { volume: 1, speed: 1.5, loop: false });
+                  await sleep(2000)
                   window.location.href = window.location.href
+                }else{
+                  
                 }
               }
 
               if( aciertos === 3 ){
+                cambiarGanarA(true);
+                juegoKaplay.play("aprobado", { volume: 1, speed: 1.5, loop: false });
+                setStateA(true);
+                await sleep(2000)
+
                 if(usuario.rol === "ESTUDIANTE"){
 
                   console.log("GANASTE")
@@ -298,16 +324,28 @@ export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
               if(aciertos < 3 && arregloAuxiliarActividades[indiceActividad].imagenes.indexOf(arregloAuxiliarActividades[indiceActividad].respuesta) === 2){
                 console.log("SUMANDO")
                 aciertos++
+                juegoKaplay.play("bien", { volume: 1, speed: 1.5, loop: false });
+                await sleep(2000)
               }else{
-                vidas--
+                  vidas--
+                  juegoKaplay.play("fallaste", { volume: 1, speed: 1.5, loop: false });
+                  await sleep(2000)
                 
                 if(vidas <= 0){
+                  cambiarGanarC(true);
+                  setStateC(true);
+                  juegoKaplay.play("perdido", { volume: 1, speed: 1.5, loop: false });
                   console.log("MORISTE")
+                  await sleep(2000)
                   window.location.href = window.location.href
                 }
               }
 
               if( aciertos === 3 ){
+                 cambiarGanarA(true);
+                juegoKaplay.play("aprobado", { volume: 1, speed: 1.5, loop: false });
+                setStateA(true);
+                await sleep(2000)
                 if(usuario.rol === "ESTUDIANTE"){
 
                   console.log("GANASTE")
@@ -381,15 +419,27 @@ export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
               if( aciertos < 3 && arregloAuxiliarActividades[indiceActividad].imagenes.indexOf(arregloAuxiliarActividades[indiceActividad].respuesta) === 3){
                 console.log("SUMANDO")
                 aciertos++
+                juegoKaplay.play("bien", { volume: 1, speed: 1.5, loop: false });
+                await sleep(2000)
               }else{
-                vidas--
+                  vidas--
+                  juegoKaplay.play("fallaste", { volume: 1, speed: 1.5, loop: false });
+                  await sleep(2000)
                 if(vidas <= 0){
+                  cambiarGanarC(true);
+                  setStateC(true);
+                  juegoKaplay.play("perdido", { volume: 1, speed: 1.5, loop: false });
                   console.log("MORISTE")
+                  await sleep(2000)
                   window.location.href = window.location.href
                 }
               }
 
               if( aciertos === 3 ){
+                 cambiarGanarA(true);
+                juegoKaplay.play("aprobado", { volume: 1, speed: 1.5, loop: false });
+                setStateA(true);
+                await sleep(2000)
                 if(usuario.rol === "ESTUDIANTE"){
 
                   console.log("GANASTE")

@@ -40,12 +40,12 @@
 
     .message-container-inicial{
     position: absolute;
-    top: 40px; /* Ajusta la posición según sea necesario */
+    top: 0px; /* Ajusta la posición según sea necesario */
     left: 50%;
-    transform: translateX(-50%); /* Centrar horizontalmente */
+    transform: translateX(-100%); /* Centrar horizontalmente */
     color: rgb(62, 50, 1);
     background-image: url('../../../public/nivel1/cartelinicial.png');  /* Fondo semitransparente */
-    padding:10px;
+    padding:0px;
     border-radius: 0px;
     font-size: 35px;
     font-family: "Jersey 15", sans-serif;
@@ -87,6 +87,26 @@
     transform: translateX(-50%); /* Centrar horizontalmente */
     color: rgb(62, 50, 1);
     background-image: url('../../../public/nivel1/cartelnivel1.png');  /* Fondo semitransparente */
+    padding:10px;
+    border-radius: 0px;
+    font-size: 35px;
+    font-family: "Jersey 15", sans-serif;
+    font-weight:400;
+    background-repeat: no-repeat;
+    background-size: contain; /* Cambia cover a contain */
+    animation: aparecerDesaparecer 6s ease-in-out forwards;
+     /* Para que empiece desde la parte izquierda */
+    width: 50vw; /* Ajusta el ancho según el contenido o un valor fijo */
+    height: 30vw; /* Ajusta el alto según el contenido o un valor fijo *//* 100% de la altura del viewport */
+  }
+
+   .message-container5 {
+    position: absolute;
+    top: 40px; /* Ajusta la posición según sea necesario */
+    left: 60%;
+    transform: translateX(-50%); /* Centrar horizontalmente */
+    color: rgb(62, 50, 1);
+    background-image: url('../../../public/nivel5/nivel5.png');  /* Fondo semitransparente */
     padding:10px;
     border-radius: 0px;
     font-size: 35px;
