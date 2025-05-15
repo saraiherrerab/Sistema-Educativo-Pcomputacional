@@ -322,11 +322,11 @@ function CartelC(props:any) {
        const juegoKaplay = juegoKaplayRef.current;
        juegoKaplay.setBackground(71,171,169)
        juegoKaplay.loadRoot("./");
+       juegoKaplay.loadSound("bien", "./oveja-dialogos/bien.wav");
        
        // Nivel1(juegoKaplay);
        Panel(juegoKaplay, setState, cambiarGanar,cambiarGanar3,setState3,cambiarGanarA, setStateA,cambiarGanarB, setStateB,
         cambiarGanarC, setStateC,cambiarGanar1, setState1,cambiarGanarI, setStateI,cambiarGanarIni, setStateIni, Router,informacionUsuario);
-
          
       }
    

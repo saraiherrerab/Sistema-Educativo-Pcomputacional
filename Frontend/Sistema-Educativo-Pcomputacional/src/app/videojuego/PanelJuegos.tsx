@@ -5,6 +5,7 @@ import { Nivel2 } from "./2ndLevel";
 import {Nivel3} from "./3rdLevel";
 import {Nivel4} from "./4thLevel";
 import {Nivel5} from "./5thLevel";
+import sleep from "./functions/sleep";
 
 export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,cambiarGanar3:any,setState3:any, cambiarGanarA:any, setStateA:any, 
   cambiarGanarB:any, setStateB:any,cambiarGanarC:any, setStateC:any,cambiarGanar1:any,setState1:any, setStateI:any,cambiarGanarI:any, setStateIni:any,cambiarGanarIni:any,    Router:any, usuario?: any) {
@@ -121,9 +122,6 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
       sliceX: 1,
       sliceY: 1,
     });
-    
-
-    juegoKaplay.loadSound("bienvenida", "bienvenida.wav");
 
     // Cargar sprites adicionales
     ["up", "down", "left", "right"].forEach((dir) => {
@@ -132,12 +130,7 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
 
     juegoKaplay.loadSprite("redbox", "red-border-box.png");
 
-     juegoKaplay.loadSound("bien", "./oveja-dialogos/bien.wav");
     
-    juegoKaplay.onLoad(() => {
-      juegoKaplay.loadSound("bien", "./oveja-dialogos/bien.wav");
-      juegoKaplay.play("bien");
-    })
     juegoKaplay.onLoad(() => {
         //Practicando aqui
       generarEsquemaMapa(
@@ -185,14 +178,15 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
         ]
       )
       .then(
-        (resultado: any) => {
+        async (resultado: any) => {
 
             cambiarGanarIni(true);
+
+            await sleep(2000)
             
             setStateIni(true);
 
-            juegoKaplay.play("bien")
-
+            await sleep(2000)
         
 
           const oveja = juegoKaplay.get("oveja")[0]
@@ -209,6 +203,9 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
           const ovejas= juegoKaplay.get("oveja")
           const rocks= juegoKaplay.get("rock")
           const hongos= juegoKaplay.get("hongo")
+          const zonaInvisible= juegoKaplay.get("botonInvisible")[0]
+
+          console.log(zonaInvisible)
 
            ovejas.forEach( (oveja: any) => {
                 oveja.play("quiet");
@@ -263,6 +260,11 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
             juegoKaplay.destroyAll("*");
             Nivel5(juegoKaplay, setState, cambiarGanar, setStateA, cambiarGanarA,setState1, cambiarGanar1, Router,usuario);
             // We pass the component id for remove it.
+          });
+
+          juegoKaplay.onKeyPress("space", () => {
+            juegoKaplay.play("bien",{ volume: 1, speed: 1.5, loop: false })
+          
           });
 
           
