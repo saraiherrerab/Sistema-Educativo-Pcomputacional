@@ -135,6 +135,28 @@ export default function Profile() {
   }
 
 
+  const [ informacionGrupoSinHorario, setInformacionGrupoSinHorario ] = useState<{
+      apellido: string,
+      id_curso: number,
+      id_grupo: number,
+      id_profesor: number,
+      nombre: string,
+      nombre_curso: string,
+      nombre_grupo: string
+  }[]>(
+    [
+      {
+        apellido: "",
+        id_curso: 0,
+        id_grupo: 0,
+        id_profesor: 0,
+        nombre: "",
+        nombre_curso: "",
+        nombre_grupo: ""
+        }
+    ]
+  )
+
   const obtenerDatosUsuario = async () => {
     
     const datosEstudiante = await fetch("http://localhost:5555/estudiantes/" + profileId)
@@ -151,6 +173,19 @@ export default function Profile() {
     console.log(dataRol.obtener_rol_usuario)
 
     const resultadoHorarios = await obtenerHorariosAlumno(resultadoConsulta.id_grupo)
+
+    if(resultadoHorarios.length === 0){
+      const obtenerGrupoSinHorarios = async () => {
+          const response = await fetch(`http://localhost:5555/grupos/${resultadoConsulta.id_grupo}/curso/sin/horario`);
+          const informacionGrupoSinHorario = await response.json()
+          console.log(informacionGrupoSinHorario)
+          return informacionGrupoSinHorario;
+      } 
+
+      const profesoresCursoSinHorario = await obtenerGrupoSinHorarios() 
+      
+      setInformacionGrupoSinHorario(profesoresCursoSinHorario)
+    }
     console.log(resultadoHorarios)
     setHorarios ([...resultadoHorarios])
     console.log(horarios)
@@ -210,9 +245,9 @@ export default function Profile() {
                           <div className="fila fila_espacio_fondo">
                               <div className="notas">
                                 <div className="notas-section">
-                                  <h2 className="tituloNotas"><strong>Curso</strong></h2>
-                                  <h2 className="tituloNotas"><strong>{(horarios[0]) ? horarios[0].nombre_grupo : ""}</strong></h2>
-                                  <p><strong>Profesor: </strong>{(horarios[0]) ? horarios[0].nombre + " " + horarios[0].apellido : ""}</p>
+                                  <h2 className="tituloNotas"><strong>Curso: </strong> {(horarios[0]) ? horarios[0].nombre_curso : informacionGrupoSinHorario[0].nombre_curso}</h2>
+                                  <h2 className="tituloNotas"><strong>{(horarios[0]) ? horarios[0].nombre_grupo : informacionGrupoSinHorario[0].nombre_grupo}</strong></h2>
+                                  <p><strong>Profesor: </strong>{(horarios[0]) ? horarios[0].nombre + " " + horarios[0].apellido : informacionGrupoSinHorario[0].nombre + " " + informacionGrupoSinHorario[0].apellido}</p>
                                   <p>{(horarios[0]) ? horarios[0].nombre_curso : ""}</p>
                                   
                                   
@@ -229,6 +264,10 @@ export default function Profile() {
                                       ))
                                       : 
                                       null
+                                  }
+                                  {
+                                    horarios.length  === 0  &&
+                                    <p>{`El estudiante no tiene un horario asignado`}</p>
                                   }
                                   </div>
                                 

@@ -794,7 +794,7 @@ export default function ProfesoresLista() {
         setProfesorSeleccionado({...informacionProfesor})
 
         await obtenerHorariosProfesor(informacionProfesor.id_usuario)
-        await obtenerCursosProfesor(informacionProfesor.id_usuario)
+        const resultadoCursosProfesor = await obtenerCursosProfesor(informacionProfesor.id_usuario)
         await obtenerCursosFaltantesProfesor(informacionProfesor.id_usuario)
         
         setMostrarAside(true);
@@ -1307,11 +1307,11 @@ export default function ProfesoresLista() {
                         >
                             <h2 style={{ textAlign: 'center', margin: 0 }}>Formulario</h2>
                             <select
-                                onChange={(e) => {console.log(e.target.value);  const cursoGuardado = cursosFaltantes.filter( (cursoFaltante: Cursos) => cursoFaltante.id_curso.toString() === e.target.value)[0]; setCursoFaltanteSeleccionado(cursoGuardado); console.log(cursoGuardado);}}
+                                onChange={(e) => {console.log(e.target.value);  const cursoGuardado = cursos.filter( (cursoFaltante: Cursos) => cursoFaltante.id_curso.toString() === e.target.value)[0]; setCursoFaltanteSeleccionado(cursoGuardado); console.log(cursoGuardado);}}
                                 style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
                                 >
                                 <option value={cursoFaltanteSeleccionado.id_curso}>Selecciona un curso</option>
-                                    {cursosFaltantes.map((curso) => (
+                                    {cursos.map((curso) => (
                                         <option key={curso.id_curso} value={curso.id_curso}>
                                         {curso.nombre_curso}
                                         </option>
@@ -1451,8 +1451,8 @@ export default function ProfesoresLista() {
                                 >
                                 <option value="" disabled>Seleccione el grupo</option> {/* Opción por defecto */}
                                 {  
-                                    horariosCursoSeleccionado?.[0] &&
-                                    gruposAlumnos.filter((grupo: Grupos) => grupo.id_curso === horariosCursoSeleccionado[0].id_curso)?.map((grupo_alumno: Grupos, index: number) => (
+                                    cursos.length > 0 &&
+                                    gruposAlumnos.filter((grupo: Grupos) => grupo.id_curso === cursos[0].id_curso)?.map((grupo_alumno: Grupos, index: number) => (
                                         <option key={grupo_alumno.id_grupo} value={grupo_alumno.id_grupo}>
                                             {grupo_alumno.nombre_grupo} {/* Asumiendo que tu objeto 'Grupos' tiene un 'nombre' */}
                                         </option>
