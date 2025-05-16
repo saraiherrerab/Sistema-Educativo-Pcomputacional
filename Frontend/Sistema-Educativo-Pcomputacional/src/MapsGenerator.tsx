@@ -982,7 +982,7 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
               let imagen_g = contextoKaplay.add([
                 contextoKaplay.pos(((posicionX) + ((imagengrande.width / 32) * anchoCelda)/2), ((posicionY) + (imagengrande.height / 32) * altoCelda) - (3/2) * altoCelda ),
                 contextoKaplay.sprite("arbol"),
-                contextoKaplay.scale(1),
+                contextoKaplay.scale(0.8),
                 contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda, altoCelda)}),
                 contextoKaplay.anchor("center"),
                 "imagen_grande",
@@ -990,6 +990,30 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
               ]);
   
               imagen_g.tag("imagen_grande")
+            })
+      
+          }
+
+          if(layer.type === "objectgroup" && layer.name === "boton"){
+
+            const anchoCelda: number = ( window.innerWidth / 20);
+            const altoCelda: number = ( window.innerHeight / 15)
+
+
+            layer.objects.forEach( (botonInvisible: any) => {
+              let posicionX: number = (botonInvisible.x / 32) * ( anchoCelda);
+              let posicionY: number = (botonInvisible.y / 32) * ( altoCelda)
+
+              let imagen_g = contextoKaplay.add([
+                contextoKaplay.pos(posicionX , posicionY),
+                contextoKaplay.sprite("arbol"),
+                contextoKaplay.scale(1),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), anchoCelda * 3, altoCelda * 3)}),
+                contextoKaplay.anchor("center"),
+                "botonInvisible",
+                {z: 1}
+              ]);
+              imagen_g.tag("botonInvisible")
             })
       
           }

@@ -101,6 +101,13 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
           sliceY: 1,
         });
 
+
+        juegoKaplay.loadSound("nivel2", "./oveja-dialogos/nivel2.wav");
+        juegoKaplay.loadSound("aprobado", "./oveja-dialogos/aprobado.wav");
+        juegoKaplay.loadSound("perdido", "./oveja-dialogos/perdido.wav");
+        juegoKaplay.loadSound("fallaste", "./oveja-dialogos/fallaste.wav");
+        juegoKaplay.loadSound("bien", "./oveja-dialogos/bien.wav");
+
         // Cargar sprites adicionales
         ["up", "down", "left", "right"].forEach((dir) => {
           juegoKaplay.loadSprite(dir, `sprites/${dir}-arrow.png`);
@@ -228,25 +235,27 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                           console.log(respuestaEvaluacion)
                                                                         
                         }else{
-                          console.log("GANO PERO NO ES ESTUDIANTE")
+                          console.log("perdio PERO NO ES ESTUDIANTE")
                         }
 
                         juegoKaplay.destroy(heart3);
                         juegoKaplay.destroy(player)
                         cambiarGanarC(true); 
+                        juegoKaplay.play("perdido", { volume: 1, speed: 1.5, loop: false });
                         setStateC(true);
 
                         await sleep(2000)
 
                         setStateC(false);
 
-                        await sleep(500)
+                        await sleep(2000)
                     
                         await terminarJuego();
                       };        
                   }
                   
                   cambiarGanarB(true);
+                  juegoKaplay.play("nivel2", { volume: 1, speed: 1.5, loop: false });
                   setStateB(true);
                   setTimeout(() => {
                     setStateB(false);
@@ -347,8 +356,12 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                     oveja.play("quiet");
                     oveja.onCollide("player", async (jugador: GameObj) => {
 
+                      
                       cambiarGanarA(true); 
                       setStateA(true);
+                      juegoKaplay.play("aprobado", { volume: 1, speed: 1.5, loop: false });
+                      await sleep(2000)
+                      
 
                       if(usuario.rol === "ESTUDIANTE"){
 
@@ -812,24 +825,7 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                       movimientoValido = false;
                     }
                   });
-
-                  juegoKaplay.onUpdate(()=>{
-                    if (lives==2){
-                      juegoKaplay.destroy(heart1);
-                    }else if(lives==1){
-                      juegoKaplay.destroy(heart2);
-                    }else if(lives==0){
-                      juegoKaplay.destroy(heart3);
-                      juegoKaplay.destroy(player);
-                      cambiarGanarC(true); 
-                      setStateC(true);
-                  
-                      setTimeout(() => {
-                        setStateC(false);
-                        window.location.href = window.location.href;
-                      }, 5000);
-                    };
-                  })
+                    
                   player.onDeath(() => {
                     juegoKaplay.destroy(player);
                   });

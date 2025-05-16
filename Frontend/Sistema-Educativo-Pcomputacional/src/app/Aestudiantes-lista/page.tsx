@@ -592,16 +592,80 @@ export default function EstudiantesLista() {
                     const grupoSeleccionadoId = result.value;
 
                     const validarCursoGrupo: any[]= await obtenerInformacionCursoDeGrupo(grupoSeleccionadoId);
+                    console.log(validarCursoGrupo)
                     if(validarCursoGrupo.length > 0 ){
                         await mostrarInformacionDelGrupo(grupoSeleccionadoId, mostrarSelectorDeGrupos,informacionGrupoEstudiante,id_estudiante); // Pasar la función para volver
+                    }else{
+                        if(validarCursoGrupo.length == 0){
+                            const obtenerGrupoSinHorarios = async () => {
+                                const response = await fetch(`http://localhost:5555/grupos/${grupoSeleccionadoId}/curso/sin/horario`);
+                                const informacionGrupoSinHorario = await response.json()
+                                console.log(informacionGrupoSinHorario)
+                                return informacionGrupoSinHorario;
+                            } 
+
+                            const profesoresCursoSinHorario = await obtenerGrupoSinHorarios()  
+
+                            let informacionHorario: string =  `<p><strong>Los Profesores no tienen horario asignado</strong></p>`
+
+                            const nombreCompletoProfesor = (profesoresCursoSinHorario.length > 0 ) ? profesoresCursoSinHorario[0].nombre + " " + profesoresCursoSinHorario[0].apellido : "No hay profesor"
+
+                            Swal.fire({
+                                title: profesoresCursoSinHorario[0].nombre_grupo,
+                                html: `
+                                    <p><strong>Profesor:</strong> ${ nombreCompletoProfesor }</p>
+                                    ${informacionHorario}
+                                    `,
+                                showCancelButton: true,
+                                confirmButtonText: "Asignar estudiante a grupo",
+                                cancelButtonText: "Salir",
+                            }).then(async (result) => {
+                                if (result.isDenied) {
+                                    
+                                } else if (result.isConfirmed) {
+
+                                    console.log(profesoresCursoSinHorario.id_grupo)
+                                    const response = await fetch('http://localhost:5555/estudiantes/asignar/grupo', {
+                                        method: 'PUT',
+                                        headers: {
+                                        'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify({ "id_estudiante": id_estudiante, "id_grupo": profesoresCursoSinHorario[0].id_grupo })
+                                    });
+                                    const data = await response.json();
+                                    console.log('Respuesta del servidor:', data);
+
+                                    Swal.fire({
+                                        title: 'Procesando...',
+                                        text: 'Por favor espera',
+                                        allowOutsideClick: false,
+                                        allowEscapeKey: false,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                        }
+                                    });
+
+                                    // Simulamos una función asíncrona (puedes reemplazar esto con tu fetch, por ejemplo)
+                                    await new Promise(resolve => setTimeout(resolve, 1000)); // Espera de 1 segundos
+
+                                    Swal.fire("¡Aceptado!", "La información del grupo ha sido aceptada.", "success");
+                                    // Aquí puedes agregar la lógica para guardar o procesar la aceptación
+                                } else if (result.isDismissed && result.dismiss === Swal.DismissReason.cancel) {
+                                    // Aquí puedes agregar la lógica para volver a la edición
+                                
+                                }
+                            });
+                          
+                         
                     }else{
                         Swal.fire({
                             icon: "error",
                             title: "No se encontraron cursos",
                             text: "El grupo no tiene ningún curso asignado",
-                          });
+                        });
                     }
                     
+                }
                 }
             });
         }

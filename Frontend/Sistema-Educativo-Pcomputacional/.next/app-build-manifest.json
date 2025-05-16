@@ -20,6 +20,7 @@
     "/Curso/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
+<<<<<<< HEAD
       "static/css/app/Curso/page.css",
       "static/chunks/app/Curso/page.js"
     ],
@@ -29,11 +30,61 @@
       "static/css/app/Aestudiantes-lista/page.css",
       "static/chunks/app/Aestudiantes-lista/page.js"
     ],
+=======
+      "static/css/app/videojuego/page.css",
+      "static/chunks/app/videojuego/page.js"
+    ],
+    "/menu/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/menu/page.css",
+      "static/chunks/app/menu/page.js"
+    ],
+    "/Aestudiantes-lista/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/Aestudiantes-lista/page.css",
+      "static/chunks/app/Aestudiantes-lista/page.js"
+    ],
+    "/profile/[id]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/profile/[id]/page.css",
+      "static/chunks/app/profile/[id]/page.js"
+    ],
+    "/reportes/[id]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/reportes/[id]/page.css",
+      "static/chunks/app/reportes/[id]/page.js"
+    ],
+    "/Curso/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/Curso/page.css",
+      "static/chunks/app/Curso/page.js"
+    ],
+>>>>>>> origin/LaSaraRama
     "/Aprofesores-lista/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/Aprofesores-lista/page.css",
       "static/chunks/app/Aprofesores-lista/page.js"
+<<<<<<< HEAD
+=======
+    ],
+    "/GruposYCursos/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/GruposYCursos/page.css",
+      "static/chunks/app/GruposYCursos/page.js"
+    ],
+    "/Grupos/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/Grupos/page.css",
+      "static/chunks/app/Grupos/page.js"
+>>>>>>> origin/LaSaraRama
     ]
   }
 }
