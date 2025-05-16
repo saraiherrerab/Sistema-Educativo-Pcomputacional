@@ -533,6 +533,7 @@ export default function ProfesoresLista() {
                 console.log(informacionProfesor)
 
                 setProfesoresFiltrados([...profesoresFiltrados, informacionProfesor]);
+                setProfesores([...profesores, informacionProfesor])
                 setMostrarFormulario(false); // Asegúrate de que el formulario se cierre después de guardar
                 setNuevoProfesor({
                     id_usuario: 0,
@@ -757,6 +758,8 @@ export default function ProfesoresLista() {
 
     }
 
+    
+
     const gestionarGrupos = async (id_usuario: number) => {
 
         const obtenerHorariosProfesor = async (id_profesor_seleccionado: number) => {
@@ -773,7 +776,7 @@ export default function ProfesoresLista() {
             const datosCursos = await fetch(`http://localhost:5555/profesores/cursos/inscritos/${id_profesor_seleccionado}`)
             const resultadoConsulta = await datosCursos.json()
             console.log(resultadoConsulta)
-            setCursos([...resultadoConsulta])
+            setCursosProfesor([...resultadoConsulta])
         };
 
         const obtenerCursosFaltantesProfesor = async (id_profesor_seleccionado: number) => {
@@ -794,7 +797,7 @@ export default function ProfesoresLista() {
         setProfesorSeleccionado({...informacionProfesor})
 
         await obtenerHorariosProfesor(informacionProfesor.id_usuario)
-        await obtenerCursosProfesor(informacionProfesor.id_usuario)
+        const resultadoCursosProfesor = await obtenerCursosProfesor(informacionProfesor.id_usuario)
         await obtenerCursosFaltantesProfesor(informacionProfesor.id_usuario)
         
         setMostrarAside(true);
@@ -1255,7 +1258,7 @@ export default function ProfesoresLista() {
                     </thead>
                     <tbody>
                         {/* Aquí deberías mapear los grupos del profesor */}
-                        {(cursos ?? []).map((curso, index) => (
+                        {(cursosProfesor ?? []).map((curso, index) => (
                             <tr key={index}>
                                 <td>{curso.id_curso }</td>
                                 <td>{curso.nombre_curso}</td>
@@ -1451,8 +1454,8 @@ export default function ProfesoresLista() {
                                 >
                                 <option value="" disabled>Seleccione el grupo</option> {/* Opción por defecto */}
                                 {  
-                                    horariosCursoSeleccionado?.[0] &&
-                                    gruposAlumnos.filter((grupo: Grupos) => grupo.id_curso === horariosCursoSeleccionado[0].id_curso)?.map((grupo_alumno: Grupos, index: number) => (
+                                    cursosFaltantes.length > 0 &&
+                                    gruposAlumnos.filter((grupo: Grupos) => grupo.id_curso === cursosFaltantes[0].id_curso)?.map((grupo_alumno: Grupos, index: number) => (
                                         <option key={grupo_alumno.id_grupo} value={grupo_alumno.id_grupo}>
                                             {grupo_alumno.nombre_grupo} {/* Asumiendo que tu objeto 'Grupos' tiene un 'nombre' */}
                                         </option>

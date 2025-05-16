@@ -5,9 +5,10 @@ import { Nivel2 } from "./2ndLevel";
 import {Nivel3} from "./3rdLevel";
 import {Nivel4} from "./4thLevel";
 import {Nivel5} from "./5thLevel";
+import sleep from "./functions/sleep";
 
 export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,cambiarGanar3:any,setState3:any, cambiarGanarA:any, setStateA:any, 
-  cambiarGanarB:any, setStateB:any,cambiarGanarC:any, setStateC:any,cambiarGanar1:any,setState1:any, setStateI:any,cambiarGanarI:any,   Router:any, usuario?: any) {
+  cambiarGanarB:any, setStateB:any,cambiarGanarC:any, setStateC:any,cambiarGanar1:any,setState1:any, setStateI:any,cambiarGanarI:any, setStateIni:any,cambiarGanarIni:any, setState5:any,cambiarGanar5:any,     Router:any, usuario?: any) {
     // Referencia persistente para almacenar la instancia de Kaplay
     const SCREEN_RESOLUTION_X: number = window.innerWidth 
     const SCREEN_RESOLUTION_Y: number = window.innerHeight 
@@ -16,6 +17,8 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
     const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
     const TILED_HEIGHT: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGHT_NUMBER
      
+
+    
     juegoKaplay.loadSprite("robot", "sprites/robotin.png", {
       sliceX: 4,
       sliceY: 12,
@@ -119,15 +122,15 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
       sliceX: 1,
       sliceY: 1,
     });
-  
+
     // Cargar sprites adicionales
     ["up", "down", "left", "right"].forEach((dir) => {
       juegoKaplay.loadSprite(dir, `sprites/${dir}-arrow.png`);
     });
 
     juegoKaplay.loadSprite("redbox", "red-border-box.png");
-    
 
+    
     juegoKaplay.onLoad(() => {
         //Practicando aqui
       generarEsquemaMapa(
@@ -175,7 +178,16 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
         ]
       )
       .then(
-        (resultado: any) => {
+        async (resultado: any) => {
+
+            cambiarGanarIni(true);
+
+            await sleep(2000)
+            
+            setStateIni(true);
+
+            await sleep(2000)
+        
 
           const oveja = juegoKaplay.get("oveja")[0]
           const arboles= juegoKaplay.get("arbol")
@@ -191,6 +203,9 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
           const ovejas= juegoKaplay.get("oveja")
           const rocks= juegoKaplay.get("rock")
           const hongos= juegoKaplay.get("hongo")
+          const zonaInvisible= juegoKaplay.get("botonInvisible")[0]
+
+          console.log(zonaInvisible)
 
            ovejas.forEach( (oveja: any) => {
                 oveja.play("quiet");
@@ -234,7 +249,7 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
             juegoKaplay.destroy(castillo);
             juegoKaplay.destroy(player);
             juegoKaplay.destroyAll("*");
-            Nivel4(juegoKaplay, setState, cambiarGanar, setStateA, cambiarGanarA,setState1, cambiarGanar1, Router,usuario);
+            Nivel4(juegoKaplay, setState, cambiarGanar, setStateA, cambiarGanarA,setState1, cambiarGanar1,setStateC, cambiarGanarC,setStateI, cambiarGanarI, Router,usuario);
             // We pass the component id for remove it.
           });
 
@@ -243,8 +258,13 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
             juegoKaplay.destroy(castillo);
             juegoKaplay.destroy(player);
             juegoKaplay.destroyAll("*");
-            Nivel5(juegoKaplay, setState, cambiarGanar, setStateA, cambiarGanarA,setState1, cambiarGanar1, Router,usuario);
+            Nivel5(juegoKaplay, setState5, cambiarGanar5, setStateA, cambiarGanarA,setStateC, cambiarGanarC, Router,usuario);
             // We pass the component id for remove it.
+          });
+
+          juegoKaplay.onKeyPress("space", () => {
+            juegoKaplay.play("bien",{ volume: 1, speed: 1.5, loop: false })
+          
           });
 
           

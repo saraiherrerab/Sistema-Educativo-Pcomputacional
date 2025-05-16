@@ -112,6 +112,13 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
           sliceY: 1,
         });
 
+        juegoKaplay.loadSound("nivel3", "./oveja-dialogos/nivel2.wav");
+        juegoKaplay.loadSound("aprobado", "./oveja-dialogos/aprobado.wav");
+        juegoKaplay.loadSound("perdido", "./oveja-dialogos/perdido.wav");
+        juegoKaplay.loadSound("fallaste", "./oveja-dialogos/fallaste.wav");
+        juegoKaplay.loadSound("bien", "./oveja-dialogos/bien.wav");
+
+
         // Cargar sprites adicionales
         ["up", "down", "left", "right"].forEach((dir) => {
           juegoKaplay.loadSprite(dir, `sprites/${dir}-arrow.png`);
@@ -169,6 +176,7 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
 
                   
                   cambiarGanar3(true);
+                  juegoKaplay.play("nivel3", { volume: 1, speed: 1.5, loop: false });
                   setState3(true);
 
                   setTimeout(() => {
@@ -230,6 +238,8 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
                         juegoKaplay.destroy(player)
                         cambiarGanarC(true); 
                         setStateC(true);
+                        juegoKaplay.play("perdido", { volume: 1, speed: 1.5, loop: false });
+                        
 
                         await sleep(2000)
 
@@ -300,6 +310,8 @@ export function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cambiarGa
 
                   torre.onCollide("player", async (jugador: GameObj) => {
                     cambiarGanarA(true); 
+                    juegoKaplay.play("aprobado", { volume: 1, speed: 1.5, loop: false });
+                    await sleep(2000)
                     setStateA(true);
                 
                     if(usuario.rol === "ESTUDIANTE"){
