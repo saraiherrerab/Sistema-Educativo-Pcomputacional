@@ -2,8 +2,8 @@
 import { useEffect, useRef, useState } from "react";
 import './styles.css';
 import { useRouter } from "next/navigation";
-import MenuButton from "../../components/menuButton/menubutton";
-import Saludo  from "../../components/saludo/saludo";
+import MenuButton from "../../../components/menuButton/menubutton";
+import Saludo  from "../../../components/saludo/saludo";
 
 interface UsuarioInterface {
   apellido: string
