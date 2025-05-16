@@ -4,28 +4,30 @@ import './styles.css';
 import '../login.css';
 import Header from "../../components/header/header";
 import { useRouter } from "next/navigation";
-
-interface Curso {
-  id_curso: number,
-  nombre: string,
-}
+import obtenerGrupos from './functions/obtenerGrupos';
+import obtenerCursos from '../GruposYCursos/functions/obtenerCursos';
+import Curso from './interfaces/curso.interface';
+import obtenerProfesores from './functions/obtenerProfesores';
+import obtenerHorariosGrupo from './functions/obtenerHorariosGrupo';
 
 interface Grupo {
   id_grupo: number,
   nombre_grupo: string,
   id_curso: number, // relación al curso
+  id_profesor_grupo: number
 }
 
 interface Profesor {
   id_usuario: number,
   id_profesor: number,
   nombre: string,
-  grupos_ids: number[]; // relación a grupos
+  apellido: string,
+  grupos_ids?: number[]; // relación a grupos
 }
 
 interface Horario {
   id_horario: number,
-  dia: string,
+  dia_semana: string,
   hora_inicio: string,
   hora_fin: string,
   id_grupo: number,
@@ -40,65 +42,116 @@ interface Estudiante {
 export default function Grupos() {
   const Router = useRouter();
 
-  // Datos de ejemplo (mock)
-  const [cursos, setCursos] = useState<Curso[]>([
-    { id_curso: 1, nombre: "Robótica" },
-    { id_curso: 2, nombre: "Matemáticas" }
-  ]);
+  
 
-  const [grupos, setGrupos] = useState<Grupo[]>([
-    { id_grupo: 1, nombre_grupo: "Grupo A", id_curso: 1 },
-    { id_grupo: 2, nombre_grupo: "Grupo B", id_curso: 1 },
-    { id_grupo: 3, nombre_grupo: "Grupo C", id_curso: 2 }
-  ]);
 
-  const [profesores, setProfesores] = useState<Profesor[]>([
-    { id_usuario: 101, id_profesor: 1, nombre: "Profe Ana", grupos_ids: [1, 3] },
-    { id_usuario: 102, id_profesor: 2, nombre: "Profe Luis", grupos_ids: [2] }
-  ]);
+  const [grupos, setGrupos] = useState<Grupo[]>([]);
+  const [grupoEditando, setGrupoEditando] = useState<Grupo>({ id_grupo: 0, nombre_grupo: '', id_curso: 0, id_profesor_grupo: 0 });
+  const [nuevoGrupo, setNuevoGrupo] = useState<Grupo>({ id_grupo: 0, nombre_grupo: '', id_curso: 0, id_profesor_grupo: 0 });
 
-  const [horarios, setHorarios] = useState<Horario[]>([
-    { id_horario: 1, dia: "Lunes", hora_inicio: "14:00", hora_fin: "17:00", id_grupo: 1 },
-    { id_horario: 2, dia: "Martes", hora_inicio: "14:00", hora_fin: "17:00", id_grupo: 1 },
-    { id_horario: 3, dia: "Miércoles", hora_inicio: "10:00", hora_fin: "12:00", id_grupo: 2 },
-     { id_horario: 3, dia: "Miércoles", hora_inicio: "10:00", hora_fin: "12:00", id_grupo: 3 },
-  ]);
-
-  const [estudiantes, setEstudiantes] = useState<Estudiante[]>([
-    { id_estudiante: 201, nombre: "Juan Pérez", grupos_ids: [1] },
-    { id_estudiante: 202, nombre: "María López", grupos_ids: [1, 2] },
-    { id_estudiante: 203, nombre: "Carlos Ruiz", grupos_ids: [3] },
-  ]);
-
+// Datos de ejemplo (mock)
+  const [cursos, setCursos] = useState<Curso[]>([]);
+  const [profesores, setProfesores] = useState<Profesor[]>([]);
+  const [horarios, setHorarios] = useState<Horario[]>([]);
+  const [estudiantes, setEstudiantes] = useState<Estudiante[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [gruposFiltrados, setGruposFiltrados] = useState<Grupo[]>(grupos);
   const [profesorSeleccionado, setProfesorSeleccionado] = useState<number>(0);
   const [horariosGrupo, setHorariosGrupo] = useState<Horario[]>([]);
 
-
-
   // Estados para mostrar formulario o vista estudiantes
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
-  const [grupoEditando, setGrupoEditando] = useState<Grupo | null>(null);
-  const [nuevoGrupo, setNuevoGrupo] = useState<Grupo>({ id_grupo: 0, nombre_grupo: '', id_curso: 0 });
+  
 
   const [mostrarEstudiantesGrupo, setMostrarEstudiantesGrupo] = useState<Grupo | null>(null);
 
+  const [controlador,setControlador] = useState<string>("AGREGAR")
+
   const obtenerProfesorDeGrupo = (grupoId: number): Profesor | undefined => {
-  return profesores.find(p => p.grupos_ids.includes(grupoId));
+  return profesores.find(p => p.grupos_ids?.includes(grupoId));
 };
 
 
   useEffect(() => {
-    filtrarGrupos();
-  }, [searchTerm, grupos]);
+  const cargarDatos = async () => {
+    try {
+      const [profesores, cursos, grupos] = await Promise.all([
+        obtenerProfesores(),
+        obtenerCursos(),
+        obtenerGrupos()
+      ]);
 
+      console.log('%cProfesores:', 'color: red;', profesores);
+      console.log('%cCursos:', 'color: red;', cursos);
+      console.log('%cGrupos:', 'color: red;', grupos);
+
+      setProfesores(profesores);
+      setCursos(cursos);
+      setGrupos(grupos);
+    } catch (error) {
+      console.error('Error al cargar los datos:', error);
+    }
+  };
+
+  cargarDatos();
+}, []);
+
+const [horariosPorGrupo, setHorariosPorGrupo] = useState<{ [id: number]: string }>({});
+useEffect(() => {
+  const cargarHorarios = async () => {
+    const nuevosHorarios: { [id: number]: string } = {};
+
+    for (const grupo of gruposFiltrados) {
+      const horarios = await obtenerHorariosGrupo(grupo.id_grupo);
+      nuevosHorarios[grupo.id_grupo] = horarios
+        .map((h: any) => `${h.dia_semana}: ${h.hora_inicio} a ${h.hora_fin}`)
+        .join(', ');
+    }
+
+    setHorariosPorGrupo(nuevosHorarios);
+  };
+
+  if (gruposFiltrados.length > 0) {
+    cargarHorarios();
+  }
+}, [gruposFiltrados]);
+
+
+const [profesoresPorGrupo, setProfesoresPorGrupo] = useState<{ [id: number]: string }>({});
+useEffect(() => {
+  const cargarProfesores = async () => {
+    const nuevosProfesores: { [id: number]: string } = {};
+
+    for (const grupo of gruposFiltrados) {
+      try {
+        const res = await fetch(`http://localhost:5555/grupos/profesores/${grupo.id_grupo}`);
+        const profesores = await res.json();
+
+        nuevosProfesores[grupo.id_grupo] = profesores.map((p: any) => `${p.nombre} ${p.apellido}`).join(', ');
+      } catch (error) {
+        console.error(`Error cargando profesores para grupo ${grupo.id_grupo}:`, error);
+        nuevosProfesores[grupo.id_grupo] = "Error al cargar";
+      }
+    }
+
+    setProfesoresPorGrupo(nuevosProfesores);
+  };
+
+  if (gruposFiltrados.length > 0) {
+    cargarProfesores();
+  }
+}, [gruposFiltrados]);
+
+useEffect(() => {
   const filtrarGrupos = () => {
     const results = grupos.filter(g =>
       g.nombre_grupo.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setGruposFiltrados(results);
   };
+
+  filtrarGrupos();
+}, [searchTerm, grupos]); // 👈 Se agregó "grupos" como dependencia
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -114,9 +167,11 @@ export default function Grupos() {
   };
 
   // Obtener profesor(es) asignados a un grupo
+  /*
   const obtenerProfesoresDelGrupo = (idGrupo: number) => {
     return profesores.filter(p => p.grupos_ids.includes(idGrupo));
   };
+  */
 
   // Obtener horarios de un grupo
   const obtenerHorariosDelGrupo = (idGrupo: number) => {
@@ -130,7 +185,7 @@ export default function Grupos() {
 
   // Obtener curso del grupo
   const obtenerCursoDelGrupo = (idCurso: number) => {
-    return cursos.find(c => c.id_curso === idCurso)?.nombre || '';
+    return cursos.find(c => c.id_curso === idCurso)?.nombre_curso || '';
   };
 
   // Funciones para formulario
@@ -138,11 +193,11 @@ export default function Grupos() {
 
 
   const mostrarFormularioAgregar = () => {
-  setNuevoGrupo({ id_grupo: Date.now(), nombre_grupo: '', id_curso: 0 });
+  setNuevoGrupo({ id_grupo: 0, nombre_grupo: '', id_curso: 0, id_profesor_grupo: 0});
   setProfesorSeleccionado(0);
   setHorariosGrupo([]);
   setMostrarFormulario(true);
-  setGrupoEditando(null);
+  setGrupoEditando({ id_grupo: 0, nombre_grupo: '', id_curso: 0, id_profesor_grupo: 0 });
 };
 
 
@@ -154,19 +209,22 @@ export default function Grupos() {
 
 
 const onEditar = (grupo: Grupo) => {
+
   setGrupoEditando({ ...grupo });
+  /*
   const prof = obtenerProfesorDeGrupo(grupo.id_grupo);
   setProfesorSeleccionado(prof ? prof.id_profesor : 0);
   
   // Carga horarios actuales del grupo al estado local
   const horariosActuales = horarios.filter(h => h.id_grupo === grupo.id_grupo);
   setHorariosGrupo(horariosActuales);
+  */
 
   setMostrarFormulario(true);
 };
 
 
-
+/*
   const onGuardarEdicion = () => {
   if (!grupoEditando) return;
 
@@ -215,7 +273,7 @@ const onEditar = (grupo: Grupo) => {
   setGrupoEditando(null);
   setMostrarFormulario(false);
 };
-
+*/
 
   const onEliminar = (id: number) => {
     const actualizados = grupos.filter(g => g.id_grupo !== id);
@@ -230,6 +288,148 @@ const onEditar = (grupo: Grupo) => {
   const onVolverListaGrupos = () => {
     setMostrarEstudiantesGrupo(null);
   };
+
+  /* Funciones Principales */
+
+  const crearNuevoGrupo = async () => {
+
+    console.log('\x1b[1m\x1b[31m%s\x1b[0m', 'Iniciando crearNuevoGrupo()');
+
+    console.log(nuevoGrupo)
+
+    const resultado= await fetch('http://localhost:5555/grupos', {
+        method: 'POST', // Método especificado
+        mode: 'cors',   // Habilita CORS
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(nuevoGrupo)
+    });
+    const resultado_json= await resultado.json();
+    console.log(resultado_json);
+
+    if(horariosGrupo.length > 0){
+      try {
+          const response = await fetch('http://localhost:5555/horarios/grupo/agregar', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id_grupo: resultado_json.id_grupo, arregloHorarios: [...horariosGrupo] })
+          });
+
+        const data = await response.json();
+        console.log('%cRespuesta del servidor:', 'color: green;', data);
+      } catch (error) {
+        console.error('Error al enviar los horarios:', error);
+      }
+    }
+
+    console.log('\x1b[1m\x1b[31m%s\x1b[0m', 'Finalizando crearNuevoGrupo()');
+    
+    setGrupos([...grupos, nuevoGrupo])
+    setMostrarFormulario(false);
+
+  }
+
+  const borrarGrupoSeleccionado = async (id_grupo_seleccionado: number) => {
+    console.log('\x1b[1m\x1b[31m%s\x1b[0m', 'Iniciando borrarGrupoSeleccionado()');
+
+    console.log(nuevoGrupo)
+
+    const resultado= await fetch('http://localhost:5555/grupos/' + id_grupo_seleccionado, {
+        method: 'DELETE', // Método especificado
+        mode: 'cors',   // Habilita CORS
+        headers: {
+          'Content-Type': 'application/json'
+        }
+    });
+    const resultado_json= await resultado.json();
+    console.log(resultado_json);
+
+    console.log('\x1b[1m\x1b[31m%s\x1b[0m', 'Finalizando borrarGrupoSeleccionado()');
+    
+    setGrupos([...grupos.filter( (grupo) => grupo.id_grupo !== id_grupo_seleccionado)])
+    
+    return resultado_json
+  }
+
+  const editarGrupoSeleccionado = async (grupo_seleccionado: Grupo) => {
+    console.log('\x1b[1m\x1b[31m%s\x1b[0m', 'Iniciando editarGrupoSeleccionado()');
+
+    setControlador("EDITAR")
+    setMostrarFormulario(true)
+    
+    console.log(grupo_seleccionado)
+
+    setGrupoEditando({...grupo_seleccionado})
+
+    const consultaHorarios = await obtenerHorariosGrupo(grupo_seleccionado.id_grupo);
+    console.log(consultaHorarios)
+
+    setHorariosGrupo([...consultaHorarios])
+
+
+    console.log('\x1b[1m\x1b[31m%s\x1b[0m', 'Finalizando editarGrupoSeleccionado()');
+  }
+
+  const guardarEdicionGrupoSeleccionado = async () => {
+    console.log('\x1b[1m\x1b[31m%s\x1b[0m', 'Iniciando editarGrupoSeleccionado()');
+
+    const resultado= await fetch('http://localhost:5555/grupos/', {
+        method: 'PUT', // Método especificado
+        mode: 'cors',   // Habilita CORS
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(grupoEditando)
+    });
+    const resultado_json= await resultado.json();
+    console.log(resultado_json);
+
+    if(horariosGrupo.length > 0){
+      try {
+
+        const horariosAnteriores = await obtenerHorariosGrupo(grupoEditando.id_grupo)
+        console.log(horariosAnteriores)
+
+        if(horariosAnteriores.length > 0) {
+          const response = await fetch('http://localhost:5555/horarios/grupo/modificar', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id_grupo: grupoEditando.id_grupo, arregloHorarios: [...horariosGrupo] })
+          });
+          const data = await response.json();
+          console.log('%cRespuesta del servidor:', 'color: green;', data);
+        }else{
+          const response = await fetch('http://localhost:5555/horarios/grupo/agregar', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id_grupo: grupoEditando.id_grupo, arregloHorarios: [...horariosGrupo] })
+          });
+          const data = await response.json();
+          console.log('%cRespuesta del servidor:', 'color: green;', data);
+        }
+          
+      } catch (error) {
+        console.error('Error al enviar los horarios:', error);
+      }
+    }
+
+    setControlador("AGREGAR")
+    setMostrarFormulario(false)
+
+    const actualizados = grupos.map(grupo =>
+      grupo.id_grupo === grupoEditando.id_grupo ? grupoEditando : grupo
+    );
+    setGrupos(actualizados);
+    setGrupoEditando({ id_grupo: 0, nombre_grupo: '', id_curso: 0, id_profesor_grupo: 0 });
+    console.log('\x1b[1m\x1b[31m%s\x1b[0m', 'Finalizando editarGrupoSeleccionado()');
+  }
 
   return (
     <>
@@ -275,7 +475,7 @@ const onEditar = (grupo: Grupo) => {
         </div>
 
         {/* Mostrar tabla o lista de estudiantes */}
-        {!mostrarFormulario && !grupoEditando && !mostrarEstudiantesGrupo && (
+        {!mostrarFormulario && (
           <table className="laTabla">
             <thead>
               <tr>
@@ -288,171 +488,168 @@ const onEditar = (grupo: Grupo) => {
               </tr>
             </thead>
             <tbody>
-              {gruposFiltrados.map(grupo => {
-                const profesoresGrupo = obtenerProfesoresDelGrupo(grupo.id_grupo);
-                const horariosGrupo = obtenerHorariosDelGrupo(grupo.id_grupo);
-                const estudiantesGrupo = obtenerEstudiantesDelGrupo(grupo.id_grupo);
-                const cursoNombre = obtenerCursoDelGrupo(grupo.id_curso);
-
-                return (
-                  <tr key={grupo.id_grupo}>
-                    <td>{grupo.nombre_grupo}</td>
-                    <td>{profesoresGrupo.map(p => p.nombre).join(", ")}</td>
-                    <td>
-                      {horariosGrupo.map(h => `${h.dia} ${h.hora_inicio}-${h.hora_fin}`).join("; ")}
-                    </td>
-                    <td>
-                      {estudiantesGrupo.length}{" "}
-                      <button onClick={() => onVerEstudiantes(grupo)}>Ver</button>
-                    </td>
-                    <td>{cursoNombre}</td>
-                    <td className="display_flex">
-                      <button onClick={() => onEditar(grupo)}>Editar</button>
-                      <button onClick={() => onEliminar(grupo.id_grupo)}>Eliminar</button>
-                    </td>
-                  </tr>
-                );
-              })}
+              {gruposFiltrados.map(grupo => (
+                <tr key={grupo.id_grupo}>
+                  <td>{grupo.nombre_grupo}</td>
+                  <td>{profesoresPorGrupo[grupo.id_grupo] || "Cargando..."}</td>
+                  <td>{horariosPorGrupo[grupo.id_grupo] || "Cargando..."}</td>
+                  <td>
+                    <button onClick={() => onVerEstudiantes(grupo)}>Ver</button>
+                  </td>
+                  <td className="display_flex">
+                    <button onClick={() => editarGrupoSeleccionado(grupo)}>Editar</button>
+                    <button onClick={() => borrarGrupoSeleccionado(grupo.id_grupo)}>Eliminar</button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         )}
 
         {/* Formulario de grupo */}
-  {(mostrarFormulario || grupoEditando) && (
-    <div className="formulario-grupo">
-      <h3>{grupoEditando ? "Editando Grupo" : "Agregar Nuevo Grupo"}</h3>
+        {(mostrarFormulario) && (
+          <div className="formulario-grupo">
+            <h3>{(controlador !== "AGREGAR") ? "Editando Grupo" : "Agregar Nuevo Grupo"}</h3>
 
-      {/* Nombre del grupo */}
-      <label>
-        Nombre del grupo:
-        <input
-          type="text"
-          placeholder="Ej: Grupo A"
-          value={grupoEditando ? grupoEditando.nombre_grupo : nuevoGrupo.nombre_grupo}
-          onChange={e => {
-            const val = e.target.value;
-            if (grupoEditando) setGrupoEditando({ ...grupoEditando, nombre_grupo: val });
-            else setNuevoGrupo({ ...nuevoGrupo, nombre_grupo: val });
-          }}
-        />
-      </label>
-
-      {/* Curso */}
-      <label>
-        Curso:
-        <select
-          value={grupoEditando ? grupoEditando.id_curso : nuevoGrupo.id_curso}
-          onChange={e => {
-            const val = parseInt(e.target.value);
-            if (grupoEditando) setGrupoEditando({ ...grupoEditando, id_curso: val });
-            else setNuevoGrupo({ ...nuevoGrupo, id_curso: val });
-          }}
-        >
-          <option value={0}>Seleccione un curso</option>
-          {cursos.map(curso => (
-            <option key={curso.id_curso} value={curso.id_curso}>{curso.nombre}</option>
-          ))}
-        </select>
-      </label>
-
-      {/* Profesor */}
-      <label>
-        Profesor:
-        <select
-          value={
-            grupoEditando
-              ? obtenerProfesorDeGrupo(grupoEditando.id_grupo)?.id_profesor || 0
-              : 0
-          }
-          onChange={e => {
-            const val = parseInt(e.target.value);
-            if (grupoEditando) {
-              setGrupoEditando({ ...grupoEditando });
-              setProfesorSeleccionado(val);
-            } else {
-              setProfesorSeleccionado(val);
-            }
-          }}
-        >
-          <option value={0}>Seleccione un profesor</option>
-          {profesores.map(prof => (
-            <option key={prof.id_profesor} value={prof.id_profesor}>{prof.nombre}</option>
-          ))}
-        </select>
-      </label>
-
-      {/* Horarios */}
-      <div className="horarios-section">
-        <h4>Horarios</h4>
-        {horariosGrupo.map((horario, idx) => (
-          <div key={horario.id_horario} className="horario-item">
-            <label>Día:
-              <select
-                value={horario.dia}
+            {/* Nombre del grupo */}
+            <label>
+              Nombre del grupo:
+              <input
+                type="text"
+                placeholder="Ej: Grupo A"
+                value={(controlador !== "AGREGAR") ? grupoEditando.nombre_grupo : nuevoGrupo.nombre_grupo}
                 onChange={e => {
-                  const newDia = e.target.value;
-                  setHorariosGrupo(hs => hs.map((h, i) => i === idx ? { ...h, dia: newDia } : h));
+                  const val = e.target.value;
+                  if ((controlador !== "AGREGAR")){
+                    setGrupoEditando({ ...grupoEditando, nombre_grupo: val });
+                  }else{
+                    setNuevoGrupo({...nuevoGrupo, nombre_grupo: val})
+                  }
+                    
+                }}
+              />
+            </label>
+
+            {/* Curso */}
+            <label>
+              Curso:
+              <select
+                value={(controlador !== "AGREGAR") ? grupoEditando.id_curso : nuevoGrupo.id_curso}
+                onChange={e => {
+                  const val = parseInt(e.target.value);
+                  if ((controlador !== "AGREGAR")){
+                    setGrupoEditando({ ...grupoEditando, id_curso: val });
+                  }else{
+                    setNuevoGrupo({ ...nuevoGrupo, id_curso: val });
+                  } 
                 }}
               >
-                {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"].map(dia => (
-                  <option key={dia} value={dia}>{dia}</option>
+                <option value={0}>Seleccione un curso</option>
+                {cursos.map(curso => (
+                  <option key={curso.id_curso} value={curso.id_curso}>{curso.nombre_curso}</option>
                 ))}
               </select>
             </label>
 
-            <label>Hora inicio:
-              <input
-                type="time"
-                value={horario.hora_inicio}
+            {/* Profesor */}
+            <label>
+              Profesor:
+              <select
+                value={(controlador !== "AGREGAR") ? grupoEditando.id_profesor_grupo : nuevoGrupo.id_profesor_grupo}
                 onChange={e => {
-                  const newHoraInicio = e.target.value;
-                  setHorariosGrupo(hs => hs.map((h, i) => i === idx ? { ...h, hora_inicio: newHoraInicio } : h));
+                  const val = parseInt(e.target.value);
+                  if((controlador !== "AGREGAR")){
+                    setGrupoEditando({...grupoEditando, id_profesor_grupo: val})
+                  }else{
+                    setNuevoGrupo({...nuevoGrupo, id_profesor_grupo: val})
+                  }
                 }}
-              />
+              >
+                <option value={0}>Seleccione un profesor</option>
+                {profesores.map(prof => (
+                  <option key={prof.id_profesor} value={prof.id_profesor}>{prof.nombre + " " + prof.apellido}</option>
+                ))}
+              </select>
             </label>
 
-            <label>Hora fin:
-              <input
-                type="time"
-                value={horario.hora_fin}
-                onChange={e => {
-                  const newHoraFin = e.target.value;
-                  setHorariosGrupo(hs => hs.map((h, i) => i === idx ? { ...h, hora_fin: newHoraFin } : h));
-                }}
-              />
-            </label>
+            {/* Horarios */}
+            <div className="horarios-section">
+              <h4>Horarios</h4>
+              {horariosGrupo.map((horario, idx) => (
+                <div key={horario.id_horario} className="horario-item">
+                  <label>Día:
+                    <select
+                      value={horario.dia_semana}
+                      onChange={e => {
+                        const newDia = e.target.value;
+                        setHorariosGrupo(hs => hs.map((h, i) => i === idx ? { ...h, dia_semana: newDia } : h));
+                      }}
+                    >
+                      {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"].map(dia => (
+                        <option key={dia} value={dia}>{dia}</option>
+                      ))}
+                    </select>
+                  </label>
 
-            <button className="btn-eliminar" onClick={() => {
-              setHorariosGrupo(hs => hs.filter((_, i) => i !== idx));
-            }}>
-              ❌
-            </button>
+                  <label>Hora inicio:
+                    <input
+                      type="time"
+                      value={horario.hora_inicio}
+                      onChange={e => {
+                        const newHoraInicio = e.target.value;
+                        setHorariosGrupo(hs => hs.map((h, i) => i === idx ? { ...h, hora_inicio: newHoraInicio } : h));
+                      }}
+                    />
+                  </label>
+
+                  <label>Hora fin:
+                    <input
+                      type="time"
+                      value={horario.hora_fin}
+                      onChange={e => {
+                        const newHoraFin = e.target.value;
+                        setHorariosGrupo(hs => hs.map((h, i) => i === idx ? { ...h, hora_fin: newHoraFin } : h));
+                      }}
+                    />
+                  </label>
+
+                  <button className="btn-eliminar" onClick={() => {
+                    setHorariosGrupo(hs => hs.filter((_, i) => i !== idx));
+                  }}>
+                    ❌
+                  </button>
+                </div>
+              ))}
+
+              <button className="btn-agregar-horario" onClick={() => {
+                const nuevo: Horario = {
+                  id_horario: Date.now(),
+                  dia_semana: "Lunes",
+                  hora_inicio: "08:00",
+                  hora_fin: "10:00",
+                  id_grupo: (controlador !== "AGREGAR") ? grupoEditando.id_grupo : nuevoGrupo.id_grupo,
+                };
+                setHorariosGrupo([...horariosGrupo, nuevo]);
+              }}>
+                ➕ Agregar horario
+              </button>
+            </div>
+
+            {/* Botones de acción */}
+            <div className="acciones-formulario">
+              <button className="btn-guardar" onClick={() => {
+                if (controlador !== "AGREGAR") {
+                  guardarEdicionGrupoSeleccionado();
+                } else {
+                  crearNuevoGrupo();
+                }}}
+            >
+                {(controlador !== "AGREGAR") ? "Guardar Cambios" : "Agregar Grupo"}
+              </button>
+              <button onClick={() => setMostrarFormulario(false)}>Cancelar</button>
+            </div>
           </div>
-        ))}
-
-        <button className="btn-agregar-horario" onClick={() => {
-          const nuevo: Horario = {
-            id_horario: Date.now(),
-            dia: "Lunes",
-            hora_inicio: "08:00",
-            hora_fin: "10:00",
-            id_grupo: grupoEditando?.id_grupo ?? nuevoGrupo.id_grupo,
-          };
-          setHorariosGrupo([...horariosGrupo, nuevo]);
-        }}>
-          ➕ Agregar horario
-        </button>
-      </div>
-
-      {/* Botones de acción */}
-      <div className="acciones-formulario">
-        <button className="btn-guardar" onClick={grupoEditando ? onGuardarEdicion : onAgregarGrupo}>
-          {grupoEditando ? "Guardar Cambios" : "Agregar Grupo"}
-        </button>
-        <button onClick={() => setMostrarFormulario(false)}>Cancelar</button>
-      </div>
-    </div>
-  )}
+        )}
 
 
 

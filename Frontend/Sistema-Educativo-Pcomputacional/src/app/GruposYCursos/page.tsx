@@ -4,11 +4,8 @@ import './styles.css';
 import '../login.css';
 import Header from "../../components/header/header";
 import { useRouter } from "next/navigation";
-
-interface Curso {
-  id_curso: number,
-  nombre: string,
-}
+import obtenerCursos from './functions/obtenerCursos';
+import Curso from './interfaces/curso.interface';
 
 interface Grupo {
   id_grupo: number,
@@ -26,10 +23,10 @@ interface Profesor {
 export default function GruposYCursos() {
   const Router = useRouter();
 
-  const [cursos, setCursos] = useState<Curso[]>([
-    { id_curso: 1, nombre: "Robótica" },
-    { id_curso: 2, nombre: "Matemáticas" }
-  ]);
+  /* Este arreglo almacena todos los cursos en el sistema */
+  const [cursos, setCursos] = useState<Curso[]>([]);
+  const [nuevoCurso, setNuevoCurso] = useState<Curso>({ id_curso: 0, nombre_curso: '' });
+  const [cursoEditando, setCursoEditando] = useState<Curso | null>(null);
 
   const [grupos, setGrupos] = useState<Grupo[]>([
     { id_grupo: 1, nombre_grupo: "Grupo A", id_curso: 1 },
@@ -46,19 +43,27 @@ export default function GruposYCursos() {
   const [cursosFiltrados, setCursosFiltrados] = useState<Curso[]>(cursos);
 
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
-  const [nuevoCurso, setNuevoCurso] = useState<Curso>({ id_curso: 0, nombre: '' });
-  const [cursoEditando, setCursoEditando] = useState<Curso | null>(null);
+ 
 
   useEffect(() => {
+    const cargarCursos = async () => {
+            const respuesta = await obtenerCursos();
+            console.log(respuesta)
+            setCursos([...respuesta])
+    };
+    cargarCursos()
+  }, []);
+
+  useEffect(() => {
+    const filtrarCursos = () => {
+      const results = cursos.filter(c =>
+        c.nombre_curso.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setCursosFiltrados(results);
+    };
+
     filtrarCursos();
   }, [searchTerm, cursos]);
-
-  const filtrarCursos = () => {
-    const results = cursos.filter(c =>
-      c.nombre.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setCursosFiltrados(results);
-  };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -73,10 +78,7 @@ export default function GruposYCursos() {
     setCursosFiltrados(cursos);
   };
 
-  const mostrarFormularioAgregar = () => {
-    setNuevoCurso({ id_curso: Date.now(), nombre: '' });
-    setMostrarFormulario(true);
-  };
+  
 
   const onAgregarCurso = () => {
     setCursos([...cursos, nuevoCurso]);
@@ -85,20 +87,6 @@ export default function GruposYCursos() {
 
   const onEditar = (curso: Curso) => {
     setCursoEditando({ ...curso });
-  };
-
-  const onGuardarEdicion = () => {
-    if (!cursoEditando) return;
-    const actualizados = cursos.map(c =>
-      c.id_curso === cursoEditando.id_curso ? cursoEditando : c
-    );
-    setCursos(actualizados);
-    setCursoEditando(null);
-  };
-
-  const onEliminar = (id: number) => {
-    const actualizados = cursos.filter(c => c.id_curso !== id);
-    setCursos(actualizados);
   };
 
   const obtenerGruposDelCurso = (idCurso: number) =>
@@ -111,14 +99,100 @@ export default function GruposYCursos() {
     );
   };
 
+  /* Funciones y variables para control de la página  */
+  const mostrarFormularioAgregar = () => {
+    setNuevoCurso({ id_curso: 0, nombre_curso: '' });
+    setMostrarFormulario(true);
+  };
+
+  /* Funciones principales */
+
+  const crearNuevoCurso = async () => {
+
+    console.log('\x1b[1m\x1b[31m%s\x1b[0m', 'Iniciando crearNuevoCurso()');
+
+    console.log(nuevoCurso)
+
+    const resultado= await fetch('http://localhost:5555/cursos', {
+        method: 'POST', // Método especificado
+        mode: 'cors',   // Habilita CORS
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(nuevoCurso)
+    });
+    const resultado_json= await resultado.json();
+    console.log(resultado_json);
+
+    console.log('\x1b[1m\x1b[31m%s\x1b[0m', 'Finalizando crearNuevoCurso()');
+    
+    setCursos([...cursos, {id_curso: resultado_json.id_curso, nombre_curso: resultado_json.nombre_curso}])
+    setMostrarFormulario(false);
+    
+    return resultado_json
+  }
+
+  const borrarCursoSeleccionado = async (id_curso_seleccionado: number) => {
+    console.log('\x1b[1m\x1b[31m%s\x1b[0m', 'Iniciando borrarCursoSeleccionado()');
+
+    console.log(nuevoCurso)
+
+    const resultado= await fetch('http://localhost:5555/cursos/' + id_curso_seleccionado, {
+        method: 'DELETE', // Método especificado
+        mode: 'cors',   // Habilita CORS
+        headers: {
+          'Content-Type': 'application/json'
+        }
+    });
+    const resultado_json= await resultado.json();
+    console.log(resultado_json);
+
+    console.log('\x1b[1m\x1b[31m%s\x1b[0m', 'Finalizando borrarCursoSeleccionado()');
+    
+    setCursos([...cursos.filter( (curso) => curso.id_curso !== id_curso_seleccionado)])
+    
+    return resultado_json
+  }
+
+  const editarCursoSeleccionado = async () => {
+    console.log('\x1b[1m\x1b[31m%s\x1b[0m', 'Iniciando editarCursoSeleccionado()');
+
+    console.log(cursoEditando)
+
+    const resultado= await fetch('http://localhost:5555/cursos', {
+        method: 'PUT', // Método especificado
+        mode: 'cors',   // Habilita CORS
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(cursoEditando)
+    });
+
+    const resultado_json= await resultado.json();
+    console.log(resultado_json);
+
+    console.log('\x1b[1m\x1b[31m%s\x1b[0m', 'Finalizando editarCursoSeleccionado()');
+    
+    if (!cursoEditando) return;
+    const actualizados = cursos.map(c =>
+      c.id_curso === cursoEditando.id_curso ? cursoEditando : c
+    );
+    setCursos(actualizados);
+    setCursoEditando(null);
+    
+    return resultado_json
+  }
+
+
+
   return (
     <>
       <Header
-        text="MULTIPLAYER" onClick={() => Router.push("/videojuego")}
+        text="MULTIPLAYER" onClick={() => Router.push("/")}
         text1="Panel de Juegos" onClick1={() => Router.push("/videojuego")}
-        text2="Menu" onClick2={() => Router.push("/videojuego")}
-        text3="Mi perfil" onClick3={() => Router.push("/videojuego")}
-        text4="Salir" onClick4={() => Router.push("/videojuego")}
+        text2="Menu" onClick2={() => Router.push("/AMenu")}
+        text3="Mi perfil" onClick3={() => Router.push("/")}
+        text4="Salir" onClick4={() => Router.push("/")}
       />
 
       <div className="listado body_estudiantes">
@@ -167,7 +241,7 @@ export default function GruposYCursos() {
                   return (
                     <tr key={curso.id_curso}>
                       <td style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        {curso.nombre}
+                        {curso.nombre_curso}
                         {/* Icono lápiz para editar */}
                         <button
                           onClick={() => onEditar(curso)}
@@ -178,7 +252,7 @@ export default function GruposYCursos() {
                       <td>{gruposCurso.map(g => g.nombre_grupo).join(", ")}</td>
                       <td>{profesoresCurso.map(p => p.nombre).join(", ")}</td>
                       <td className="display_flex">
-                        <button onClick={() => onEliminar(curso.id_curso)}>Eliminar</button>
+                        <button onClick={() => borrarCursoSeleccionado(curso.id_curso)}>Eliminar</button>
                       </td>
                     </tr>
                   );
@@ -200,10 +274,10 @@ export default function GruposYCursos() {
             <input
               type="text"
               placeholder="Nombre"
-              value={nuevoCurso.nombre}
-              onChange={e => setNuevoCurso({ ...nuevoCurso, nombre: e.target.value })}
+              value={nuevoCurso.nombre_curso}
+              onChange={e => setNuevoCurso({ ...nuevoCurso, nombre_curso: e.target.value })}
             />
-            <button onClick={onAgregarCurso} disabled={!nuevoCurso.nombre.trim()}>Guardar</button>
+            <button onClick={() => crearNuevoCurso()} disabled={!nuevoCurso.nombre_curso.trim()}>Guardar</button>
             <button onClick={() => setMostrarFormulario(false)}>Cancelar</button>
           </div>
         )}
@@ -215,10 +289,10 @@ export default function GruposYCursos() {
             <input
               type="text"
               placeholder="Nombre"
-              value={cursoEditando.nombre || ''}
-              onChange={e => setCursoEditando({ ...cursoEditando, nombre: e.target.value })}
+              value={cursoEditando.nombre_curso || ''}
+              onChange={e => setCursoEditando({ ...cursoEditando, nombre_curso: e.target.value })}
             />
-            <button onClick={onGuardarEdicion} disabled={!cursoEditando.nombre.trim()}>Guardar</button>
+            <button onClick={editarCursoSeleccionado} disabled={!cursoEditando.nombre_curso.trim()}>Guardar</button>
             <button onClick={() => setCursoEditando(null)}>Cancelar</button>
           </div>
         )}

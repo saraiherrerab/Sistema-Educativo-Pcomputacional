@@ -253,6 +253,8 @@ CREATE TABLE IF NOT EXISTS horarios_grupo (
   hora_inicio TIME NOT NULL,
   hora_fin TIME NOT NULL,
   FOREIGN KEY (id_grupo) REFERENCES grupos(id_grupo)
+	ON DELETE CASCADE
+	ON UPDATE RESTRICT
 );
 /*
 INSERT INTO horarios_profesor (id_profesor, id_curso, id_grupo, dia_semana, hora_inicio, hora_fin)
