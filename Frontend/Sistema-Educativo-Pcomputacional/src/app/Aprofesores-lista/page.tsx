@@ -533,6 +533,7 @@ export default function ProfesoresLista() {
                 console.log(informacionProfesor)
 
                 setProfesoresFiltrados([...profesoresFiltrados, informacionProfesor]);
+                setProfesores([...profesores, informacionProfesor])
                 setMostrarFormulario(false); // Asegúrate de que el formulario se cierre después de guardar
                 setNuevoProfesor({
                     id_usuario: 0,

@@ -17,9 +17,20 @@
       "static/css/app/Amenu/page.css",
       "static/chunks/app/Amenu/page.js"
     ],
-    "/videojuego/page": [
+    "/Curso/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
+<<<<<<< HEAD
+      "static/css/app/Curso/page.css",
+      "static/chunks/app/Curso/page.js"
+    ],
+    "/Aestudiantes-lista/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/Aestudiantes-lista/page.css",
+      "static/chunks/app/Aestudiantes-lista/page.js"
+    ],
+=======
       "static/css/app/videojuego/page.css",
       "static/chunks/app/videojuego/page.js"
     ],
@@ -53,11 +64,14 @@
       "static/css/app/Curso/page.css",
       "static/chunks/app/Curso/page.js"
     ],
+>>>>>>> origin/LaSaraRama
     "/Aprofesores-lista/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/Aprofesores-lista/page.css",
       "static/chunks/app/Aprofesores-lista/page.js"
+<<<<<<< HEAD
+=======
     ],
     "/GruposYCursos/page": [
       "static/chunks/webpack.js",
@@ -70,6 +84,7 @@
       "static/chunks/main-app.js",
       "static/css/app/Grupos/page.css",
       "static/chunks/app/Grupos/page.js"
+>>>>>>> origin/LaSaraRama
     ]
   }
 }
