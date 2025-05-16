@@ -125,11 +125,7 @@
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-<<<<<<< HEAD
-/******/ 		__webpack_require__.h = () => ("e072504f4d250513")
-=======
-/******/ 		__webpack_require__.h = () => ("21dfc050c40fc14e")
->>>>>>> origin/LaSaraRama
+/******/ 		__webpack_require__.h = () => ("f4ef8a7d751bc31c")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */

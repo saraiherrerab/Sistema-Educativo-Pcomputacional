@@ -309,8 +309,16 @@ $$ LANGUAGE plpgsql;
 
 SELECT * FROM obtener_horarios_profesor(3)
 
-
-
+DELETE FROM Horarios_Profesor;
+DELETE FROM Profesor_Curso;	
+DELETE FROM Curso;
+DELETE FROM Estudiante;
+DELETE FROM Grupos;
+DELETE FROM Juego;
+DELETE FROM Nivel;
+DELETE FROM Profesor;
+DELETE FROM Usuario;
+DELETE FROM Usuario_Nivel;
 
 -- Elimina el trigger si existe
 DROP TRIGGER IF EXISTS trg_actualizar_premio_algoritmo ON estudiante;
