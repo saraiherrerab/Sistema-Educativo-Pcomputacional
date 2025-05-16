@@ -190,10 +190,10 @@ router.put('/curso/asignar/grupo', async function(req, res, next) {
 router.post('/grupos', async function(req, res, next) {
 
     try {
-        const { nombre_grupo,id_curso } = req.body  
-        const query = "INSERT INTO GRUPOS (nombre_grupo,id_curso) VALUES ($1,$2) RETURNING *";        
-        const findGrupo =  new PQ({text: query, values: [nombre_grupo,id_curso]});
-        const result = await db.oneOrNone(findGrupo);
+        const { nombre_grupo,id_curso,id_profesor_grupo } = req.body  
+        const query = "INSERT INTO GRUPOS (nombre_grupo,id_curso,id_profesor_grupo) VALUES ($1,$2,$3) RETURNING *";        
+        const crearGrupo =  new PQ({text: query, values: [nombre_grupo,id_curso,id_profesor_grupo]});
+        const result = await db.oneOrNone(crearGrupo);
         console.log('Resultado:', result);
 
         return res.json(result)
@@ -235,5 +235,23 @@ router.put('/grupos', async function(req, res, next) {
     }
     
 });
+
+router.get('/grupos/profesores/:id', async function(req, res, next) {
+
+    try {
+        const { id } = req.params  
+        const query = "SELECT Us.* FROM Usuario AS Us, Profesor AS Pr, Grupos AS Gr WHERE Gr.id_profesor_grupo = Pr.id_profesor AND Us.id_usuario = Pr.id_profesor AND Gr.id_grupo = $1";      
+        const findGrupo =  new PQ({text: query, values: [id]});
+        const result = await db.manyOrNone(findGrupo);
+
+        return res.json(result)
+
+    } catch (error) {
+        console.error('Error al hacer la consulta:', error);
+        res.json({menssage: "Error al crear grupo"})
+    }
+    
+});
+
 
 module.exports = router;
