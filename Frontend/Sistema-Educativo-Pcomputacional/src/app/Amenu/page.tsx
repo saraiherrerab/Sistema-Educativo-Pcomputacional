@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import MenuButton from "../../components/menuButton/menubutton";
 import Saludo  from "../../components/saludo/saludo";
 
+
+
 interface UsuarioInterface {
   apellido: string
   cedula: string
@@ -51,6 +53,7 @@ export default function Amenu() {
   return <>
     
     <div className="menu background_menu">
+      <img src="/boton-salir.png" alt="Salir" className="boton-salir"  onClick={()=>Router.push("/")}/>
       <Saludo usuario="admin"></Saludo>
       <div className="contenedor">
       <div className= "MButtonsContainer">

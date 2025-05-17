@@ -1,15 +1,6 @@
 {
-<<<<<<< HEAD
   "/page": "app/page.js",
   "/Amenu/page": "app/Amenu/page.js",
-  "/Aestudiantes-lista/page": "app/Aestudiantes-lista/page.js",
-  "/Aprofesores-lista/page": "app/Aprofesores-lista/page.js",
-  "/Curso/page": "app/Curso/page.js"
-=======
-  "/reportes/[id]/page": "app/reportes/[id]/page.js",
-  "/GruposYCursos/page": "app/GruposYCursos/page.js",
-  "/videojuego/page": "app/videojuego/page.js",
-  "/Amenu/page": "app/Amenu/page.js",
-  "/Grupos/page": "app/Grupos/page.js"
->>>>>>> origin/LaSaraRama
+  "/menu/page": "app/menu/page.js",
+  "/videojuego/page": "app/videojuego/page.js"
 }

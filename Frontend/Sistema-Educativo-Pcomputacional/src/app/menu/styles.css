@@ -47,6 +47,8 @@ body{
 
 
 
+
+
   .descripcion {
     display: flex; /* Asegura que .descripcion sea un contenedor flex */
     flex-direction: column;
@@ -54,4 +56,19 @@ body{
     gap: 15px; /* Ajusta el valor según el espaciado deseado */
     font-size: 16px;
     text-align: center;
+}
+
+.boton-salir {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  z-index: 10; /* Asegura que quede encima de otros elementos */
+}
+
+.boton-salir:hover {
+  transform: scale(1.1);
 }
