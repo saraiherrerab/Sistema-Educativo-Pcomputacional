@@ -10,6 +10,8 @@ import Curso from './interfaces/curso.interface';
 import obtenerProfesores from './functions/obtenerProfesores';
 import obtenerHorariosGrupo from './functions/obtenerHorariosGrupo';
 import obtenerEstudiantes from './functions/obtenerListaEstudiantes'
+import Estudiante from './interfaces/estudiante.interface';
+import eliminarEstudiateDeGrupo from './functions/eliminarEstudianteGrupo';
 
 interface Grupo {
   id_grupo: number,
@@ -34,11 +36,7 @@ interface Horario {
   id_grupo: number,
 }
 
-interface Estudiante {
-  id_estudiante: number,
-  nombre: string,
-  grupos_ids: number[], // relación a grupos
-}
+
 
 export default function Grupos() {
   const Router = useRouter();
@@ -169,26 +167,44 @@ useEffect(() => {
 }, [gruposFiltrados]);
 
 const [estudiantesPorGrupo, setEstudiantesPorGrupo] = useState<{ [id: number]: string }>({});
-const [listaEstudiantesPorGrupo, setListaEstudiantesPorGrupo] = useState<any[]>([]);
+const [listaEstudiantesPorGrupo, setListaEstudiantesPorGrupo] = useState<{ [id_grupo: number]: Estudiante[] }>({});
+const [estudianteSeleccionado, setEstudianteSeleccionado] = useState<Estudiante>(
+  {
+        id_usuario: 0,
+        telefono: "",
+        nombre: "",
+        apellido: "",
+        correo: "",
+        edad: 0,
+        foto: "",
+        usuario: "",
+        clave_acceso: "",
+        cedula: "",
+        id_estudiante: 0,
+        condicion_medica: ""
+    }
+)
 useEffect(() => {
   const cargarEstudiantes = async () => {
-    const nuevosEstudiantes: { [id: number]: string } = {};
+    const nuevosEstudiantesPorGrupo: { [id: number]: Estudiante[] } = {};
+    const nombresEstudiantesPorGrupo: { [id: number]: string } = {};
 
     for (const grupo of gruposFiltrados) {
       try {
         const res = await fetch(`http://localhost:5555/grupos/estudiantes/${grupo.id_grupo}`);
         const estudiantes = await res.json();
 
-        setListaEstudiantesPorGrupo([...estudiantes])
-
-        nuevosEstudiantes[grupo.id_grupo] = estudiantes.map((p: any) => `${p.nombre} ${p.apellido}`).join(', ');
+        nuevosEstudiantesPorGrupo[grupo.id_grupo] = estudiantes;
+        nombresEstudiantesPorGrupo[grupo.id_grupo] = estudiantes.map((p: any) => `${p.nombre} ${p.apellido}`).join(', ');
       } catch (error) {
-        console.error(`Error cargando profesores para grupo ${grupo.id_grupo}:`, error);
-        nuevosEstudiantes[grupo.id_grupo] = "Error al cargar";
+        console.error(`Error cargando estudiantes para grupo ${grupo.id_grupo}:`, error);
+        nombresEstudiantesPorGrupo[grupo.id_grupo] = "Error al cargar";
+        nuevosEstudiantesPorGrupo[grupo.id_grupo] = [];
       }
     }
 
-    setEstudiantesPorGrupo(nuevosEstudiantes);
+    setListaEstudiantesPorGrupo(nuevosEstudiantesPorGrupo);
+    setEstudiantesPorGrupo(nombresEstudiantesPorGrupo);
   };
 
   if (gruposFiltrados.length > 0) {
@@ -385,31 +401,54 @@ useEffect(() => {
   
 
   const agregarEstudianteEnGrupo = async () => {
-    setMostrarAsignarEstudianteAGrupo(true)
-    const resultadoEstudiantes = await obtenerEstudiantes()
-    console.log(resultadoEstudiantes)
-    console.log(listaEstudiantesPorGrupo)
-    const estudiantesFiltrados = resultadoEstudiantes.filter(est =>
-      !listaEstudiantesPorGrupo.some(e => e.id_usuario === est.id_usuario)
-    );
-    console.table(estudiantesFiltrados)
+  setMostrarAsignarEstudianteAGrupo(true);
+  const resultadoEstudiantes = await obtenerEstudiantes();
+  console.log(resultadoEstudiantes);
+  console.log(listaEstudiantesPorGrupo);
 
-    setListasEstudiantes(estudiantesFiltrados)
-  }
+  const estudiantesGrupoActual = listaEstudiantesPorGrupo[mostrarEstudiantesGrupo!.id_grupo] || [];
+
+  const estudiantesFiltrados = resultadoEstudiantes.filter(est =>
+    !estudiantesGrupoActual.some(e => e.id_usuario === est.id_usuario)
+  );
+
+  console.table(estudiantesFiltrados);
+  setListasEstudiantes(estudiantesFiltrados);
+};
 
   const guardarEstudianteEnGrupo = () => {
     
   }
   const editarEstudianteEnGrupo = (estudiante: any) => {
     console.log(estudiante)
+    setEditarGrupoEstudianteSeleccionado(true)
   }
-  const eliminarEstudianteEnGrupo = (id_estudiante_seleccionado: number) => {
+  const eliminarEstudianteEnGrupo = async (id_estudiante_seleccionado: number) => {
     console.log(id_estudiante_seleccionado)
+    const respuesta = await eliminarEstudiateDeGrupo(id_estudiante_seleccionado)
+    console.log(respuesta)
+
+    if (!mostrarEstudiantesGrupo) return;
+
+    const idGrupo = mostrarEstudiantesGrupo.id_grupo;
+
+    // Obtener la lista actual
+    const estudiantesActuales = listaEstudiantesPorGrupo[idGrupo] || [];
+
+    // Filtrar la lista para eliminar al estudiante con ese id_usuario
+    const nuevosEstudiantes = estudiantesActuales.filter(est => est.id_usuario !== id_estudiante_seleccionado);
+
+    // Actualizar el estado con la nueva lista
+    setListaEstudiantesPorGrupo({
+      ...listaEstudiantesPorGrupo,
+      [idGrupo]: nuevosEstudiantes
+    });
+
+
   }
 
   const [mostrarAsignarEstudianteAGrupo, setMostrarAsignarEstudianteAGrupo] = useState<boolean>(false)
-
-
+  const [editarGrupoEstudianteSeleccionado, setEditarGrupoEstudianteSeleccionado] = useState<boolean>(false)
 
   return (
     <>
@@ -647,11 +686,7 @@ useEffect(() => {
 
 
 
-{/* Lista de estudiantes de un grupo */}
-
-
-
-
+    {/* Lista de estudiantes de un grupo */}
     {mostrarEstudiantesGrupo && (
       <div className="tabla-estudiantes">
         <h3>Estudiantes de {mostrarEstudiantesGrupo.nombre_grupo}</h3>
@@ -662,13 +697,13 @@ useEffect(() => {
             <label>
               Estudiante:
               <select
-                value={0}
+                value={estudianteSeleccionado.id_usuario}
                 onChange={(e) => {
                   const val = Number(e.target.value);
-                  
+                  setEstudianteSeleccionado(listaEstudiantes.find( (est) => est.id_usuario === val));
                 }}
               >
-                <option value="">Seleccione un estudiante</option>
+                <option value={0} disabled = {true}>Seleccione un estudiante</option>
                 {listaEstudiantes.map(est => (
                   <option key={est.id_usuario} value={est.id_usuario}>
                     {est.nombre} {est.apellido}
@@ -678,35 +713,48 @@ useEffect(() => {
           </label>
           )
         }
-        <table>
-                        <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Apellido</th>
-                                <th className="texto_central">Correo</th>
-                                <th className="texto_central">Celular</th>
-
-                                <th className="texto_central">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {listaEstudiantesPorGrupo.map((estudiante, index) => (
-                                <tr key={index}>
-                                    <td>{estudiante.nombre ? estudiante.nombre : "null"}</td>
-                                    <td>{estudiante.apellido ? estudiante.apellido : "null"}</td>
-                                    
-                                    <td>{estudiante.correo ? estudiante.correo : "null"}</td>
-                                    <td>{estudiante.telefono ? estudiante.telefono : "null"}</td>
-    
-                                    <td className="display_flex">
-                                        <button onClick={() => editarEstudianteEnGrupo(estudiante)}><img src="/icons/edit_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
-                                        <button onClick={() => eliminarEstudianteEnGrupo(estudiante.id_usuario)}><img src="/icons/delete_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
-                                    </td>
-
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+        {
+          estudianteSeleccionado.id_usuario != 0 &&
+          <div>
+             <button onClick={() => null}><img src="/icons/check_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
+              <button onClick={() => null}><img src="/icons/close_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
+          </div>
+        }
+        {
+          editarGrupoEstudianteSeleccionado &&
+          <div>
+            Editando 
+          </div>
+        }
+         <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th className="texto_central">Correo</th>
+          <th className="texto_central">Celular</th>
+          <th className="texto_central">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {(listaEstudiantesPorGrupo[mostrarEstudiantesGrupo.id_grupo] || []).map((estudiante, index) => (
+          <tr key={index}>
+            <td>{estudiante.nombre || "null"}</td>
+            <td>{estudiante.apellido || "null"}</td>
+            <td>{estudiante.correo || "null"}</td>
+            <td>{estudiante.telefono || "null"}</td>
+            <td className="display_flex">
+              <button onClick={() => editarEstudianteEnGrupo(estudiante)}>
+                <img src="/icons/edit_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Editar" style={{ width: 16, height: 16 }} />
+              </button>
+              <button onClick={() => eliminarEstudianteEnGrupo(estudiante.id_usuario)}>
+                <img src="/icons/delete_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Eliminar" style={{ width: 16, height: 16 }} />
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
         <ul>
           {estudiantesPorGrupo[mostrarEstudiantesGrupo.id_grupo]}
         </ul>

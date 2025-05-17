@@ -5,17 +5,35 @@
       "static/chunks/main-app.js",
       "static/chunks/app/layout.js"
     ],
-    "/Grupos/page": [
+    "/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/Grupos/page.css",
-      "static/chunks/app/Grupos/page.js"
+      "static/css/app/page.css",
+      "static/chunks/app/page.js"
     ],
     "/Amenu/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/Amenu/page.css",
       "static/chunks/app/Amenu/page.js"
+    ],
+    "/GruposYCursos/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/GruposYCursos/page.css",
+      "static/chunks/app/GruposYCursos/page.js"
+    ],
+    "/Grupos/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/Grupos/page.css",
+      "static/chunks/app/Grupos/page.js"
+    ],
+    "/videojuego/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/videojuego/page.css",
+      "static/chunks/app/videojuego/page.js"
     ],
     "/Aestudiantes-lista/page": [
       "static/chunks/webpack.js",

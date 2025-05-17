@@ -252,6 +252,26 @@ router.get('/grupos/curso/:id', async function(req, res, next) {
     
 });
 
+/* Eliminar Grupo de Un estudiante */
+router.delete('/grupos/estudiante/:id/eliminar', async function(req, res, next) {
+
+    try {
+        const { id } = req.params  
+        const query = "UPDATE Estudiante SET id_grupo = NULL WHERE id_estudiante = $1";
+        const findGrupo =  new PQ({text: query, values: [id]});
+        const result = await db.none(findGrupo);
+
+        return res.json({mensaje: "El estudiante ha sido eliminado del grupo"})
+
+    } catch (error) {
+        console.error('Error al hacer la consulta:', error);
+        res.json({menssage: "Error al crear grupo"})
+    }
+    
+});
+
+
+
 
 
 module.exports = router;
