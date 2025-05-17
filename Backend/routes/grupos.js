@@ -96,24 +96,6 @@ router.get('/grupos/:id/curso/sin/horario', async function(req, res, next) {
     
 });
 
-//Obtener la información del grupo que ve un curso dado
-router.get('/grupos/curso/:id', async function(req, res, next) {
-
-    try {
-        const { id } = req.params  
-        const query = "SELECT Gr.* FROM Grupos AS Gr WHERE Gr.id_curso = $1";        
-        const findGrupo =  new PQ({text: query, values: [id]});
-        const result = await db.manyOrNone(findGrupo);
-        console.log('Resultado:', result);
-
-        return res.json(result)
-    } catch (error) {
-        console.error('Error al hacer la consulta:', error);
-        res.json({menssage: "Error al obtener profesores"})
-    }
-    
-});
-
 //Obtener Todos los Estudiantes de un grupo Dado
 router.get('/grupos/:id/estudiantes', async function(req, res, next) {
 
@@ -128,24 +110,6 @@ router.get('/grupos/:id/estudiantes', async function(req, res, next) {
     } catch (error) {
         console.error('Error al hacer la consulta:', error);
         res.json({menssage: "Error al obtener profesores"}) 
-    }
-    
-});
-
-//Obtener la información del grupo que ve un curso dado
-router.get('/grupos/curso/:id', async function(req, res, next) {
-
-    try {
-        const { id } = req.params  
-        const query = "SELECT Gr.* FROM Grupos AS Gr WHERE Gr.id_curso = $1";        
-        const findGrupo =  new PQ({text: query, values: [id]});
-        const result = await db.manyOrNone(findGrupo);
-        console.log('Resultado:', result);
-
-        return res.json(result)
-    } catch (error) {
-        console.error('Error al hacer la consulta:', error);
-        res.json({menssage: "Error al obtener profesores"})
     }
     
 });
@@ -252,6 +216,42 @@ router.get('/grupos/profesores/:id', async function(req, res, next) {
     }
     
 });
+
+router.get('/grupos/estudiantes/:id', async function(req, res, next) {
+
+    try {
+        const { id } = req.params  
+        const query = "SELECT Us.* FROM Usuario AS Us, Estudiante AS Est, Grupos AS Gr WHERE Gr.id_grupo = Est.id_grupo AND Us.id_usuario = Est.id_estudiante AND Gr.id_grupo = $1";  
+        const findGrupo =  new PQ({text: query, values: [id]});
+        const result = await db.manyOrNone(findGrupo);
+
+        return res.json(result)
+
+    } catch (error) {
+        console.error('Error al hacer la consulta:', error);
+        res.json({menssage: "Error al crear grupo"})
+    }
+    
+});
+
+
+router.get('/grupos/curso/:id', async function(req, res, next) {
+
+    try {
+        const { id } = req.params  
+        const query = "SELECT Cu.* FROM Grupos AS Gr, Curso AS Cu WHERE Gr.id_grupo = $1 AND Gr.id_curso = Cu.id_curso";
+        const findGrupo =  new PQ({text: query, values: [id]});
+        const result = await db.oneOrNone(findGrupo);
+
+        return res.json(result)
+
+    } catch (error) {
+        console.error('Error al hacer la consulta:', error);
+        res.json({menssage: "Error al crear grupo"})
+    }
+    
+});
+
 
 
 module.exports = router;
