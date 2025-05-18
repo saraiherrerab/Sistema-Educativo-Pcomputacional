@@ -18,4 +18,4 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-SELECT obtener_rol_usuario(2);
+SELECT obtener_rol_usuario(1);

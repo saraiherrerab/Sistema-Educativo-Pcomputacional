@@ -9,6 +9,12 @@ import obtenerCursos from '../GruposYCursos/functions/obtenerCursos';
 import Curso from './interfaces/curso.interface';
 import obtenerProfesores from './functions/obtenerProfesores';
 import obtenerHorariosGrupo from './functions/obtenerHorariosGrupo';
+import obtenerEstudiantes from './functions/obtenerListaEstudiantes'
+import Estudiante from './interfaces/estudiante.interface';
+import eliminarEstudiateDeGrupo from './functions/eliminarEstudianteGrupo';
+import agregarEstudianteGrupo from './functions/agregarEstudianteGrupo';
+import obtenerEstudiantesGrupo from './functions/obtenerEstudiantesGrupo';
+import reasignarEstudianteGrupo from './functions/reasignarEstudianteGrupo';
 
 interface Grupo {
   id_grupo: number,
@@ -33,11 +39,7 @@ interface Horario {
   id_grupo: number,
 }
 
-interface Estudiante {
-  id_estudiante: number,
-  nombre: string,
-  grupos_ids: number[], // relación a grupos
-}
+
 
 export default function Grupos() {
   const Router = useRouter();
@@ -53,7 +55,6 @@ export default function Grupos() {
   const [cursos, setCursos] = useState<Curso[]>([]);
   const [profesores, setProfesores] = useState<Profesor[]>([]);
   const [horarios, setHorarios] = useState<Horario[]>([]);
-  const [estudiantes, setEstudiantes] = useState<Estudiante[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [gruposFiltrados, setGruposFiltrados] = useState<Grupo[]>(grupos);
   const [profesorSeleccionado, setProfesorSeleccionado] = useState<number>(0);
@@ -67,27 +68,28 @@ export default function Grupos() {
 
   const [controlador,setControlador] = useState<string>("AGREGAR")
 
-  const obtenerProfesorDeGrupo = (grupoId: number): Profesor | undefined => {
-  return profesores.find(p => p.grupos_ids?.includes(grupoId));
-};
+  const [listaEstudiantes, setListasEstudiantes] = useState<any[]>([])
 
 
   useEffect(() => {
   const cargarDatos = async () => {
     try {
-      const [profesores, cursos, grupos] = await Promise.all([
+      const [profesores, cursos, grupos,estudiantes] = await Promise.all([
         obtenerProfesores(),
         obtenerCursos(),
-        obtenerGrupos()
+        obtenerGrupos(),
+        obtenerEstudiantes()
       ]);
 
       console.log('%cProfesores:', 'color: red;', profesores);
       console.log('%cCursos:', 'color: red;', cursos);
       console.log('%cGrupos:', 'color: red;', grupos);
+      console.log('%cEstudiantes:', 'color: red;', estudiantes);
 
       setProfesores(profesores);
       setCursos(cursos);
       setGrupos(grupos);
+      setListasEstudiantes(estudiantes)
     } catch (error) {
       console.error('Error al cargar los datos:', error);
     }
@@ -97,17 +99,24 @@ export default function Grupos() {
 }, []);
 
 const [horariosPorGrupo, setHorariosPorGrupo] = useState<{ [id: number]: string }>({});
+const [listaHorarios, setListaHorarios] = useState<any[][]>([]);
 useEffect(() => {
   const cargarHorarios = async () => {
     const nuevosHorarios: { [id: number]: string } = {};
+    const nuevaLista: any[] = [];
 
     for (const grupo of gruposFiltrados) {
       const horarios = await obtenerHorariosGrupo(grupo.id_grupo);
+      console.log(horarios);
+
+      nuevaLista.push(horarios); // Agrega los horarios al array temporal
+
       nuevosHorarios[grupo.id_grupo] = horarios
         .map((h: any) => `${h.dia_semana}: ${h.hora_inicio} a ${h.hora_fin}`)
         .join(', ');
     }
 
+    setListaHorarios(nuevaLista); // Guarda todos los arreglos de una sola vez
     setHorariosPorGrupo(nuevosHorarios);
   };
 
@@ -118,9 +127,12 @@ useEffect(() => {
 
 
 const [profesoresPorGrupo, setProfesoresPorGrupo] = useState<{ [id: number]: string }>({});
+const [cursosPorGrupo, setCursosPorGrupo] = useState<{ [id: number]: string }>({});
+
 useEffect(() => {
   const cargarProfesores = async () => {
     const nuevosProfesores: { [id: number]: string } = {};
+    const nuevosCursos: { [id: number]: string } = {};
 
     for (const grupo of gruposFiltrados) {
       try {
@@ -128,17 +140,79 @@ useEffect(() => {
         const profesores = await res.json();
 
         nuevosProfesores[grupo.id_grupo] = profesores.map((p: any) => `${p.nombre} ${p.apellido}`).join(', ');
+
+        
       } catch (error) {
         console.error(`Error cargando profesores para grupo ${grupo.id_grupo}:`, error);
         nuevosProfesores[grupo.id_grupo] = "Error al cargar";
       }
+
+      // Cargar curso
+      try {
+        const resCurso = await fetch(`http://localhost:5555/grupos/curso/${grupo.id_grupo}`);
+        if (!resCurso.ok) throw new Error("No se pudo cargar curso");
+        const curso = await resCurso.json();
+        nuevosCursos[grupo.id_grupo] = curso?.nombre_curso || "Sin curso";
+      } catch (error) {
+        console.error(`Error cargando curso para grupo ${grupo.id_grupo}:`, error);
+        nuevosCursos[grupo.id_grupo] = "Error al cargar";
+        
+      }
     }
 
     setProfesoresPorGrupo(nuevosProfesores);
+    setCursosPorGrupo(nuevosCursos);
   };
 
   if (gruposFiltrados.length > 0) {
     cargarProfesores();
+  }
+}, [gruposFiltrados]);
+
+const [estudiantesPorGrupo, setEstudiantesPorGrupo] = useState<{ [id: number]: string }>({});
+const [listaEstudiantesPorGrupo, setListaEstudiantesPorGrupo] = useState<{ [id_grupo: number]: Estudiante[] }>({});
+const [estudianteSeleccionado, setEstudianteSeleccionado] = useState<Estudiante>(
+  {
+        id_usuario: 0,
+        telefono: "",
+        nombre: "",
+        apellido: "",
+        correo: "",
+        edad: 0,
+        foto: "",
+        usuario: "",
+        clave_acceso: "",
+        cedula: "",
+        id_estudiante: 0,
+        condicion_medica: "",
+        id_grupo: 0
+    }
+)
+useEffect(() => {
+  const cargarEstudiantes = async () => {
+    const nuevosEstudiantesPorGrupo: { [id: number]: Estudiante[] } = {};
+    const nombresEstudiantesPorGrupo: { [id: number]: string } = {};
+
+    for (const grupo of gruposFiltrados) {
+      try {
+        const res = await fetch(`http://localhost:5555/grupos/estudiantes/${grupo.id_grupo}`);
+        const estudiantes = await res.json();
+
+        nuevosEstudiantesPorGrupo[grupo.id_grupo] = estudiantes;
+        nombresEstudiantesPorGrupo[grupo.id_grupo] = estudiantes.map((p: any) => `${p.nombre} ${p.apellido}`).join(', ');
+      } catch (error) {
+        console.error(`Error cargando estudiantes para grupo ${grupo.id_grupo}:`, error);
+        nombresEstudiantesPorGrupo[grupo.id_grupo] = "Error al cargar";
+        nuevosEstudiantesPorGrupo[grupo.id_grupo] = [];
+      }
+    }
+
+    setListaEstudiantesPorGrupo(nuevosEstudiantesPorGrupo);
+    setEstudiantesPorGrupo(nombresEstudiantesPorGrupo);
+  };
+
+  if (gruposFiltrados.length > 0) {
+    cargarEstudiantes();
   }
 }, [gruposFiltrados]);
 
@@ -158,34 +232,12 @@ useEffect(() => {
   };
 
   const handleSearchClick = () => {
-    filtrarGrupos();
+    //filtrarGrupos();
   };
 
   const handleTitleClick = () => {
     setSearchTerm('');
     setGruposFiltrados(grupos);
-  };
-
-  // Obtener profesor(es) asignados a un grupo
-  /*
-  const obtenerProfesoresDelGrupo = (idGrupo: number) => {
-    return profesores.filter(p => p.grupos_ids.includes(idGrupo));
-  };
-  */
-
-  // Obtener horarios de un grupo
-  const obtenerHorariosDelGrupo = (idGrupo: number) => {
-    return horarios.filter(h => h.id_grupo === idGrupo);
-  };
-
-  // Obtener estudiantes de un grupo
-  const obtenerEstudiantesDelGrupo = (idGrupo: number) => {
-    return estudiantes.filter(e => e.grupos_ids.includes(idGrupo));
-  };
-
-  // Obtener curso del grupo
-  const obtenerCursoDelGrupo = (idCurso: number) => {
-    return cursos.find(c => c.id_curso === idCurso)?.nombre_curso || '';
   };
 
   // Funciones para formulario
@@ -199,86 +251,6 @@ useEffect(() => {
   setMostrarFormulario(true);
   setGrupoEditando({ id_grupo: 0, nombre_grupo: '', id_curso: 0, id_profesor_grupo: 0 });
 };
-
-
-  const onAgregarGrupo = () => {
-    setGrupos([...grupos, nuevoGrupo]);
-    setMostrarFormulario(false);
-  };
-
-
-
-const onEditar = (grupo: Grupo) => {
-
-  setGrupoEditando({ ...grupo });
-  /*
-  const prof = obtenerProfesorDeGrupo(grupo.id_grupo);
-  setProfesorSeleccionado(prof ? prof.id_profesor : 0);
-  
-  // Carga horarios actuales del grupo al estado local
-  const horariosActuales = horarios.filter(h => h.id_grupo === grupo.id_grupo);
-  setHorariosGrupo(horariosActuales);
-  */
-
-  setMostrarFormulario(true);
-};
-
-
-/*
-  const onGuardarEdicion = () => {
-  if (!grupoEditando) return;
-
-  // Actualizar grupos
-  const actualizados = grupos.map(g =>
-    g.id_grupo === grupoEditando.id_grupo ? grupoEditando : g
-  );
-  setGrupos(actualizados);
-
-  // Actualizar profesores: 
-  // 1) Remover grupo del profesor anterior
-  // 2) Asignar grupo al profesor seleccionado
-
-  setProfesores(prevProfesores => {
-    return prevProfesores.map(prof => {
-      // Si este profesor tenía este grupo, removerlo
-      if (prof.grupos_ids.includes(grupoEditando.id_grupo)) {
-        return {
-          ...prof,
-          grupos_ids: prof.id_profesor === profesorSeleccionado
-            ? prof.grupos_ids // si es el nuevo profesor, dejar igual (se añade después)
-            : prof.grupos_ids.filter(id => id !== grupoEditando.id_grupo)
-        };
-      }
-      return prof;
-    }).map(prof => {
-      // Si es el profesor seleccionado, agregar el grupo si no lo tiene
-      if (prof.id_profesor === profesorSeleccionado) {
-        if (!prof.grupos_ids.includes(grupoEditando.id_grupo)) {
-          return { ...prof, grupos_ids: [...prof.grupos_ids, grupoEditando.id_grupo] };
-        }
-      }
-      return prof;
-    });
-  });
-
-    // Actualizar horarios (remplazar horarios del grupo)
-    setHorarios(prevHorarios => {
-    // Quitar horarios antiguos del grupo
-    const filtrados = prevHorarios.filter(h => h.id_grupo !== grupoEditando.id_grupo);
-    // Agregar los horarios nuevos/actualizados
-    return [...filtrados, ...horariosGrupo];
-    });
-
-
-  setGrupoEditando(null);
-  setMostrarFormulario(false);
-};
-*/
-
-  const onEliminar = (id: number) => {
-    const actualizados = grupos.filter(g => g.id_grupo !== id);
-    setGrupos(actualizados);
-  };
 
   // Mostrar lista estudiantes grupo
   const onVerEstudiantes = (grupo: Grupo) => {
@@ -430,7 +402,145 @@ const onEditar = (grupo: Grupo) => {
     setGrupoEditando({ id_grupo: 0, nombre_grupo: '', id_curso: 0, id_profesor_grupo: 0 });
     console.log('\x1b[1m\x1b[31m%s\x1b[0m', 'Finalizando editarGrupoSeleccionado()');
   }
+  
 
+  const agregarEstudianteEnGrupo = async () => {
+  setMostrarAsignarEstudianteAGrupo(true);
+  const resultadoEstudiantes = await obtenerEstudiantes();
+  console.log(resultadoEstudiantes);
+  console.log(listaEstudiantesPorGrupo);
+
+  const estudiantesGrupoActual = listaEstudiantesPorGrupo[mostrarEstudiantesGrupo!.id_grupo] || [];
+
+  const estudiantesFiltrados = resultadoEstudiantes.filter(est =>
+    !estudiantesGrupoActual.some(e => e.id_usuario === est.id_usuario)
+  );
+
+  console.table(estudiantesFiltrados);
+  setListasEstudiantes(estudiantesFiltrados);
+};
+
+  const guardarEstudianteEnGrupo = () => {
+    
+  }
+  const editarEstudianteEnGrupo = (estudiante: any) => {
+    console.log(estudiante)
+    setEditarGrupoEstudianteSeleccionado(true)
+    setEstudianteSeleccionado(estudiante)
+  }
+  const eliminarEstudianteEnGrupo = async (id_estudiante_seleccionado: number) => {
+    console.log(id_estudiante_seleccionado)
+    const respuesta = await eliminarEstudiateDeGrupo(id_estudiante_seleccionado)
+    console.log(respuesta)
+
+    if (!mostrarEstudiantesGrupo) return;
+
+    const idGrupo = mostrarEstudiantesGrupo.id_grupo;
+
+    // Obtener la lista actual
+    const estudiantesActuales = listaEstudiantesPorGrupo[idGrupo] || [];
+
+    // Filtrar la lista para eliminar al estudiante con ese id_usuario
+    const nuevosEstudiantes = estudiantesActuales.filter(est => est.id_usuario !== id_estudiante_seleccionado);
+
+    // Actualizar el estado con la nueva lista
+    setListaEstudiantesPorGrupo({
+      ...listaEstudiantesPorGrupo,
+      [idGrupo]: nuevosEstudiantes
+    });
+
+
+  }
+
+  const [mostrarAsignarEstudianteAGrupo, setMostrarAsignarEstudianteAGrupo] = useState<boolean>(false)
+  const [editarGrupoEstudianteSeleccionado, setEditarGrupoEstudianteSeleccionado] = useState<boolean>(false)
+
+  const [grupoAsignadoEstudiante, setGrupoAsignadoEstudiante] = useState<Grupo>(
+    { id_grupo: 0, nombre_grupo: '', id_curso: 0, id_profesor_grupo: 0}
+  )
+
+  const agregarEstudianteAGrupo = async () => {
+    console.log("agregarEstudianteAGrupo")
+    if(mostrarEstudiantesGrupo){
+      console.log(mostrarEstudiantesGrupo.id_grupo)
+      await agregarEstudianteGrupo(estudianteSeleccionado,mostrarEstudiantesGrupo.id_grupo)
+
+       // Después de agregar el estudiante:
+      const estudiantesActualizados = await obtenerEstudiantesGrupo(mostrarEstudiantesGrupo.id_grupo);
+      setListaEstudiantesPorGrupo(prev => ({
+        ...prev,
+        [mostrarEstudiantesGrupo.id_grupo]: estudiantesActualizados
+      }));
+
+    }
+
+    setEstudianteSeleccionado(
+      {
+        id_usuario: 0,
+        telefono: "",
+        nombre: "",
+        apellido: "",
+        correo: "",
+        edad: 0,
+        foto: "",
+        usuario: "",
+        clave_acceso: "",
+        cedula: "",
+        id_estudiante: 0,
+        condicion_medica: "",
+        id_grupo: 0
+    }
+  )
+
+    console.log(estudianteSeleccionado)
+
+   
+
+  }  
+
+  const reasignarEstudianteAGrupo = async () => {
+
+    console.log(estudianteSeleccionado)
+
+    const idGrupoNuevo = grupoAsignadoEstudiante.id_grupo;
+
+    const resultadoReasignar = await reasignarEstudianteGrupo(estudianteSeleccionado, idGrupoNuevo);
+
+    console.log(resultadoReasignar)
+
+    // 🔄 Actualiza el grupo nuevo
+    const estudiantesNuevoGrupo = await obtenerEstudiantesGrupo(idGrupoNuevo);
+
+    console.log(estudiantesNuevoGrupo)
+
+    window.location.href =  window.location.href 
+
+
+  }
+
+  const volverATablaDeGrupos = () => {
+    console.log("volverATablaDeGrupos")
+    setEstudianteSeleccionado(
+      {
+        id_usuario: 0,
+        telefono: "",
+        nombre: "",
+        apellido: "",
+        correo: "",
+        edad: 0,
+        foto: "",
+        usuario: "",
+        clave_acceso: "",
+        cedula: "",
+        id_estudiante: 0,
+        condicion_medica: "",
+        id_grupo: 0
+    }
+    
+  )
+  setEditarGrupoEstudianteSeleccionado(false)
+  setGrupoAsignadoEstudiante({ id_grupo: 0, nombre_grupo: '', id_curso: 0, id_profesor_grupo: 0})
+  }  
   return (
     <>
       <Header
@@ -488,14 +598,27 @@ const onEditar = (grupo: Grupo) => {
               </tr>
             </thead>
             <tbody>
-              {gruposFiltrados.map(grupo => (
+              {gruposFiltrados.map((grupo, index) => (
                 <tr key={grupo.id_grupo}>
                   <td>{grupo.nombre_grupo}</td>
                   <td>{profesoresPorGrupo[grupo.id_grupo] || "Cargando..."}</td>
-                  <td>{horariosPorGrupo[grupo.id_grupo] || "Cargando..."}</td>
+                  <td>
+
+                      {
+                        listaHorarios.flat().filter( horariosFilter => horariosFilter.id_grupo === grupo.id_grupo).map((detalleHorario, index) => (
+                          <p key={index}>
+                            {detalleHorario.dia_semana} {detalleHorario.hora_inicio} a {detalleHorario.hora_fin}
+                          </p>
+                        ))
+                      }
+                    
+                    
+                  
+                  </td>
                   <td>
                     <button onClick={() => onVerEstudiantes(grupo)}>Ver</button>
                   </td>
+                  <td>{cursosPorGrupo[grupo.id_grupo] || "Cargando..."}</td>
                   <td className="display_flex">
                     <button onClick={() => editarGrupoSeleccionado(grupo)}>Editar</button>
                     <button onClick={() => borrarGrupoSeleccionado(grupo.id_grupo)}>Eliminar</button>
@@ -654,18 +777,100 @@ const onEditar = (grupo: Grupo) => {
 
 
 
-{/* Lista de estudiantes de un grupo */}
-
-
-
-
+    {/* Lista de estudiantes de un grupo */}
     {mostrarEstudiantesGrupo && (
       <div className="tabla-estudiantes">
         <h3>Estudiantes de {mostrarEstudiantesGrupo.nombre_grupo}</h3>
+        <button onClick={() => agregarEstudianteEnGrupo()}><img src="/icons/edit_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
+        {
+          mostrarAsignarEstudianteAGrupo && 
+          (
+            <label>
+              Estudiante:
+              <select
+                value={estudianteSeleccionado.id_usuario}
+                onChange={(e) => {
+                  const val = Number(e.target.value);
+                  setEstudianteSeleccionado(listaEstudiantes.find( (est) => est.id_usuario === val));
+                }}
+              >
+                <option value={0} disabled = {true}>Seleccione un estudiante</option>
+                {listaEstudiantes.map(est => (
+                  <option key={est.id_usuario} value={est.id_usuario}>
+                    {est.nombre} {est.apellido}
+                  </option>
+                ))}
+              </select>
+          </label>
+          )
+        }
+        {
+          estudianteSeleccionado.id_usuario != 0 && !editarGrupoEstudianteSeleccionado &&
+          <div>
+             <button onClick={() => agregarEstudianteAGrupo()}><img src="/icons/check_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
+              <button onClick={() => volverATablaDeGrupos()}><img src="/icons/close_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
+          </div>
+        }
+        {
+          editarGrupoEstudianteSeleccionado &&
+          <div>
+            <label>
+              Grupo:
+              <select
+                value={(grupoAsignadoEstudiante.id_grupo === 0 ) ? 0 : grupoAsignadoEstudiante.id_grupo}
+                onChange={(e) => {
+                  const idGrupo = Number(e.target.value);
+                  const grupoSeleccionado = grupos.find(grupo => grupo.id_grupo === idGrupo);
+                  console.log(grupoSeleccionado)
+                  if(grupoSeleccionado)
+                  setGrupoAsignadoEstudiante(grupoSeleccionado)
+                }}
+              >
+                <option value={0} disabled>Seleccione un grupo</option>
+                {grupos.map(grupo => (
+                  <option key={grupo.id_grupo} value={grupo.id_grupo}>
+                    {grupo.nombre_grupo}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <div>
+             <button onClick={() => reasignarEstudianteAGrupo()}><img src="/icons/check_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
+              <button onClick={() => volverATablaDeGrupos()}><img src="/icons/close_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
+          </div>
+          </div>
+        }
+         <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th className="texto_central">Correo</th>
+          <th className="texto_central">Celular</th>
+          <th className="texto_central">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {(listaEstudiantesPorGrupo[mostrarEstudiantesGrupo.id_grupo] || []).map((estudiante, index) => (
+          <tr key={index}>
+            <td>{estudiante.nombre || "null"}</td>
+            <td>{estudiante.apellido || "null"}</td>
+            <td>{estudiante.correo || "null"}</td>
+            <td>{estudiante.telefono || "null"}</td>
+            <td className="display_flex">
+              <button onClick={() => editarEstudianteEnGrupo(estudiante)}>
+                <img src="/icons/edit_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Editar" style={{ width: 16, height: 16 }} />
+              </button>
+              <button onClick={() => eliminarEstudianteEnGrupo(estudiante.id_usuario)}>
+                <img src="/icons/delete_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Eliminar" style={{ width: 16, height: 16 }} />
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
         <ul>
-          {obtenerEstudiantesDelGrupo(mostrarEstudiantesGrupo.id_grupo).map(est => (
-            <li key={est.id_estudiante}>{est.nombre}</li>
-          ))}
+          {estudiantesPorGrupo[mostrarEstudiantesGrupo.id_grupo]}
         </ul>
       </div>
     )}
