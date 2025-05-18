@@ -72,4 +72,33 @@ router.delete('/cursos/:id', async function(req, res, next) {
     
 });
 
+
+/* Obtener Todos los Profesores que dan un curso dado */
+router.get('/cursos/:id/profesores', async function(req, res, next) {
+    try {
+      const { id } = req.params
+      const obtenerProfesoresCurso = new PQ({text :`SELECT Us.* FROM Usuario AS Us, Profesor AS Pr, Grupos AS Gr, Curso AS Cu WHERE Cu.id_curso = $1 AND Gr.id_curso = Cu.id_curso AND Gr.id_profesor_grupo = Pr.id_profesor AND Pr.id_profesor = Us.id_usuario`, values: [id]});
+      const result = await db.manyOrNone(obtenerProfesoresCurso);
+      return res.json(result)
+    } catch (error) {
+      console.error('Error al hacer la consulta:', error);
+      res.json({menssage: "Error al eliminar estudiante"})
+    }
+    
+});
+
+/* Obtener todos  los grupos que ven un curso dado */
+router.get('/cursos/:id/grupos', async function(req, res, next) {
+    try {
+      const { id } = req.params
+      const query = "SELECT Gr.* FROM Grupos AS Gr, Curso AS Cu WHERE Cu.id_curso = $1 AND Gr.id_curso = Cu.id_curso";
+      const obtenerProfesoresCurso = new PQ({text : query, values: [id]});
+      const result = await db.manyOrNone(obtenerProfesoresCurso);
+      return res.json(result)
+    } catch (error) {
+      console.error('Error al hacer la consulta:', error);
+      res.json({menssage: "Error al eliminar estudiante"})
+    }
+    
+});
 module.exports = router;

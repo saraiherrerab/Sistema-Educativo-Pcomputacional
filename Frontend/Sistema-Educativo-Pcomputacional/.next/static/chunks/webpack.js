@@ -190,11 +190,7 @@
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-<<<<<<< HEAD
-/******/ 		__webpack_require__.h = () => ("c4bda43fff1bb899")
-=======
-/******/ 		__webpack_require__.h = () => ("faede82cfda3c9b9")
->>>>>>> origin/LaSaraRama
+/******/ 		__webpack_require__.h = () => ("232f8cdaf55d07b6")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */
