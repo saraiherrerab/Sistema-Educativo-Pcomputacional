@@ -11,4 +11,5 @@ export default interface Estudiante {
     cedula: string,
     id_estudiante: number,
     condicion_medica: string
+    id_grupo: number
 }

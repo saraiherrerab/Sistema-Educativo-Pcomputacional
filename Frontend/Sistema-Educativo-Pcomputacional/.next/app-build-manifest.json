@@ -17,6 +17,18 @@
       "static/css/app/Amenu/page.css",
       "static/chunks/app/Amenu/page.js"
     ],
+    "/Aestudiantes-lista/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/Aestudiantes-lista/page.css",
+      "static/chunks/app/Aestudiantes-lista/page.js"
+    ],
+    "/videojuego/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/videojuego/page.css",
+      "static/chunks/app/videojuego/page.js"
+    ],
     "/GruposYCursos/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -28,18 +40,6 @@
       "static/chunks/main-app.js",
       "static/css/app/Grupos/page.css",
       "static/chunks/app/Grupos/page.js"
-    ],
-    "/videojuego/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/videojuego/page.css",
-      "static/chunks/app/videojuego/page.js"
-    ],
-    "/Aestudiantes-lista/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/Aestudiantes-lista/page.css",
-      "static/chunks/app/Aestudiantes-lista/page.js"
     ]
   }
 }

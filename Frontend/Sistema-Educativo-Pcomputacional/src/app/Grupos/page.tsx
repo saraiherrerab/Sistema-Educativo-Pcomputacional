@@ -12,6 +12,9 @@ import obtenerHorariosGrupo from './functions/obtenerHorariosGrupo';
 import obtenerEstudiantes from './functions/obtenerListaEstudiantes'
 import Estudiante from './interfaces/estudiante.interface';
 import eliminarEstudiateDeGrupo from './functions/eliminarEstudianteGrupo';
+import agregarEstudianteGrupo from './functions/agregarEstudianteGrupo';
+import obtenerEstudiantesGrupo from './functions/obtenerEstudiantesGrupo';
+import reasignarEstudianteGrupo from './functions/reasignarEstudianteGrupo';
 
 interface Grupo {
   id_grupo: number,
@@ -181,7 +184,8 @@ const [estudianteSeleccionado, setEstudianteSeleccionado] = useState<Estudiante>
         clave_acceso: "",
         cedula: "",
         id_estudiante: 0,
-        condicion_medica: ""
+        condicion_medica: "",
+        id_grupo: 0
     }
 )
 useEffect(() => {
@@ -422,6 +426,7 @@ useEffect(() => {
   const editarEstudianteEnGrupo = (estudiante: any) => {
     console.log(estudiante)
     setEditarGrupoEstudianteSeleccionado(true)
+    setEstudianteSeleccionado(estudiante)
   }
   const eliminarEstudianteEnGrupo = async (id_estudiante_seleccionado: number) => {
     console.log(id_estudiante_seleccionado)
@@ -450,6 +455,92 @@ useEffect(() => {
   const [mostrarAsignarEstudianteAGrupo, setMostrarAsignarEstudianteAGrupo] = useState<boolean>(false)
   const [editarGrupoEstudianteSeleccionado, setEditarGrupoEstudianteSeleccionado] = useState<boolean>(false)
 
+  const [grupoAsignadoEstudiante, setGrupoAsignadoEstudiante] = useState<Grupo>(
+    { id_grupo: 0, nombre_grupo: '', id_curso: 0, id_profesor_grupo: 0}
+  )
+
+  const agregarEstudianteAGrupo = async () => {
+    console.log("agregarEstudianteAGrupo")
+    if(mostrarEstudiantesGrupo){
+      console.log(mostrarEstudiantesGrupo.id_grupo)
+      await agregarEstudianteGrupo(estudianteSeleccionado,mostrarEstudiantesGrupo.id_grupo)
+
+       // Después de agregar el estudiante:
+      const estudiantesActualizados = await obtenerEstudiantesGrupo(mostrarEstudiantesGrupo.id_grupo);
+      setListaEstudiantesPorGrupo(prev => ({
+        ...prev,
+        [mostrarEstudiantesGrupo.id_grupo]: estudiantesActualizados
+      }));
+
+    }
+
+    setEstudianteSeleccionado(
+      {
+        id_usuario: 0,
+        telefono: "",
+        nombre: "",
+        apellido: "",
+        correo: "",
+        edad: 0,
+        foto: "",
+        usuario: "",
+        clave_acceso: "",
+        cedula: "",
+        id_estudiante: 0,
+        condicion_medica: "",
+        id_grupo: 0
+    }
+  )
+
+    console.log(estudianteSeleccionado)
+
+   
+
+  }  
+
+  const reasignarEstudianteAGrupo = async () => {
+
+    console.log(estudianteSeleccionado)
+
+    const idGrupoNuevo = grupoAsignadoEstudiante.id_grupo;
+
+    const resultadoReasignar = await reasignarEstudianteGrupo(estudianteSeleccionado, idGrupoNuevo);
+
+    console.log(resultadoReasignar)
+
+    // 🔄 Actualiza el grupo nuevo
+    const estudiantesNuevoGrupo = await obtenerEstudiantesGrupo(idGrupoNuevo);
+
+    console.log(estudiantesNuevoGrupo)
+
+    window.location.href =  window.location.href 
+
+
+  }
+
+  const volverATablaDeGrupos = () => {
+    console.log("volverATablaDeGrupos")
+    setEstudianteSeleccionado(
+      {
+        id_usuario: 0,
+        telefono: "",
+        nombre: "",
+        apellido: "",
+        correo: "",
+        edad: 0,
+        foto: "",
+        usuario: "",
+        clave_acceso: "",
+        cedula: "",
+        id_estudiante: 0,
+        condicion_medica: "",
+        id_grupo: 0
+    }
+    
+  )
+  setEditarGrupoEstudianteSeleccionado(false)
+  setGrupoAsignadoEstudiante({ id_grupo: 0, nombre_grupo: '', id_curso: 0, id_profesor_grupo: 0})
+  }  
   return (
     <>
       <Header
@@ -714,16 +805,39 @@ useEffect(() => {
           )
         }
         {
-          estudianteSeleccionado.id_usuario != 0 &&
+          estudianteSeleccionado.id_usuario != 0 && !editarGrupoEstudianteSeleccionado &&
           <div>
-             <button onClick={() => null}><img src="/icons/check_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
-              <button onClick={() => null}><img src="/icons/close_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
+             <button onClick={() => agregarEstudianteAGrupo()}><img src="/icons/check_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
+              <button onClick={() => volverATablaDeGrupos()}><img src="/icons/close_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
           </div>
         }
         {
           editarGrupoEstudianteSeleccionado &&
           <div>
-            Editando 
+            <label>
+              Grupo:
+              <select
+                value={(grupoAsignadoEstudiante.id_grupo === 0 ) ? 0 : grupoAsignadoEstudiante.id_grupo}
+                onChange={(e) => {
+                  const idGrupo = Number(e.target.value);
+                  const grupoSeleccionado = grupos.find(grupo => grupo.id_grupo === idGrupo);
+                  console.log(grupoSeleccionado)
+                  if(grupoSeleccionado)
+                  setGrupoAsignadoEstudiante(grupoSeleccionado)
+                }}
+              >
+                <option value={0} disabled>Seleccione un grupo</option>
+                {grupos.map(grupo => (
+                  <option key={grupo.id_grupo} value={grupo.id_grupo}>
+                    {grupo.nombre_grupo}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <div>
+             <button onClick={() => reasignarEstudianteAGrupo()}><img src="/icons/check_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
+              <button onClick={() => volverATablaDeGrupos()}><img src="/icons/close_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
+          </div>
           </div>
         }
          <table>
