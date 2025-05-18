@@ -417,9 +417,11 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
 
                   const velocidad = 64;
 
-                  // Movimiento con teclado
-                  juegoKaplay.onKeyPress("w", () => {
+                
 
+                  // Movimiento con clic
+                  up.onClick(() => {
+                    console.log("PRESIONANDO FLECHA UP")
                     const objetoPosicionAnterior = {
                       x: player.pos.x,
                       y: player.pos.y
@@ -468,8 +470,7 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                     
                     
                   });
-
-                  juegoKaplay.onKeyPress("s", () => {
+                  down.onClick(() =>{
 
                     console.log(player.pos.x)
                     console.log(player.pos.y)
@@ -510,209 +511,6 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                     }else{
                       console.log("MOVIMIENTO INVALIDO - CONTADOR ", contadorMovimientos)
                       movimientoValido = true;
-                    }
-
-                  });
-
-                  juegoKaplay.onKeyPress("a", () => {
-
-                  
-                    posicionAnteriorXGlobal = player.pos.x
-                    posicionAnteriorYGlobal = player.pos.y
-
-                    player.moveTo(posicionAnteriorXGlobal - TILED_WIDTH,posicionAnteriorYGlobal);
-                    player.play("left");
-
-                    colisiones.forEach( (colision: GameObj<any>) => {
-                    
-                      colision.onCollide("player", (jugador: any) => {
-                        player.pos.x = posicionAnteriorXGlobal
-                        player.pos.y = posicionAnteriorYGlobal
-
-                        movimientoValido = false
-
-                      })
-
-                    })
-
-                    zonasGolpe.forEach( (zona: GameObj<any>) => {
-                    
-                      zona.onCollide("player", async (jugador: any) => {
-
-                        player.pos.x = posicionAnteriorXGlobal
-                        player.pos.y = posicionAnteriorYGlobal
-
-                      })
-
-                    })
-
-                    if(movimientoValido){
-                      contadorMovimientos = contadorMovimientos + 1;
-                      console.log("MOVIMIENTO VALIDO - CONTADOR ", contadorMovimientos)
-                    }else{
-                      console.log("MOVIMIENTO INVALIDO - CONTADOR ", contadorMovimientos)
-                      movimientoValido = true;
-                    }
-
-                  });
-                  
-                  juegoKaplay.onKeyPress("d", async () => {
-
-                    posicionAnteriorXGlobal = player.pos.x
-                    posicionAnteriorYGlobal = player.pos.y
-
-                    player.moveTo(posicionAnteriorXGlobal + TILED_WIDTH,posicionAnteriorYGlobal);
-                    player.play("right");
-
-                    colisiones.forEach( (colision: GameObj<any>) => {
-                    
-                      colision.onCollide("player", (jugador: any) => {
-                        player.pos.x = posicionAnteriorXGlobal
-                        player.pos.y = posicionAnteriorYGlobal
-
-                        movimientoValido = false
-
-                      })
-
-                    })
-
-                    zonasGolpe.forEach( (zona: GameObj<any>) => {
-                    
-                      zona.onCollide("player", async (jugador: any) => {
-
-                        player.pos.x = posicionAnteriorXGlobal
-                        player.pos.y = posicionAnteriorYGlobal
-
-                      })
-
-                    })
-
-                    if(movimientoValido){
-                      contadorMovimientos = contadorMovimientos + 1;
-                      console.log("MOVIMIENTO VALIDO - CONTADOR ", contadorMovimientos)
-                    }else{
-                      console.log("MOVIMIENTO INVALIDO - CONTADOR ", contadorMovimientos)
-                      movimientoValido = true;
-                    }
-                    
-                  });
-
-                  // Movimiento con clic
-                  up.onClick(() => {
-
-                    console.log(player.pos.x)
-                    console.log(player.pos.y)
-
-                    const posicionAnteriorX = player.pos.x
-                    const posicionAnteriorY = player.pos.y
-
-                    player.moveTo(posicionAnteriorX,posicionAnteriorY - TILED_HEIGHT);
-                    player.play("up");
-                    
-                    colisiones.forEach( (colision: GameObj<any>) => {
-                    
-                      colision.onCollide("player", (jugador: any) => {
-
-                        player.pos.x = posicionAnteriorX
-                        player.pos.y = posicionAnteriorY
-
-                        movimientoValido = false;
-                        
-                      })
-
-                    })
-
-                    enemigos.forEach( (enemigo: GameObj<any>) => {
-                    
-                      enemigo.onCollide("player", (jugador: any) => {
-                        player.pos.x = posicionAnteriorX
-                        player.pos.y = posicionAnteriorY
-
-                        movimientoValido = false;
-
-                      })
-
-                    })
-
-                    zonasGolpe.forEach( (zona: GameObj<any>) => {
-                    
-                      zona.onCollide("player", async (jugador: any) => {
-
-                        await sleep(100)
-                        
-                        player.pos.x = posicionAnteriorX
-                        player.pos.y = posicionAnteriorY
-
-                        movimientoValido = false;
-
-                      })
-                    });
-
-                    if(movimientoValido){
-                      contadorMovimientos = contadorMovimientos + 1;
-                      console.log("MOVIMIENTO VALIDO - CONTADOR ", contadorMovimientos)
-                    }else{
-                      console.log("MOVIMIENTO INVALIDO - CONTADOR ", contadorMovimientos)
-                      movimientoValido = false;
-                    }
-
-                  });
-                  down.onClick(() => {
-                    console.log(player.pos.x)
-                    console.log(player.pos.y)
-
-                    const posicionAnteriorX = player.pos.x
-                    const posicionAnteriorY = player.pos.y
-
-                    player.moveTo(posicionAnteriorX,posicionAnteriorY + TILED_HEIGHT);
-                    player.play("down");
-
-                    colisiones.forEach( (colision: GameObj<any>) => {
-                    
-                      colision.onCollide("player", (jugador: any) => {
-                        
-                        player.pos.x = posicionAnteriorX
-                        player.pos.y = posicionAnteriorY
-
-                        movimientoValido = false;
-
-                      })
-
-                    })
-
-                    enemigos.forEach( (enemigo: GameObj<any>) => {
-                    
-                      enemigo.onCollide("player", (jugador: any) => {
-                        player.pos.x = posicionAnteriorX
-                        player.pos.y = posicionAnteriorY
-
-                        movimientoValido = false;
-
-                      })
-
-                    })
-
-                    zonasGolpe.forEach( (zona: GameObj<any>) => {
-                  
-                      zona.onCollide("player", async (jugador: any) => {
-
-                        await sleep(100)
-                        
-                        player.pos.x = posicionAnteriorX
-                        player.pos.y = posicionAnteriorY
-
-                        movimientoValido = false;
-
-                      })
-
-                    })
-
-                    if(movimientoValido){
-                      contadorMovimientos = contadorMovimientos + 1;
-                      console.log("MOVIMIENTO VALIDO - CONTADOR ", contadorMovimientos)
-                    }else{
-                      console.log("MOVIMIENTO INVALIDO - CONTADOR ", contadorMovimientos)
-                      movimientoValido = false;
                     }
 
                   });
@@ -771,49 +569,34 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                     }
 
                   });
-                  right.onClick(() => {
-                    console.log(player.pos.x)
-                    console.log(player.pos.y)
+                  right.onClick(() =>{
 
-                    const posicionAnteriorX = player.pos.x
-                    const posicionAnteriorY = player.pos.y
+                    posicionAnteriorXGlobal = player.pos.x
+                    posicionAnteriorYGlobal = player.pos.y
 
-                    player.moveTo(posicionAnteriorX + TILED_WIDTH,posicionAnteriorY);
+                    player.moveTo(posicionAnteriorXGlobal + TILED_WIDTH,posicionAnteriorYGlobal);
                     player.play("right");
 
                     colisiones.forEach( (colision: GameObj<any>) => {
                     
                       colision.onCollide("player", (jugador: any) => {
-                        player.pos.x = posicionAnteriorX
-                        player.pos.y = posicionAnteriorY
+                        player.pos.x = posicionAnteriorXGlobal
+                        player.pos.y = posicionAnteriorYGlobal
 
-                        movimientoValido = false;
-                      })
+                        movimientoValido = false
 
-                    })
-
-                    enemigos.forEach( (enemigo: GameObj<any>) => {
-                    
-                      enemigo.onCollide("player", (jugador: any) => {
-                        player.pos.x = posicionAnteriorX
-                        player.pos.y = posicionAnteriorY
-
-                        movimientoValido = false;
                       })
 
                     })
 
                     zonasGolpe.forEach( (zona: GameObj<any>) => {
                     
-                        zona.onCollide("player", async (jugador: any) => {
+                      zona.onCollide("player", async (jugador: any) => {
 
-                          await sleep(100)
+                        player.pos.x = posicionAnteriorXGlobal
+                        player.pos.y = posicionAnteriorYGlobal
 
-                          player.pos.x = posicionAnteriorX
-                          player.pos.y = posicionAnteriorY
-
-                          movimientoValido = false;
-                        })
+                      })
 
                     })
 
@@ -822,57 +605,12 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                       console.log("MOVIMIENTO VALIDO - CONTADOR ", contadorMovimientos)
                     }else{
                       console.log("MOVIMIENTO INVALIDO - CONTADOR ", contadorMovimientos)
-                      movimientoValido = false;
+                      movimientoValido = true;
                     }
-                  });
                     
-                  player.onDeath(() => {
-                    juegoKaplay.destroy(player);
                   });
                   
-                  /* Nota de Luis: Aquí está el movimiento de cámara
-                  console.log("IMPRIMIENDO COORDENADAS DE BORDE")
-                  console.log({
-                    1: {x: redRoom.pos.x, y: 0},
-                    2: {x: redRoom.pos.x + redRoom.width, y: 0},
-                    3: {x:0,y:redRoom.pos.y + redRoom.height},
-                    4: {x: redRoom.pos.x + redRoom.width, y: redRoom.pos.y + redRoom.height}
-                  })
-
-                  console.log("IMPRIMIENDO COORDENADAS DE JUGADOR")
-                  console.log({
-                    1: {x: player.pos.x, y: 0},
-                    2: {x: player.pos.x + player.width, y: 0},
-                    3: {x:0,y:player.pos.y + player.height},
-                    4: {x: player.pos.x + player.width, y: player.pos.y + player.height}
-                  })
-                  
-                  player.onCollide("redRoom", (redRoom:any) => {
-                    console.log("SIGUIENTE NIVEl")
-                    
-                    juegoKaplay.tween(
-                      juegoKaplay.camPos().x, 
-                          redRoom.pos.x + redRoom.width + 1920/ 2, 
-                          1, 
-                          (value:any) => juegoKaplay.camPos(value, juegoKaplay.camPos().y), 
-                          juegoKaplay.easings.linear
-                    )
-                          
-                    
-                  })
-                  */
-                  
-                  /*
-                  const redRoom = juegoKaplay.add([
-                    juegoKaplay.rect(200, 500),
-                    juegoKaplay.area(),
-                    juegoKaplay.color(255, 0, 0),
-                    juegoKaplay.pos(1920 - 200,juegoKaplay.center().y - 250),
-                    "redRoom",
-                    { z: 10 } // Asegura que el jugador esté en una capa superior
-                  ])
-                  */
-    
+                
               }
               ).catch(
                 ((error:any) => {

@@ -11,6 +11,7 @@ export default function Menu() {
       <canvas id="menu" style={{ width: "100vw", height: "100vh", position:"relative" }} />
       
       <div className="menu">
+        <img src="/boton-salir.png" alt="Salir" className="boton-salir"  onClick={()=>Router.push("/")}/>
         <Saludo usuario="profesor"></Saludo>
         <div className="contenedor">
         <div className= "MButtonsContainer">
