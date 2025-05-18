@@ -1,14 +1,3 @@
 {
-<<<<<<< HEAD
-  "/Amenu/page": "app/Amenu/page.js",
-  "/GruposYCursos/page": "app/GruposYCursos/page.js",
-  "/Aestudiantes-lista/page": "app/Aestudiantes-lista/page.js",
-  "/videojuego/page": "app/videojuego/page.js",
-  "/Grupos/page": "app/Grupos/page.js"
-=======
-  "/page": "app/page.js",
-  "/Amenu/page": "app/Amenu/page.js",
-  "/menu/page": "app/menu/page.js",
-  "/videojuego/page": "app/videojuego/page.js"
->>>>>>> origin/LaSaraRama
+  "/GruposYCursos/page": "app/GruposYCursos/page.js"
 }
