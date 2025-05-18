@@ -6,6 +6,8 @@ import Header from "../../components/header/header";
 import { useRouter } from "next/navigation";
 import obtenerCursos from './functions/obtenerCursos';
 import Curso from './interfaces/curso.interface';
+import obtenerProfesoresCurso from './functions/obtenerProfesoresCurso';
+import obtenerGruposCurso from './functions/obtenerGruposCurso';
 
 interface Grupo {
   id_grupo: number,
@@ -45,33 +47,36 @@ export default function GruposYCursos() {
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
  
 
-  useEffect(() => {
-    const cargarCursos = async () => {
-            const respuesta = await obtenerCursos();
-            console.log(respuesta)
-            setCursos([...respuesta])
-    };
-    cargarCursos()
-  }, []);
-
-  useEffect(() => {
-    const filtrarCursos = () => {
-      const results = cursos.filter(c =>
-        c.nombre_curso.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setCursosFiltrados(results);
-    };
-
-    filtrarCursos();
-  }, [searchTerm, cursos]);
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+// 1. Obtener los cursos al montar el componente
+useEffect(() => {
+  const cargarCursos = async () => {
+    const respuesta = await obtenerCursos();
+    setCursos(respuesta); // No necesitas usar spread [...respuesta]
   };
+  cargarCursos();
+}, []);
 
-  const handleSearchClick = () => {
-    filtrarCursos();
-  };
+// ✅ 2. Función de filtrado afuera del useEffect
+const filtrarCursos = () => {
+  const results = cursos.filter(c =>
+    c.nombre_curso.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  setCursosFiltrados(results);
+};
+
+// 3. Filtrar cuando cambia el término o los cursos
+useEffect(() => {
+  filtrarCursos();
+}, [searchTerm, cursos]);
+
+// 4. Handlers para búsqueda
+const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  setSearchTerm(e.target.value);
+};
+
+const handleSearchClick = () => {
+  filtrarCursos(); // ✅ Ya está definida
+};
 
   const handleTitleClick = () => {
     setSearchTerm('');
@@ -89,8 +94,11 @@ export default function GruposYCursos() {
     setCursoEditando({ ...curso });
   };
 
-  const obtenerGruposDelCurso = (idCurso: number) =>
+  const obtenerGruposDelCurso = (idCurso: number) => 
+  {
     grupos.filter(g => g.id_curso === idCurso);
+  }
+    
 
   const obtenerProfesoresDelCurso = (idCurso: number) => {
     const gruposDelCurso = obtenerGruposDelCurso(idCurso).map(g => g.id_grupo);
@@ -183,7 +191,30 @@ export default function GruposYCursos() {
     return resultado_json
   }
 
+  const [mapaGruposPorCurso, setMapaGruposPorCurso] = useState<{ [id: number]: any[] }>({});
+  const [mapaProfesoresPorCurso, setMapaProfesoresPorCurso] = useState<{ [id: number]: any[] }>({});
 
+  useEffect(() => {
+  const cargarDatosCursos = async () => {
+    const nuevosGrupos: { [id: number]: any[] } = {};
+    const nuevosProfesores: { [id: number]: any[] } = {};
+
+    for (const curso of cursosFiltrados) {
+      const grupos = await obtenerGruposCurso(curso.id_curso);
+      const profesores = await obtenerProfesoresCurso(curso.id_curso);
+
+      nuevosGrupos[curso.id_curso] = grupos;
+      nuevosProfesores[curso.id_curso] = profesores;
+    }
+
+    setMapaGruposPorCurso(nuevosGrupos);
+    setMapaProfesoresPorCurso(nuevosProfesores);
+  };
+
+  if (cursosFiltrados.length > 0) {
+    cargarDatosCursos();
+  }
+}, [cursosFiltrados]);
 
   return (
     <>
@@ -235,22 +266,34 @@ export default function GruposYCursos() {
               </thead>
               <tbody>
                 {cursosFiltrados.map(curso => {
-                  const gruposCurso = obtenerGruposDelCurso(curso.id_curso);
-                  const profesoresCurso = obtenerProfesoresDelCurso(curso.id_curso);
+                  const gruposCurso = mapaGruposPorCurso[curso.id_curso] || [];
+                  const profesoresCurso = mapaProfesoresPorCurso[curso.id_curso] || [];
 
                   return (
                     <tr key={curso.id_curso}>
                       <td style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         {curso.nombre_curso}
-                        {/* Icono lápiz para editar */}
-                        <button
-                          onClick={() => onEditar(curso)}
-                        >
-                          Editar
-                        </button>
+                        <button onClick={() => onEditar(curso)}>Editar</button>
                       </td>
-                      <td>{gruposCurso.map(g => g.nombre_grupo).join(", ")}</td>
-                      <td>{profesoresCurso.map(p => p.nombre).join(", ")}</td>
+
+                      <td>
+                        <ul style={{ paddingLeft: '1rem', margin: 0 }}>
+                          {gruposCurso.map(grupo => (
+                            <li key={grupo.id_grupo}>{grupo.nombre_grupo}</li>
+                          ))}
+                        </ul>
+                      </td>
+
+                      <td>
+                        <ul style={{ paddingLeft: '1rem', margin: 0 }}>
+                          {profesoresCurso.map(profesor => (
+                            <li key={profesor.id_usuario}>
+                              {profesor.nombre} {profesor.apellido}
+                            </li>
+                          ))}
+                        </ul>
+                      </td>
+
                       <td className="display_flex">
                         <button onClick={() => borrarCursoSeleccionado(curso.id_curso)}>Eliminar</button>
                       </td>
