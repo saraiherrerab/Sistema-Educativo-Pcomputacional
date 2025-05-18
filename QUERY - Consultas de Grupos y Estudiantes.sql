@@ -36,3 +36,5 @@ AND Gr.id_curso = 1;
 SELECT Gr.*
 FROM Grupos AS Gr
 WHERE Gr.id_curso = 1
+
+INSERT INTO horarios_grupo(id_grupo,dia_semana,hora_inicio,hora_fin) VALUES ()

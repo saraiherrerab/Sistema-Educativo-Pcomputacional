@@ -60,7 +60,7 @@ export default function EstudiantesLista() {
                 headers: {
                   'Content-Type': 'application/json'
                 }
-                    });
+        });
         const resultado_json= await resultado.json();
         console.log(resultado_json);
         return resultado_json
