@@ -13,6 +13,7 @@ var awsRouter = require('./amazon_s3')
 var evaluacionRoutes = require('./routes/evaluacion');
 var cursosRoutes = require('./routes/cursos');
 var horariosRoutes = require('./routes/horarios');
+var nivelesRoutes = require('./routes/nivel');
 const cors = require('cors');
 
 var app = express();
@@ -38,6 +39,7 @@ app.use(estudianteRouter);
 app.use(evaluacionRoutes);
 app.use(cursosRoutes);
 app.use(horariosRoutes);
+app.use(nivelesRoutes);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

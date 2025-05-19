@@ -2,9 +2,20 @@ import { GameObj, KAPLAYCtx } from "kaplay";
 import generarEsquemaMapa from "../../MapsGenerator";
 import Evaluacion_Estudiante from "./interfaces/informacion_estudiante.interface";
 import cargarEvaluacionEstudiante from "./functions/cargarEvaluacionEstudiante";
+import obtenerNivelesUsuario from "./functions/obtenerNivelesUsuario";
+import cargarNivelUsuario from "./functions/cargarNivelUsuario";
+import modificarNivelUsuario from "./functions/modificarNivelUsuario";
 
-export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGanarB:any, setStateA:any, cambiarGanarA:any,setStateC:any, cambiarGanarC:any, Router:any,usuario: any){
+export async function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGanarB:any, setStateA:any, cambiarGanarA:any,setStateC:any, cambiarGanarC:any, Router:any,usuario: any,jugoNiveles:boolean){
 
+        let existeNivelUno = false
+        if(jugoNiveles){
+          const nivelesUsuario = await obtenerNivelesUsuario(usuario.id_usuario)
+          console.log(nivelesUsuario)
+          existeNivelUno = nivelesUsuario.some( (nivel: any) => nivel.id_nivel === 1);
+        }else{
+          console.log("NO HA JUGADO - PRIMERA VEZ")
+        }
         const SCREEN_RESOLUTION_X: number = window.innerWidth 
         const SCREEN_RESOLUTION_Y: number = window.innerHeight 
         const TILED_MAP__WIDTH_NUMBER: number = 20
@@ -203,6 +214,19 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
 
                       if( lives ===0 ){
 
+                        
+                        if(existeNivelUno){
+                          const nivelesUsuario = await obtenerNivelesUsuario(usuario.id_usuario)
+                          
+                          const aproboNivelUno = nivelesUsuario.some((nivel: any) => nivel.id_nivel === 1 && nivel.estatus === "APROBADO");
+        
+                          const modificarResultado = await modificarNivelUsuario(usuario.id_usuario,1,(aproboNivelUno) ? "APROBADO" : "NO APROBADO")
+                          console.log(modificarResultado)
+                        }else{
+                          const cargarResultado = await cargarNivelUsuario(usuario.id_usuario,1,"NO APROBADO")
+                          console.log(cargarResultado)
+                        }
+
                         if(usuario.rol === "ESTUDIANTE"){
                                                           
                           const obtenerDatosUsuario = async (estudiante_seleccionado: number) => {
@@ -360,6 +384,20 @@ export function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cambiarGa
                       cambiarGanarA(true); 
                       setStateA(true);
                       juegoKaplay.play("aprobado", { volume: 1, speed: 1.5, loop: false });
+
+                      if(existeNivelUno){
+                          const nivelesUsuario = await obtenerNivelesUsuario(usuario.id_usuario)
+                          
+                          const aproboNivelUno = nivelesUsuario.some((nivel: any) => nivel.id_nivel === 1 && nivel.estatus === "APROBADO");
+        
+                          const modificarResultado = await modificarNivelUsuario(usuario.id_usuario,1,(aproboNivelUno) ? "APROBADO" : "NO APROBADO")
+                          console.log(modificarResultado)
+                        }else{
+                          const cargarResultado = await cargarNivelUsuario(usuario.id_usuario,1,"APROBADO")
+                          console.log(cargarResultado)
+                        }
+
+                      
                       await sleep(2000)
                       
 
