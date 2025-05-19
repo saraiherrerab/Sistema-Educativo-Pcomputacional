@@ -1018,6 +1018,90 @@ import devolverSiguienteNumeroValido from "./utils/generarSiguienteNumeroValido"
       
           }
 
+          if(layer.type === "objectgroup" && layer.name === "restriccion3"){
+
+            const anchoCelda: number = ( window.innerWidth / 20);
+            const altoCelda: number = ( window.innerHeight / 15)
+
+
+            layer.objects.forEach( (imagenNivel: any) => {
+              
+              console.log(imagenNivel)
+              let posicionX: number = (imagenNivel.x / 32) * ( anchoCelda);
+              let posicionY: number = (imagenNivel.y / 32) * ( altoCelda)
+
+              let imagen = contextoKaplay.add([
+                contextoKaplay.pos(((posicionX) + (anchoCelda)/2), ((posicionY) + ( altoCelda / 2))),
+                contextoKaplay.sprite("arbol"),
+                contextoKaplay.scale(0.8),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), (imagenNivel.width / 32) * anchoCelda, (imagenNivel.height / 32) * altoCelda)}),
+                contextoKaplay.anchor("center"),
+                contextoKaplay.body({isStatic: true}),
+                "restriccion3",
+                { z: 1 } // Asegura que el jugador esté en una capa superior
+              ]);
+  
+              imagen.tag("restriccion3")
+            })
+      
+          }
+
+          if(layer.type === "objectgroup" && layer.name === "restriccion2"){
+
+            const anchoCelda: number = ( window.innerWidth / 20);
+            const altoCelda: number = ( window.innerHeight / 15)
+
+
+            layer.objects.forEach( (imagenNivel: any) => {
+              
+              console.log(imagenNivel)
+              let posicionX: number = (imagenNivel.x / 32) * ( anchoCelda);
+              let posicionY: number = (imagenNivel.y / 32) * ( altoCelda)
+
+              let imagen = contextoKaplay.add([
+                contextoKaplay.pos(((posicionX) + (anchoCelda)/2), ((posicionY) + ( altoCelda / 2))),
+                contextoKaplay.sprite("arbol"),
+                contextoKaplay.scale(0.8),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), (imagenNivel.width / 32) * anchoCelda, (imagenNivel.height / 32) * altoCelda)}),
+                contextoKaplay.anchor("center"),
+                contextoKaplay.body({isStatic: true}),
+                "restriccion2",
+                { z: 1 } // Asegura que el jugador esté en una capa superior
+              ]);
+  
+              imagen.tag("restriccion2")
+            })
+      
+          }
+
+          if(layer.type === "objectgroup" && layer.name === "restriccion1"){
+
+            const anchoCelda: number = ( window.innerWidth / 20);
+            const altoCelda: number = ( window.innerHeight / 15)
+
+
+            layer.objects.forEach( (imagenNivel: any) => {
+              
+              console.log(imagenNivel)
+              let posicionX: number = (imagenNivel.x / 32) * ( anchoCelda);
+              let posicionY: number = (imagenNivel.y / 32) * ( altoCelda)
+
+              let imagen = contextoKaplay.add([
+                contextoKaplay.pos(((posicionX) + (anchoCelda)/2), ((posicionY) + ( altoCelda / 2))),
+                contextoKaplay.sprite("arbol"),
+                contextoKaplay.scale(0.8),
+                contextoKaplay.area({shape: new contextoKaplay.Rect(contextoKaplay.vec2(0,0), (imagenNivel.width / 32) * anchoCelda, (imagenNivel.height / 32) * altoCelda)}),
+                contextoKaplay.anchor("center"),
+                contextoKaplay.body({isStatic: true}),
+                "restriccion1",
+                { z: 1 } // Asegura que el jugador esté en una capa superior
+              ]);
+  
+              imagen.tag("restriccion1")
+            })
+      
+          }
+
         });
         
       

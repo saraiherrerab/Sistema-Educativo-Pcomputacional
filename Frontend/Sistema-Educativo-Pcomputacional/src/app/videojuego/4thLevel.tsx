@@ -5,6 +5,9 @@ import generarEsquemaMapa from "../../MapsGenerator";
 import generarNumerosAzar from "../../utils/generarNumerosAzar";
 import Evaluacion_Estudiante from "./interfaces/informacion_estudiante.interface";
 import cargarEvaluacionEstudiante from "./functions/cargarEvaluacionEstudiante";
+import cargarNivelUsuario from "./functions/cargarNivelUsuario";
+import obtenerNivelesUsuario from "./functions/obtenerNivelesUsuario";
+import modificarNivelUsuario from "./functions/modificarNivelUsuario";
 
 let SCREEN_RESOLUTION_X = 0;
 let SCREEN_RESOLUTION_Y = 0;
@@ -20,9 +23,18 @@ export let cambioNivel = 0;
 
 
 
-export function Nivel4(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,setStateA:any, cambiarGanarA:any,setState1:any, cambiarGanar1:any, setStateC:any, cambiarGanarC:any,setStateI:any, cambiarGanarI:any, Router:any,usuario: any) {
+export async function Nivel4(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,setStateA:any, cambiarGanarA:any,setState1:any, cambiarGanar1:any, setStateC:any, cambiarGanarC:any,setStateI:any, cambiarGanarI:any, Router:any,usuario: any,jugoNiveles:boolean) {
     // Referencia persistente para almacenar la instancia de Kaplay
    // setState(false);
+
+    let existeNivelCuatro = false
+    if(jugoNiveles){
+      const nivelesUsuario = await obtenerNivelesUsuario(usuario.id_usuario)
+      console.log(nivelesUsuario)
+      existeNivelCuatro = nivelesUsuario.some( (nivel: any) => nivel.id_nivel === 4);
+    }else{
+      console.log("NO HA JUGADO - PRIMERA VEZ")
+    }
 
     function sleep(ms: number) {
       return new Promise(resolve => setTimeout(resolve, ms));   
@@ -502,6 +514,20 @@ export function Nivel4(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
 
             if(vidas <= 0) {
               console.log("TE MORISTE")
+
+              if(existeNivelCuatro){
+                const nivelesUsuario = await obtenerNivelesUsuario(usuario.id_usuario)
+                
+                const aproboNivelUno = nivelesUsuario.some((nivel: any) => nivel.id_nivel === 4 && nivel.estatus === "APROBADO");
+
+                const modificarResultado = await modificarNivelUsuario(usuario.id_usuario,4,(aproboNivelUno) ? "APROBADO" : "NO APROBADO")
+                console.log(modificarResultado)
+              }else{
+                const cargarResultado = await cargarNivelUsuario(usuario.id_usuario,4,"NO APROBADO")
+                console.log(cargarResultado)
+              }
+
+
               cambiarGanarC(true);
               setStateC(true);
               juegoKaplay.play("perdido", { volume: 1, speed: 1.5, loop: false });
@@ -569,6 +595,19 @@ export function Nivel4(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGan
               
               console.log("El mensaje es: " + aciertos);
               //patronesdinamicos().clear;
+
+              if(existeNivelCuatro){
+                const nivelesUsuario = await obtenerNivelesUsuario(usuario.id_usuario)
+                
+                const aproboNivelUno = nivelesUsuario.some((nivel: any) => nivel.id_nivel === 4 && nivel.estatus === "APROBADO");
+
+                const modificarResultado = await modificarNivelUsuario(usuario.id_usuario,4,(aproboNivelUno) ? "APROBADO" : "NO APROBADO")
+                console.log(modificarResultado)
+              }else{
+                const cargarResultado = await cargarNivelUsuario(usuario.id_usuario,4,"APROBADO")
+                console.log(cargarResultado)
+              }
+
               
               cambiarGanar(true);
               setState(true);

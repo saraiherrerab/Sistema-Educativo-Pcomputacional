@@ -10,9 +10,7 @@ interface Horarios {
     dia_semana: string,
     hora_fin: string,
     hora_inicio: string,
-    id_curso: number,
     id_horario: number,
-    id_profesor: number
 }
 
 interface descripcionesNota {
