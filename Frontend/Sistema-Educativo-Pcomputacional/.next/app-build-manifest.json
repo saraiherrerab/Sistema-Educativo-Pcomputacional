@@ -11,18 +11,22 @@
       "static/css/app/page.css",
       "static/chunks/app/page.js"
     ],
+<<<<<<< HEAD
     "/Amenu/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/Amenu/page.css",
       "static/chunks/app/Amenu/page.js"
     ],
+=======
+>>>>>>> origin/LaSaraRama
     "/Aestudiantes-lista/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/Aestudiantes-lista/page.css",
       "static/chunks/app/Aestudiantes-lista/page.js"
     ],
+<<<<<<< HEAD
     "/profile/[id]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -40,12 +44,28 @@
       "static/chunks/main-app.js",
       "static/css/app/profile-prof/[id]/page.css",
       "static/chunks/app/profile-prof/[id]/page.js"
+=======
+    "/Amenu/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/Amenu/page.css",
+      "static/chunks/app/Amenu/page.js"
+>>>>>>> origin/LaSaraRama
     ],
     "/videojuego/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/videojuego/page.css",
       "static/chunks/app/videojuego/page.js"
+<<<<<<< HEAD
+=======
+    ],
+    "/profile/[id]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/profile/[id]/page.css",
+      "static/chunks/app/profile/[id]/page.js"
+>>>>>>> origin/LaSaraRama
     ]
   }
 }
