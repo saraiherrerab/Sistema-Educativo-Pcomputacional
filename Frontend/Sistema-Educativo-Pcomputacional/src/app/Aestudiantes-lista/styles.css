@@ -265,6 +265,8 @@ th:last-child {
   cursor: not-allowed;
 }
 
+
+
 /* Responsive para móviles */
 @media (max-width: 600px) {
   .formulario-agregar {

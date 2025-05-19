@@ -71,6 +71,7 @@ export default function EstudiantesLista() {
     const [estudianteEditando, setEstudianteEditando] = useState<Estudiante | null>(null);
 
     const [mostrarFormulario, setMostrarFormulario] = useState(false);
+    
     const [nuevoEstudiante, setNuevoEstudiante] = useState<Estudiante>({
         id_usuario: 0,
         telefono: "",
@@ -862,10 +863,11 @@ export default function EstudiantesLista() {
                         <p className="mensaje-error-usuario">&nbsp;</p>
                     </div>
 
-                    <div className="campo-clave">
-                        <label>Clave</label>
+                  <div className="campo-clave">
+                    <label>Clave</label>
+                    <div style={{ position: 'relative', width: '100%' }}>
                         <input
-                        type="password"
+                        type={mostrarClave ? 'text' : 'password'}
                         placeholder="Clave"
                         autoComplete="new-password"
                         value={nuevoEstudiante.clave_acceso}
@@ -873,13 +875,40 @@ export default function EstudiantesLista() {
                             setNuevoEstudiante({ ...nuevoEstudiante, clave_acceso: e.target.value });
                             setContrasenaValida(validarContrasena(e.target.value));
                         }}
+                        style={{
+                            width: '100%',
+                            paddingRight: '40px',
+                            height: '36px',
+                            fontSize: '16px',
+                            boxSizing: 'border-box'
+                        }}
                         />
-                        {!contrasenaValida && (
-                        <p className="mensaje-error-clave">
-                            La clave requiere al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.
-                        </p>
-                        )}
+                        <img
+                        src={mostrarClave ? '/icons/ojito-abierto.png' : '/icons/ojito-cerrado.png'}
+                        alt="Mostrar/Ocultar Clave"
+                        onClick={() => setMostrarClave(prev => !prev)}
+                        style={{
+                            position: 'absolute',
+                            right: '40px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            width: '20px',
+                            height: '20px',
+                            cursor: 'pointer',
+                            opacity: 0.7
+                        }}
+                        />
                     </div>
+
+                    {!contrasenaValida && (
+                        <p className="mensaje-error-clave">
+                        La clave requiere al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.
+                        </p>
+                    )}
+                    </div>
+
+
+
                     </div>
 
                     <div className="campo-form">
@@ -1075,23 +1104,49 @@ export default function EstudiantesLista() {
 
                         <div className="campo-form">
                         <label>Clave</label>
-                        <input
-                            type="password"
+                        <div style={{ position: 'relative', width: '100%' }}>
+                            <input
+                            type={mostrarClave ? 'text' : 'password'}
                             placeholder="Clave"
                             value={estudianteEditando.clave_acceso || ''}
                             onChange={e => {
-                            const value = e.target.value;
-                            setEstudianteEditando({ ...estudianteEditando, clave_acceso: value });
-                            const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&.,;:]).{8,}$/;
-                            setClaveValidaEdit(regex.test(value));
+                                const value = e.target.value;
+                                setEstudianteEditando({ ...estudianteEditando, clave_acceso: value });
+                                const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&.,;:]).{8,}$/;
+                                setClaveValidaEdit(regex.test(value));
                             }}
-                        />
+                            style={{
+                                width: '100%',
+                                paddingRight: '40px',
+                                height: '36px',
+                                fontSize: '16px',
+                                boxSizing: 'border-box'
+                        }}
+                            
+                            />
+                            <img
+                            src={mostrarClave ? '/icons/ojito-abierto.png' : '/icons/ojito-cerrado.png'}
+                            alt="Mostrar/Ocultar Clave"
+                            onClick={() => setMostrarClave(prev => !prev)}
+                            style={{
+                                position: 'absolute',
+                                right: '40px',
+                                top: '50%',
+                                transform: 'translateY(-50%)',
+                                width: '20px',
+                                height: '20px',
+                                cursor: 'pointer',
+                                opacity: 0.7
+                            }}
+                            />
+                        </div>
                         {!claveValidaEdit && (
                             <p className="mensaje-error-clave">
                             La clave requiere al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.
                             </p>
                         )}
                         </div>
+
 
                         <div className="campo-form">
                         <label>Teléfono</label>

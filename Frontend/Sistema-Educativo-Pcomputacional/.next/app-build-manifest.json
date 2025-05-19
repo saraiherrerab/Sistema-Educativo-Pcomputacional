@@ -22,6 +22,18 @@
       "static/chunks/main-app.js",
       "static/css/app/Amenu/page.css",
       "static/chunks/app/Amenu/page.js"
+    ],
+    "/videojuego/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/videojuego/page.css",
+      "static/chunks/app/videojuego/page.js"
+    ],
+    "/profile/[id]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/profile/[id]/page.css",
+      "static/chunks/app/profile/[id]/page.js"
     ]
   }
 }
