@@ -5,11 +5,17 @@
       "static/chunks/main-app.js",
       "static/chunks/app/layout.js"
     ],
-    "/GruposYCursos/page": [
+    "/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/GruposYCursos/page.css",
-      "static/chunks/app/GruposYCursos/page.js"
+      "static/css/app/page.css",
+      "static/chunks/app/page.js"
+    ],
+    "/Aestudiantes-lista/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/Aestudiantes-lista/page.css",
+      "static/chunks/app/Aestudiantes-lista/page.js"
     ]
   }
 }

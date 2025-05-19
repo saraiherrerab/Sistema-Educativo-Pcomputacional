@@ -1,3 +1,4 @@
 {
-  "/GruposYCursos/page": "app/GruposYCursos/page.js"
+  "/page": "app/page.js",
+  "/Aestudiantes-lista/page": "app/Aestudiantes-lista/page.js"
 }

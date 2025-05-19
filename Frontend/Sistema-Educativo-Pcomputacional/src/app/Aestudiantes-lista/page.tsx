@@ -38,6 +38,7 @@ export default function EstudiantesLista() {
     const [habilitarGuardado, setHabilitarGuardado] = useState<boolean>(true);
     const [nuevaFoto, setNuevaFoto] = useState<boolean>(false);
     const [grupos, setGrupos] = useState<Grupo[]>([])
+    
 
     const validarFormulario = (): boolean => {
         console.log("Validando Entradas de nuevo profesor")
@@ -84,6 +85,7 @@ export default function EstudiantesLista() {
         id_estudiante: 0,
         condicion_medica: ""
     });
+    
 
     const [descargandoImagen, setDescargandoImagen] = useState(false);
     const [imagenDescargadaUrl, setImagenDescargadaUrl] = useState<string | null>(null);
@@ -509,6 +511,7 @@ export default function EstudiantesLista() {
                 
                 setImagenDescargadaUrl('imagenvacia.png')
                 setFotoPerfil(archivo)
+                
             
                 return;
             } catch (error) {
@@ -762,6 +765,16 @@ export default function EstudiantesLista() {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
+    const validarContrasena = (clave: string): boolean => {
+                // Al menos una mayúscula, una minúscula, un número, un carácter especial, mínimo 8 caracteres
+                const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+                return regex.test(clave);
+                };
+
+    const [contrasenaValida, setContrasenaValida] = useState(true);
+    const [mostrarClave, setMostrarClave] = useState(false);
+            
+
 
     return (
         <>
@@ -773,7 +786,10 @@ export default function EstudiantesLista() {
                 text4="Salir" onClick4={() => Router.push("/videojuego")}>
             </Header>
 
+           
+
             <div className="listado body_estudiantes">
+                {!mostrarFormulario && (
                 <div className="encabezado">
                     <div className="tituloListado" style={{ cursor: 'pointer' }}>
                         <h2 className="estudiantes" onClick={() => handleTitleClick()}>ESTUDIANTES</h2>
@@ -798,42 +814,135 @@ export default function EstudiantesLista() {
                     </div>
                     </div>
                 </div>
+                )}
 
                 {mostrarFormulario && (
-                    <div className="formulario-agregar">
-                        <h3>Agregar Nuevo Estudiante</h3>
-                        <input type="text" placeholder="Nombre" value={nuevoEstudiante.nombre} onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, nombre: e.target.value })} />
-                        <input type="text" placeholder="Apellido" value={nuevoEstudiante.apellido} onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, apellido: e.target.value })} />
-                        <input type="text" placeholder="Usuario" value={nuevoEstudiante.usuario} onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, usuario: e.target.value })} />
-                        <input type="text" placeholder="Clave" value={nuevoEstudiante.clave_acceso} onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, clave_acceso: e.target.value })} />
-                        <input type="text" placeholder="Telefono" value={nuevoEstudiante.telefono} onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, telefono: e.target.value })} />
-                        <input type="text" placeholder="Correo" value={nuevoEstudiante.correo} onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, correo: e.target.value })} />
-                        <input
-                            type="number"
-                            min={0}
-                            placeholder="Edad"
-                            value={nuevoEstudiante.edad}
-                            onChange={e => {
-                                const value = e.target.value;
-                                const numberValue = Number(value);
-                                if (value === '' || (Number.isFinite(numberValue) && numberValue >= 0)) {
-                                setNuevoEstudiante({
-                                    ...nuevoEstudiante,
-                                    edad: value === '' ? 0 : numberValue,
-                                });
-                                }
-                            }}
-                        />
-                        <input type="text" placeholder="Cedula" value={nuevoEstudiante.cedula} onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, cedula: e.target.value })} />
-                        <input
-                            type="file"
-                            accept=".png"
-                            onChange={handleFotoChange}
-                        />
-                        <button onClick={() => onAgregarEstudiante() } disabled={habilitarGuardado}>Guardar</button>
-                        <button onClick={() => setMostrarFormulario(false)}>Cancelar</button>
-                    </div>
+        <div className="formulario-agregar">
+            <h3>AGREGAR NUEVO ESTUDIANTE</h3>
+
+            <div className="campo-form">
+            <label>Nombre</label>
+            <input
+                type="text"
+                placeholder="Nombre"
+                value={nuevoEstudiante.nombre}
+                onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, nombre: e.target.value })}
+            />
+            </div>
+
+            <div className="campo-form">
+            <label>Apellido</label>
+            <input
+                type="text"
+                placeholder="Apellido"
+                value={nuevoEstudiante.apellido}
+                onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, apellido: e.target.value })}
+            />
+            </div>
+
+            <div className="fila-usuario-clave">
+            <div className="campo-usuario">
+                <label>Usuario</label>
+                <input
+                type="text"
+                placeholder="Usuario"
+                autoComplete="off"
+                value={nuevoEstudiante.usuario}
+                onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, usuario: e.target.value })}
+                />
+                <p className="mensaje-error-usuario">&nbsp;</p>
+            </div>
+
+            <div className="campo-clave">
+                <label>Clave</label>
+                <input
+                type="password"
+                placeholder="Clave"
+                autoComplete="new-password"
+                value={nuevoEstudiante.clave_acceso}
+                onChange={e => {
+                    setNuevoEstudiante({ ...nuevoEstudiante, clave_acceso: e.target.value });
+                    setContrasenaValida(validarContrasena(e.target.value));
+                }}
+                />
+                {!contrasenaValida && (
+                <p className="mensaje-error-clave">
+                    La clave requiere al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.
+                </p>
                 )}
+            </div>
+            </div>
+
+            <div className="campo-form">
+            <label>Teléfono</label>
+            <input
+                type="text"
+                placeholder="Telefono"
+                value={nuevoEstudiante.telefono}
+                onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, telefono: e.target.value })}
+            />
+            </div>
+
+            <div className="campo-form">
+            <label>Correo</label>
+            <input
+                type="text"
+                placeholder="Correo"
+                value={nuevoEstudiante.correo}
+                onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, correo: e.target.value })}
+            />
+            </div>
+
+            <div className="campo-form">
+            <label>Edad</label>
+            <input
+                type="number"
+                min={0}
+                placeholder="Edad"
+                value={nuevoEstudiante.edad}
+                onChange={e => {
+                const value = e.target.value;
+                const numberValue = Number(value);
+                if (value === '' || (Number.isFinite(numberValue) && numberValue >= 0)) {
+                    setNuevoEstudiante({
+                    ...nuevoEstudiante,
+                    edad: value === '' ? 0 : numberValue,
+                    });
+                }
+                }}
+            />
+            </div>
+
+            <div className="campo-form">
+            <label>Cédula</label>
+            <input
+                type="text"
+                placeholder="Cedula"
+                value={nuevoEstudiante.cedula}
+                onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, cedula: e.target.value })}
+            />
+            </div>
+
+            <div className="campo-form">
+            <label>Foto (solo PNG)</label>
+            <input
+                type="file"
+                accept=".png"
+                onChange={handleFotoChange}
+            />
+            </div>
+
+            <div className="botones">
+            <button onClick={() => onAgregarEstudiante()} disabled={habilitarGuardado || !contrasenaValida}>
+                Guardar
+            </button>
+            <button onClick={() => setMostrarFormulario(false)}>Cancelar</button>
+            </div>
+        </div>
+        )}
+
+
+               
 
                 {!mostrarFormulario && !estudianteEditando && (
                     <table>
