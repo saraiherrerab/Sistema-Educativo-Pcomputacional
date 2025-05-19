@@ -385,17 +385,9 @@ export async function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cam
                       setStateA(true);
                       juegoKaplay.play("aprobado", { volume: 1, speed: 1.5, loop: false });
 
-                      if(existeNivelUno){
-                          const nivelesUsuario = await obtenerNivelesUsuario(usuario.id_usuario)
-                          
-                          const aproboNivelUno = nivelesUsuario.some((nivel: any) => nivel.id_nivel === 1 && nivel.estatus === "APROBADO");
-        
-                          const modificarResultado = await modificarNivelUsuario(usuario.id_usuario,1,(aproboNivelUno) ? "APROBADO" : "NO APROBADO")
-                          console.log(modificarResultado)
-                        }else{
-                          const cargarResultado = await cargarNivelUsuario(usuario.id_usuario,1,"APROBADO")
-                          console.log(cargarResultado)
-                        }
+                      
+
+                      
 
                       
                       await sleep(2000)
@@ -413,9 +405,25 @@ export async function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cam
 
                         };
 
-                        const datosEstudiante = await obtenerDatosUsuario(usuario.id_usuario)
+                        const datosEstudiante = await obtenerDatosUsuario(usuario.id_usuario);
+
+                        const nivelesJugados = await obtenerNivelesUsuario(usuario.id_usuario);
+                        console.log(nivelesJugados)
+      
+                        const ganoNivelUno = nivelesJugados.some( (nivel: any) => nivel.id_nivel === 1 && nivel.estatus === "APROBADO");
+      
+                        console.log(ganoNivelUno)
+      
+                        const porcentajeAumentado =
+                        // Si el estudiante ya aprobó, se mantiene el porcentaje.
+                        ganoNivelUno
+                        ? datosEstudiante.p_actividades_completadas
+                        // Si está en proceso o no ha jugado, se suma un 20%.
+                        : datosEstudiante.p_actividades_completadas + 20;
 
                         console.log(datosEstudiante)
+
+                        console.log(porcentajeAumentado)
 
                         console.log((contadorMovimientos <= 26) ? 100 : Math.ceil((26 / contadorMovimientos) * 100))
                 
@@ -427,7 +435,7 @@ export async function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cam
                           abstraccion: datosEstudiante.abstraccion,
                           asociacion: datosEstudiante.asociacion,
                           construccion_algoritmos:  (datosEstudiante.construccion_algoritmos !== "APROBADO") ? "EN PROCESO" : datosEstudiante.identificacion_errores,
-                          p_actividades_completadas: (datosEstudiante.construccion_algoritmos !== "EN PROCESO" && datosEstudiante.construccion_algoritmos != "APROBADO") ? (datosEstudiante.p_actividades_completadas + (1 / 5) * 100) : ((datosEstudiante.p_actividades_completadas) / 5) * 100,
+                          p_actividades_completadas: porcentajeAumentado,
                           tipo_premiacion: datosEstudiante.tipo_premiacion // o string[], si es un arreglo
                         }
 
@@ -437,6 +445,18 @@ export async function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cam
                       }else{
                         console.log("GANO PERO NO ES ESTUDIANTE")
                       }
+
+                      if(existeNivelUno){
+                          const nivelesUsuario = await obtenerNivelesUsuario(usuario.id_usuario)
+                          
+                          const aproboNivelUno = nivelesUsuario.some((nivel: any) => nivel.id_nivel === 1 && nivel.estatus === "APROBADO");
+        
+                          const modificarResultado = await modificarNivelUsuario(usuario.id_usuario,1,(aproboNivelUno) ? "APROBADO" : "NO APROBADO")
+                          console.log(modificarResultado)
+                        }else{
+                          const cargarResultado = await cargarNivelUsuario(usuario.id_usuario,1,"APROBADO")
+                          console.log(cargarResultado)
+                        }
                   
                       await terminarJuego()
                       

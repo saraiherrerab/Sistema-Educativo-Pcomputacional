@@ -10,6 +10,7 @@ import Estrellas from "../../../components/estrellas/estrellas";
 import NombreEs from "../../../components/nombreEs/nombreEs";
 
 import './styles.css'
+import obtenerGrupoAlumno from "../functions/obtenerGrupoAlumno";
 
 interface Estudiante {
   id_usuario: number,
@@ -143,57 +144,21 @@ export default function Reportes( ) {
         const datosEstudiante = await fetch("http://localhost:5555/estudiantes/" + profileId)
         const resultadoConsulta = await datosEstudiante.json()
         console.log(resultadoConsulta)
-
-        const resultadoHorarios = await obtenerHorariosAlumno(resultadoConsulta.id_grupo)
-        console.log(resultadoHorarios)
-
-        if(resultadoHorarios.length === 0){
-        const obtenerGrupoSinHorarios = async () => {
-          const response = await fetch(`http://localhost:5555/grupos/${resultadoConsulta.id_grupo}/curso/sin/horario`);
-          const informacionGrupoSinHorario = await response.json()
-          console.log(informacionGrupoSinHorario)
-          return informacionGrupoSinHorario;
-        } 
-
-        const profesoresCursoSinHorario = await obtenerGrupoSinHorarios() 
-      
-        setInformacionGrupoSinHorario(profesoresCursoSinHorario)
-
-        console.log(profesoresCursoSinHorario)
-    }
-
-        const resultadoProfesor = (resultadoHorarios.length > 0)
-        ? await obtenerDatosProfesor(resultadoHorarios[0].id_profesor)
-        : null;
-
-        if (resultadoProfesor) {
-        setProfesor(resultadoProfesor); // solo aquí
-}
-
-        setHorarios ([...resultadoHorarios])
-
         setUsuario(resultadoConsulta)
+
+        if(resultadoConsulta.id_grupo){
+            const resultadoGrupo = await obtenerGrupoAlumno(resultadoConsulta.id_usuario)
+            const resultadoProfesor = await obtenerGrupoAlumno(resultadoGrupo.id_profesor_grupo)
+            if (resultadoProfesor) {
+                setProfesor(resultadoProfesor); // solo aquí
+            }
         
 
+        
+
+        }
     };
 
-    const obtenerDatosProfesor = async (id_profesor_alumno: number) => {
-    
-        const datosProfesor = await fetch("http://localhost:5555/profesores/" + id_profesor_alumno)
-        const resultadoConsulta = await datosProfesor.json()
-        console.log(resultadoConsulta)
-        return resultadoConsulta
-
-    };
-
-    const obtenerHorariosAlumno = async (id_grupo: number) => {
-    
-        const datosHorario = await fetch(`http://localhost:5555/grupos/${id_grupo}/curso`)
-        const resultadoConsulta = await datosHorario.json()
-        console.log(resultadoConsulta)
-        return resultadoConsulta;
-
-    };
 
   useEffect(() => {
     obtenerDatosUsuario()

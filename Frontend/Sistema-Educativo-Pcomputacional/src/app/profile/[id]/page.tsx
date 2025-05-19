@@ -193,12 +193,26 @@ export default function Profile() {
     const dataRol = await responseRol.json();
     console.log(dataRol.obtener_rol_usuario)
 
-    const resultadoHorarios = await obtenerHorariosAlumno(resultadoConsulta.id_grupo)
+    try {
 
-    console.log(resultadoHorarios)
-    setHorarios ([...resultadoHorarios])
+      if(resultadoConsulta.id_grupo){
+        const resultadoHorarios = await obtenerHorariosAlumno(resultadoConsulta.id_grupo)
+        console.log(resultadoHorarios)
+        setHorarios ([...resultadoHorarios])
+      }else{
+        setHorarios ([])
+      }
+
+      
+      
+    } catch (error) {
+
+      console.log(error)
+      
+    }
 
     console.log(horarios)
+
     setUsuario({...resultadoConsulta, rol: dataRol.obtener_rol_usuario})
 
     const informacionCurso = await obtenerCursoAlumno(resultadoConsulta.id_grupo)
@@ -207,8 +221,28 @@ export default function Profile() {
     const informacionGrupo = await obtenerGrupoAlumno(resultadoConsulta.id_grupo)
     setGrupoAlumno(informacionGrupo)
 
-    const informacionProfesor = await obtenerProfesorAlumno(informacionGrupo.id_profesor_grupo)
-    setProfesorAlumno(informacionProfesor)
+    if(informacionGrupo){
+      const informacionProfesor = await obtenerProfesorAlumno(informacionGrupo.id_profesor_grupo)
+      setProfesorAlumno(informacionProfesor)
+    }else{
+      setProfesorAlumno({
+        id_usuario: 0,
+        telefono: "",
+        nombre: "",
+        apellido: "",
+        correo: "",
+        edad: 0,
+        foto: "",
+        usuario: "",
+        clave_acceso: "",
+        cedula: "",
+        id_profesor: 0,
+        curriculum: "",
+        formacion: ""
+      })
+    }
+
+    
 
     await descargarImagenPerfil(`User-${resultadoConsulta.id_usuario}.png`);
 
@@ -260,7 +294,7 @@ export default function Profile() {
                               <div className="notas">
                                 <div className="notas-section">
                                   <h2 className="tituloNotas"><strong>Curso: </strong> {(cursoAlumno.id_curso !== 0) ? cursoAlumno.nombre_curso : "No está inscrito en un curso"}</h2>
-                                  <h2 className="tituloNotas"><strong>{(grupoAlumno.id_grupo !== 0) ? grupoAlumno.nombre_grupo: "No tiene grupo"}</strong></h2>
+                                  <h2 className="tituloNotas"><strong>{( grupoAlumno && grupoAlumno.id_grupo !== 0) ? grupoAlumno.nombre_grupo: "No tiene grupo"}</strong></h2>
                                   <p><strong>Profesor: </strong>{(profesorAlumno.id_usuario !== 0) ? profesorAlumno.nombre + " " + profesorAlumno.apellido : "No tiene un profesor asignado"}</p>
                                   
                                   
