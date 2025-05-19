@@ -89,6 +89,10 @@ export default function EstudiantesLista() {
 
     const [descargandoImagen, setDescargandoImagen] = useState(false);
     const [imagenDescargadaUrl, setImagenDescargadaUrl] = useState<string | null>(null);
+    const [correoValido, setCorreoValido] = useState(true);
+    const [cedulaValida, setCedulaValida] = useState(true);
+    const [telefonoValido, setTelefonoValido] = useState(true);
+
 
 
     const filtrarEstudiantes = () => {
@@ -879,8 +883,22 @@ export default function EstudiantesLista() {
                 type="text"
                 placeholder="Telefono"
                 value={nuevoEstudiante.telefono}
-                onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, telefono: e.target.value })}
+                onChange={e => {
+                            const value = e.target.value;
+                            const formatoTelefono = /^[0-9()+\-\s]*$/;
+                            if (formatoTelefono.test(value)) {
+                                setNuevoEstudiante({ ...nuevoEstudiante, telefono: value });
+                                setTelefonoValido(true);
+                            } else {
+                                setTelefonoValido(false);
+                            }
+                            }}
             />
+                       {!telefonoValido && (
+                        <p className="mensaje-error-clave">Teléfono inválido. Use solo números o símbolos como + - ( )</p>
+                        )}
+
+
             </div>
 
             <div className="campo-form">
@@ -889,8 +907,17 @@ export default function EstudiantesLista() {
                 type="text"
                 placeholder="Correo"
                 value={nuevoEstudiante.correo}
-                onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, correo: e.target.value })}
+                onChange={e => {
+                    const value = e.target.value;
+                    setNuevoEstudiante({ ...nuevoEstudiante, correo: value });
+                    setCorreoValido(value.includes('@'));
+                    }}
+
             />
+            {!correoValido && (
+                <p className="mensaje-error-clave">Ingrese una dirección de correo válida</p>
+                )}
+
             </div>
 
             <div className="campo-form">
@@ -919,8 +946,22 @@ export default function EstudiantesLista() {
                 type="text"
                 placeholder="Cedula"
                 value={nuevoEstudiante.cedula}
-                onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, cedula: e.target.value })}
+                onChange={e => {
+                        const value = e.target.value;
+                        const soloDigitos = /^\d*$/;
+                        if (soloDigitos.test(value)) {
+                            setNuevoEstudiante({ ...nuevoEstudiante, cedula: value });
+                            setCedulaValida(true);
+                        } else {
+                            setCedulaValida(false);
+                        }
+                        }}
+
             />
+                    {!cedulaValida && (
+                        <p className="mensaje-error-clave">La cédula solo debe contener dígitos</p>
+                        )}
+
             </div>
 
             <div className="campo-form">

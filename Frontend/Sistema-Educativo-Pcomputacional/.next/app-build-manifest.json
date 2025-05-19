@@ -16,6 +16,12 @@
       "static/chunks/main-app.js",
       "static/css/app/Aestudiantes-lista/page.css",
       "static/chunks/app/Aestudiantes-lista/page.js"
+    ],
+    "/Amenu/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/Amenu/page.css",
+      "static/chunks/app/Amenu/page.js"
     ]
   }
 }
