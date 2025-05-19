@@ -92,6 +92,11 @@ export default function EstudiantesLista() {
     const [correoValido, setCorreoValido] = useState(true);
     const [cedulaValida, setCedulaValida] = useState(true);
     const [telefonoValido, setTelefonoValido] = useState(true);
+    const [correoValidoEdit, setCorreoValidoEdit] = useState(true);
+    const [telefonoValidoEdit, setTelefonoValidoEdit] = useState(true);
+    const [cedulaValidaEdit, setCedulaValidaEdit] = useState(true);
+    const [claveValidaEdit, setClaveValidaEdit] = useState(true);
+
 
 
 
@@ -793,7 +798,7 @@ export default function EstudiantesLista() {
            
 
             <div className="listado body_estudiantes">
-                {!mostrarFormulario && (
+                {!mostrarFormulario &&  !estudianteEditando && (
                 <div className="encabezado">
                     <div className="tituloListado" style={{ cursor: 'pointer' }}>
                         <h2 className="estudiantes" onClick={() => handleTitleClick()}>ESTUDIANTES</h2>
@@ -821,166 +826,177 @@ export default function EstudiantesLista() {
                 )}
 
                 {mostrarFormulario && (
-        <div className="formulario-agregar">
-            <h3>AGREGAR NUEVO ESTUDIANTE</h3>
+                <div className="formulario-agregar">
+                    <h3>AGREGAR NUEVO ESTUDIANTE</h3>
 
-            <div className="campo-form">
-            <label>Nombre</label>
-            <input
-                type="text"
-                placeholder="Nombre"
-                value={nuevoEstudiante.nombre}
-                onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, nombre: e.target.value })}
-            />
-            </div>
+                    <div className="campo-form">
+                    <label>Nombre</label>
+                    <input
+                        type="text"
+                        placeholder="Nombre"
+                        value={nuevoEstudiante.nombre}
+                        onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, nombre: e.target.value })}
+                    />
+                    </div>
 
-            <div className="campo-form">
-            <label>Apellido</label>
-            <input
-                type="text"
-                placeholder="Apellido"
-                value={nuevoEstudiante.apellido}
-                onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, apellido: e.target.value })}
-            />
-            </div>
+                    <div className="campo-form">
+                    <label>Apellido</label>
+                    <input
+                        type="text"
+                        placeholder="Apellido"
+                        value={nuevoEstudiante.apellido}
+                        onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, apellido: e.target.value })}
+                    />
+                    </div>
 
-            <div className="fila-usuario-clave">
-            <div className="campo-usuario">
-                <label>Usuario</label>
-                <input
-                type="text"
-                placeholder="Usuario"
-                autoComplete="off"
-                value={nuevoEstudiante.usuario}
-                onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, usuario: e.target.value })}
-                />
-                <p className="mensaje-error-usuario">&nbsp;</p>
-            </div>
+                    <div className="fila-usuario-clave">
+                    <div className="campo-usuario">
+                        <label>Usuario</label>
+                        <input
+                        type="text"
+                        placeholder="Usuario"
+                        autoComplete="off"
+                        value={nuevoEstudiante.usuario}
+                        onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, usuario: e.target.value })}
+                        />
+                        <p className="mensaje-error-usuario">&nbsp;</p>
+                    </div>
 
-            <div className="campo-clave">
-                <label>Clave</label>
-                <input
-                type="password"
-                placeholder="Clave"
-                autoComplete="new-password"
-                value={nuevoEstudiante.clave_acceso}
-                onChange={e => {
-                    setNuevoEstudiante({ ...nuevoEstudiante, clave_acceso: e.target.value });
-                    setContrasenaValida(validarContrasena(e.target.value));
-                }}
-                />
-                {!contrasenaValida && (
-                <p className="mensaje-error-clave">
-                    La clave requiere al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.
-                </p>
-                )}
-            </div>
-            </div>
+                    <div className="campo-clave">
+                        <label>Clave</label>
+                        <input
+                        type="password"
+                        placeholder="Clave"
+                        autoComplete="new-password"
+                        value={nuevoEstudiante.clave_acceso}
+                        onChange={e => {
+                            setNuevoEstudiante({ ...nuevoEstudiante, clave_acceso: e.target.value });
+                            setContrasenaValida(validarContrasena(e.target.value));
+                        }}
+                        />
+                        {!contrasenaValida && (
+                        <p className="mensaje-error-clave">
+                            La clave requiere al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.
+                        </p>
+                        )}
+                    </div>
+                    </div>
 
-            <div className="campo-form">
-            <label>Teléfono</label>
-            <input
-                type="text"
-                placeholder="Telefono"
-                value={nuevoEstudiante.telefono}
-                onChange={e => {
+                    <div className="campo-form">
+                    <label>Teléfono</label>
+                    <input
+                        type="text"
+                        placeholder="Telefono"
+                        value={nuevoEstudiante.telefono}
+                        onChange={e => {
+                                    const value = e.target.value;
+                                    const formatoTelefono = /^[0-9()+\-\s]*$/;
+                                    if (formatoTelefono.test(value)) {
+                                        setNuevoEstudiante({ ...nuevoEstudiante, telefono: value });
+                                        setTelefonoValido(true);
+                                    } else {
+                                        setTelefonoValido(false);
+                                    }
+                                    }}
+                    />
+                            {!telefonoValido && (
+                                <p className="mensaje-error-clave">Teléfono inválido. Use solo números o símbolos como + - ( )</p>
+                                )}
+
+
+                    </div>
+
+                    <div className="campo-form">
+                    <label>Correo</label>
+                    <input
+                        type="text"
+                        placeholder="Correo"
+                        value={nuevoEstudiante.correo}
+                        onChange={e => {
                             const value = e.target.value;
-                            const formatoTelefono = /^[0-9()+\-\s]*$/;
-                            if (formatoTelefono.test(value)) {
-                                setNuevoEstudiante({ ...nuevoEstudiante, telefono: value });
-                                setTelefonoValido(true);
-                            } else {
-                                setTelefonoValido(false);
-                            }
+                            setNuevoEstudiante({ ...nuevoEstudiante, correo: value });
+                            setCorreoValido(value.includes('@'));
                             }}
-            />
-                       {!telefonoValido && (
-                        <p className="mensaje-error-clave">Teléfono inválido. Use solo números o símbolos como + - ( )</p>
+
+                    />
+                    {!correoValido && (
+                        <p className="mensaje-error-clave">Ingrese una dirección de correo válida</p>
                         )}
 
+                    </div>
 
-            </div>
-
-            <div className="campo-form">
-            <label>Correo</label>
-            <input
-                type="text"
-                placeholder="Correo"
-                value={nuevoEstudiante.correo}
-                onChange={e => {
-                    const value = e.target.value;
-                    setNuevoEstudiante({ ...nuevoEstudiante, correo: value });
-                    setCorreoValido(value.includes('@'));
-                    }}
-
-            />
-            {!correoValido && (
-                <p className="mensaje-error-clave">Ingrese una dirección de correo válida</p>
-                )}
-
-            </div>
-
-            <div className="campo-form">
-            <label>Edad</label>
-            <input
-                type="number"
-                min={0}
-                placeholder="Edad"
-                value={nuevoEstudiante.edad}
-                onChange={e => {
-                const value = e.target.value;
-                const numberValue = Number(value);
-                if (value === '' || (Number.isFinite(numberValue) && numberValue >= 0)) {
-                    setNuevoEstudiante({
-                    ...nuevoEstudiante,
-                    edad: value === '' ? 0 : numberValue,
-                    });
-                }
-                }}
-            />
-            </div>
-
-            <div className="campo-form">
-            <label>Cédula</label>
-            <input
-                type="text"
-                placeholder="Cedula"
-                value={nuevoEstudiante.cedula}
-                onChange={e => {
+                    <div className="campo-form">
+                    <label>Edad</label>
+                    <input
+                        type="number"
+                        min={0}
+                        placeholder="Edad"
+                        value={nuevoEstudiante.edad}
+                        onChange={e => {
                         const value = e.target.value;
-                        const soloDigitos = /^\d*$/;
-                        if (soloDigitos.test(value)) {
-                            setNuevoEstudiante({ ...nuevoEstudiante, cedula: value });
-                            setCedulaValida(true);
-                        } else {
-                            setCedulaValida(false);
+                        const numberValue = Number(value);
+                        if (value === '' || (Number.isFinite(numberValue) && numberValue >= 0)) {
+                            setNuevoEstudiante({
+                            ...nuevoEstudiante,
+                            edad: value === '' ? 0 : numberValue,
+                            });
                         }
                         }}
+                    />
+                    </div>
 
-            />
-                    {!cedulaValida && (
-                        <p className="mensaje-error-clave">La cédula solo debe contener dígitos</p>
-                        )}
+                    <div className="campo-form">
+                    <label>Cédula</label>
+                    <input
+                        type="text"
+                        placeholder="Cedula"
+                        value={nuevoEstudiante.cedula}
+                        onChange={e => {
+                                const value = e.target.value;
+                                const soloDigitos = /^\d*$/;
+                                if (soloDigitos.test(value)) {
+                                    setNuevoEstudiante({ ...nuevoEstudiante, cedula: value });
+                                    setCedulaValida(true);
+                                } else {
+                                    setCedulaValida(false);
+                                }
+                                }}
 
-            </div>
+                    />
+                            {!cedulaValida && (
+                                <p className="mensaje-error-clave">La cédula solo debe contener dígitos</p>
+                                )}
 
-            <div className="campo-form">
-            <label>Foto (solo PNG)</label>
-            <input
-                type="file"
-                accept=".png"
-                onChange={handleFotoChange}
-            />
-            </div>
+                    </div>
 
-            <div className="botones">
-            <button onClick={() => onAgregarEstudiante()} disabled={habilitarGuardado || !contrasenaValida}>
-                Guardar
-            </button>
-            <button onClick={() => setMostrarFormulario(false)}>Cancelar</button>
-            </div>
-        </div>
-        )}
+                    <div className="campo-form">
+                        <label>Condición médica</label>
+                        <input
+                            type="text"
+                            placeholder="Condición médica"
+                            value={nuevoEstudiante.condicion_medica}
+                            onChange={e => setNuevoEstudiante({ ...nuevoEstudiante, condicion_medica: e.target.value })}
+                        />
+                        </div>
+
+
+                    <div className="campo-form">
+                    <label>Foto (solo PNG)</label>
+                    <input
+                        type="file"
+                        accept=".png"
+                        onChange={handleFotoChange}
+                    />
+                    </div>
+
+                    <div className="botones">
+                    <button onClick={() => onAgregarEstudiante()} disabled={habilitarGuardado || !contrasenaValida}>
+                        Guardar
+                    </button>
+                    <button onClick={() => setMostrarFormulario(false)}>Cancelar</button>
+                    </div>
+                </div>
+                )}
 
 
                
@@ -1029,47 +1045,176 @@ export default function EstudiantesLista() {
                     </table>
                 )}
 
-                {estudianteEditando && (
-                    <div className="formulario-edicion">
+               {estudianteEditando && (
+                    <div className="formulario-agregar">
                         <h3>Editando estudiante</h3>
-                        <input type="text" placeholder="Apellido" value={estudianteEditando.apellido || ''} onChange={e => setEstudianteEditando({ ...estudianteEditando, apellido: e.target.value })} />
-                        <input type="text" placeholder="Usuario" value={estudianteEditando.usuario || ''} onChange={e => setEstudianteEditando({ ...estudianteEditando, usuario: e.target.value })} />
-                        <input type="text" placeholder="Clave" value={estudianteEditando.clave_acceso || ''} onChange={e => setEstudianteEditando({ ...estudianteEditando, clave_acceso: e.target.value })} />
-                        <input type="text" placeholder="Telefono" value={estudianteEditando.telefono || ''} onChange={e => setEstudianteEditando({ ...estudianteEditando, telefono: e.target.value })} />
-                        <input type="text" placeholder="Correo" value={estudianteEditando.correo || ''} onChange={e => setEstudianteEditando({ ...estudianteEditando, correo: e.target.value })} />
-                        <input type="number" placeholder="Edad" value={estudianteEditando.edad ?? ''} onChange={e => setEstudianteEditando({ ...estudianteEditando, edad: Number(e.target.value) })} />
-                        <input type="text" placeholder="Cedula" value={estudianteEditando.cedula || ''} onChange={e => setEstudianteEditando({ ...estudianteEditando, cedula: e.target.value })} />
-                        <input type="text" placeholder="Condicion" value={estudianteEditando.condicion_medica || ''} onChange={e => setEstudianteEditando({ ...estudianteEditando, condicion_medica: e.target.value })} />
-                        {imagenDescargadaUrl && (
-                            <div>
-                                <img
-                                    src={imagenDescargadaUrl}
-                                    alt="Imagen de perfil"
-                                    style={{ width: '200px', height: '200px', objectFit: 'cover', borderRadius: '10px' }}
-                                />
-                            </div>
-                        )}
-                        <label htmlFor="editarImagen">Editar imagen de perfil:</label>
-                            <input
-                                type="file"
-                                id="editarImagen"
-                                accept="image/png"
-                                onChange={(e) => {
-                                const archivo = e.target.files?.[0];
-                                if (archivo) {
-                                    const nuevaUrl = URL.createObjectURL(archivo);
-                                    setNuevaFoto(true)
-                                    setImagenDescargadaUrl(nuevaUrl);
-                                    setFotoPerfil(archivo)
-                                    // Aquí podrías subirla al servidor si deseas
-                                }
-                                
-                                }}
+
+                        <div className="campo-form">
+                        <label>Apellido</label>
+                        <input
+                            type="text"
+                            placeholder="Apellido"
+                            value={estudianteEditando.apellido || ''}
+                            onChange={e =>
+                            setEstudianteEditando({ ...estudianteEditando, apellido: e.target.value })
+                            }
                         />
+                        </div>
+
+                        <div className="campo-form">
+                        <label>Usuario</label>
+                        <input
+                            type="text"
+                            placeholder="Usuario"
+                            value={estudianteEditando.usuario || ''}
+                            onChange={e =>
+                            setEstudianteEditando({ ...estudianteEditando, usuario: e.target.value })
+                            }
+                        />
+                        </div>
+
+                        <div className="campo-form">
+                        <label>Clave</label>
+                        <input
+                            type="password"
+                            placeholder="Clave"
+                            value={estudianteEditando.clave_acceso || ''}
+                            onChange={e => {
+                            const value = e.target.value;
+                            setEstudianteEditando({ ...estudianteEditando, clave_acceso: value });
+                            const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&.,;:]).{8,}$/;
+                            setClaveValidaEdit(regex.test(value));
+                            }}
+                        />
+                        {!claveValidaEdit && (
+                            <p className="mensaje-error-clave">
+                            La clave requiere al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.
+                            </p>
+                        )}
+                        </div>
+
+                        <div className="campo-form">
+                        <label>Teléfono</label>
+                        <input
+                            type="text"
+                            placeholder="Teléfono"
+                            value={estudianteEditando.telefono || ''}
+                            onChange={e => {
+                            const value = e.target.value;
+                            const regex = /^[0-9()+\-\s]*$/;
+                            if (regex.test(value)) {
+                                setEstudianteEditando({ ...estudianteEditando, telefono: value });
+                                setTelefonoValidoEdit(true);
+                            } else {
+                                setTelefonoValidoEdit(false);
+                            }
+                            }}
+                        />
+                        {!telefonoValidoEdit && (
+                            <p className="mensaje-error-clave">
+                            Teléfono inválido. Use solo números o símbolos como + - ( )
+                            </p>
+                        )}
+                        </div>
+
+                        <div className="campo-form">
+                        <label>Correo</label>
+                        <input
+                            type="text"
+                            placeholder="Correo"
+                            value={estudianteEditando.correo || ''}
+                            onChange={e => {
+                            const value = e.target.value;
+                            setEstudianteEditando({ ...estudianteEditando, correo: value });
+                            setCorreoValidoEdit(value.includes('@'));
+                            }}
+                        />
+                        {!correoValidoEdit && (
+                            <p className="mensaje-error-clave">Ingrese una dirección de correo válida</p>
+                        )}
+                        </div>
+
+                        <div className="campo-form">
+                        <label>Edad</label>
+                        <input
+                            type="number"
+                            placeholder="Edad"
+                            value={estudianteEditando.edad ?? ''}
+                            onChange={e =>
+                            setEstudianteEditando({ ...estudianteEditando, edad: Number(e.target.value) })
+                            }
+                        />
+                        </div>
+
+                        <div className="campo-form">
+                        <label>Cédula</label>
+                        <input
+                            type="text"
+                            placeholder="Cédula"
+                            value={estudianteEditando.cedula || ''}
+                            onChange={e => {
+                            const value = e.target.value;
+                            const regex = /^\d*$/;
+                            if (regex.test(value)) {
+                                setEstudianteEditando({ ...estudianteEditando, cedula: value });
+                                setCedulaValidaEdit(true);
+                            } else {
+                                setCedulaValidaEdit(false);
+                            }
+                            }}
+                        />
+                        {!cedulaValidaEdit && (
+                            <p className="mensaje-error-clave">La cédula solo debe contener dígitos</p>
+                        )}
+                        </div>
+
+                        <div className="campo-form">
+                        <label>Condición médica</label>
+                        <input
+                            type="text"
+                            placeholder="Condición médica"
+                            value={estudianteEditando.condicion_medica || ''}
+                            onChange={e =>
+                            setEstudianteEditando({ ...estudianteEditando, condicion_medica: e.target.value })
+                            }
+                        />
+                        </div>
+
+                        {imagenDescargadaUrl && (
+                        <div>
+                            <img
+                            src={imagenDescargadaUrl}
+                            alt="Imagen de perfil"
+                            style={{ width: '200px', height: '200px', objectFit: 'cover', borderRadius: '10px' }}
+                            />
+                        </div>
+                        )}
+
+                        <div className="campo-form">
+                        <label htmlFor="editarImagen">Editar imagen de perfil (PNG):</label>
+                        <input
+                            type="file"
+                            id="editarImagen"
+                            accept="image/png"
+                            onChange={e => {
+                            const archivo = e.target.files?.[0];
+                            if (archivo) {
+                                const nuevaUrl = URL.createObjectURL(archivo);
+                                setNuevaFoto(true);
+                                setImagenDescargadaUrl(nuevaUrl);
+                                setFotoPerfil(archivo);
+                            }
+                            }}
+                        />
+                        </div>
+
+                        <div className="botones">
                         <button onClick={() => onGuardarEdicion()}>Guardar</button>
                         <button onClick={() => setEstudianteEditando(null)}>Cancelar</button>
+                        </div>
                     </div>
-                )}
+                    )}
+
             </div>
         </>
     );
