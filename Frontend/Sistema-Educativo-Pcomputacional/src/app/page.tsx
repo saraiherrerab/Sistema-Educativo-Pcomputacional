@@ -72,6 +72,13 @@ export default function Page() {
       <div className="login-container">
         <div className="form-container">
           <div className="input-container">
+              <img
+                  src="./login-decoracion.png"
+                  alt="Decoración Login"
+                  className="login-decorativo"
+                />
+                <p className="titulo-login">Bienvenido explorador, al reino de multiplayer</p>
+
           <input
             type="text"
             placeholder="Usuario"
