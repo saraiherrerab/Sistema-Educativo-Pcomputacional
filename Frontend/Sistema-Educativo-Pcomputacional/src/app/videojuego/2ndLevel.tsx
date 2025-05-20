@@ -265,7 +265,7 @@ export async function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cam
                         juegoKaplay.destroy(heart3);
                         juegoKaplay.destroy(player)
                         cambiarGanarC(true); 
-                        juegoKaplay.play("perdido", { volume: 1, speed: 1.5, loop: false });
+                        juegoKaplay.play("perdido", { volume: 1, speed: 1, loop: false });
                         setStateC(true);
 
                         await sleep(2000)
@@ -279,7 +279,7 @@ export async function Nivel2(juegoKaplay:KAPLAYCtx<{},never>, setStateB:any, cam
                   }
                   
                   cambiarGanarB(true);
-                  juegoKaplay.play("nivel2", { volume: 1, speed: 1.5, loop: false });
+                  juegoKaplay.play("nivel2", { volume: 1, speed: 1, loop: false });
                   setStateB(true);
                   setTimeout(() => {
                     setStateB(false);
