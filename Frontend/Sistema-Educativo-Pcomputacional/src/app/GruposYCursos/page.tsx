@@ -214,8 +214,8 @@ const handleSearchClick = () => {
       <Header
         text="MULTIPLAYER" onClick={() => Router.push("/")}
         text1="Panel de Juegos" onClick1={() => Router.push("/videojuego")}
-        text2="Menu" onClick2={() => Router.push("/AMenu")}
-        text3="Mi perfil" onClick3={() => Router.push("/")}
+        text2="Menu" onClick2={() => Router.push("/Amenu")}
+        text3="Mis datos" onClick3={() => Router.push("/Aadmins-lista")}
         text4="Salir" onClick4={() => Router.push("/")}
       />
 
@@ -279,8 +279,8 @@ const handleSearchClick = () => {
 
                       <td>
                         <ul style={{ paddingLeft: '1rem', margin: 0 }}>
-                          {profesoresCurso.map(profesor => (
-                            <li key={profesor.id_usuario}>
+                          {profesoresCurso.map((profesor,index) => (
+                            <li key={index}>
                               {profesor.nombre} {profesor.apellido}
                             </li>
                           ))}

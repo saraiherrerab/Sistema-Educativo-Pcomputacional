@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from "react";
-import Header from "../../../components/header/header";
+import Header from "../../../components/header-white/header";
 import { useParams, useRouter } from "next/navigation";
 import DonutChart from "../../../components/donutChart/donutChart";
 import PieChart from "../../../components/pieChart/pieChart";
@@ -182,11 +182,11 @@ export default function Reportes( ) {
         <div className="contenedor_pagina">
             <div className="dimensiones_header">
                 <Header
-                        text="MULTIPLAYER" onClick={() => Router.push("/AMenu")}
-                        text1="Panel de Juegos" onClick1={() => Router.push("/videojuego")}
-                        text2="Menu" onClick2={() => Router.push("/AMenu")}
-                        text3="Mi perfil" onClick3={() => Router.push("/profile-adm")}
-                        text4="Salir" onClick4={() => Router.push("/")}>
+                                text="MULTIPLAYER" onClick={() => Router.push("/Amenu")}
+                                text1="Panel de Juegos" onClick1={() => Router.push("/videojuego")}
+                                text2="Menu" onClick2={() => Router.push("/Amenu")}
+                                text3="" onClick3={() => ("")}
+                                text4="Salir" onClick4={() => Router.push("/")}>
                 </Header>
             </div>
             

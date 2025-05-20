@@ -12,6 +12,7 @@ import Horarios from "../interfaces/horario.interface";
 import Cursos from "../interfaces/curso.interface";
 import obtenerHorariosProfesor from "../functions/obtenerHorariosProfesor";
 import obtenerCursosProfesor from "../functions/obtenerCursosProfesor";
+import Header from "../../../components/header-white/header"
 
 export default function Profileprof() {
     const params = useParams(); // Usa el hook useParams para acceder a los params
@@ -180,10 +181,22 @@ export default function Profileprof() {
 
   }
 
+  
+
   const Router = useRouter();
 
     return (
+      <>
+       <Header
+                                       text="MULTIPLAYER" onClick={() => Router.push("/Amenu")}
+                                       text1="Panel de Juegos" onClick1={() => Router.push("/videojuego")}
+                                       text2="Menu" onClick2={() => Router.push("/Amenu")}
+                                       text3="Mis datos" onClick3={() => Router.push("/Aadmins-lista")}
+                                       text4="Salir" onClick4={() => Router.push("/")}>
+        </Header>
+                
         <div className="perfil body_profile">
+          
             <div className="datosUsario">
                     {imagenDescargadaUrl ? (
                     <Foto imageUrl={imagenDescargadaUrl} />
@@ -222,6 +235,7 @@ export default function Profileprof() {
                 </div>
             </div> 
         </div>
+      </>
     )
             
     

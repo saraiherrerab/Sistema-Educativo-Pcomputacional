@@ -1,11 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
 
-.body_profile{
-    background-color: #6F4EF6;
-    margin: 0; /* Asegúrate de eliminar los márgenes predeterminados del body */
-    
-}
+
 
 html,
 body {
@@ -13,8 +9,8 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
+   background-color: #6F4EF6;
 }
-
 .titulo{
     margin-bottom:15px;
 }

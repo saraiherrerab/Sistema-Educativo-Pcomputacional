@@ -60,7 +60,7 @@ export default function Amenu() {
 
               <div className="descripcion">
                   <MenuButton imageUrl='./educacion-fisica.png' onClick={()=>Router.push("/Aadmins-lista")}/>
-                  <span>MI PERFIL</span>
+                  <span>MIS DATOS</span>
               </div>
               <div className="descripcion">
                   <MenuButton imageUrl='./game-console.png' onClick={()=>Router.push("/videojuego")}/>
