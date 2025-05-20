@@ -545,12 +545,12 @@ useEffect(() => {
   return (
     <>
       <Header
-        text="MULTIPLAYER" onClick={() => Router.push("/videojuego")}
-        text1="Panel de Juegos" onClick1={() => Router.push("/videojuego")}
-        text2="Menu" onClick2={() => Router.push("/videojuego")}
-        text3="Mi perfil" onClick3={() => Router.push("/videojuego")}
-        text4="Salir" onClick4={() => Router.push("/videojuego")}
-      />
+              text="MULTIPLAYER" onClick={() => Router.push("/")}
+              text1="Panel de Juegos" onClick1={() => Router.push("/videojuego")}
+              text2="Menu" onClick2={() => Router.push("/Amenu")}
+              text3="Mis datos" onClick3={() => Router.push("/Aadmins-lista")}
+              text4="Salir" onClick4={() => Router.push("/")}
+            />
 
       <div className="listado body_estudiantes">
         <div className="encabezado">
@@ -872,9 +872,7 @@ useEffect(() => {
         ))}
       </tbody>
     </table>
-        <ul>
-          {estudiantesPorGrupo[mostrarEstudiantesGrupo.id_grupo]}
-        </ul>
+      
       </div>
     )}
   </div>

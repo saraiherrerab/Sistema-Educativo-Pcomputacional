@@ -790,11 +790,11 @@ export default function EstudiantesLista() {
     return (
         <>
             <Header
-                text="MULTIPLAYER" onClick={() => Router.push("/videojuego")}
-                text1="Panel de Juegos" onClick1={() => Router.push("/videojuego")}
-                text2="Menu" onClick2={() => Router.push("/videojuego")}
-                text3="Mi perfil" onClick3={() => Router.push("/videojuego")}
-                text4="Salir" onClick4={() => Router.push("/videojuego")}>
+                            text="MULTIPLAYER" onClick={() => Router.push("/Amenu")}
+                            text1="Panel de Juegos" onClick1={() => Router.push("/videojuego")}
+                            text2="Menu" onClick2={() => Router.push("/Amenu")}
+                            text3="Mis datos" onClick3={() => Router.push("/Aadmins-lista")}
+                            text4="Salir" onClick4={() => Router.push("/")}>
             </Header>
 
            

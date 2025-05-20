@@ -489,12 +489,12 @@ export default function AdministradoresLista() {
     return (
         <>
             <Header
-                text="MULTIPLAYER" onClick={() => Router.push("/")}
-                text1="Panel de Juegos" onClick1={() => Router.push("/videojuego")}
-                text2="Menu" onClick2={() => Router.push("/Amenu")}
-                text3="Mi perfil" onClick3={() => Router.push("/profile-adm")}
-                text4="Salir" onClick4={() => Router.push("/")}>
-            </Header>
+                    text="MULTIPLAYER" onClick={() => Router.push("/")}
+                    text1="Panel de Juegos" onClick1={() => Router.push("/videojuego")}
+                    text2="Menu" onClick2={() => Router.push("/Amenu")}
+                    text3="Mis datos" onClick3={() => Router.push("/Aadmins-lista")}
+                    text4="Salir" onClick4={() => Router.push("/")}
+                  />
 
             <div className="listado">
 
