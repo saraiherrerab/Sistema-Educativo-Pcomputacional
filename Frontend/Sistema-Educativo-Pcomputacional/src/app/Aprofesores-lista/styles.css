@@ -152,3 +152,230 @@ input > .input_formulario {
   display:  flex;
 }
 
+.formulario-agregar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px 48px;
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 30px;
+  border-radius: 16px;
+  background-color: #fff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  justify-content: center;
+  font-family: "Inter", sans-serif;
+}
+
+.formulario-agregar h3 {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #222;
+}
+
+/* Campos de texto en general */
+.formulario-agregar input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 1em;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  height: 42px;
+  transition: border 0.2s ease-in-out;
+}
+
+.formulario-agregar input:focus {
+  border-color: #888;
+  outline: none;
+}
+
+.campo-form,
+.campo-usuario,
+.campo-clave {
+  flex: 1 1 45%;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Etiquetas */
+.campo-form label,
+.campo-usuario label,
+.campo-clave label {
+  margin-bottom: 6px;
+  font-weight: 500;
+  font-size: 0.95em;
+  color: #444;
+}
+
+/* Inputs de usuario y clave */
+.fila-usuario-clave {
+  display: flex;
+  gap: 40px;
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  margin-bottom: 0px;
+}
+
+.campo-usuario,
+.campo-clave {
+  width: 100%;
+}
+
+/* Mensajes de error */
+.mensaje-error-usuario,
+.mensaje-error-clave {
+  font-size: 0.85em;
+  margin-top: 6px;
+  color: red;
+  visibility: hidden;
+  min-height: 1em;
+}
+
+.mensaje-error-clave {
+  visibility: visible;
+}
+
+/* Botones */
+.formulario-agregar .botones {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.formulario-agregar .botones button {
+  background-color: #4B22F4;
+  color: white;
+  font-weight: 500;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.formulario-agregar .botones button:hover {
+  background-color: #333;
+}
+
+.formulario-agregar .botones button:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+.formulario-edicion {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px 48px;
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 30px;
+  border-radius: 16px;
+  background-color: #fff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  justify-content: center;
+  font-family: "Inter", sans-serif;
+}
+
+.formulario-edicion h3 {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.formulario-edicion input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 1em;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  height: 42px;
+  transition: border 0.2s ease-in-out;
+}
+
+.formulario-edicion input:focus {
+  border-color: #888;
+  outline: none;
+}
+
+.formulario-edicion .campo-form {
+  flex: 1 1 45%;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+}
+
+.formulario-edicion .campo-form label {
+  margin-bottom: 6px;
+  font-weight: 500;
+  font-size: 0.95em;
+  color: #444;
+}
+
+.formulario-edicion .mensaje-error-clave,
+.formulario-edicion .mensaje-error-usuario {
+  font-size: 0.85em;
+  margin-top: 6px;
+  color: red;
+  visibility: hidden;
+  min-height: 1em;
+}
+
+.formulario-edicion .mensaje-error-clave {
+  visibility: visible;
+}
+
+.formulario-edicion .botones {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.formulario-edicion .botones button {
+  background-color: #4B22F4;
+  color: white;
+  font-weight: 500;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.formulario-edicion .botones button:hover {
+  background-color: #333;
+}
+
+.formulario-edicion .botones button:disabled {
+  background-color: #999;
+  cursor: not-allow
+}
+
+ button {
+  background-color: #4B22F4;
+  color: white;
+  font-weight: 500;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  margin:2px;
+}
+
