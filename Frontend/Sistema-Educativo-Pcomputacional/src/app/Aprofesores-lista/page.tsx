@@ -67,6 +67,21 @@ export default function ProfesoresLista() {
     const [subiendo, setSubiendo] = useState(false);
     const [nuevaFoto, setNuevaFoto] = useState<boolean>(false);
     const [nuevoCurriculum, setNuevoCurriculum] = useState<boolean>(false);
+    const [correoValido, setCorreoValido] = useState(true);
+    const [cedulaValida, setCedulaValida] = useState(true);
+    const [telefonoValido, setTelefonoValido] = useState(true);
+    const [correoValidoEdit, setCorreoValidoEdit] = useState(true);
+    const [telefonoValidoEdit, setTelefonoValidoEdit] = useState(true);
+    const [cedulaValidaEdit, setCedulaValidaEdit] = useState(true);
+    const [claveValidaEdit, setClaveValidaEdit] = useState(true);
+
+    const validarContrasena = (clave: string): boolean => {
+                // Al menos una mayúscula, una minúscula, un número, un carácter especial, mínimo 8 caracteres
+                const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+                return regex.test(clave);
+                };
+
+    const [contrasenaValida, setContrasenaValida] = useState(true);
 
     async function obtenerProfesores() : Promise<Profesor[]>{
         const resultado= await fetch('http://localhost:5555/profesores',{
@@ -140,6 +155,7 @@ export default function ProfesoresLista() {
     const [descargandoCurriculum, setDescargandoCurriculum] = useState(false);
     const [curriculum, setCurriculum] = useState<File | null>(null);
     const [tieneCurriculum, setTieneCurriculum] = useState<boolean>(true);
+    const [mostrarClave, setMostrarClave] = useState(false);
 
     const validarFormulario = (): boolean => {
         console.log("Validando Entradas de nuevo profesor")
@@ -1026,8 +1042,10 @@ export default function ProfesoresLista() {
                 text4="Salir" onClick4={() => Router.push("/")}>
             </Header>
 
+            
             <div className="listado">
-                <div className="encabezado">
+                {!mostrarFormulario && !profesorEditando && (
+                    <div className="encabezado">
                     <div className="tituloListado" style={{ cursor: 'pointer' }}>
                         <h2 className="profesores" onClick={() => handleTitleClick()}>PROFESORES</h2>
                         <button onClick={() => mostrarFormularioAgregar()}>Agregar Profesor</button>
@@ -1051,48 +1069,209 @@ export default function ProfesoresLista() {
                     </div>
                 </div>
             </div>
+                 )}
+                
 
             {mostrarFormulario && (
                 <div className="formulario-agregar">
-                    <h3>Agregar Nuevo Profesor</h3>
-                    <input type="text" placeholder="Nombre" value={nuevoProfesor.nombre} onChange={e => setNuevoProfesor({ ...nuevoProfesor, nombre: e.target.value })} />
-                    <input type="text" placeholder="Apellido" value={nuevoProfesor.apellido} onChange={e => setNuevoProfesor({ ...nuevoProfesor, apellido: e.target.value })} />
-                    <input type="text" placeholder="Usuario" value={nuevoProfesor.usuario} onChange={e => setNuevoProfesor({ ...nuevoProfesor, usuario: e.target.value })} />
-                    <input type="text" placeholder="Clave" value={nuevoProfesor.clave_acceso} onChange={e => setNuevoProfesor({ ...nuevoProfesor, clave_acceso: e.target.value })} />
-                    <input type="text" placeholder="Telefono" value={nuevoProfesor.telefono} onChange={e => setNuevoProfesor({ ...nuevoProfesor, telefono: e.target.value })} />
-                    <input type="text" placeholder="Correo" value={nuevoProfesor.correo} onChange={e => setNuevoProfesor({ ...nuevoProfesor, correo: e.target.value })} />
+                    <h3>AGREGAR NUEVO PROFESOR</h3>
+
+                    <div className="campo-form">
+                    <label>Nombre</label>
                     <input
-                            type="number"
-                            min={0}
-                            placeholder="Edad"
-                            value={nuevoProfesor.edad}
-                            onChange={e => {
-                                const value = e.target.value;
-                                const numberValue = Number(value);
-                                if (value === '' || (Number.isFinite(numberValue) && numberValue >= 0)) {
-                                setNuevoProfesor({
-                                    ...nuevoProfesor    ,
-                                    edad: value === '' ? 0 : numberValue,
-                                });
-                                }
-                            }}
+                        type="text"
+                        placeholder="Nombre"
+                        value={nuevoProfesor.nombre}
+                        onChange={e => setNuevoProfesor({ ...nuevoProfesor, nombre: e.target.value })}
                     />
-                    <input type="text" placeholder="Cedula" value={nuevoProfesor.cedula} onChange={e => setNuevoProfesor({ ...nuevoProfesor, cedula: e.target.value })} />
-                    <input type="text" placeholder="Formación" value={nuevoProfesor.formacion} onChange={e => setNuevoProfesor({ ...nuevoProfesor, formacion: e.target.value })} />
+                    </div>
+
+                    <div className="campo-form">
+                    <label>Apellido</label>
+                    <input
+                        type="text"
+                        placeholder="Apellido"
+                        value={nuevoProfesor.apellido}
+                        onChange={e => setNuevoProfesor({ ...nuevoProfesor, apellido: e.target.value })}
+                    />
+                    </div>
+
+                    <div className="campo-form">
+                    <label>Usuario</label>
+                    <input
+                        type="text"
+                        placeholder="Usuario"
+                        autoComplete="off"
+                        value={nuevoProfesor.usuario}
+                        onChange={e => setNuevoProfesor({ ...nuevoProfesor, usuario: e.target.value })}
+                    />
+                    </div>
+
+                    <div className="campo-clave">
+                    <label>Clave</label>
+                    <div style={{ position: 'relative', width: '100%' }}>
+                        <input
+                        type={mostrarClave ? 'text' : 'password'}
+                        placeholder="Clave"
+                        autoComplete="new-password"
+                        value={nuevoProfesor.clave_acceso}
+                        onChange={e => {
+                            setNuevoProfesor({ ...nuevoProfesor, clave_acceso: e.target.value });
+                            setContrasenaValida(validarContrasena(e.target.value));
+                        }}
+                        style={{
+                            width: '100%',
+                            paddingRight: '40px',
+                            height: '36px',
+                            fontSize: '16px',
+                            boxSizing: 'border-box'
+                        }}
+                        />
+                        <img
+                        src={mostrarClave ? '/icons/ojito-abierto.png' : '/icons/ojito-cerrado.png'}
+                        alt="Mostrar/Ocultar Clave"
+                        onClick={() => setMostrarClave(prev => !prev)}
+                        style={{
+                            position: 'absolute',
+                            right: '40px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            width: '20px',
+                            height: '20px',
+                            cursor: 'pointer',
+                            opacity: 0.7
+                        }}
+                        />
+                    </div>
+
+                    {!contrasenaValida && (
+                        <p className="mensaje-error-clave">
+                        La clave requiere al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.
+                        </p>
+                    )}
+                    </div>
+
+                    <div className="campo-form">
+                    <label>Teléfono</label>
+                    <input
+                        type="text"
+                        placeholder="Telefono"
+                        value={nuevoProfesor.telefono}
+                        onChange={e => {
+                                    const value = e.target.value;
+                                    const formatoTelefono = /^[0-9()+\-\s]*$/;
+                                    if (formatoTelefono.test(value)) {
+                                        setNuevoProfesor({ ...nuevoProfesor, telefono: value });
+                                        setTelefonoValido(true);
+                                    } else {
+                                        setTelefonoValido(false);
+                                    }
+                                    }}
+                    />
+                            {!telefonoValido && (
+                                <p className="mensaje-error-clave">Teléfono inválido. Use solo números o símbolos como + - ( )</p>
+                                )}
+
+
+                    </div>
+
+                    <div className="campo-form">
+                    <label>Correo</label>
+                    <input
+                        type="text"
+                        placeholder="Correo"
+                        value={nuevoProfesor.correo}
+                        onChange={e => {
+                            const value = e.target.value;
+                            setNuevoProfesor({ ...nuevoProfesor, correo: value });
+                            setCorreoValido(value.includes('@'));
+                            }}
+
+                    />
+                    {!correoValido && (
+                        <p className="mensaje-error-clave">Ingrese una dirección de correo válida</p>
+                        )}
+
+                    </div>
+
+                    <div className="campo-form">
+                    <label>Edad</label>
+                    <input
+                        type="number"
+                        min={0}
+                        placeholder="Edad"
+                        value={nuevoProfesor.edad}
+                        onChange={e => {
+                        const value = e.target.value;
+                        const numberValue = Number(value);
+                        if (value === '' || (Number.isFinite(numberValue) && numberValue >= 0)) {
+                            setNuevoProfesor({ ...nuevoProfesor, edad: value === '' ? 0 : numberValue });
+                        }
+                        }}
+                    />
+                    </div>
+
+                    <div className="campo-form">
+                    <label>Cédula</label>
+                    <input
+                        type="text"
+                        placeholder="Cedula"
+                        value={nuevoProfesor.cedula}
+                        onChange={e => {
+                                const value = e.target.value;
+                                const soloDigitos = /^\d*$/;
+                                if (soloDigitos.test(value)) {
+                                    setNuevoProfesor({ ...nuevoProfesor, cedula: value });
+                                    setCedulaValida(true);
+                                } else {
+                                    setCedulaValida(false);
+                                }
+                                }}
+
+                    />
+                            {!cedulaValida && (
+                                <p className="mensaje-error-clave">La cédula solo debe contener dígitos</p>
+                                )}
+
+                    </div>
+
+                    <div className="campo-form">
+                    <label>Formación</label>
+                    <input
+                        type="text"
+                        placeholder="Formación"
+                        value={nuevoProfesor.formacion}
+                        onChange={e => setNuevoProfesor({ ...nuevoProfesor, formacion: e.target.value })}
+                    />
+                    </div>
+
+                    <div className="campo-form">
+                    <label>Foto (.png)</label>
                     <input
                         type="file"
                         accept=".png"
                         onChange={handleFotoChange}
                     />
+                    </div>
+
+                    <div className="campo-form">
+                    <label>Currículum (.pdf)</label>
                     <input
                         type="file"
                         accept=".pdf"
                         onChange={handlePdfChange}
                     />
+                    </div>
+
+                    <div className="botones">
                     <button onClick={() => onAgregarProfesor()} disabled={habilitarGuardado}>Guardar</button>
                     <button onClick={() => setMostrarFormulario(false)}>Cancelar</button>
+                    </div>
                 </div>
-            )}
+                )}
+
+            
+
 
             {!mostrarFormulario && !profesorEditando && (
                 <table>
@@ -1106,7 +1285,6 @@ export default function ProfesoresLista() {
                             <th>Celular</th>
                             <th>Perfil</th> 
                             <th>Acciones</th>
-                            <th>Cursos y Horarios</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1123,380 +1301,269 @@ export default function ProfesoresLista() {
                                 <td>
                                     <button onClick={()=>Router.push("/profile-prof/"+profesor.id_profesor)}>Ver Perfil</button>
                                 </td>
-                                <td>
-                                    <button onClick={() => onEditar(profesor)}>Editar</button>
-                                    <button onClick={() => onEliminar(profesor.id_profesor)}>Eliminar</button>
+                                <td className="display_flex">
+                                    <button onClick={() => onEditar(profesor)}>
+                                        <img
+                                        src="/icons/edit_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg"
+                                        alt="Editar"
+                                        style={{ width: 16, height: 16 }}
+                                        />
+                                    </button>
+                                    <button onClick={() => onEliminar(profesor.id_profesor)}>
+                                        <img
+                                        src="/icons/delete_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg"
+                                        alt="Eliminar"
+                                        style={{ width: 16, height: 16 }}
+                                        />
+                                    </button>
                                 </td>
-                                <td>
-                                    <button onClick={() => gestionarGrupos(profesor.id_profesor)}><img src="/icons/arrow_forward_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Home icon" width={16} height={16} /></button>
-                                </td>
+
+    
                             </tr>
                         ))}
                     </tbody>
                 </table>
             )}
 
-            {profesorEditando && ! mostrarFormulario && (
-                <div className="formulario-edicion">
-                    <h3>Editando profesor</h3>
-                    <input type="text" placeholder="Nombre" value={(profesorEditando.nombre)} onChange={e => setProfesorEditando({ ...profesorEditando, nombre: e.target.value })} />
-                    <input type="text" placeholder="Apellido" value={(profesorEditando.apellido)} onChange={e => setProfesorEditando({ ...profesorEditando, apellido: e.target.value })} />
-                    <input type="text" placeholder="Usuario" value={(profesorEditando.usuario)} onChange={e => setProfesorEditando({ ...profesorEditando, usuario: e.target.value })} />
-                    <input type="text" placeholder="Clave" value={(profesorEditando.clave_acceso)} onChange={e => setProfesorEditando({ ...profesorEditando, clave_acceso: e.target.value })} />
-                    <input type="text" placeholder="Telefono" value={(profesorEditando.telefono) ? (profesorEditando.telefono) : ""} onChange={e => setProfesorEditando({ ...profesorEditando, telefono: e.target.value })} />
-                    <input type="email" placeholder="Correo" value={(profesorEditando.correo) ? (profesorEditando.correo) : ""} onChange={e => setProfesorEditando({ ...profesorEditando, correo: e.target.value })} />
-                    <input type="number" placeholder="Edad" value={(profesorEditando.edad) ? (profesorEditando.edad) : 0} onChange={e => setProfesorEditando({ ...profesorEditando, edad: (e.target.value) as unknown as number})} />
-                    <input type="text" placeholder="Cedula" value={(profesorEditando.cedula) ? (profesorEditando.cedula) : ""} onChange={e => setProfesorEditando({ ...profesorEditando, cedula: e.target.value })} />
-                    <input type="text" placeholder="formación" value={(profesorEditando.formacion) ? (profesorEditando.formacion) : ""} onChange={e => setProfesorEditando({ ...profesorEditando, formacion: e.target.value })} />
-                    {imagenDescargadaUrl && (
-                            <div>
-                                <img
-                                    src={imagenDescargadaUrl}
-                                    alt="Imagen de perfil"
-                                    style={{ width: '200px', height: '200px', objectFit: 'cover', borderRadius: '10px' }}
-                                />
-                            </div>
-                    )}
-                    <label htmlFor="editarImagen">Editar imagen de perfil:</label>
-                        <input
-                            type="file"
-                            id="editarImagen"
-                            accept="image/png"
-                            onChange={(e) => {
-                            const archivo = e.target.files?.[0];
-                            if (archivo) {
-                                const nuevaUrl = URL.createObjectURL(archivo);
-                                setNuevaFoto(true)
-                                setImagenDescargadaUrl(nuevaUrl);
-                                setFotoPerfil(archivo)
-                                // Aquí podrías subirla al servidor si deseas
-                            }
-                            
-                            }}
-                    />
-                    {curriculumDescargadaUrl ? (
-                        <div>
-                            <iframe
-                            src={curriculumDescargadaUrl}
-                            title="Vista previa del PDF"
-                            style={{
-                                width: '100%',
-                                height: '100%',
-                                borderRadius: '10px',
-                                border: '1px solid #ccc',
-                            }}
-                            />
-                        </div>
-                        ) : (
-                        !descargandoCurriculum && !tieneCurriculum && (
-                            <p style={{ color: 'gray' }}>Este profesor aún no tiene un curriculum subido.</p>
-                        )
-                    )}
-                    <label htmlFor="editarCurriculum">Editar curriculum de profesor:</label>
-                        <input
-                            type="file"
-                            id="editarCurriculum"
-                            accept="application/pdf"
-                            onChange={(e) => {
-                            const archivo = e.target.files?.[0];
-                            if (archivo) {
-                                const nuevaUrl = URL.createObjectURL(archivo);
-                                setNuevoCurriculum(true)
-                                setCurriculumDescargadaUrl(nuevaUrl);
-                                setCurriculum(archivo)
-                                // Aquí podrías subirla al servidor si deseas
-                            }
-                            
-                            }}
-                    />
-                    <button onClick={() => onGuardarEdicion()}>Guardar</button>
-                    <button onClick={() => setProfesorEditando(null)}>Cancelar</button>
-                </div>
-            )}
+            {profesorEditando && !mostrarFormulario && (
+        <div className="formulario-edicion">
+            <h3>Editando profesor</h3>
 
-            {mostrarAside && (
-                <aside
-                    style={{
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100vh',
-                        backgroundColor: '#f0f0f5',
-                        boxShadow: '2px 0 12px rgba(0, 0, 0, 0.15)',
-                        padding: '24px',
-                        overflowY: 'auto',
-                        zIndex: 1000,
-                        transition: 'all 0.3s ease',
-                    }}
-                >
-                    <h2 style={{ marginTop: 0 }}>Cursos de {profesorSeleccionado?.nombre + " " + profesorSeleccionado?.apellido}</h2>
-                    <button
-                        onClick={() => { setAgregarCurso(!agregarCurso); setSeguidorEvento( (seguidorEvento === 2) ? 0 : 2 ); }}
-                        style={{
-                            marginBottom: '15px',
-                            padding: '8px 12px',
-                            backgroundColor: '#4CAF50',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: 'pointer',
-                        }}
-                    >
-                        + Agregar nuevo curso
-                    </button>
-                    {/* Ejemplo de tabla de grupos */}
-                    {
-                    (seguidorEvento === 0) &&
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                    <thead>
-                        <tr>
-                            <th>ID - Curso</th>
-                            <th>Nombre</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {/* Aquí deberías mapear los grupos del profesor */}
-                        {(cursosProfesor ?? []).map((curso, index) => (
-                            <tr key={index}>
-                                <td>{curso.id_curso }</td>
-                                <td>{curso.nombre_curso}</td>
-                                <td>
-                                <button
-                                    onClick={async () => {  await obtenerHorariosCurso(profesorSeleccionado.id_usuario, curso.id_curso); setCursoSeleccionado(curso); setMostrarAsideHorarios(true); setAgregarHorario(true); setMostrarTablaHorarios(true); setSeguidorEvento(2); await obtenerGrupos(curso.id_curso);}}
-                                    style={{
-                                    padding: '4px 8px',
-                                    backgroundColor: '#2196F3',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '4px',
-                                    cursor: 'pointer',
-                                    }}
-                                >
-                                    <img src="/icons/event_list_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Home icon" width={16} height={16} />
-                                </button>
+            <div className="campo-form">
+            <label>Nombre</label>
+            <input
+                type="text"
+                placeholder="Nombre"
+                value={profesorEditando.nombre || ''}
+                onChange={e => setProfesorEditando({ ...profesorEditando, nombre: e.target.value })}
+            />
+            </div>
 
-                                <button onClick={async () => await eliminarCursoProfesor(profesorSeleccionado.id_usuario, curso.id_curso)}><img src="/icons/delete_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Home icon" width={16} height={16} /></button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                    </table>
-                    }
-                    {
-                    (seguidorEvento === 2 ) && 
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            height: '100vh',
-                            backgroundColor: '#f0f2f5'
-                        }}
-                        >
-                        <form
-                            style={{
-                            backgroundColor: 'white',
-                            padding: '50px',
-                            borderRadius: '10px',
-                            boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '15px',
-                            width: '40%'
-                            }}
-                            onSubmit={handleSubmit}
-                        >
-                            <h2 style={{ textAlign: 'center', margin: 0 }}>Formulario</h2>
-                            <select
-                                onChange={(e) => {console.log(e.target.value);  const cursoGuardado = cursosFaltantes.filter( (cursoFaltante: Cursos) => cursoFaltante.id_curso.toString() === e.target.value)[0]; setCursoFaltanteSeleccionado(cursoGuardado); console.log(cursoGuardado);}}
-                                style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-                                >
-                                <option value={cursoFaltanteSeleccionado.id_curso}>Selecciona un curso</option>
-                                    {cursosFaltantes.map((curso) => (
-                                        <option key={curso.id_curso} value={curso.id_curso}>
-                                        {curso.nombre_curso}
-                                        </option>
-                                    ))}
-                            </select>
-                            <button
-                                type="submit"
-                                style={{
-                                    padding: '10px',
-                                    backgroundColor: '#007bff',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '5px',
-                                    cursor: 'pointer',
-                                    width: '100%'
-                                }}
-                            >
-                            Enviar
-                            </button>
-                        </form>
-                    </div>
-                    }
-                    <button onClick={() => {setMostrarAside(false); setSeguidorEvento(0);}} style={{ marginTop: '20px' }}>
-                    Cerrar
-                    </button>
-                </aside>
-            )}
-            {/* Segundo aside para los horarios */}
-            {mostrarAsideHorarios && (
-            <aside
-                style={{
-                    position: 'fixed',
-                    top: 0,
-                    width: '100%',
-                    height: '100vh',
-                    backgroundColor: '#ffffff',
-                    boxShadow: '-2px 0 10px rgba(0, 0, 0, 0.2)',
-                    padding: '24px',
-                    overflowY: 'auto',
-                    zIndex: 1100,
-                    transition: 'all 0.3s ease',
+            <div className="campo-form">
+            <label>Apellido</label>
+            <input
+                type="text"
+                placeholder="Apellido"
+                value={profesorEditando.apellido || ''}
+                onChange={e => setProfesorEditando({ ...profesorEditando, apellido: e.target.value })}
+            />
+            </div>
+
+            <div className="campo-form">
+            <label>Usuario</label>
+            <input
+                type="text"
+                placeholder="Usuario"
+                value={profesorEditando.usuario || ''}
+                onChange={e => setProfesorEditando({ ...profesorEditando, usuario: e.target.value })}
+            />
+            </div>
+
+            <div className="campo-form">
+            <label>Clave</label>
+            <div style={{ position: 'relative', width: '100%' }}>
+                <input
+                type={mostrarClave ? 'text' : 'password'}
+                placeholder="Clave"
+                value={profesorEditando.clave_acceso || ''}
+                onChange={e => {
+                    const value = e.target.value;
+                    setProfesorEditando({ ...profesorEditando, clave_acceso: value });
+                    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&.,;:]).{8,}$/;
+                    setClaveValidaEdit(regex.test(value));
                 }}
-            >
-                <h3 style={{ marginTop: 0 }}>
-                    Horarios de {cursoSeleccionado?.nombre_curso}
-                </h3>
+                style={{
+                    width: '100%',
+                    paddingRight: '40px',
+                    height: '36px',
+                    fontSize: '16px',
+                    boxSizing: 'border-box'
+                }}
+                />
+                <img
+                src={mostrarClave ? '/icons/ojito-abierto.png' : '/icons/ojito-cerrado.png'}
+                alt="Mostrar/Ocultar Clave"
+                onClick={() => setMostrarClave(prev => !prev)}
+                style={{
+                    position: 'absolute',
+                    right: '40px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: '20px',
+                    height: '20px',
+                    cursor: 'pointer',
+                    opacity: 0.7
+                }}
+                />
+            </div>
+            {!claveValidaEdit && (
+                <p className="mensaje-error-clave">
+                La clave requiere al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.
+                </p>
+            )}
+            </div>
 
-                <button
-                    onClick={() => { setAgregarHorario(!agregarHorario); setMostrarTablaHorarios(!mostrarTablaHorarios); setSeguidorEvento( (seguidorEvento === 2) ? 3 : 2); console.log({"agregarHorario": agregarHorario, "mostrarTablaHorarios": mostrarTablaHorarios, "agregarCurso": agregarCurso, "mostrarTablaCursos": mostrarTablaCursos});}}
-                    style={{
-                        marginBottom: '15px',
-                        padding: '8px 12px',
-                        backgroundColor: '#4CAF50',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                    }}
-                >
-                    + Agregar horario
-                </button>
-                {
-                
-                    (seguidorEvento === 2) &&
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                    <thead>
-                        <tr>
-                        <th>Grupo</th>
-                        <th>Día</th>
-                        <th>Inicio</th>
-                        <th>Fin</th>
-                        <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {(horariosCursoSeleccionado ?? []).map((horario, index) => (
-                        <tr key={index}>
-                            <td>{horario.nombre_grupo }</td>
-                            <td>{horario.dia_semana}</td>
-                            <td>{horario.hora_inicio}</td>
-                            <td>{horario.hora_fin}</td>
-                            <td className="display_flex">
-                                <button onClick={() => editarHorarioProfesor(horario.id_horario)}><img src="/icons/edit_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
-                                <button onClick={() => eliminarHorarioProfesor(horario.id_horario)}><img src="/icons/delete_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
-                            </td>
-                        </tr>
-                        ))}
-                    </tbody>
-                    </table>
-                
+            <div className="campo-form">
+            <label>Teléfono</label>
+            <input
+                type="text"
+                placeholder="Teléfono"
+                value={profesorEditando.telefono || ''}
+                onChange={e => {
+                const value = e.target.value;
+                const regex = /^[0-9()+\-\s]*$/;
+                if (regex.test(value)) {
+                    setProfesorEditando({ ...profesorEditando, telefono: value });
+                    setTelefonoValidoEdit(true);
+                } else {
+                    setTelefonoValidoEdit(false);
                 }
-                {
-                    (seguidorEvento === 3) &&
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            height: '100vh',
-                            backgroundColor: '#f0f2f5'
-                        }}
-                        >
-                        <form
-                            style={{
-                            backgroundColor: 'white',
-                            padding: '50px',
-                            borderRadius: '10px',
-                            boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '15px',
-                            width: '40%'
-                            }}
-                            onSubmit={handleSubmitHorario}
-                        >
-                            
-                            <label htmlFor="dia">Día de la semana:</label>
-                            <select id="dia" name="dia" value={(horarioSeleccionado.dia_semana) ? (horarioSeleccionado.dia_semana) : ""} onChange={(e) => handleChangeDia(e)}>
-                                <option value="" disabled>Seleccione un día de la semana</option>
-                                <option value="Lunes">Lunes</option>
-                                <option value="Martes">Martes</option>
-                                <option value="Miércoles">Miércoles</option>
-                                <option value="Jueves">Jueves</option>
-                                <option value="Viernes">Viernes</option>
-                                <option value="Sábado">Sábado</option>
-                                <option value="Domingo">Domingo</option>
-                            </select>
+                }}
+            />
+            {!telefonoValidoEdit && (
+                <p className="mensaje-error-clave">Teléfono inválido. Use solo números o símbolos como + - ( )</p>
+            )}
+            </div>
 
-                            <br /><br />
+            <div className="campo-form">
+            <label>Correo</label>
+            <input
+                type="text"
+                placeholder="Correo"
+                value={profesorEditando.correo || ''}
+                onChange={e => {
+                const value = e.target.value;
+                setProfesorEditando({ ...profesorEditando, correo: value });
+                setCorreoValidoEdit(value.includes('@'));
+                }}
+            />
+            {!correoValidoEdit && (
+                <p className="mensaje-error-clave">Ingrese una dirección de correo válida</p>
+            )}
+            </div>
 
-                            <label htmlFor="grupo">Grupo:</label>
-                            <select
-                                id="grupo"
-                                name="grupo"
-                                value={horarioSeleccionado.id_grupo ? horarioSeleccionado.id_grupo : ""}
-                                onChange={(e) => handleChangeGrupo(e)}
-                                >
-                                <option value="" disabled>Seleccione el grupo</option> {/* Opción por defecto */}
-                                {  
-                                    cursosFaltantes.length > 0 &&
-                                    gruposAlumnos.filter((grupo: Grupos) => grupo.id_curso === cursosFaltantes[0].id_curso)?.map((grupo_alumno: Grupos, index: number) => (
-                                        <option key={grupo_alumno.id_grupo} value={grupo_alumno.id_grupo}>
-                                            {grupo_alumno.nombre_grupo} {/* Asumiendo que tu objeto 'Grupos' tiene un 'nombre' */}
-                                        </option>
-                                    ))
-                                }
-                            </select>
-
-                            <label htmlFor="entrada">Hora de entrada:</label>
-                            <input
-                                type="time"
-                                id="entrada"
-                                name="entrada"
-                                value={horarioSeleccionado.hora_inicio as string}
-                                onChange={(e) => {setEntrada(e.target.value); setHorarioSeleccionado({...horarioSeleccionado, hora_inicio: e.target.value});}}
-                            />
-
-                            <label htmlFor="salida">Hora de salida:</label>
-                            <input
-                                type="time"
-                                id="salida"
-                                name="salida"
-                                value={horarioSeleccionado.hora_fin as string}
-                                onChange={(e) => {setSalida(e.target.value); setHorarioSeleccionado({...horarioSeleccionado, hora_fin: e.target.value});}}
-                            />
-                            
-                            <button
-                                type="submit"
-                                disabled={!(horarioSeleccionado.dia_semana !== "" && horarioSeleccionado.hora_inicio !== "" && horarioSeleccionado.hora_fin !== "" && horarioSeleccionado.id_grupo !== null && horarioSeleccionado.id_grupo >= 1)}
-                            >
-                            Enviar
-                            </button>
-                        </form>
-                    </div>
+            <div className="campo-form">
+            <label>Edad</label>
+            <input
+                type="number"
+                placeholder="Edad"
+                min={0}
+                value={profesorEditando.edad ?? ''}
+                onChange={e =>
+                setProfesorEditando({ ...profesorEditando, edad: Number(e.target.value) })
                 }
+            />
+            </div>
 
-                <button onClick={() =>{ setMostrarAsideHorarios(false); setSeguidorEvento(0)}} style={{ marginTop: '20px' }}>
-                Cerrar horarios
-                </button>
-            </aside>
+            <div className="campo-form">
+            <label>Cédula</label>
+            <input
+                type="text"
+                placeholder="Cédula"
+                value={profesorEditando.cedula || ''}
+                onChange={e => {
+                const value = e.target.value;
+                const regex = /^\d*$/;
+                if (regex.test(value)) {
+                    setProfesorEditando({ ...profesorEditando, cedula: value });
+                    setCedulaValidaEdit(true);
+                } else {
+                    setCedulaValidaEdit(false);
+                }
+                }}
+            />
+            {!cedulaValidaEdit && (
+                <p className="mensaje-error-clave">La cédula solo debe contener dígitos</p>
+            )}
+            </div>
+
+            <div className="campo-form">
+            <label>Formación</label>
+            <input
+                type="text"
+                placeholder="Formación"
+                value={profesorEditando.formacion || ''}
+                onChange={e => setProfesorEditando({ ...profesorEditando, formacion: e.target.value })}
+            />
+            </div>
+
+            {imagenDescargadaUrl && (
+            <div>
+                <img
+                src={imagenDescargadaUrl}
+                alt="Imagen de perfil"
+                style={{ width: '200px', height: '200px', objectFit: 'cover', borderRadius: '10px' }}
+                />
+            </div>
             )}
 
+            <div className="campo-form">
+            <label htmlFor="editarImagen">Editar imagen de perfil (PNG):</label>
+            <input
+                type="file"
+                id="editarImagen"
+                accept="image/png"
+                onChange={e => {
+                const archivo = e.target.files?.[0];
+                if (archivo) {
+                    const nuevaUrl = URL.createObjectURL(archivo);
+                    setNuevaFoto(true);
+                    setImagenDescargadaUrl(nuevaUrl);
+                    setFotoPerfil(archivo);
+                }
+                }}
+            />
+            </div>
+
+            {curriculumDescargadaUrl ? (
+            <div>
+                <iframe
+                src={curriculumDescargadaUrl}
+                title="Vista previa del PDF"
+                style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: '10px',
+                    border: '1px solid #ccc',
+                }}
+                />
+            </div>
+            ) : (
+            !descargandoCurriculum &&
+            !tieneCurriculum && (
+                <p style={{ color: 'gray' }}>
+                Este profesor aún no tiene un curriculum subido.
+                </p>
+            )
+            )}
+
+            <div className="campo-form">
+            <label htmlFor="editarCurriculum">Editar curriculum (PDF):</label>
+            <input
+                type="file"
+                id="editarCurriculum"
+                accept="application/pdf"
+                onChange={e => {
+                const archivo = e.target.files?.[0];
+                if (archivo) {
+                    const nuevaUrl = URL.createObjectURL(archivo);
+                    setNuevoCurriculum(true);
+                    setCurriculumDescargadaUrl(nuevaUrl);
+                    setCurriculum(archivo);
+                }
+                }}
+            />
+            </div>
+
+            <div className="botones">
+            <button onClick={onGuardarEdicion}>Guardar</button>
+            <button onClick={() => setProfesorEditando(null)}>Cancelar</button>
+            </div>
+        </div>
+        )}
+
+
+          
             
             </div>
         </>
