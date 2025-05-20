@@ -1,4 +1,13 @@
 {
+<<<<<<< HEAD
+  "/Amenu/page": "app/Amenu/page.js",
+  "/videojuego/page": "app/videojuego/page.js",
+  "/Grupos/page": "app/Grupos/page.js",
+  "/Aestudiantes-lista/page": "app/Aestudiantes-lista/page.js",
+  "/GruposYCursos/page": "app/GruposYCursos/page.js",
+  "/Aadmins-lista/page": "app/Aadmins-lista/page.js"
+=======
   "/page": "app/page.js",
   "/Grupos/page": "app/Grupos/page.js"
+>>>>>>> origin/backend
 }

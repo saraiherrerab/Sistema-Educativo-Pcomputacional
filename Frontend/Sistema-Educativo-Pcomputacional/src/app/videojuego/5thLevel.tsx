@@ -198,7 +198,7 @@ export async function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState5:any, cam
       )
       .then(  
         async (resultado: any) => {
-          juegoKaplay.play("nivel5", { volume: 1, speed: 1.5, loop: false });
+          juegoKaplay.play("nivel5", { volume: 1, speed: 1, loop: false });
           cambiarGanar5(true);
           setState5(true);
           await sleep(2000)
@@ -237,11 +237,11 @@ export async function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState5:any, cam
               if(aciertos < 3 && arregloAuxiliarActividades[indiceActividad].imagenes.indexOf(arregloAuxiliarActividades[indiceActividad].respuesta) === 1){
                 console.log("SUMANDO")
                 aciertos++
-                juegoKaplay.play("bien", { volume: 1, speed: 1.5, loop: false });
+                juegoKaplay.play("bien", { volume: 1, speed: 1, loop: false });
                 await sleep(2000)
               }else{
                   vidas--
-                  juegoKaplay.play("fallaste", { volume: 1, speed: 1.5, loop: false });
+                  juegoKaplay.play("fallaste", { volume: 1, speed: 1, loop: false });
                   await sleep(2000)
                 
                 if(vidas <= 0){
@@ -385,11 +385,11 @@ export async function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState5:any, cam
               if(aciertos < 3 && arregloAuxiliarActividades[indiceActividad].imagenes.indexOf(arregloAuxiliarActividades[indiceActividad].respuesta) === 2){
                 console.log("SUMANDO")
                 aciertos++
-                juegoKaplay.play("bien", { volume: 1, speed: 1.5, loop: false });
+                juegoKaplay.play("bien", { volume: 1, speed: 1, loop: false });
                 await sleep(2000)
               }else{
                   vidas--
-                  juegoKaplay.play("fallaste", { volume: 1, speed: 1.5, loop: false });
+                  juegoKaplay.play("fallaste", { volume: 1, speed: 1, loop: false });
                   await sleep(2000)
                 
                 if(vidas <= 0){
@@ -529,16 +529,16 @@ export async function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState5:any, cam
               if( aciertos < 3 && arregloAuxiliarActividades[indiceActividad].imagenes.indexOf(arregloAuxiliarActividades[indiceActividad].respuesta) === 3){
                 console.log("SUMANDO")
                 aciertos++
-                juegoKaplay.play("bien", { volume: 1, speed: 1.5, loop: false });
+                juegoKaplay.play("bien", { volume: 1, speed: 1, loop: false });
                 await sleep(2000)
               }else{
                   vidas--
-                  juegoKaplay.play("fallaste", { volume: 1, speed: 1.5, loop: false });
+                  juegoKaplay.play("fallaste", { volume: 1, speed: 1, loop: false });
                   await sleep(2000)
                 if(vidas <= 0){
                   cambiarGanarC(true);
                   setStateC(true);
-                  juegoKaplay.play("perdido", { volume: 1, speed: 1.5, loop: false });
+                  juegoKaplay.play("perdido", { volume: 1, speed: 1, loop: false });
                   console.log("MORISTE")
                   await sleep(2000)
                   window.location.href = window.location.href

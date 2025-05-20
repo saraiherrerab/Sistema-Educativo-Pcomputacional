@@ -205,7 +205,7 @@ export async function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, camb
         (resultado: any) => {
 
           cambiarGanar1(true);
-          juegoKaplay.play("nivel1", { volume: 1, speed: 1.5, loop: false });
+          juegoKaplay.play("nivel1", { volume: 1, speed: 1.4, loop: false });
           setState1(true);
           setTimeout(() => {
             setState1(false);
@@ -264,7 +264,7 @@ export async function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, camb
           async function validarAciertos() {
             const mostrarGananciaTemporal = () => {
               cambiarGanar(true);
-              juegoKaplay.play("bien", { volume: 1, speed: 1.5, loop: false });
+              juegoKaplay.play("bien", { volume: 1, speed: 1, loop: false });
               setState(true);
               setTimeout(() => setState(false), 4000);
             };
@@ -470,7 +470,7 @@ export async function Nivel1(juegoKaplay:KAPLAYCtx<{},never>, setState:any, camb
                 console.log("TE MORISTE");
               }, 5000);
                 
-                juegoKaplay.play("perdido", { volume: 1, speed: 1.5, loop: false });
+                juegoKaplay.play("perdido", { volume: 1, speed: 1, loop: false });
                 cambiarGanarC(true);
                 setStateC(true);
 

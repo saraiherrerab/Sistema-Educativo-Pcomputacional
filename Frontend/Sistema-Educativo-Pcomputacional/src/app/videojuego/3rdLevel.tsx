@@ -125,7 +125,7 @@ export async function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cam
           sliceY: 1,
         });
 
-        juegoKaplay.loadSound("nivel3", "./oveja-dialogos/nivel2.wav");
+        juegoKaplay.loadSound("nivel3", "./oveja-dialogos/nivel3.wav");
         juegoKaplay.loadSound("aprobado", "./oveja-dialogos/aprobado.wav");
         juegoKaplay.loadSound("perdido", "./oveja-dialogos/perdido.wav");
         juegoKaplay.loadSound("fallaste", "./oveja-dialogos/fallaste.wav");
@@ -189,7 +189,7 @@ export async function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cam
 
                   
                   cambiarGanar3(true);
-                  juegoKaplay.play("nivel3", { volume: 1, speed: 1.5, loop: false });
+                  juegoKaplay.play("nivel3", { volume: 1, speed: 1, loop: false });
                   setState3(true);
 
                   setTimeout(() => {
@@ -266,7 +266,7 @@ export async function Nivel3(juegoKaplay:KAPLAYCtx<{},never>, setState3:any, cam
                         juegoKaplay.destroy(player)
                         cambiarGanarC(true); 
                         setStateC(true);
-                        juegoKaplay.play("perdido", { volume: 1, speed: 1.5, loop: false });
+                        juegoKaplay.play("perdido", { volume: 1, speed: 1, loop: false });
                         
 
                         await sleep(2000)
