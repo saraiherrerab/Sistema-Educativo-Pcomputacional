@@ -1,7 +1,7 @@
 DROP FUNCTION IF EXISTS obtener_cursos_profesor;
 DROP FUNCTION IF EXISTS obtener_horarios_profesor;
 	
-DROP TABLE IF EXISTS horarios_profesor;
+DROP TABLE IF EXISTS horarios_grupo;
 DROP TABLE IF EXISTS Profesor_Curso;
 
 /*Tablas principales*/
@@ -155,7 +155,7 @@ CREATE TABLE IF NOT EXISTS Estudiante (
         construccion_algoritmos IN ('NO CURSADO', 'EN PROCESO', 'REPROBADO', 'APROBADO')
     ),
 	p_actividades_completadas INTEGER DEFAULT 0,
-	tipo_premiacion TEXT,
+	tipo_premiacion TEXT DEFAULT "",
 	id_grupo INTEGER DEFAULT NULL,
 	PRIMARY KEY(id_estudiante),
 	FOREIGN KEY (id_estudiante) REFERENCES Usuario(id_usuario)
@@ -298,16 +298,17 @@ $$ LANGUAGE plpgsql;
 
 SELECT * FROM obtener_horarios_profesor(2);
 
+/*
 DELETE FROM Horarios_Grupo;
 DELETE FROM Curso;
 DELETE FROM Estudiante;
 DELETE FROM Grupos;
-DELETE FROM Juego;
+
 DELETE FROM Nivel;
 DELETE FROM Profesor;
 DELETE FROM Usuario;
 DELETE FROM Usuario_Nivel;
-
+*/
 -- Elimina el trigger si existe
 DROP TRIGGER IF EXISTS trg_actualizar_premio_algoritmo ON estudiante;
 
