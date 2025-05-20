@@ -450,11 +450,14 @@ useEffect(() => {
       [idGrupo]: nuevosEstudiantes
     });
 
+    window.location.href =  window.location.href 
 
   }
 
   const [mostrarAsignarEstudianteAGrupo, setMostrarAsignarEstudianteAGrupo] = useState<boolean>(false)
   const [editarGrupoEstudianteSeleccionado, setEditarGrupoEstudianteSeleccionado] = useState<boolean>(false)
+  const cerrarListaEstudiantes = () => setMostrarEstudiantesGrupo(null);
+
 
   const [grupoAsignadoEstudiante, setGrupoAsignadoEstudiante] = useState<Grupo>(
     { id_grupo: 0, nombre_grupo: '', id_curso: 0, id_profesor_grupo: 0}
@@ -563,7 +566,7 @@ useEffect(() => {
               <button onClick={onVolverListaGrupos}>Volver a grupos</button>
             )}
           </div>
-          {!mostrarEstudiantesGrupo && (
+          {!mostrarEstudiantesGrupo && !mostrarFormulario && (
             <div className="barraBusqueda">
               <div className="search-input-container">
                 <input
@@ -782,29 +785,36 @@ useEffect(() => {
     {/* Lista de estudiantes de un grupo */}
     {mostrarEstudiantesGrupo && (
       <div className="tabla-estudiantes">
-        <h3>Estudiantes de {mostrarEstudiantesGrupo.nombre_grupo}</h3>
+        <h3>Estudiantes de {mostrarEstudiantesGrupo.nombre_grupo}
+          
+        </h3>
         <button onClick={() => agregarEstudianteEnGrupo()}><img src="/icons/edit_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
         {
           mostrarAsignarEstudianteAGrupo && 
           (
-            <label>
-              Estudiante:
-              <select
-                value={estudianteSeleccionado.id_usuario}
-                onChange={(e) => {
-                  const val = Number(e.target.value);
-                  setEstudianteSeleccionado(listaEstudiantes.find( (est) => est.id_usuario === val));
-          
-                }}
-              >
-                <option value={0} disabled = {true}>Seleccione un estudiante</option>
-                {listaEstudiantes.map(est => (
-                  <option key={est.id_usuario} value={est.id_usuario}>
-                    {est.nombre} {est.apellido}
-                  </option>
-                ))}
-              </select>
-          </label>
+            <div className="estudiante-selector-con-estilo">
+              <label className="selector-estudiante-label">
+                Estudiante:
+                <select
+                  className="selector-estudiante"
+                  value={estudianteSeleccionado.id_usuario}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    setEstudianteSeleccionado(
+                      listaEstudiantes.find((est) => est.id_usuario === val)
+                    );
+                  }}
+                >
+                  <option value={0} disabled={true}>Seleccione un estudiante</option>
+                  {listaEstudiantes.map(est => (
+                    <option key={est.id_usuario} value={est.id_usuario}>
+                      {est.nombre} {est.apellido}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+
           )
         }
         {
@@ -816,17 +826,16 @@ useEffect(() => {
         }
         {
           editarGrupoEstudianteSeleccionado &&
-          <div>
-            <label>
+          <div className="grupo-selector-con-botones">
+            <label className="selector-grupo-label">
               Grupo:
               <select
-                value={(grupoAsignadoEstudiante.id_grupo === 0 ) ? 0 : grupoAsignadoEstudiante.id_grupo}
+                className="selector-grupo"
+                value={grupoAsignadoEstudiante.id_grupo === 0 ? 0 : grupoAsignadoEstudiante.id_grupo}
                 onChange={(e) => {
                   const idGrupo = Number(e.target.value);
                   const grupoSeleccionado = grupos.find(grupo => grupo.id_grupo === idGrupo);
-                  console.log(grupoSeleccionado)
-                  if(grupoSeleccionado)
-                  setGrupoAsignadoEstudiante(grupoSeleccionado)
+                  if (grupoSeleccionado) setGrupoAsignadoEstudiante(grupoSeleccionado);
                 }}
               >
                 <option value={0} disabled>Seleccione un grupo</option>
@@ -837,11 +846,25 @@ useEffect(() => {
                 ))}
               </select>
             </label>
-            <div>
-             <button onClick={() => reasignarEstudianteAGrupo()}><img src="/icons/check_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
-              <button onClick={() => volverATablaDeGrupos()}><img src="/icons/close_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
+
+            <div className="botones-grupo">
+              <button onClick={() => reasignarEstudianteAGrupo()}>
+                <img
+                  src="/icons/check_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg"
+                  alt="Confirmar"
+                  style={{ width: 16, height: 16 }}
+                />
+              </button>
+              <button onClick={() => volverATablaDeGrupos()}>
+                <img
+                  src="/icons/close_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg"
+                  alt="Cancelar"
+                  style={{ width: 16, height: 16 }}
+                />
+              </button>
+            </div>
           </div>
-          </div>
+
         }
          <table>
       <thead>
@@ -866,13 +889,25 @@ useEffect(() => {
               </button>
               <button onClick={() => eliminarEstudianteEnGrupo(estudiante.id_usuario)}>
                 <img src="/icons/delete_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Eliminar" style={{ width: 16, height: 16 }} />
+                
               </button>
             </td>
           </tr>
         ))}
       </tbody>
     </table>
-      
+      <button
+            onClick={cerrarListaEstudiantes}
+            className="boton-cerrar-lista"
+            title="Cerrar lista"
+            style={{ marginLeft: "10px", background: "none", border: "none", cursor: "pointer" }}
+          >
+            <img
+              src="/icons/close_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg"
+              alt="Cerrar"
+              style={{ width: 16, height: 16 }}
+            />
+          </button>
       </div>
     )}
   </div>
