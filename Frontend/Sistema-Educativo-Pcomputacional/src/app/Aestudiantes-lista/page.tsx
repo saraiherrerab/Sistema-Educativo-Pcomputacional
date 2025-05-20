@@ -39,6 +39,7 @@ export default function EstudiantesLista() {
     const [nuevaFoto, setNuevaFoto] = useState<boolean>(false);
     const [grupos, setGrupos] = useState<Grupo[]>([])
     
+    
 
     const validarFormulario = (): boolean => {
         console.log("Validando Entradas de nuevo profesor")
@@ -799,6 +800,8 @@ export default function EstudiantesLista() {
            
 
             <div className="listado body_estudiantes">
+                
+                
                 {!mostrarFormulario &&  !estudianteEditando && (
                 <div className="encabezado">
                     <div className="tituloListado" style={{ cursor: 'pointer' }}>
@@ -1028,8 +1031,6 @@ export default function EstudiantesLista() {
                 )}
 
 
-               
-
                 {!mostrarFormulario && !estudianteEditando && (
                     <table>
                         <thead>
@@ -1042,7 +1043,7 @@ export default function EstudiantesLista() {
                                 <th className="texto_central">Celular</th>
                                 <th className="texto_central">Perfil</th> 
                                 <th className="texto_central">Acciones</th>
-                                <th className="texto_central">Cursos</th>
+                                
                             </tr>
                         </thead>
                         <tbody>
@@ -1063,11 +1064,7 @@ export default function EstudiantesLista() {
                                         <button onClick={() => onEditar(estudiante)}><img src="/icons/edit_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
                                         <button onClick={() => onEliminar(estudiante.id_estudiante)}><img src="/icons/delete_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} /></button>
                                     </td>
-                                    <td>
-                                        <button onClick={() => gestionarCursosYHorarios(estudiante.id_estudiante)}>
-                                            <img src="/icons/arrow_forward_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.svg" alt="Icono fleca" style={{ width: 16, height: 16 }} />
-                                        </button>
-                                    </td>
+                                    
                                 </tr>
                             ))}
                         </tbody>

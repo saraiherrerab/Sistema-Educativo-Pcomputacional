@@ -26,6 +26,12 @@ export default function AdministradoresLista() {
       const [administradores_, setAdministradores] = useState<Administrador[]>([]);
       const [administradoresFiltrados, setAdministradoresFiltrados] = useState<Administrador[]>([]);
       const [searchTerm, setSearchTerm] = useState('');
+      const [mostrarClave, setMostrarClave] = useState(false);
+      const [claveValidaEdit, setClaveValidaEdit] = useState(true);
+      const [correoValidoEdit, setCorreoValidoEdit] = useState(true);
+      const [telefonoValidoEdit, setTelefonoValidoEdit] = useState(true);
+      const [cedulaValidaEdit, setCedulaValidaEdit] = useState(true);
+
 
     async function obtenerAdministradores() : Promise<Administrador[]>{
         const resultado= await fetch('http://localhost:5555/administradores',{
@@ -295,21 +301,133 @@ export default function AdministradoresLista() {
             )}
 
             {administradorEditando && (
-                <div className="formulario-edicion">
-                    <h3>Editando administrador</h3>
-                    <input type="text" placeholder="Nombre" value={administradorEditando.nombre} onChange={e => setAdministradorEditando({ ...administradorEditando, nombre: e.target.value })} />
-                    <input type="text" placeholder="Apellido" value={administradorEditando.apellido} onChange={e => setAdministradorEditando({ ...administradorEditando, apellido: e.target.value })} />
-                    <input type="text" placeholder="Usuario" value={administradorEditando.usuario} onChange={e => setAdministradorEditando({ ...administradorEditando, usuario: e.target.value })} />
-                    <input type="text" placeholder="Clave" value={administradorEditando.clave_acceso} onChange={e => setAdministradorEditando({ ...administradorEditando, clave_acceso: e.target.value })} />
-                    <input type="text" placeholder="Telefono" value={administradorEditando.telefono} onChange={e => setAdministradorEditando({ ...administradorEditando, telefono: e.target.value })} />
-                    <input type="text" placeholder="Correo" value={administradorEditando.correo} onChange={e => setAdministradorEditando({ ...administradorEditando, correo: e.target.value })} />
-                    <input type="number" placeholder="Edad" value={administradorEditando.edad} onChange={e => setAdministradorEditando({ ...administradorEditando, edad: (e.target.value) as unknown as number})} />
-                    <input type="text" placeholder="Cedula" value={administradorEditando.cedula} onChange={e => setAdministradorEditando({ ...administradorEditando, cedula: e.target.value })} />
-                    <input type="text" placeholder="Foto" value={administradorEditando.foto} onChange={e => setAdministradorEditando({ ...administradorEditando, foto: e.target.value })} />
-                    <button onClick={() => onGuardarEdicion()}>Guardar</button>
-                    <button onClick={() => setAdministradorEditando(null)}>Cancelar</button>
+            <div className="formulario-agregar">
+                <h3>Editando administrador</h3>
+
+                <div className="campo-form">
+                <label>Nombre</label>
+                <input
+                    type="text"
+                    placeholder="Nombre"
+                    value={administradorEditando.nombre || ''}
+                    onChange={e => setAdministradorEditando({ ...administradorEditando, nombre: e.target.value })}
+                />
                 </div>
+
+                <div className="campo-form">
+                <label>Apellido</label>
+                <input
+                    type="text"
+                    placeholder="Apellido"
+                    value={administradorEditando.apellido || ''}
+                    onChange={e => setAdministradorEditando({ ...administradorEditando, apellido: e.target.value })}
+                />
+                </div>
+
+                <div className="campo-form">
+                <label>Usuario</label>
+                <input
+                    type="text"
+                    placeholder="Usuario"
+                    value={administradorEditando.usuario || ''}
+                    onChange={e => setAdministradorEditando({ ...administradorEditando, usuario: e.target.value })}
+                />
+                </div>
+
+                <div className="campo-form">
+                <label>Clave</label>
+                <div style={{ position: 'relative', width: '100%' }}>
+                    <input
+                    type={mostrarClave ? 'text' : 'password'}
+                    placeholder="Clave"
+                    value={administradorEditando.clave_acceso || ''}
+                    onChange={e => {
+                        const value = e.target.value;
+                        setAdministradorEditando({ ...administradorEditando, clave_acceso: value });
+                        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&.,;:]).{8,}$/;
+                        setClaveValidaEdit(regex.test(value));
+                    }}
+                    style={{
+                        width: '100%',
+                        paddingRight: '40px',
+                        height: '36px',
+                        fontSize: '16px',
+                        boxSizing: 'border-box'
+                    }}
+                    />
+                    <img
+                    src={mostrarClave ? '/icons/ojito-abierto.png' : '/icons/ojito-cerrado.png'}
+                    alt="Mostrar/Ocultar Clave"
+                    onClick={() => setMostrarClave(prev => !prev)}
+                    style={{
+                        position: 'absolute',
+                        right: '40px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        width: '20px',
+                        height: '20px',
+                        cursor: 'pointer',
+                        opacity: 0.7
+                    }}
+                    />
+                </div>
+                {!claveValidaEdit && (
+                    <p className="mensaje-error-clave">
+                    La clave requiere al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.
+                    </p>
+                )}
+                </div>
+
+                <div className="campo-form">
+                <label>Teléfono</label>
+                <input
+                    type="text"
+                    placeholder="Teléfono"
+                    value={administradorEditando.telefono || ''}
+                    onChange={e => {
+                    const value = e.target.value;
+                    const regex = /^[0-9()+\-\s]*$/;
+                    if (regex.test(value)) {
+                        setAdministradorEditando({ ...administradorEditando, telefono: value });
+                        setTelefonoValidoEdit(true);
+                    } else {
+                        setTelefonoValidoEdit(false);
+                    }
+                    }}
+                />
+                {!telefonoValidoEdit && (
+                    <p className="mensaje-error-clave">
+                    Teléfono inválido. Use solo números o símbolos como + - ( )
+                    </p>
+                )}
+                </div>
+
+                <div className="campo-form">
+                <label>Correo</label>
+                <input
+                    type="text"
+                    placeholder="Correo"
+                    value={administradorEditando.correo || ''}
+                    onChange={e => {
+                    const value = e.target.value;
+                    setAdministradorEditando({ ...administradorEditando, correo: value });
+                    setCorreoValidoEdit(value.includes('@'));
+                    }}
+                />
+                {!correoValidoEdit && (
+                    <p className="mensaje-error-clave">Ingrese una dirección de correo válida</p>
+                )}
+                </div>
+
+               
+               
+                <div className="botones">
+                <button onClick={() => onGuardarEdicion()}>Guardar</button>
+                <button onClick={() => setAdministradorEditando(null)}>Cancelar</button>
+                </div>
+            </div>
             )}
+
             </div>
         </>
     );
