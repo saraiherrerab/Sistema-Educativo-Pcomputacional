@@ -11,6 +11,9 @@ import NombreEs from "../../../components/nombreEs/nombreEs";
 
 import './styles.css'
 import obtenerGrupoAlumno from "../functions/obtenerGrupoAlumno";
+import obtenerProfesorAlumno from "../functions/obtenerProfesorAlumno";
+import obtenerCursoAlumno from "../functions/obtenerCursoAlumno";
+import Curso from "../interfaces/curso.interface";
 
 interface Estudiante {
   id_usuario: number,
@@ -117,6 +120,10 @@ export default function Reportes( ) {
                 formacion: ""
             }
         );
+    const [curso, setCurso] = useState<Curso>({
+        id_curso: 0,
+        nombre_curso: ""
+    })
 
         const [ informacionGrupoSinHorario, setInformacionGrupoSinHorario ] = useState<{
         apellido: string,
@@ -147,14 +154,22 @@ export default function Reportes( ) {
         setUsuario(resultadoConsulta)
 
         if(resultadoConsulta.id_grupo){
-            const resultadoGrupo = await obtenerGrupoAlumno(resultadoConsulta.id_usuario)
-            const resultadoProfesor = await obtenerGrupoAlumno(resultadoGrupo.id_profesor_grupo)
+
+            console.log("TIENE GRUPO")
+            const resultadoGrupo = await obtenerGrupoAlumno(resultadoConsulta.id_grupo)
+
+            console.log(resultadoGrupo)
+
+            const resultadoCurso = await obtenerCursoAlumno(resultadoConsulta.id_grupo)
+            console.log(resultadoCurso)
+
+            setCurso(resultadoCurso)
+
+            const resultadoProfesor = await obtenerProfesorAlumno(resultadoGrupo.id_profesor_grupo)
             if (resultadoProfesor) {
                 setProfesor(resultadoProfesor); // solo aquí
+                console.log(resultadoProfesor)
             }
-        
-
-        
 
         }
     };
@@ -255,7 +270,7 @@ export default function Reportes( ) {
                                 <Parametros parametroTitulo1="CONSTRUCCIÓN DE ALGORITMOS" parametroTitulo2={(usuario.construccion_algoritmos) ? usuario.construccion_algoritmos : ""} />
                             </div>
                             <div className="contenedor_construccion_profesor">
-                                <Notita NotitaTitulo1={(profesor.id_profesor) ? profesor.nombre + " " + profesor.apellido : informacionGrupoSinHorario[0].nombre + " " + informacionGrupoSinHorario[0].apellido } NotitaTitulo2={(horarios.length > 0) ? horarios[0].nombre_curso : (informacionGrupoSinHorario.length > 0) ? informacionGrupoSinHorario[0].nombre_curso : ""}/>
+                                <Notita NotitaTitulo1={(profesor.id_profesor !== 0) ? profesor.nombre + " " + profesor.apellido : "No tiene profesor asignado" } NotitaTitulo2={(curso.id_curso !== 0) ?  curso.nombre_curso : "No está en un curso"}/>
                             </div>
                         </div>
                     </div>
