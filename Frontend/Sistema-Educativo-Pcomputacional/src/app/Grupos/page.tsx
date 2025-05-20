@@ -794,6 +794,7 @@ useEffect(() => {
                 onChange={(e) => {
                   const val = Number(e.target.value);
                   setEstudianteSeleccionado(listaEstudiantes.find( (est) => est.id_usuario === val));
+          
                 }}
               >
                 <option value={0} disabled = {true}>Seleccione un estudiante</option>

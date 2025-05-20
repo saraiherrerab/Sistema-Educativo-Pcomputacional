@@ -1,8 +1,19 @@
 {
+<<<<<<< HEAD
   "/Aadmins-lista/page": "app/Aadmins-lista/page.js",
   "/videojuego/page": "app/videojuego/page.js",
   "/reportes/[id]/page": "app/reportes/[id]/page.js",
   "/GruposYCursos/page": "app/GruposYCursos/page.js",
   "/Grupos/page": "app/Grupos/page.js",
   "/Amenu/page": "app/Amenu/page.js"
+=======
+  "/Amenu/page": "app/Amenu/page.js",
+  "/GruposYCursos/page": "app/GruposYCursos/page.js",
+  "/Grupos/page": "app/Grupos/page.js",
+  "/reportes/[id]/page": "app/reportes/[id]/page.js",
+  "/profile/[id]/page": "app/profile/[id]/page.js",
+  "/page": "app/page.js",
+  "/videojuego/page": "app/videojuego/page.js",
+  "/Aestudiantes-lista/page": "app/Aestudiantes-lista/page.js"
+>>>>>>> origin/backend
 }
