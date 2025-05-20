@@ -101,4 +101,34 @@ router.get('/cursos/:id/grupos', async function(req, res, next) {
     }
     
 });
+
+/* Obtener curso de un grupo especifico */
+router.get('/cursos/grupo/:id', async function(req, res, next) {
+    try {
+      const { id } = req.params
+      const query = "SELECT Cu.* FROM Grupos AS Gr, Curso AS Cu WHERE Gr.id_curso = Cu.id_curso AND Gr.id_grupo = $1";
+      const informacionCurso = new PQ({text : query, values: [id]});
+      const result = await db.oneOrNone(informacionCurso);
+      return res.json(result)
+    } catch (error) {
+      console.error('Error al hacer la consulta:', error);
+      res.json({menssage: "Error al eliminar estudiante"})
+    }
+    
+});
+
+/* Obtener cursos de profesor */
+
+router.get('/cursos/profesor/:id', async function(req, res, next) {
+    try {
+      const { id } = req.params
+      const query = "SELECT Cu.* FROM Grupos AS Gr, Curso AS Cu WHERE Gr.id_curso = Cu.id_curso AND Gr.id_profesor_grupo = $1";
+      const informacionCurso = new PQ({text : query, values: [id]});
+      const result = await db.manyOrNone(informacionCurso);
+      return res.json(result)
+    } catch (error) {
+      console.error('Error al hacer la consulta:', error);
+      res.json({menssage: "Error al eliminar estudiante"})
+    }
+});
 module.exports = router;

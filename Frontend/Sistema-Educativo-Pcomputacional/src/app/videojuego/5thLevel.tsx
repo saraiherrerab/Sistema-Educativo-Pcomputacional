@@ -6,6 +6,9 @@ import generarNumerosAleatorios from './functions/generarNumerosAleatorios'
 import Evaluacion_Estudiante from "./interfaces/informacion_estudiante.interface";
 import cargarEvaluacionEstudiante from "./functions/cargarEvaluacionEstudiante";
 import sleep from "./functions/sleep";
+import cargarNivelUsuario from "./functions/cargarNivelUsuario";
+import obtenerNivelesUsuario from "./functions/obtenerNivelesUsuario";
+import modificarNivelUsuario from "./functions/modificarNivelUsuario";
 
 let SCREEN_RESOLUTION_X = 0;
 let SCREEN_RESOLUTION_Y = 0;
@@ -20,9 +23,18 @@ export let cambioNivel = 0;
 
 
 
-export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState5:any, cambiarGanar5:any,setStateA:any, cambiarGanarA:any,setStateC:any, cambiarGanarC:any, Router:any,usuario: any) {
+export async function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState5:any, cambiarGanar5:any,setStateA:any, cambiarGanarA:any,setStateC:any, cambiarGanarC:any, Router:any,usuario: any,jugoNiveles:boolean) {
     // Referencia persistente para almacenar la instancia de Kaplay
    // setState(false);
+
+       let existeNivelCinco = false
+       if(jugoNiveles){
+         const nivelesUsuario = await obtenerNivelesUsuario(usuario.id_usuario)
+         console.log(nivelesUsuario)
+         existeNivelCinco = nivelesUsuario.some( (nivel: any) => nivel.id_nivel === 5);
+       }else{
+         console.log("NO HA JUGADO - PRIMERA VEZ")
+       }
 
    /* EJERCICIO DE ARBOLES  */
     juegoKaplay.loadSprite("arbol", "sprites/a-arbol/arbolicon.jpg", {
@@ -233,6 +245,20 @@ export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState5:any, cambiarGa
                   await sleep(2000)
                 
                 if(vidas <= 0){
+
+                  if(existeNivelCinco){
+                    const nivelesUsuario = await obtenerNivelesUsuario(usuario.id_usuario)
+                    
+                    const aproboNivelUno = nivelesUsuario.some((nivel: any) => nivel.id_nivel === 5 && nivel.estatus === "APROBADO");
+    
+                    const modificarResultado = await modificarNivelUsuario(usuario.id_usuario,5,(aproboNivelUno) ? "APROBADO" : "NO APROBADO")
+                    console.log(modificarResultado)
+                  }else{
+                    const cargarResultado = await cargarNivelUsuario(usuario.id_usuario,5,"NO APROBADO")
+                    console.log(cargarResultado)
+                  }
+
+                  
                   console.log("MORISTE")
                   cambiarGanarC(true);
                   setStateC(true);
@@ -245,6 +271,20 @@ export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState5:any, cambiarGa
               }
 
               if( aciertos === 3 ){
+
+                if(existeNivelCinco){
+                  const nivelesUsuario = await obtenerNivelesUsuario(usuario.id_usuario)
+                  
+                  const aproboNivelUno = nivelesUsuario.some((nivel: any) => nivel.id_nivel === 5 && nivel.estatus === "APROBADO");
+  
+                  const modificarResultado = await modificarNivelUsuario(usuario.id_usuario,5,(aproboNivelUno) ? "APROBADO" : "NO APROBADO")
+                  console.log(modificarResultado)
+                }else{
+                  const cargarResultado = await cargarNivelUsuario(usuario.id_usuario,5,"APROBADO")
+                  console.log(cargarResultado)
+                }
+                  
+
                 cambiarGanarA(true);
                 juegoKaplay.play("aprobado", { volume: 1, speed: 1.5, loop: false });
                 setStateA(true);
@@ -296,22 +336,26 @@ export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState5:any, cambiarGa
                 }else{
                   console.log("GANO PERO NO ES ESTUDIANTE")
                 }
-
-                 window.location.href = window.location.href
               }
 
               arregloAuxiliarActividades.splice(indiceActividad, 1);
               console.log("ELIMINADO OPCION DE ARREGLO")
               console.log(arregloAuxiliarActividades)
+
               indiceActividad = (arregloAuxiliarActividades.length === 1) ? 0 : generarNumerosAleatorios(0,vidas -1)
               console.log("EL INDICE DE LA ACTIVIDAD ES:", indiceActividad)
+
               actividadGeneradaAzar = (arregloAuxiliarActividades.length > 0) ? arregloAuxiliarActividades[indiceActividad] : arregloActividades[0]
               console.log(actividadGeneradaAzar)
-              opcionEscogida = actividadGeneradaAzar.imagenes.indexOf(actividadGeneradaAzar.respuesta)
-              imagen_central.sprite = actividadGeneradaAzar.imagenes[0]
-              imagen1.sprite = actividadGeneradaAzar.imagenes[1]
-              imagen2.sprite = actividadGeneradaAzar.imagenes[2]
-              imagen3.sprite = actividadGeneradaAzar.imagenes[3]
+              if (actividadGeneradaAzar) {
+                opcionEscogida = actividadGeneradaAzar.imagenes.indexOf(actividadGeneradaAzar.respuesta);
+                imagen_central.sprite = actividadGeneradaAzar.imagenes[0];
+                imagen1.sprite = actividadGeneradaAzar.imagenes[1];
+                imagen2.sprite = actividadGeneradaAzar.imagenes[2];
+                imagen3.sprite = actividadGeneradaAzar.imagenes[3];
+              } else {
+                console.warn("No hay más actividades disponibles. No se puede continuar.");
+              }
 
             }
           )
@@ -402,11 +446,15 @@ export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState5:any, cambiarGa
               indiceActividad = (arregloAuxiliarActividades.length === 1) ? 0 :  generarNumerosAleatorios(0,vidas -1)
               console.log("EL INDICE DE LA ACTIVIDAD ES:", indiceActividad)
               actividadGeneradaAzar = (arregloAuxiliarActividades.length > 0) ? arregloAuxiliarActividades[indiceActividad] : arregloActividades[0]
-              console.log(actividadGeneradaAzar)
-              imagen_central.sprite = actividadGeneradaAzar.imagenes[0]
-              imagen1.sprite = actividadGeneradaAzar.imagenes[1]
-              imagen2.sprite = actividadGeneradaAzar.imagenes[2]
-              imagen3.sprite = actividadGeneradaAzar.imagenes[3]
+              if (actividadGeneradaAzar) {
+                opcionEscogida = actividadGeneradaAzar.imagenes.indexOf(actividadGeneradaAzar.respuesta);
+                imagen_central.sprite = actividadGeneradaAzar.imagenes[0];
+                imagen1.sprite = actividadGeneradaAzar.imagenes[1];
+                imagen2.sprite = actividadGeneradaAzar.imagenes[2];
+                imagen3.sprite = actividadGeneradaAzar.imagenes[3];
+              } else {
+                console.warn("No hay más actividades disponibles. No se puede continuar.");
+              }
 
             }
           )
@@ -497,10 +545,15 @@ export function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState5:any, cambiarGa
               console.log("EL INDICE DE LA ACTIVIDAD ES:", indiceActividad)
               actividadGeneradaAzar = (arregloAuxiliarActividades.length > 0) ? arregloAuxiliarActividades[indiceActividad] : arregloActividades[0]
               console.log(actividadGeneradaAzar)
-              imagen_central.sprite = actividadGeneradaAzar.imagenes[0]
-              imagen1.sprite = actividadGeneradaAzar.imagenes[1]
-              imagen2.sprite = actividadGeneradaAzar.imagenes[2]
-              imagen3.sprite = actividadGeneradaAzar.imagenes[3]
+              if (actividadGeneradaAzar) {
+                opcionEscogida = actividadGeneradaAzar.imagenes.indexOf(actividadGeneradaAzar.respuesta);
+                imagen_central.sprite = actividadGeneradaAzar.imagenes[0];
+                imagen1.sprite = actividadGeneradaAzar.imagenes[1];
+                imagen2.sprite = actividadGeneradaAzar.imagenes[2];
+                imagen3.sprite = actividadGeneradaAzar.imagenes[3];
+              } else {
+                console.warn("No hay más actividades disponibles. No se puede continuar.");
+              }
 
             }
           )

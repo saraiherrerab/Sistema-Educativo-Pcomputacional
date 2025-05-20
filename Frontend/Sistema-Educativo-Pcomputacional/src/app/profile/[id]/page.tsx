@@ -12,6 +12,13 @@ import Datos from "../../../components/dbasicos/dbasicos";
 import Nombre from "../../../components/nombre/nombre";
 import { useParams } from 'next/navigation'; // Importa useParams
 import { useRouter } from "next/navigation";
+import obtenerHorariosAlumno from "../functions/obtenerHorariosAlumno";
+import Horario from "../interfaces/horario.interface";
+import Curso from "../interfaces/curso.interface";
+import obtenerCursoAlumno from "../functions/obtenerCursoAlumno";
+import obtenerGrupoAlumno from "../functions/obtenerGrupoAlumno";
+import Grupo from "../interfaces/grupo.interface";
+import obtenerProfesorAlumno from "../functions/obtenerProfesorAlumno";
 
 interface Estudiante {
   id_usuario: number,
@@ -35,20 +42,6 @@ interface Estudiante {
   tipo_premiacion: string,
   id_grupo: number,
   rol: string
-}
-
-interface Consulta_Horario {
-  apellido: string;
-  dia_semana: string;
-  hora_fin: string;
-  hora_inicio: string;
-  id_curso: number;
-  id_grupo: number;
-  id_horario: number;
-  id_profesor: number;
-  nombre: string;
-  nombre_curso: string;
-  nombre_grupo: string;
 }
 
 export default function Profile() {
@@ -81,7 +74,35 @@ export default function Profile() {
       rol: ""
     }
   );
-  const [horarios, setHorarios] = useState<Consulta_Horario[]>([])
+  const [horarios, setHorarios] = useState<Horario[]>([])
+  const [cursoAlumno, setCursoAlumno] = useState<Curso>({
+    id_curso: 0,
+    nombre_curso: ""
+  })
+  const [grupoAlumno, setGrupoAlumno] = useState<Grupo>({
+    id_grupo: 0,
+    nombre_grupo: "",
+    id_curso: 0,
+    id_profesor_grupo: 0
+  })
+
+  const [profesorAlumno,setProfesorAlumno] = useState({
+    id_usuario: 0,
+    telefono: "",
+    nombre: "",
+    apellido: "",
+    correo: "",
+    edad: 0,
+    foto: "",
+    usuario: "",
+    clave_acceso: "",
+    cedula: "",
+    id_profesor: 0,
+    curriculum: "",
+    formacion: ""
+  })
+
+
   const [descargandoImagen, setDescargandoImagen] = useState(false);
   const [imagenDescargadaUrl, setImagenDescargadaUrl] = useState<string | null>(null);
 
@@ -172,35 +193,62 @@ export default function Profile() {
     const dataRol = await responseRol.json();
     console.log(dataRol.obtener_rol_usuario)
 
-    const resultadoHorarios = await obtenerHorariosAlumno(resultadoConsulta.id_grupo)
+    try {
 
-    if(resultadoHorarios.length === 0){
-      const obtenerGrupoSinHorarios = async () => {
-          const response = await fetch(`http://localhost:5555/grupos/${resultadoConsulta.id_grupo}/curso/sin/horario`);
-          const informacionGrupoSinHorario = await response.json()
-          console.log(informacionGrupoSinHorario)
-          return informacionGrupoSinHorario;
-      } 
+      if(resultadoConsulta.id_grupo){
+        const resultadoHorarios = await obtenerHorariosAlumno(resultadoConsulta.id_grupo)
+        console.log(resultadoHorarios)
+        setHorarios ([...resultadoHorarios])
+      }else{
+        setHorarios ([])
+      }
 
-      const profesoresCursoSinHorario = await obtenerGrupoSinHorarios() 
       
-      setInformacionGrupoSinHorario(profesoresCursoSinHorario)
+      
+    } catch (error) {
+
+      console.log(error)
+      
     }
-    console.log(resultadoHorarios)
-    setHorarios ([...resultadoHorarios])
+
     console.log(horarios)
+
     setUsuario({...resultadoConsulta, rol: dataRol.obtener_rol_usuario})
-    await descargarImagenPerfil(`User-${resultadoConsulta.id_usuario}.png`);
-  };
 
-  const obtenerHorariosAlumno = async (id_grupo: number) => {
+    const informacionCurso = await obtenerCursoAlumno(resultadoConsulta.id_grupo)
+    setCursoAlumno(informacionCurso)
+
+    const informacionGrupo = await obtenerGrupoAlumno(resultadoConsulta.id_grupo)
+    setGrupoAlumno(informacionGrupo)
+
+    if(informacionGrupo){
+      const informacionProfesor = await obtenerProfesorAlumno(informacionGrupo.id_profesor_grupo)
+      setProfesorAlumno(informacionProfesor)
+    }else{
+      setProfesorAlumno({
+        id_usuario: 0,
+        telefono: "",
+        nombre: "",
+        apellido: "",
+        correo: "",
+        edad: 0,
+        foto: "",
+        usuario: "",
+        clave_acceso: "",
+        cedula: "",
+        id_profesor: 0,
+        curriculum: "",
+        formacion: ""
+      })
+    }
+
     
-    const datosHorario = await fetch(`http://localhost:5555/grupos/${id_grupo}/curso`)
-    const resultadoConsulta = await datosHorario.json()
-    console.log(resultadoConsulta)
-    return resultadoConsulta;
-  };
 
+    await descargarImagenPerfil(`User-${resultadoConsulta.id_usuario}.png`);
+
+    }
+
+  
   useEffect(() => {
     obtenerDatosUsuario();
     return () => {
@@ -245,10 +293,9 @@ export default function Profile() {
                           <div className="fila fila_espacio_fondo">
                               <div className="notas">
                                 <div className="notas-section">
-                                  <h2 className="tituloNotas"><strong>Curso: </strong> {(horarios[0]) ? horarios[0].nombre_curso : informacionGrupoSinHorario[0].nombre_curso}</h2>
-                                  <h2 className="tituloNotas"><strong>{(horarios[0]) ? horarios[0].nombre_grupo : informacionGrupoSinHorario[0].nombre_grupo}</strong></h2>
-                                  <p><strong>Profesor: </strong>{(horarios[0]) ? horarios[0].nombre + " " + horarios[0].apellido : informacionGrupoSinHorario[0].nombre + " " + informacionGrupoSinHorario[0].apellido}</p>
-                                  <p>{(horarios[0]) ? horarios[0].nombre_curso : ""}</p>
+                                  <h2 className="tituloNotas"><strong>Curso: </strong> {(cursoAlumno.id_curso !== 0) ? cursoAlumno.nombre_curso : "No está inscrito en un curso"}</h2>
+                                  <h2 className="tituloNotas"><strong>{( grupoAlumno && grupoAlumno.id_grupo !== 0) ? grupoAlumno.nombre_grupo: "No tiene grupo"}</strong></h2>
+                                  <p><strong>Profesor: </strong>{(profesorAlumno.id_usuario !== 0) ? profesorAlumno.nombre + " " + profesorAlumno.apellido : "No tiene un profesor asignado"}</p>
                                   
                                   
                                 </div>
@@ -259,7 +306,7 @@ export default function Profile() {
                                     {
                                       horarios && horarios.length > 0
                                       ? 
-                                      horarios.map((horario: Consulta_Horario, index: number) => (
+                                      horarios.map((horario: Horario, index: number) => (
                                               <p key={index}>{`${horario.dia_semana} desde ${horario.hora_inicio} hasta las ${horario.hora_fin}`}</p>
                                       ))
                                       : 
