@@ -272,19 +272,6 @@ export async function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState5:any, cam
 
               if( aciertos === 3 ){
 
-                if(existeNivelCinco){
-                  const nivelesUsuario = await obtenerNivelesUsuario(usuario.id_usuario)
-                  
-                  const aproboNivelUno = nivelesUsuario.some((nivel: any) => nivel.id_nivel === 5 && nivel.estatus === "APROBADO");
-  
-                  const modificarResultado = await modificarNivelUsuario(usuario.id_usuario,5,(aproboNivelUno) ? "APROBADO" : "NO APROBADO")
-                  console.log(modificarResultado)
-                }else{
-                  const cargarResultado = await cargarNivelUsuario(usuario.id_usuario,5,"APROBADO")
-                  console.log(cargarResultado)
-                }
-                  
-
                 cambiarGanarA(true);
                 juegoKaplay.play("aprobado", { volume: 1, speed: 1.5, loop: false });
                 setStateA(true);
@@ -308,6 +295,24 @@ export async function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState5:any, cam
                 
                   console.log(datosEstudiante)
 
+                  const nivelesJugados = await obtenerNivelesUsuario(usuario.id_usuario);
+                  console.log(nivelesJugados)
+  
+                  const ganoNivelCuatro = nivelesJugados.some( (nivel: any) => nivel.id_nivel === 5 && nivel.estatus === "APROBADO");
+  
+                  console.log(ganoNivelCuatro)
+  
+                  const porcentajeAumentado =
+                  // Si el estudiante ya aprobó, se mantiene el porcentaje.
+                  ganoNivelCuatro
+                  ? datosEstudiante.p_actividades_completadas
+                  // Si está en proceso o no ha jugado, se suma un 20%.
+                  : datosEstudiante.p_actividades_completadas + 20;
+  
+                  console.log(datosEstudiante)
+  
+                  console.log(porcentajeAumentado)
+
                   const ganoIdenticacionErrores: string = 
                   (datosEstudiante.identificacion_errores !== "APROBADO" && datosEstudiante.construccion_algoritmos == "APROBADO" && datosEstudiante.reconocimiento_patrones == "APROBADO")
                   ? "APROBADO" 
@@ -322,7 +327,7 @@ export async function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState5:any, cam
                     abstraccion: "APROBADO",
                     asociacion: datosEstudiante.asociacion,
                     construccion_algoritmos: datosEstudiante.construccion_algoritmos,
-                    p_actividades_completadas:  (datosEstudiante.abstraccion !== "APROBADO") ? (datosEstudiante.p_actividades_completadas + (1 / 5) * 100) : ((datosEstudiante.p_actividades_completadas) / 5) * 100,
+                    p_actividades_completadas:  porcentajeAumentado,
                     tipo_premiacion: (datosEstudiante.tipo_premiacion.length > 0) ? datosEstudiante.tipo_premiacion + ", " + "Crítico del Arte Abstracto" : "Crítico del Arte Abstracto"
                   }
                               
@@ -336,15 +341,25 @@ export async function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState5:any, cam
                 }else{
                   console.log("GANO PERO NO ES ESTUDIANTE")
                 }
+
+                if(existeNivelCinco){
+                    const nivelesUsuario = await obtenerNivelesUsuario(usuario.id_usuario)
+                    
+                    const aproboNivelUno = nivelesUsuario.some((nivel: any) => nivel.id_nivel === 5 && nivel.estatus === "APROBADO");
+
+                    const modificarResultado = await modificarNivelUsuario(usuario.id_usuario,5,(aproboNivelUno) ? "APROBADO" : "NO APROBADO")
+                    console.log(modificarResultado)
+                  }else{
+                    const cargarResultado = await cargarNivelUsuario(usuario.id_usuario,5,"APROBADO")
+                    console.log(cargarResultado)
+                  }
               }
 
               arregloAuxiliarActividades.splice(indiceActividad, 1);
               console.log("ELIMINADO OPCION DE ARREGLO")
               console.log(arregloAuxiliarActividades)
-
-              indiceActividad = (arregloAuxiliarActividades.length === 1) ? 0 : generarNumerosAleatorios(0,vidas -1)
+              indiceActividad = (arregloAuxiliarActividades.length === 1) ? 0 :  generarNumerosAleatorios(0,vidas-1 )
               console.log("EL INDICE DE LA ACTIVIDAD ES:", indiceActividad)
-
               actividadGeneradaAzar = (arregloAuxiliarActividades.length > 0) ? arregloAuxiliarActividades[indiceActividad] : arregloActividades[0]
               console.log(actividadGeneradaAzar)
               if (actividadGeneradaAzar) {
@@ -356,6 +371,8 @@ export async function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState5:any, cam
               } else {
                 console.warn("No hay más actividades disponibles. No se puede continuar.");
               }
+
+
 
             }
           )
@@ -380,6 +397,19 @@ export async function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState5:any, cam
                   setStateC(true);
                   juegoKaplay.play("perdido", { volume: 1, speed: 1.5, loop: false });
                   console.log("MORISTE")
+
+                  if(existeNivelCinco){
+                    const nivelesUsuario = await obtenerNivelesUsuario(usuario.id_usuario)
+                    
+                    const aproboNivelUno = nivelesUsuario.some((nivel: any) => nivel.id_nivel === 5 && nivel.estatus === "APROBADO");
+    
+                    const modificarResultado = await modificarNivelUsuario(usuario.id_usuario,5,(aproboNivelUno) ? "APROBADO" : "NO APROBADO")
+                    console.log(modificarResultado)
+                  }else{
+                    const cargarResultado = await cargarNivelUsuario(usuario.id_usuario,5,"NO APROBADO")
+                    console.log(cargarResultado)
+                  }
+
                   await sleep(2000)
                   window.location.href = window.location.href
                 }
@@ -408,6 +438,24 @@ export async function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState5:any, cam
                 
                   console.log(datosEstudiante)
 
+                  const nivelesJugados = await obtenerNivelesUsuario(usuario.id_usuario);
+                  console.log(nivelesJugados)
+  
+                  const ganoNivelCuatro = nivelesJugados.some( (nivel: any) => nivel.id_nivel === 5 && nivel.estatus === "APROBADO");
+  
+                  console.log(ganoNivelCuatro)
+  
+                  const porcentajeAumentado =
+                  // Si el estudiante ya aprobó, se mantiene el porcentaje.
+                  ganoNivelCuatro
+                  ? datosEstudiante.p_actividades_completadas
+                  // Si está en proceso o no ha jugado, se suma un 20%.
+                  : datosEstudiante.p_actividades_completadas + 20;
+  
+                  console.log(datosEstudiante)
+  
+                  console.log(porcentajeAumentado)
+
                   const ganoIdenticacionErrores: string = 
                   (datosEstudiante.identificacion_errores !== "APROBADO" && datosEstudiante.construccion_algoritmos == "APROBADO" && datosEstudiante.reconocimiento_patrones == "APROBADO")
                   ? "APROBADO" 
@@ -422,7 +470,7 @@ export async function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState5:any, cam
                     abstraccion: "APROBADO",
                     asociacion: datosEstudiante.asociacion,
                     construccion_algoritmos: datosEstudiante.construccion_algoritmos,
-                    p_actividades_completadas:  (datosEstudiante.abstraccion !== "APROBADO") ? (datosEstudiante.p_actividades_completadas + (1 / 5) * 100) : ((datosEstudiante.p_actividades_completadas) / 5) * 100,
+                    p_actividades_completadas:  porcentajeAumentado,
                     tipo_premiacion: (datosEstudiante.tipo_premiacion.length > 0) ? datosEstudiante.tipo_premiacion + ", " + "Crítico del Arte Abstracto" : "Crítico del Arte Abstracto"
                   }
                               
@@ -437,8 +485,22 @@ export async function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState5:any, cam
                   console.log("GANO PERO NO ES ESTUDIANTE")
                 }
 
+                if(existeNivelCinco){
+                  const nivelesUsuario = await obtenerNivelesUsuario(usuario.id_usuario)
+                  
+                  const aproboNivelUno = nivelesUsuario.some((nivel: any) => nivel.id_nivel === 5 && nivel.estatus === "APROBADO");
+  
+                  const modificarResultado = await modificarNivelUsuario(usuario.id_usuario,5,(aproboNivelUno) ? "APROBADO" : "NO APROBADO")
+                  console.log(modificarResultado)
+                }else{
+                  const cargarResultado = await cargarNivelUsuario(usuario.id_usuario,5,"APROBADO")
+                  console.log(cargarResultado)
+                }
+
                  window.location.href = window.location.href
               }
+
+              
 
               arregloAuxiliarActividades.splice(indiceActividad, 1);
               console.log("ELIMINADO OPCION DE ARREGLO")
@@ -506,6 +568,24 @@ export async function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState5:any, cam
                 
                   console.log(datosEstudiante)
 
+                  const nivelesJugados = await obtenerNivelesUsuario(usuario.id_usuario);
+                  console.log(nivelesJugados)
+  
+                  const ganoNivelCuatro = nivelesJugados.some( (nivel: any) => nivel.id_nivel === 5 && nivel.estatus === "APROBADO");
+  
+                  console.log(ganoNivelCuatro)
+  
+                  const porcentajeAumentado =
+                  // Si el estudiante ya aprobó, se mantiene el porcentaje.
+                  ganoNivelCuatro
+                  ? datosEstudiante.p_actividades_completadas
+                  // Si está en proceso o no ha jugado, se suma un 20%.
+                  : datosEstudiante.p_actividades_completadas + 20;
+  
+                  console.log(datosEstudiante)
+  
+                  console.log(porcentajeAumentado)
+
                   const ganoIdenticacionErrores: string = 
                   (datosEstudiante.identificacion_errores !== "APROBADO" && datosEstudiante.construccion_algoritmos == "APROBADO" && datosEstudiante.reconocimiento_patrones == "APROBADO")
                   ? "APROBADO" 
@@ -520,19 +600,43 @@ export async function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState5:any, cam
                     abstraccion: "APROBADO",
                     asociacion: datosEstudiante.asociacion,
                     construccion_algoritmos: datosEstudiante.construccion_algoritmos,
-                    p_actividades_completadas:  (datosEstudiante.abstraccion !== "APROBADO") ? (datosEstudiante.p_actividades_completadas + (1 / 5) * 100) : ((datosEstudiante.p_actividades_completadas) / 5) * 100,
+                    p_actividades_completadas: porcentajeAumentado,
                     tipo_premiacion: (datosEstudiante.tipo_premiacion.length > 0) ? datosEstudiante.tipo_premiacion + ", " + "Crítico del Arte Abstracto" : "Crítico del Arte Abstracto"
                   }
                               
                   const respuestaEvaluacion = await cargarEvaluacionEstudiante(datosUsuario)
                   console.log(respuestaEvaluacion)
 
+
+                  if(existeNivelCinco){
+                    const nivelesUsuario = await obtenerNivelesUsuario(usuario.id_usuario)
+                    
+                    const aproboNivelUno = nivelesUsuario.some((nivel: any) => nivel.id_nivel === 5 && nivel.estatus === "APROBADO");
+
+                    const modificarResultado = await modificarNivelUsuario(usuario.id_usuario,5,(aproboNivelUno) ? "APROBADO" : "NO APROBADO")
+                    console.log(modificarResultado)
+                  }else{
+                    const cargarResultado = await cargarNivelUsuario(usuario.id_usuario,5,"APROBADO")
+                    console.log(cargarResultado)
+                  }
+
                   await sleep(3000)
 
-                  window.location.href = window.location.href
                                                                 
                 }else{
                   console.log("GANO PERO NO ES ESTUDIANTE")
+                }
+
+                if(existeNivelCinco){
+                  const nivelesUsuario = await obtenerNivelesUsuario(usuario.id_usuario)
+                  
+                  const aproboNivelUno = nivelesUsuario.some((nivel: any) => nivel.id_nivel === 5 && nivel.estatus === "APROBADO");
+  
+                  const modificarResultado = await modificarNivelUsuario(usuario.id_usuario,5,(aproboNivelUno) ? "APROBADO" : "NO APROBADO")
+                  console.log(modificarResultado)
+                }else{
+                  const cargarResultado = await cargarNivelUsuario(usuario.id_usuario,5,"APROBADO")
+                  console.log(cargarResultado)
                 }
 
                  window.location.href = window.location.href
@@ -554,6 +658,8 @@ export async function Nivel5(juegoKaplay:KAPLAYCtx<{},never>, setState5:any, cam
               } else {
                 console.warn("No hay más actividades disponibles. No se puede continuar.");
               }
+
+              
 
             }
           )
