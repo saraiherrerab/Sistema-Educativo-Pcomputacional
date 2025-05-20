@@ -301,6 +301,7 @@ useEffect(() => {
     
     setGrupos([...grupos, nuevoGrupo])
     setMostrarFormulario(false);
+    window.location.href = window.location.href
 
   }
 
@@ -586,6 +587,7 @@ useEffect(() => {
 
         {/* Mostrar tabla o lista de estudiantes */}
         {!mostrarFormulario && (
+
           <table className="laTabla">
             <thead>
               <tr>

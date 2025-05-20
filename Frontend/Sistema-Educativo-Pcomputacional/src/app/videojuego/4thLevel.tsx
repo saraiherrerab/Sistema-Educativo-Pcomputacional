@@ -571,7 +571,7 @@ export async function Nivel4(juegoKaplay:KAPLAYCtx<{},never>, setState:any, camb
               }
                                 
               await sleep(1000)
-              window.location.href = window.location.href;
+              /*window.location.href = window.location.href;*/
             }
 
             if(aciertos==1){
@@ -658,7 +658,8 @@ export async function Nivel4(juegoKaplay:KAPLAYCtx<{},never>, setState:any, camb
                   asociacion: (datosEstudiante.asociacion !== "APROBADO") ? "EN PROCESO" : datosEstudiante.asociacion,
                   construccion_algoritmos: datosEstudiante.construccion_algoritmos,
                   p_actividades_completadas: porcentajeAumentado,
-                  tipo_premiacion: (datosEstudiante.tipo_premiacion.length > 0) ? datosEstudiante.tipo_premiacion + ", " + "Corrector de melodías" : "Corrector de melodías" // o string[], si es un arreglo
+                  
+                  tipo_premiacion: ( datosEstudiante.tipo_premiacion && datosEstudiante.tipo_premiacion.length > 0 ) ? datosEstudiante.tipo_premiacion + ", " + "Corrector de melodías" : "Corrector de melodías" // o string[], si es un arreglo
                 }
               
                 const respuestaEvaluacion = await cargarEvaluacionEstudiante(datosUsuario)
