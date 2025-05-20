@@ -1,7 +1,7 @@
 {
   "/Amenu/page": "app/Amenu/page.js",
-  "/profile/[id]/page": "app/profile/[id]/page.js",
-  "/Aestudiantes-lista/page": "app/Aestudiantes-lista/page.js",
   "/reportes/[id]/page": "app/reportes/[id]/page.js",
-  "/videojuego/page": "app/videojuego/page.js"
+  "/videojuego/page": "app/videojuego/page.js",
+  "/Aestudiantes-lista/page": "app/Aestudiantes-lista/page.js",
+  "/profile/[id]/page": "app/profile/[id]/page.js"
 }
