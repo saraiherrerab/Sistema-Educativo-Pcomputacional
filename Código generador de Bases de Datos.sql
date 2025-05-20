@@ -320,11 +320,11 @@ BEGIN
   -- Solo actúa si el nuevo valor es 'APROBADO'
   IF NEW.construccion_algoritmos = 'APROBADO' THEN
     -- Si la columna premio está vacía o es nula
-    IF NEW.tipo_premio IS NULL OR TRIM(NEW.tipo_premio) = '' THEN
-      NEW.tipo_premio := 'Constructor de algoritmos PRO';
+    IF NEW.tipo_premiacion IS NULL OR TRIM(NEW.tipo_premiacion) = '' THEN
+      NEW.tipo_premiacion := 'Constructor de algoritmos PRO';
     ELSE
       -- Si ya hay algún premio, lo agrega al final
-      NEW.tipo_premio := NEW.tipo_premio || ', Constructor de algoritmos PRO';
+      NEW.tipo_premiacion := NEW.tipo_premiacion || ', Constructor de algoritmos PRO';
     END IF;
   END IF;
   
