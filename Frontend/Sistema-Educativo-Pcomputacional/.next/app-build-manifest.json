@@ -17,65 +17,6 @@
       "static/css/app/Amenu/page.css",
       "static/chunks/app/Amenu/page.js"
     ],
-<<<<<<< HEAD
-    "/Aestudiantes-lista/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/Aestudiantes-lista/page.css",
-      "static/chunks/app/Aestudiantes-lista/page.js"
-=======
-    "/GruposYCursos/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/GruposYCursos/page.css",
-      "static/chunks/app/GruposYCursos/page.js"
->>>>>>> origin/backend
-    ],
-    "/Grupos/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/Grupos/page.css",
-      "static/chunks/app/Grupos/page.js"
-    ],
-<<<<<<< HEAD
-    "/Aprofesores-lista/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/Aprofesores-lista/page.css",
-      "static/chunks/app/Aprofesores-lista/page.js"
-=======
-    "/reportes/[id]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/reportes/[id]/page.css",
-      "static/chunks/app/reportes/[id]/page.js"
->>>>>>> origin/backend
-    ],
-    "/profile-prof/[id]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/profile-prof/[id]/page.css",
-      "static/chunks/app/profile-prof/[id]/page.js"
-    ],
-    "/profile/[id]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/profile/[id]/page.css",
-      "static/chunks/app/profile/[id]/page.js"
-    ],
-    "/videojuego/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-<<<<<<< HEAD
-      "static/css/app/reportes/[id]/page.css",
-      "static/chunks/app/reportes/[id]/page.js"
-    ],
-    "/videojuego/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/videojuego/page.css",
-      "static/chunks/app/videojuego/page.js"
-    ],
     "/GruposYCursos/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -87,10 +28,6 @@
       "static/chunks/main-app.js",
       "static/css/app/Grupos/page.css",
       "static/chunks/app/Grupos/page.js"
-=======
-      "static/css/app/videojuego/page.css",
-      "static/chunks/app/videojuego/page.js"
->>>>>>> origin/backend
     ]
   }
 }

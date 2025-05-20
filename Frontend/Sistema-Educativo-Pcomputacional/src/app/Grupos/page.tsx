@@ -366,13 +366,33 @@ useEffect(() => {
         const horariosAnteriores = await obtenerHorariosGrupo(grupoEditando.id_grupo)
         console.log(horariosAnteriores)
 
-        if(horariosAnteriores.length > 0) {
+        const idsAnteriores = new Set(horariosAnteriores.map((h: Horario) => h.id_horario));
+
+        const nuevosHorarios = horariosGrupo.filter(h => !idsAnteriores.has(h.id_horario));
+        const horariosExistentes = horariosGrupo.filter(h => idsAnteriores.has(h.id_horario));
+
+        console.log('Nuevos horarios:', nuevosHorarios);
+
+        if(nuevosHorarios.length > 0){
+          const response = await fetch('http://localhost:5555/horarios/grupo/agregar', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id_grupo: grupoEditando.id_grupo, arregloHorarios: [...nuevosHorarios] })
+          });
+          const data = await response.json();
+          console.log('%cRespuesta del servidor:', 'color: green;', data);
+        }
+
+        
+        if(horariosExistentes.length > 0) {
           const response = await fetch('http://localhost:5555/horarios/grupo/modificar', {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ id_grupo: grupoEditando.id_grupo, arregloHorarios: [...horariosGrupo] })
+            body: JSON.stringify({ id_grupo: grupoEditando.id_grupo, arregloHorarios: [...horariosExistentes] })
           });
           const data = await response.json();
           console.log('%cRespuesta del servidor:', 'color: green;', data);
@@ -386,7 +406,7 @@ useEffect(() => {
           });
           const data = await response.json();
           console.log('%cRespuesta del servidor:', 'color: green;', data);
-        }
+        } 
           
       } catch (error) {
         console.error('Error al enviar los horarios:', error);
