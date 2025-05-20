@@ -88,7 +88,7 @@ router.put('/horarios/grupo/modificar', async function (req, res) {
     for (const horario of arregloHorarios) {
       const actualizarHorarioParaGrupo = new PQ({
         text: `UPDATE horarios_grupo SET dia_semana = $2, hora_inicio = $3, hora_fin = $4 WHERE id_horario = $1`,
-        values: [id_grupo, horario.dia_semana, horario.hora_inicio, horario.hora_fin]
+        values: [horario.id_horario, horario.dia_semana, horario.hora_inicio, horario.hora_fin]
       });
 
       await db.none(actualizarHorarioParaGrupo);
