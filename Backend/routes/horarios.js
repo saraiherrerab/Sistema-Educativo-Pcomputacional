@@ -32,7 +32,7 @@ router.get('/horarios/:id', async function(req, res, next) {
     
 });
 
-/* Agregar una seria de horarios a un grupo en particular  */
+/* Agregar una serie de horarios a un grupo en particular  */
 router.post('/horarios/grupo/agregar', async function (req, res) {
   try {
     const { id_grupo, arregloHorarios } = req.body;
@@ -101,7 +101,21 @@ router.put('/horarios/grupo/modificar', async function (req, res) {
   }
 });
 
+/* Obtener horarios de profesor */
 
+router.get('/horarios/profesor/:id', async function(req, res, next) {
+  
+    try {
+      const { id } = req.params
+      const obtenerHorariosProfesor =  new PQ({text :`SELECT Hor.* FROM horarios_grupo AS Hor, Grupos AS Gr WHERE Hor.id_grupo = Gr.id_grupo AND Gr.id_profesor_grupo = $1`,values: [id]});
+      const result = await db.manyOrNone(obtenerHorariosProfesor);
+      return res.json(result)
+    } catch (error) {
+      console.error('Error al hacer la consulta:', error);
+      res.json({menssage: "Error al obtener el horario de id: " + id})
+    }
+    
+});
 
 module.exports = router;
   

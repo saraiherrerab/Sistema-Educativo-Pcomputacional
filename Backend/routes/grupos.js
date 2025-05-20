@@ -271,7 +271,7 @@ router.delete('/grupos/estudiante/:id/eliminar', async function(req, res, next) 
 });
 
 
-/* Eliminar Grupo de Un estudiante */
+/* Agregar Grupo de Un estudiante */
 router.post('/grupos/estudiante/:id/agregar/:id_grupo', async function(req, res, next) {
 
     try {
@@ -289,7 +289,7 @@ router.post('/grupos/estudiante/:id/agregar/:id_grupo', async function(req, res,
     
 });
 
-/* Eliminar Grupo de Un estudiante */
+/* Editar Grupo de Un estudiante */
 router.put('/grupos/estudiante/:id/editar/:id_grupo', async function(req, res, next) {
 
     try {
@@ -307,6 +307,8 @@ router.put('/grupos/estudiante/:id/editar/:id_grupo', async function(req, res, n
     
 });
 
+
+/* Obtener información de profesor que le da clases a un grupo dado */
 
 
 

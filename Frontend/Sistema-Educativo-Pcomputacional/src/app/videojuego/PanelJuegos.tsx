@@ -6,8 +6,9 @@ import {Nivel3} from "./3rdLevel";
 import {Nivel4} from "./4thLevel";
 import {Nivel5} from "./5thLevel";
 import sleep from "./functions/sleep";
+import obtenerNivelesUsuario from "./functions/obtenerNivelesUsuario";
 
-export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,cambiarGanar3:any,setState3:any, cambiarGanarA:any, setStateA:any, 
+export async function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGanar:any,cambiarGanar3:any,setState3:any, cambiarGanarA:any, setStateA:any, 
   cambiarGanarB:any, setStateB:any,cambiarGanarC:any, setStateC:any,cambiarGanar1:any,setState1:any, setStateI:any,cambiarGanarI:any, setStateIni:any,cambiarGanarIni:any, setState5:any,cambiarGanar5:any,     Router:any, usuario?: any) {
     // Referencia persistente para almacenar la instancia de Kaplay
     const SCREEN_RESOLUTION_X: number = window.innerWidth 
@@ -16,6 +17,9 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
     const TILED_MAP_HEIGHT_NUMBER: number = 16
     const TILED_WIDTH: number = SCREEN_RESOLUTION_X / TILED_MAP__WIDTH_NUMBER
     const TILED_HEIGHT: number = SCREEN_RESOLUTION_Y / TILED_MAP_HEIGHT_NUMBER
+
+    let jugoNiveles = false
+    let nivelesUsuario: any[] = []
      
 
     
@@ -130,6 +134,29 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
 
     juegoKaplay.loadSprite("redbox", "red-border-box.png");
 
+    if(usuario.id_usuario !== 0){
+
+      const nivelesJugados = await obtenerNivelesUsuario(usuario.id_usuario)
+
+      nivelesUsuario = [...nivelesJugados]
+      console.log(nivelesUsuario)
+
+      if(nivelesUsuario.length > 0 ){
+        jugoNiveles = true
+      }
+
+      console.log("jugoNiveles: ", jugoNiveles )
+
+      console.log(usuario)
+      if(usuario.rol === "ESTUDIANTE"){
+        console.log("ESTUDIANTE DETECTADO")
+        /* Aqui valido que niveles a pasado */
+        
+      }else{
+        console.log("NO ES ESTUDIANTE")
+      }
+    }
+
     
     juegoKaplay.onLoad(() => {
         //Practicando aqui
@@ -181,12 +208,8 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
         async (resultado: any) => {
 
             cambiarGanarIni(true);
-
-            await sleep(2000)
             
             setStateIni(true);
-
-            await sleep(2000)
         
 
           const oveja = juegoKaplay.get("oveja")[0]
@@ -205,7 +228,65 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
           const hongos= juegoKaplay.get("hongo")
           const zonaInvisible= juegoKaplay.get("botonInvisible")[0]
 
-          console.log(zonaInvisible)
+          const restriccion1= juegoKaplay.get("restriccion1")
+          const restriccion2= juegoKaplay.get("restriccion2")
+          const restriccion3= juegoKaplay.get("restriccion3")
+
+
+
+          console.log(restriccion1)
+          console.log(restriccion2)
+          console.log(restriccion3)
+
+          let estatusActual = null
+
+          let aproboNivel1 = false;
+          let aproboNivel2 = false;
+          let aproboNivel3 = false;
+          let aproboNivel4 = false;
+          let aproboNivel5 = false;
+
+          
+
+          if(jugoNiveles && nivelesUsuario.length > 0){
+            nivelesUsuario.forEach( (nivel) => {
+              if(nivel.id_nivel === 1 && nivel.estatus === "APROBADO"){
+                aproboNivel1 = true
+              }
+              if(nivel.id_nivel === 2 && nivel.estatus === "APROBADO"){
+                aproboNivel2 = true
+              }
+              if(nivel.id_nivel === 3 && nivel.estatus === "APROBADO"){
+                aproboNivel3 = true
+              }
+              if(nivel.id_nivel === 4 && nivel.estatus === "APROBADO"){
+                aproboNivel4 = true
+              }
+            })
+          }
+
+          if(aproboNivel1 && aproboNivel2){
+            console.log("LIBERAR NIVEL 3 y 4")
+            restriccion1.forEach ( (restriccion) => {
+              restriccion.destroy()
+            })
+            restriccion2.forEach ( (restriccion) => {
+              restriccion.destroy()
+            })
+
+          }else{
+            console.log("NO HA PASADO EL PRIMER Y SEGUNDO NIVEL")
+          }
+
+          if(aproboNivel3 && aproboNivel4){
+            console.log("LIBERAR NIVEL 5")
+            restriccion3.forEach ( (restriccion) => {
+              restriccion.destroy()
+            })
+          }else{
+            console.log("NO HA PASAOD EL TERCER Y CUARTO NIVEL")
+          }
+
 
            ovejas.forEach( (oveja: any) => {
                 oveja.play("quiet");
@@ -222,7 +303,7 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
             juegoKaplay.destroy(castillo);
             juegoKaplay.destroy(player);
             juegoKaplay.destroyAll("*");
-            Nivel3(juegoKaplay, setState3, cambiarGanar3,cambiarGanarA, setStateA,cambiarGanarC, setStateC, Router,usuario);
+            Nivel3(juegoKaplay, setState3, cambiarGanar3,cambiarGanarA, setStateA,cambiarGanarC, setStateC, Router,usuario,jugoNiveles);
             // We pass the component id for remove it.
           });
 
@@ -231,7 +312,7 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
             juegoKaplay.destroy(castillo);
             juegoKaplay.destroy(player);
             juegoKaplay.destroyAll("*");
-            Nivel1(juegoKaplay, setState, cambiarGanar, setStateA, cambiarGanarA,setState1, cambiarGanar1,setStateI, cambiarGanarI,setStateC, cambiarGanarC, Router,usuario);
+            Nivel1(juegoKaplay, setState, cambiarGanar, setStateA, cambiarGanarA,setState1, cambiarGanar1,setStateI, cambiarGanarI,setStateC, cambiarGanarC, Router,usuario,jugoNiveles);
             // We pass the component id for remove it.
           });
 
@@ -240,7 +321,7 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
             juegoKaplay.destroy(castillo);
             juegoKaplay.destroy(player);
             juegoKaplay.destroyAll("*");
-            Nivel2(juegoKaplay, setStateB, cambiarGanarB, setStateA, cambiarGanarA,cambiarGanarC, setStateC, Router,usuario);
+            Nivel2(juegoKaplay, setStateB, cambiarGanarB, setStateA, cambiarGanarA,cambiarGanarC, setStateC, Router,usuario,jugoNiveles);
             // We pass the component id for remove it.
           });
 
@@ -249,7 +330,7 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
             juegoKaplay.destroy(castillo);
             juegoKaplay.destroy(player);
             juegoKaplay.destroyAll("*");
-            Nivel4(juegoKaplay, setState, cambiarGanar, setStateA, cambiarGanarA,setState1, cambiarGanar1,setStateC, cambiarGanarC,setStateI, cambiarGanarI, Router,usuario);
+            Nivel4(juegoKaplay, setState, cambiarGanar, setStateA, cambiarGanarA,setState1, cambiarGanar1,setStateC, cambiarGanarC,setStateI, cambiarGanarI, Router,usuario,jugoNiveles);
             // We pass the component id for remove it.
           });
 
@@ -258,7 +339,7 @@ export function Panel(juegoKaplay:KAPLAYCtx<{},never>, setState:any, cambiarGana
             juegoKaplay.destroy(castillo);
             juegoKaplay.destroy(player);
             juegoKaplay.destroyAll("*");
-            Nivel5(juegoKaplay, setState5, cambiarGanar5, setStateA, cambiarGanarA,setStateC, cambiarGanarC, Router,usuario);
+            Nivel5(juegoKaplay, setState5, cambiarGanar5, setStateA, cambiarGanarA,setStateC, cambiarGanarC, Router,usuario,jugoNiveles);
             // We pass the component id for remove it.
           });
 

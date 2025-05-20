@@ -100,13 +100,6 @@ const handleSearchClick = () => {
   }
     
 
-  const obtenerProfesoresDelCurso = (idCurso: number) => {
-    const gruposDelCurso = obtenerGruposDelCurso(idCurso).map(g => g.id_grupo);
-    return profesores.filter(p =>
-      p.grupos_ids.some(grupoId => gruposDelCurso.includes(grupoId))
-    );
-  };
-
   /* Funciones y variables para control de la página  */
   const mostrarFormularioAgregar = () => {
     setNuevoCurso({ id_curso: 0, nombre_curso: '' });

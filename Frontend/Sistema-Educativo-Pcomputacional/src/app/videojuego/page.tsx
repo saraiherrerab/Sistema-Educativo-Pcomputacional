@@ -120,7 +120,6 @@ interface Estudiante {
 
 }
 
-
 function CartelNivel1(props:any) {
   // Declaración del estado con useState dentro del cuerpo del componente
 
@@ -209,6 +208,7 @@ function CartelC(props:any) {
   );
 
 }
+
  function Cartel3(props:any) {
   // Declaración del estado con useState dentro del cuerpo del componente
  
@@ -234,9 +234,6 @@ function CartelC(props:any) {
  let SCREEN_RESOLUTION_X: number = 0;
  let SCREEN_RESOLUTION_Y: number = 0;
 
- 
-
- 
  function Page() {
     const [cambiarMostrar1, setState1] = useState(false);
     const [ganar1, cambiarGanar1] = useState(true);

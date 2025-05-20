@@ -7,41 +7,11 @@ import Foto from "../../../components/foto/foto";
 import Datos from  "../../../components/dbasicos/dbasicos";
 import Nombre from "../../../components/nombre/nombre";
 import { useParams } from 'next/navigation'; // Importa useParams
-
-interface Profesor {
-    id_usuario: number,
-    telefono: string,
-    nombre: string,
-    apellido: string,
-    correo: string,
-    edad: number,
-    foto: string,
-    usuario: string,
-    clave_acceso: string,
-    cedula: string,
-    id_profesor: number,
-    curriculum: string,
-    formacion: string
-}
-
-interface descripcionesNota {
-    titulo: string,
-    descripcion: string
-}
-
-interface Cursos {
-    id_curso: number,
-    nombre_curso: string
-}
-
-interface Horarios {
-    dia_semana: string,
-    hora_fin: string,
-    hora_inicio: string,
-    id_curso: number,
-    id_horario: number,
-    id_profesor: number
-}
+import Profesor from "../interfaces/profesor.interface";
+import Horarios from "../interfaces/horario.interface";
+import Cursos from "../interfaces/curso.interface";
+import obtenerHorariosProfesor from "../functions/obtenerHorariosProfesor";
+import obtenerCursosProfesor from "../functions/obtenerCursosProfesor";
 
 export default function Profileprof() {
     const params = useParams(); // Usa el hook useParams para acceder a los params
@@ -185,26 +155,15 @@ export default function Profileprof() {
       console.log(resultadoConsulta)
       setUsuario({...resultadoConsulta})
       await descargarImagenPerfil(`User-${resultadoConsulta.id_usuario}.png`, (resultadoConsulta.foto) ? true : false);
-      await obtenerHorariosProfesor();
-      await obtenerCursosProfesor();
+
+      const informacionHorarios = await obtenerHorariosProfesor(resultadoConsulta.id_usuario);
+      setHorarios([...informacionHorarios])
+
+      const informacionCursos = await obtenerCursosProfesor(resultadoConsulta.id_usuario);
+      setCursos([...informacionCursos])
+      
     };
 
-    const obtenerHorariosProfesor = async () => {
-      
-        const datosHorario = await fetch(`http://localhost:5555/profesores/${profileId}/horarios/`)
-        const resultadoConsulta = await datosHorario.json()
-        console.log(resultadoConsulta)
-        setHorarios([...resultadoConsulta])
-    
-    };
-
-    const obtenerCursosProfesor = async () => {
-      
-        const datosCursos = await fetch(`http://localhost:5555/profesores/cursos/inscritos/${profileId}`)
-        const resultadoConsulta = await datosCursos.json()
-        console.log(resultadoConsulta)
-        setCursos([...resultadoConsulta])
-    };
   
   useEffect(() => {
     obtenerDatosUsuario();
