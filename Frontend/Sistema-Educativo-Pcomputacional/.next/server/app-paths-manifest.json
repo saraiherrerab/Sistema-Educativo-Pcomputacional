@@ -1,9 +1,8 @@
 {
-  "/menu/page": "app/menu/page.js",
-  "/Amenu/page": "app/Amenu/page.js",
-  "/Aprofesores-lista/page": "app/Aprofesores-lista/page.js",
-  "/Pestudiantes-lista/page": "app/Pestudiantes-lista/page.js",
-  "/profile/[id]/page": "app/profile/[id]/page.js",
+  "/Aadmins-lista/page": "app/Aadmins-lista/page.js",
+  "/videojuego/page": "app/videojuego/page.js",
   "/reportes/[id]/page": "app/reportes/[id]/page.js",
-  "/Aestudiantes-lista/page": "app/Aestudiantes-lista/page.js"
+  "/GruposYCursos/page": "app/GruposYCursos/page.js",
+  "/Grupos/page": "app/Grupos/page.js",
+  "/Amenu/page": "app/Amenu/page.js"
 }

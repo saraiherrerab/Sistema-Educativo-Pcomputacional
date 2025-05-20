@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from "react";
-import Header from "../../../components/header/header";
+import Header from "../../../components/header-white/header";
 import { useParams, useRouter } from "next/navigation";
 import DonutChart from "../../../components/donutChart/donutChart";
 import PieChart from "../../../components/pieChart/pieChart";

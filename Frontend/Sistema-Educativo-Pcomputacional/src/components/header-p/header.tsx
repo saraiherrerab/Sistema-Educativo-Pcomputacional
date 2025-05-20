@@ -83,7 +83,6 @@ export default function Header() {
         <p className="header-button" onClick={() => router.push("/menu")}>
           Menu
         </p>
-        
         <p className="header-button" onClick={() => router.push("/")}>
           Salir
         </p>

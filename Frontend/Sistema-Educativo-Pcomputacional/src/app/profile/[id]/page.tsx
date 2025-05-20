@@ -19,7 +19,7 @@ import obtenerCursoAlumno from "../functions/obtenerCursoAlumno";
 import obtenerGrupoAlumno from "../functions/obtenerGrupoAlumno";
 import Grupo from "../interfaces/grupo.interface";
 import obtenerProfesorAlumno from "../functions/obtenerProfesorAlumno";
-import Header from "../../../components/header-p/header"
+import Header from "../../../components/header/header"
 
 interface Estudiante {
   id_usuario: number,
@@ -263,7 +263,12 @@ export default function Profile() {
 
   return (
     <>
-    <Header>
+    <Header
+                                    text="MULTIPLAYER" onClick={() => Router.push("/Amenu")}
+                                    text1="Panel de Juegos" onClick1={() => Router.push("/videojuego")}
+                                    text2="Menu" onClick2={() => Router.push("/Amenu")}
+                                    text3="Mis datos" onClick3={() => Router.push("/Aadmins-lista")}
+                                    text4="Salir" onClick4={() => Router.push("/")}>
     </Header>
     <div className="perfil body_profile">
             <div className="datosUsario">

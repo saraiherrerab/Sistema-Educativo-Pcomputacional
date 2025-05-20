@@ -84,7 +84,7 @@ export default function Header() {
           Menu
         </p>
         <p className="header-button" onClick={() => router.push("/profile-prof/" + usuario.id_usuario)}>
-          Mis datos
+          Mi perfil
         </p>
         <p className="header-button" onClick={() => router.push("/")}>
           Salir

@@ -263,12 +263,7 @@ export default function Profile() {
 
   return (
     <>
-    <Header
-                          text="MULTIPLAYER" onClick={() => Router.push("/Amenu")}
-                          text1="Panel de Juegos" onClick1={() => Router.push("/videojuego")}
-                          text2="Menu" onClick2={() => Router.push("/Amenu")}
-                          text3="Mi perfil" onClick3={() => Router.push("/Aadmins-lista")}
-                          text4="Salir" onClick4={() => Router.push("./")}>
+    <Header>
     </Header>
     <div className="perfil body_profile">
             <div className="datosUsario">
@@ -282,7 +277,7 @@ export default function Profile() {
             </div>
             <Datos titulo="Cedula" descripcion={ usuario.cedula }></Datos>
             <Datos titulo="Edad" descripcion={ usuario.edad.toString() }></Datos>
-            <button onClick={()=>Router.push("/reportes/" + profileId)}>Ver Reportes</button>
+            <button onClick={()=>Router.push("/reportes-p/" + profileId)}>Ver Reportes</button>
           </div>
           <div className="datosBloques">
                           <div className="fila">

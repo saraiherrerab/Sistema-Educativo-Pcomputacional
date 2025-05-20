@@ -488,11 +488,7 @@ export default function EstudiantesLista() {
             }
         };
 
-    const mostrarFormularioAgregar = () => {
-        console.log("Mostrar formulario para agregar")
-        setMostrarFormulario(true);
-        setEstudianteEditando(null); // Asegúrate de que no se muestre el formulario de edición al mismo tiempo
-    };
+    
 
     async function descargarImagenPerfil(nombreArchivo: string) {
         setDescargandoImagen(true);
@@ -802,7 +798,7 @@ export default function EstudiantesLista() {
                 <div className="encabezado">
                     <div className="tituloListado" style={{ cursor: 'pointer' }}>
                         <h2 className="estudiantes" onClick={() => handleTitleClick()}>ESTUDIANTES</h2>
-                        <button onClick={() => mostrarFormularioAgregar()}>Agregar Estudiante</button>
+                        
                     </div>
                     <div className="barraBusqueda">
                     <div className="search-input-container">
@@ -855,7 +851,7 @@ export default function EstudiantesLista() {
                                     <td>{estudiante.correo ? estudiante.correo : "null"}</td>
                                     <td>{estudiante.telefono ? estudiante.telefono : "null"}</td>
                                     <td>
-                                        <button onClick={()=>Router.push("/profile/" + estudiante.id_estudiante)}>Ver Perfil</button>
+                                        <button onClick={()=>Router.push("/profile-s-p/" + estudiante.id_estudiante)}>Ver Perfil</button>
                                     </td>
                                 
                                     
