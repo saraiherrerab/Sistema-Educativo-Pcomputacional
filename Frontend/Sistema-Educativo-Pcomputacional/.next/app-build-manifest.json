@@ -17,11 +17,25 @@
       "static/css/app/Amenu/page.css",
       "static/chunks/app/Amenu/page.js"
     ],
+<<<<<<< HEAD
     "/GruposYCursos/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/GruposYCursos/page.css",
       "static/chunks/app/GruposYCursos/page.js"
+=======
+    "/reportes/[id]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/reportes/[id]/page.css",
+      "static/chunks/app/reportes/[id]/page.js"
+    ],
+    "/videojuego/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/videojuego/page.css",
+      "static/chunks/app/videojuego/page.js"
+>>>>>>> origin/backend
     ],
     "/Aestudiantes-lista/page": [
       "static/chunks/webpack.js",
