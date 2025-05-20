@@ -19,6 +19,7 @@ import obtenerCursoAlumno from "../functions/obtenerCursoAlumno";
 import obtenerGrupoAlumno from "../functions/obtenerGrupoAlumno";
 import Grupo from "../interfaces/grupo.interface";
 import obtenerProfesorAlumno from "../functions/obtenerProfesorAlumno";
+import Header from "../../../components/header-p/header"
 
 interface Estudiante {
   id_usuario: number,
@@ -261,6 +262,9 @@ export default function Profile() {
   const Router = useRouter();
 
   return (
+    <>
+    <Header>
+    </Header>
     <div className="perfil body_profile">
             <div className="datosUsario">
               {imagenDescargadaUrl ? (
@@ -322,5 +326,6 @@ export default function Profile() {
                           </div>
                       </div> 
     </div>
+    </>
   );
 }

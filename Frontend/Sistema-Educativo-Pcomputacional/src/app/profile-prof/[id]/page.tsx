@@ -12,6 +12,7 @@ import Horarios from "../interfaces/horario.interface";
 import Cursos from "../interfaces/curso.interface";
 import obtenerHorariosProfesor from "../functions/obtenerHorariosProfesor";
 import obtenerCursosProfesor from "../functions/obtenerCursosProfesor";
+import Header from "../../../components/header-p/header"
 
 export default function Profileprof() {
     const params = useParams(); // Usa el hook useParams para acceder a los params
@@ -180,10 +181,16 @@ export default function Profileprof() {
 
   }
 
+  
+
   const Router = useRouter();
 
     return (
+      <>
+       <Header></Header>
+                
         <div className="perfil body_profile">
+          
             <div className="datosUsario">
                     {imagenDescargadaUrl ? (
                     <Foto imageUrl={imagenDescargadaUrl} />
@@ -222,6 +229,7 @@ export default function Profileprof() {
                 </div>
             </div> 
         </div>
+      </>
     )
             
     
