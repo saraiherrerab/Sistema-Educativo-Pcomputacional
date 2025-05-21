@@ -86,3 +86,16 @@ button:disabled {
 }
 
 
+.login-decorativo {
+  width: 120px;
+  margin: 0 auto 20px auto;
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.titulo-login{
+    color:#4B22F4; 
+    font-size: 18px;       /* Tamaño de la letra */
+    font-family: "Roboto", sans-serif; /* Fuente */
+    font-weight: bold;
+}

@@ -4,7 +4,7 @@ import "./imageRight.css";
 export default function Imagen() {
     return (
             <div className="image-section">
-                <img src='./granimagen.jpg' alt='oh vaya'/>
+                <img src='./granimagen.jpeg' alt='oh vaya'/>
             </div>
 
     );
