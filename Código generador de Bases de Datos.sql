@@ -155,7 +155,7 @@ CREATE TABLE IF NOT EXISTS Estudiante (
         construccion_algoritmos IN ('NO CURSADO', 'EN PROCESO', 'REPROBADO', 'APROBADO')
     ),
 	p_actividades_completadas INTEGER DEFAULT 0,
-	tipo_premiacion TEXT DEFAULT "",
+	tipo_premiacion TEXT DEFAULT '',
 	id_grupo INTEGER DEFAULT NULL,
 	PRIMARY KEY(id_estudiante),
 	FOREIGN KEY (id_estudiante) REFERENCES Usuario(id_usuario)

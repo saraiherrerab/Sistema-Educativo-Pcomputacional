@@ -1,7 +1,8 @@
 import Estudiante from "../interfaces/estudiante.interface";
 
 export default async function obtenerEstudiantes() : Promise<Estudiante[]>{
-        const resultado= await fetch('http://localhost:5555/estudiantes',{
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+        const resultado= await fetch(`${baseUrl}/estudiantes`,{
                 method: 'GET', // Método especificado
                 mode: 'cors',   // Habilita CORS
                 headers: {

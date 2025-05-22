@@ -24,6 +24,7 @@ interface Profesor {
 
 export default function GruposYCursos() {
   const Router = useRouter();
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
   /* Este arreglo almacena todos los cursos en el sistema */
   const [cursos, setCursos] = useState<Curso[]>([]);
@@ -114,7 +115,7 @@ const handleSearchClick = () => {
 
     console.log(nuevoCurso)
 
-    const resultado= await fetch('http://localhost:5555/cursos', {
+    const resultado= await fetch(`${baseUrl}/cursos`, {
         method: 'POST', // Método especificado
         mode: 'cors',   // Habilita CORS
         headers: {
@@ -138,7 +139,7 @@ const handleSearchClick = () => {
 
     console.log(nuevoCurso)
 
-    const resultado= await fetch('http://localhost:5555/cursos/' + id_curso_seleccionado, {
+    const resultado= await fetch(`${baseUrl}/cursos/` + id_curso_seleccionado, {
         method: 'DELETE', // Método especificado
         mode: 'cors',   // Habilita CORS
         headers: {
@@ -160,7 +161,7 @@ const handleSearchClick = () => {
 
     console.log(cursoEditando)
 
-    const resultado= await fetch('http://localhost:5555/cursos', {
+    const resultado= await fetch(`${baseUrl}/cursos`, {
         method: 'PUT', // Método especificado
         mode: 'cors',   // Habilita CORS
         headers: {

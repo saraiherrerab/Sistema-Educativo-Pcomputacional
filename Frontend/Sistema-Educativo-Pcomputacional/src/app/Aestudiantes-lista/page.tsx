@@ -30,6 +30,8 @@ interface Grupo {
 
 export default function EstudiantesLista() {
     const Router = useRouter();
+
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
       
     const [estudiantes, setEstudiantes] = useState<Estudiante[]>([]);
     const [estudiantesFiltrados, setEstudiantesFiltrados] = useState<Estudiante[]>([]);
@@ -56,7 +58,7 @@ export default function EstudiantesLista() {
     }
 
     async function obtenerEstudiantes() : Promise<Estudiante[]>{
-        const resultado= await fetch('http://localhost:5555/estudiantes',{
+        const resultado= await fetch(`${baseUrl}/estudiantes`,{
                 method: 'GET', // Método especificado
                 mode: 'cors',   // Habilita CORS
                 headers: {
@@ -140,7 +142,7 @@ export default function EstudiantesLista() {
 
             console.log(estudianteEditando)
 
-            const response = await fetch(`http://localhost:5555/estudiantes`, {
+            const response = await fetch(`${baseUrl}/estudiantes`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(estudianteEditando),
@@ -164,7 +166,7 @@ export default function EstudiantesLista() {
                 formData.append('id_usuario', estudianteEditando.id_usuario.toString());
 
                 try {
-                    const response = await fetch('http://localhost:5555/cargar/archivo/imagen', {
+                    const response = await fetch(`${baseUrl}/cargar/archivo/imagen`, {
                         method: 'POST',
                         body: formData,
                     });
@@ -225,7 +227,7 @@ export default function EstudiantesLista() {
                 showLoaderOnConfirm: true,
                 preConfirm: async (login) => {
                     try {
-                        const response = await fetch(`http://localhost:5555/estudiantes`, {
+                        const response = await fetch(`${baseUrl}/estudiantes`, {
                             method: 'DELETE',
                             mode: 'cors',   // Habilita CORS
                             headers: {
@@ -290,7 +292,7 @@ export default function EstudiantesLista() {
             }
         });
 
-        const response = await fetch(`http://localhost:5555/estudiantes`, {
+        const response = await fetch(`${baseUrl}/estudiantes`, {
             method: 'POST',
             mode: 'cors',   // Habilita CORS
             headers: {
@@ -322,7 +324,7 @@ export default function EstudiantesLista() {
                     formData.append('archivo', nuevoArchivo); // Agregar archivo solo si no es null
                     formData.append('id_usuario', resultadoConsulta.id_usuario.toString());
 
-                    const response = await fetch('http://localhost:5555/cargar/archivo/imagen', {
+                    const response = await fetch(`${baseUrl}/cargar/archivo/imagen`, {
                         method: 'POST',
                         body: formData,
                     });
@@ -392,7 +394,7 @@ export default function EstudiantesLista() {
     };
 
     const obtenerGrupos = async () => {
-        const resultado= await fetch('http://localhost:5555/grupos',{
+        const resultado= await fetch(`${baseUrl}/grupos`,{
             method: 'GET', // Método especificado
             mode: 'cors',   // Habilita CORS
             headers: {
@@ -405,7 +407,7 @@ export default function EstudiantesLista() {
     }
 
     const obtenerInformacionGrupoAlumno = async (id_estudiante: number) => {
-        const resultado= await fetch('http://localhost:5555/grupos/estudiante/' + id_estudiante,{
+        const resultado= await fetch(`${baseUrl}/grupos/estudiante/` + id_estudiante,{
             method: 'GET', // Método especificado
             mode: 'cors',   // Habilita CORS
             headers: {
@@ -418,7 +420,7 @@ export default function EstudiantesLista() {
     }
 
     const obtenerInformacionCursoDeGrupo = async (id_grupo: string) => {
-        const resultado= await fetch(`http://localhost:5555/grupos/${id_grupo}/curso`,{
+        const resultado= await fetch(`${baseUrl}/grupos/${id_grupo}/curso`,{
             method: 'GET', // Método especificado
             mode: 'cors',   // Habilita CORS
             headers: {
@@ -499,7 +501,7 @@ export default function EstudiantesLista() {
         const urlDescarga = `/descargar/imagen/${nombreArchivo}`;
     
         try {
-          const response = await fetch(`http://localhost:5555${urlDescarga}`);
+          const response = await fetch(`${baseUrl}${urlDescarga}`);
           console.log(response);
     
           if (!response.ok){
@@ -546,7 +548,7 @@ export default function EstudiantesLista() {
     }
 
     async function cargarInformacionGrupo(id_grupo:number) {
-        const resultado= await fetch('http://localhost:5555/grupos/'+id_grupo,{
+        const resultado= await fetch(`${baseUrl}/grupos/`+id_grupo,{
             method: 'GET', // Método especificado
             mode: 'cors',   // Habilita CORS
             headers: {
@@ -612,7 +614,7 @@ export default function EstudiantesLista() {
                     }else{
                         if(validarCursoGrupo.length == 0){
                             const obtenerGrupoSinHorarios = async () => {
-                                const response = await fetch(`http://localhost:5555/grupos/${grupoSeleccionadoId}/curso/sin/horario`);
+                                const response = await fetch(`${baseUrl}/grupos/${grupoSeleccionadoId}/curso/sin/horario`);
                                 const informacionGrupoSinHorario = await response.json()
                                 console.log(informacionGrupoSinHorario)
                                 return informacionGrupoSinHorario;
@@ -639,7 +641,7 @@ export default function EstudiantesLista() {
                                 } else if (result.isConfirmed) {
 
                                     console.log(profesoresCursoSinHorario.id_grupo)
-                                    const response = await fetch('http://localhost:5555/estudiantes/asignar/grupo', {
+                                    const response = await fetch(`${baseUrl}/estudiantes/asignar/grupo`, {
                                         method: 'PUT',
                                         headers: {
                                         'Content-Type': 'application/json'
@@ -732,7 +734,7 @@ export default function EstudiantesLista() {
                     } else if (result.isConfirmed) {
 
                         console.log(informacion.id_grupo)
-                        const response = await fetch('http://localhost:5555/estudiantes/asignar/grupo', {
+                        const response = await fetch(`${baseUrl}/estudiantes/asignar/grupo`, {
                             method: 'PUT',
                             headers: {
                               'Content-Type': 'application/json'

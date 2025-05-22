@@ -44,7 +44,7 @@ interface Horario {
 export default function Grupos() {
   const Router = useRouter();
 
-  
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
 
   const [grupos, setGrupos] = useState<Grupo[]>([]);
@@ -136,7 +136,7 @@ useEffect(() => {
 
     for (const grupo of gruposFiltrados) {
       try {
-        const res = await fetch(`http://localhost:5555/grupos/profesores/${grupo.id_grupo}`);
+        const res = await fetch(`${baseUrl}/grupos/profesores/${grupo.id_grupo}`);
         const profesores = await res.json();
 
         nuevosProfesores[grupo.id_grupo] = profesores.map((p: any) => `${p.nombre} ${p.apellido}`).join(', ');
@@ -149,7 +149,7 @@ useEffect(() => {
 
       // Cargar curso
       try {
-        const resCurso = await fetch(`http://localhost:5555/grupos/curso/${grupo.id_grupo}`);
+        const resCurso = await fetch(`${baseUrl}/grupos/curso/${grupo.id_grupo}`);
         if (!resCurso.ok) throw new Error("No se pudo cargar curso");
         const curso = await resCurso.json();
         nuevosCursos[grupo.id_grupo] = curso?.nombre_curso || "Sin curso";
@@ -195,7 +195,7 @@ useEffect(() => {
 
     for (const grupo of gruposFiltrados) {
       try {
-        const res = await fetch(`http://localhost:5555/grupos/estudiantes/${grupo.id_grupo}`);
+        const res = await fetch(`${baseUrl}/grupos/estudiantes/${grupo.id_grupo}`);
         const estudiantes = await res.json();
 
         nuevosEstudiantesPorGrupo[grupo.id_grupo] = estudiantes;
@@ -269,7 +269,7 @@ useEffect(() => {
 
     console.log(nuevoGrupo)
 
-    const resultado= await fetch('http://localhost:5555/grupos', {
+    const resultado= await fetch(`${baseUrl}/grupos`, {
         method: 'POST', // Método especificado
         mode: 'cors',   // Habilita CORS
         headers: {
@@ -282,7 +282,7 @@ useEffect(() => {
 
     if(horariosGrupo.length > 0){
       try {
-          const response = await fetch('http://localhost:5555/horarios/grupo/agregar', {
+          const response = await fetch(`${baseUrl}/horarios/grupo/agregar`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -310,7 +310,7 @@ useEffect(() => {
 
     console.log(nuevoGrupo)
 
-    const resultado= await fetch('http://localhost:5555/grupos/' + id_grupo_seleccionado, {
+    const resultado= await fetch(`${baseUrl}/grupos/` + id_grupo_seleccionado, {
         method: 'DELETE', // Método especificado
         mode: 'cors',   // Habilita CORS
         headers: {
@@ -349,7 +349,7 @@ useEffect(() => {
   const guardarEdicionGrupoSeleccionado = async () => {
     console.log('\x1b[1m\x1b[31m%s\x1b[0m', 'Iniciando editarGrupoSeleccionado()');
 
-    const resultado= await fetch('http://localhost:5555/grupos/', {
+    const resultado= await fetch(`${baseUrl}/grupos/`, {
         method: 'PUT', // Método especificado
         mode: 'cors',   // Habilita CORS
         headers: {
@@ -374,7 +374,7 @@ useEffect(() => {
         console.log('Nuevos horarios:', nuevosHorarios);
 
         if(nuevosHorarios.length > 0){
-          const response = await fetch('http://localhost:5555/horarios/grupo/agregar', {
+          const response = await fetch(`${baseUrl}/horarios/grupo/agregar`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -387,7 +387,7 @@ useEffect(() => {
 
         
         if(horariosExistentes.length > 0) {
-          const response = await fetch('http://localhost:5555/horarios/grupo/modificar', {
+          const response = await fetch(`${baseUrl}/horarios/grupo/modificar`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json'
@@ -397,7 +397,7 @@ useEffect(() => {
           const data = await response.json();
           console.log('%cRespuesta del servidor:', 'color: green;', data);
         }else{
-          const response = await fetch('http://localhost:5555/horarios/grupo/agregar', {
+          const response = await fetch(`${baseUrl}/horarios/grupo/agregar`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

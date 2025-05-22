@@ -1,5 +1,6 @@
 export default async function obtenerProfesoresGrupo(id_grupo_seleccionado:number ) {
-    const resultado= await fetch('http://localhost:5555/grupos/profesores/' + id_grupo_seleccionado,{
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+    const resultado= await fetch(`${baseUrl}/grupos/profesores/` + id_grupo_seleccionado,{
                 method: 'GET', // Método especificado
                 mode: 'cors',   // Habilita CORS
                 headers: {

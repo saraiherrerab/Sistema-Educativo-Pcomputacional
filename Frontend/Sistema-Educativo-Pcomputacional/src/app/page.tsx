@@ -8,11 +8,13 @@ import Swal from "sweetalert2";
 
 export default function Page() {
 
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+
   const validarUsuario = async (usuario_val: string, clave_acceso_val: string) => {
     try {
       console.log(usuario_val)
       console.log(clave_acceso_val)
-      const response = await fetch('http://localhost:5555/validar', {
+      const response = await fetch(`${baseUrl}/validar`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -26,7 +28,7 @@ export default function Page() {
       if (data) {
         // Lógica si el usuario fue encontrado
 
-        const responseRol = await fetch('http://localhost:5555/rol', {
+        const responseRol = await fetch(`${baseUrl}/rol`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

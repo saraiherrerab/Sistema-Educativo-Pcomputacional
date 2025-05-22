@@ -1,5 +1,6 @@
 export default async function obtenerCursos() {
-    const resultado= await fetch('http://localhost:5555/cursos',{
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+    const resultado= await fetch(`${baseUrl}/cursos`,{
                 method: 'GET', // Método especificado
                 mode: 'cors',   // Habilita CORS
                 headers: {

@@ -6,6 +6,9 @@ import { useRouter } from "next/navigation";
 
 
 export default function AdministradoresLista() {
+
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+
     const Router = useRouter();
 
     interface Administrador {
@@ -34,17 +37,16 @@ export default function AdministradoresLista() {
 
 
     async function obtenerAdministradores() : Promise<Administrador[]>{
-        const resultado= await fetch('http://localhost:5555/administradores',{
-                method: 'GET', // Método especificado
-                mode: 'cors',   // Habilita CORS
+        const resultado= await fetch(`${baseUrl}/administradores`,{
+                method: 'GET',
+                mode: 'cors',
                 headers: {
                   'Content-Type': 'application/json'
                 }
-                    });
-        const resultado_json= await resultado.json();
+        });
+        const resultado_json = await resultado.json();
         console.log(resultado_json);
-        return resultado_json
-
+        return resultado_json;
     }
 
         // Este useEffect se ejecuta una sola vez al montar el componente
@@ -100,13 +102,10 @@ export default function AdministradoresLista() {
 
     
     const onGuardarEdicion = async () => {
-        
-        
-
         try {
             if (!administradorEditando) return;
             console.log(administradorEditando)
-            const response = await fetch(`http://localhost:5555/administradores`, {
+            const response = await fetch(`${baseUrl}/administradores`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(administradorEditando),
@@ -115,9 +114,9 @@ export default function AdministradoresLista() {
             const resultadoConsulta = await response.json()
             console.log(resultadoConsulta)
 
-            const updatedList = administradores_.map((administrador:Administrador) =>
+            const updatedList = administradores_.map((administrador: Administrador) =>
                 administrador.id_admin === administradorEditando.id_admin
-                  ? { ...administradorEditando }  // Solo cambiamos el atributo necesario
+                  ? { ...administradorEditando }
                   : administrador
             );
 
@@ -128,35 +127,29 @@ export default function AdministradoresLista() {
         } catch (error) {
             console.error("Error en la petición:", error);
         }
-            
     };
     
 
     const onEliminar = async (id_administrador: number) => {
-    
         try {
-
             const confirmacion = confirm("¿Estás seguro de que quieres eliminar este administrador?");
             if (!confirmacion) return;
 
-            console.log("Eliminando")
+            console.log("Eliminando");
 
-            const response = await fetch(`http://localhost:5555/administradores`, {
+            const response = await fetch(`${baseUrl}/administradores`, {
                 method: 'DELETE',
-                mode: 'cors',   // Habilita CORS
+                mode: 'cors',
                 headers: {
                   'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({id: id_administrador}),
+                body: JSON.stringify({ id: id_administrador }),
             });
-
-            console.log(administradores_)
 
             const resultadoConsulta = await response.json()
             console.log(resultadoConsulta)
 
             const arrayActualizado = administradores_.filter(administrador => administrador.id_usuario !== id_administrador)
-            console.log(arrayActualizado)
             setAdministradores(arrayActualizado);
             setAdministradoresFiltrados(arrayActualizado);
 
@@ -168,34 +161,29 @@ export default function AdministradoresLista() {
     
 
     const onAgregarAdministrador = async () => {
-        
         const nuevo = { ...nuevoAdministrador };
         
-        const response = await fetch(`http://localhost:5555/administradores`, {
+        const response = await fetch(`${baseUrl}/administradores`, {
             method: 'POST',
-            mode: 'cors',   // Habilita CORS
+            mode: 'cors',
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify(
-                {
-                    nombre: nuevo.nombre,
-                    apellido: nuevo.apellido,
-                    usuario: nuevo.usuario,
-                    clave_acceso: nuevo.clave_acceso
-                }
-            ),
+            body: JSON.stringify({
+                nombre: nuevo.nombre,
+                apellido: nuevo.apellido,
+                usuario: nuevo.usuario,
+                clave_acceso: nuevo.clave_acceso
+            }),
         });
-
-        console.log(response)
 
         const resultadoConsulta = await response.json()
         console.log(resultadoConsulta)
 
-        if(response.status === 200){
+        if (response.status === 200) {
             setAdministradores([...administradores_, nuevo]);
             setAdministradoresFiltrados([...administradoresFiltrados, nuevo]);
-            setMostrarFormulario(false); // Asegúrate de que el formulario se cierre después de guardar
+            setMostrarFormulario(false);
             setNuevoAdministrador({
                 id_usuario: 0,
                 telefono: "",
@@ -211,7 +199,6 @@ export default function AdministradoresLista() {
                 curriculum: ""
             });
         }
-        
     };
     
 

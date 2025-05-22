@@ -15,6 +15,7 @@ import obtenerCursosProfesor from "../functions/obtenerCursosProfesor";
 import Header from "../../../components/header-p/header"
 
 export default function Profileprof() {
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
     const params = useParams(); // Usa el hook useParams para acceder a los params
     const profileId = params.id;
     console.log("ID de la ruta dinámica:", profileId);
@@ -54,7 +55,7 @@ export default function Profileprof() {
       try {
 
         if(tieneFoto){
-          const response = await fetch(`http://localhost:5555${urlDescarga}`);
+          const response = await fetch(`${baseUrl}${urlDescarga}`);
           console.log(response);
     
           if (!response.ok) {
@@ -110,7 +111,7 @@ export default function Profileprof() {
       const urlDescarga = `/descargar/pdf/${nombreArchivo}`;
     
       try {
-        const response = await fetch(`http://localhost:5555${urlDescarga}`);
+        const response = await fetch(`${baseUrl}${urlDescarga}`);
         if (!response.ok) {
           let errorMessage = 'Error desconocido';
           try {
@@ -151,7 +152,7 @@ export default function Profileprof() {
   
     const obtenerDatosUsuario = async () => {
       
-      const datosProfesor = await fetch("http://localhost:5555/profesores/" + profileId)
+      const datosProfesor = await fetch(`${baseUrl}/profesores/` + profileId)
       const resultadoConsulta = await datosProfesor.json()
       console.log(resultadoConsulta)
       setUsuario({...resultadoConsulta})

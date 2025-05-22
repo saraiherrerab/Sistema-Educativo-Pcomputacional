@@ -1,5 +1,6 @@
 export default async function obtenerHorariosGrupo(id_grupo_seleccionado: number) {
-    const resultado= await fetch('http://localhost:5555/horarios/grupo/' + id_grupo_seleccionado,{
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+    const resultado= await fetch(`${baseUrl}/horarios/grupo/` + id_grupo_seleccionado,{
                 method: 'GET', // Método especificado
                 mode: 'cors',   // Habilita CORS
                 headers: {

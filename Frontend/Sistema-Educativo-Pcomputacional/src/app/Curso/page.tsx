@@ -10,13 +10,14 @@ import Estudiante from "./interfaces/estudiante.interface";
 
 export default function AdministradoresLista() {
     const Router = useRouter();
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
       
     const [listaCursos, setListaCursos] = useState<Curso[]>([]);
     const [cursosFiltrados, setCursosFiltrados] = useState<Curso[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
 
     async function obtenerCursos() : Promise<Curso[]>{
-        const resultado= await fetch('http://localhost:5555/cursos',{
+        const resultado= await fetch(`${baseUrl}/cursos`,{
                 method: 'GET', // Método especificado
                 mode: 'cors',   // Habilita CORS
                 headers: {
@@ -76,7 +77,7 @@ export default function AdministradoresLista() {
         
         const nuevo = { ...nuevoCurso };
         
-        const response = await fetch(`http://localhost:5555/cursos`, {
+        const response = await fetch(`${baseUrl}/cursos`, {
             method: 'POST',
             mode: 'cors',   // Habilita CORS
             headers: {
@@ -120,7 +121,7 @@ export default function AdministradoresLista() {
         try {
             if (!cursoEditando) return;
             console.log(cursoEditando)
-            const response = await fetch(`http://localhost:5555/cursos`, {
+            const response = await fetch(`${baseUrl}/cursos`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(cursoEditando),
@@ -155,7 +156,7 @@ export default function AdministradoresLista() {
 
             console.log("Eliminando")
 
-            const response = await fetch(`http://localhost:5555/cursos`, {
+            const response = await fetch(`${baseUrl}/cursos`, {
                 method: 'DELETE',
                 mode: 'cors',   // Habilita CORS
                 headers: {
@@ -225,7 +226,7 @@ export default function AdministradoresLista() {
 
     const toggleGrupo = async (id: number, nombre: string) => {
 
-        const response = await fetch(`http://localhost:5555/grupos/${id}/estudiantes`, {
+        const response = await fetch(`${baseUrl}/grupos/${id}/estudiantes`, {
             method: 'GET',
             mode: 'cors',   // Habilita CORS
             headers: {
@@ -244,7 +245,7 @@ export default function AdministradoresLista() {
     const buscarGruposConCursoFaltante = async () => {
         try {
 
-            const response = await fetch(`http://localhost:5555/grupos/curso/${cursoEscogido.id_curso}/faltantes`, {
+            const response = await fetch(`${baseUrl}/grupos/curso/${cursoEscogido.id_curso}/faltantes`, {
                 method: 'GET',
                 mode: 'cors',   // Habilita CORS
                 headers: {
@@ -272,7 +273,7 @@ export default function AdministradoresLista() {
 
         try {
 
-            const response = await fetch(`http://localhost:5555/grupos/curso/${curso_seleccionado.id_curso}`, {
+            const response = await fetch(`${baseUrl}/grupos/curso/${curso_seleccionado.id_curso}`, {
                 method: 'GET',
                 mode: 'cors',   // Habilita CORS
                 headers: {
@@ -310,7 +311,7 @@ export default function AdministradoresLista() {
 
     const handleSubmitGrupo = async (e: React.FormEvent) => {
         e.preventDefault(); // evita recargar la página
-        const response = await fetch(`http://localhost:5555/grupos`, {
+        const response = await fetch(`${baseUrl}/grupos`, {
             method: 'POST',
             mode: 'cors',   // Habilita CORS
             headers: {
@@ -337,7 +338,7 @@ export default function AdministradoresLista() {
     const asignarGrupoACurso = async () => {
         console.log("asignarGrupoACurso")
 
-        const response = await fetch(`http://localhost:5555/curso/asignar/grupo`, {
+        const response = await fetch(`${baseUrl}/curso/asignar/grupo`, {
             method: 'PUT',
             mode: 'cors',   // Habilita CORS
             headers: {
@@ -369,7 +370,7 @@ export default function AdministradoresLista() {
     const eliminarGrupo = async (id_grupo_seleccionado: number) => {
         console.log("eliminarGrupo")
 
-        const response = await fetch(`http://localhost:5555/grupos/${id_grupo_seleccionado}`, {
+        const response = await fetch(`${baseUrl}/grupos/${id_grupo_seleccionado}`, {
             method: 'DELETE',
             mode: 'cors',   // Habilita CORS
             headers: {
@@ -400,7 +401,7 @@ export default function AdministradoresLista() {
         console.log(grupoEditando)
 
         /*
-        const response = await fetch(`http://localhost:5555/grupos/${id_grupo_seleccionado}`, {
+        const response = await fetch(`${baseUrl}/grupos/${id_grupo_seleccionado}`, {
             method: 'DELETE',
             mode: 'cors',   // Habilita CORS
             headers: {
@@ -444,7 +445,7 @@ export default function AdministradoresLista() {
         e.preventDefault(); // evita que se recargue la página
         
         console.log("handleSubmitEditandoGrupo")
-        const response = await fetch(`http://localhost:5555/grupos`, {
+        const response = await fetch(`${baseUrl}/grupos`, {
                 method: 'PUT',
                 mode: 'cors',   // Habilita CORS
                 headers: {

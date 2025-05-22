@@ -23,6 +23,7 @@ interface UsuarioInterface {
 
 export default function Amenu() {
   const Router = useRouter();
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   const [usuario, setUsuario] = useState<UsuarioInterface>(
     {
       apellido: "",

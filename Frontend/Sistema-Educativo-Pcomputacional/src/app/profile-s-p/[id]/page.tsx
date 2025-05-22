@@ -49,7 +49,7 @@ export default function Profile() {
   const params = useParams(); // Usa el hook useParams para acceder a los params
   const profileId = params.id;
   console.log("ID de la ruta dinámica:", profileId);
-
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   const [usuario, setUsuario] = useState<Estudiante>(
     {
       id_usuario: 0,
@@ -112,7 +112,7 @@ export default function Profile() {
     const urlDescarga = `/descargar/imagen/${nombreArchivo}`;
 
     try {
-      const response = await fetch(`http://localhost:5555${urlDescarga}`);
+      const response = await fetch(`${baseUrl}${urlDescarga}`);
       console.log(response);
 
       if (!response.ok){
@@ -181,10 +181,10 @@ export default function Profile() {
 
   const obtenerDatosUsuario = async () => {
     
-    const datosEstudiante = await fetch("http://localhost:5555/estudiantes/" + profileId)
+    const datosEstudiante = await fetch(`${baseUrl}/estudiantes/` + profileId)
     const resultadoConsulta = await datosEstudiante.json()
     console.log(resultadoConsulta)
-    const responseRol = await fetch('http://localhost:5555/rol', {
+    const responseRol = await fetch(`${baseUrl}/rol`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

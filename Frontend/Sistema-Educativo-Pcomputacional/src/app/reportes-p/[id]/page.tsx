@@ -71,7 +71,7 @@ export default function Reportes( ) {
     const Router = useRouter();
     const params = useParams(); // Usa el hook useParams para acceder a los params
     const profileId = params.id
-
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
     const [usuario, setUsuario] = useState<Estudiante>(
         {
           id_usuario: 0,
@@ -141,7 +141,7 @@ export default function Reportes( ) {
     )
     const obtenerDatosUsuario = async () => {
     
-        const datosEstudiante = await fetch("http://localhost:5555/estudiantes/" + profileId)
+        const datosEstudiante = await fetch(`${baseUrl}/estudiantes/` + profileId)
         const resultadoConsulta = await datosEstudiante.json()
         console.log(resultadoConsulta)
         setUsuario(resultadoConsulta)

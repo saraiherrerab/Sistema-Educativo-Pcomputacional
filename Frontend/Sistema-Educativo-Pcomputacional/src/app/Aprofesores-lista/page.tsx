@@ -57,7 +57,7 @@ interface HorarioCurso {
 export default function ProfesoresLista() {
     const Router = useRouter();
 
-    
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
       
     const [profesores, setProfesores] = useState<Profesor[]>([]);
@@ -84,7 +84,7 @@ export default function ProfesoresLista() {
     const [contrasenaValida, setContrasenaValida] = useState(true);
 
     async function obtenerProfesores() : Promise<Profesor[]>{
-        const resultado= await fetch('http://localhost:5555/profesores',{
+        const resultado= await fetch(`${baseUrl}/profesores`,{
                 method: 'GET', // Método especificado
                 mode: 'cors',   // Habilita CORS
                 headers: {
@@ -98,7 +98,7 @@ export default function ProfesoresLista() {
     }
 
     async function obtenerInformacionProfesor(id_profesor: number) : Promise<Profesor>{
-        const resultado= await fetch('http://localhost:5555/profesores/' + id_profesor,{
+        const resultado= await fetch(`${baseUrl}/profesores/` + id_profesor,{
                 method: 'GET', // Método especificado
                 mode: 'cors',   // Habilita CORS
                 headers: {
@@ -209,7 +209,7 @@ export default function ProfesoresLista() {
                 }
             });
 
-            const response = await fetch(`http://localhost:5555/profesores`, {
+            const response = await fetch(`${baseUrl}/profesores`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(profesorEditando),
@@ -236,7 +236,7 @@ export default function ProfesoresLista() {
                     formData.append('id_usuario', profesorEditando.id_usuario.toString());
 
                     try {
-                        const response = await fetch('http://localhost:5555/cargar/archivo/imagen', {
+                        const response = await fetch(`${baseUrl}/cargar/archivo/imagen`, {
                             method: 'POST',
                             body: formData,
                         });
@@ -277,7 +277,7 @@ export default function ProfesoresLista() {
                     formData.append('id_usuario', profesorEditando.id_usuario.toString());
 
                     try {
-                        const response = await fetch('http://localhost:5555/cargar/archivo/pdf', {
+                        const response = await fetch(`${baseUrl}/cargar/archivo/pdf`, {
                             method: 'POST',
                             body: formData,
                         });
@@ -346,7 +346,7 @@ export default function ProfesoresLista() {
                     await new Promise(resolve => setTimeout(resolve, 1000));
 
                     // Haces el fetch dentro de preConfirm
-                    const response = await fetch(`http://localhost:5555/profesores`, {
+                    const response = await fetch(`${baseUrl}/profesores`, {
                     method: 'DELETE',
                     mode: 'cors',
                     headers: {
@@ -441,7 +441,7 @@ export default function ProfesoresLista() {
           try {
 
             
-            const response = await fetch(`http://localhost:5555/profesores`, {
+            const response = await fetch(`${baseUrl}/profesores`, {
                 method: 'POST',
                 mode: 'cors',   // Habilita CORS
                 headers: {
@@ -474,7 +474,7 @@ export default function ProfesoresLista() {
                     formData.append('id_usuario', resultadoConsulta.id_usuario.toString());
 
                     try {
-                        const response = await fetch('http://localhost:5555/cargar/archivo/imagen', {
+                        const response = await fetch(`${baseUrl}/cargar/archivo/imagen`, {
                             method: 'POST',
                             body: formData,
                         });
@@ -515,7 +515,7 @@ export default function ProfesoresLista() {
                     formData.append('id_usuario', resultadoConsulta.id_usuario.toString());
 
                     try {
-                        const response = await fetch('http://localhost:5555/cargar/archivo/pdf', {
+                        const response = await fetch(`${baseUrl}/cargar/archivo/pdf`, {
                             method: 'POST',
                             body: formData,
                         });
@@ -612,7 +612,7 @@ export default function ProfesoresLista() {
         const urlDescarga = `/descargar/imagen/${nombreArchivo}`;
     
         try {
-          const response = await fetch(`http://localhost:5555${urlDescarga}`);
+          const response = await fetch(`${baseUrl}${urlDescarga}`);
           console.log(response);
     
           if (!response.ok){
@@ -663,7 +663,7 @@ export default function ProfesoresLista() {
         const urlDescarga = `/descargar/pdf/${nombreArchivo}`;
     
         try {
-          const response = await fetch(`http://localhost:5555${urlDescarga}`);
+          const response = await fetch(`${baseUrl}${urlDescarga}`);
           console.log(response);
     
           if (!response.ok){
@@ -750,7 +750,7 @@ export default function ProfesoresLista() {
       });
 
     const obtenerHorariosCurso = async (id_profesor_seleccionado: number, id_curso_seleccionado: number) => {
-        const datosCursos = await fetch(`http://localhost:5555/profesores/${id_profesor_seleccionado}/horarios/curso/${id_curso_seleccionado}`)
+        const datosCursos = await fetch(`${baseUrl}/profesores/${id_profesor_seleccionado}/horarios/curso/${id_curso_seleccionado}`)
         const resultadoConsulta = await datosCursos.json()
         console.log(resultadoConsulta)
         setHorariosCursoSeleccionado([...resultadoConsulta])
@@ -767,7 +767,7 @@ export default function ProfesoresLista() {
     const [editandoHorario,setEditandoHorario] = useState(false)
 
     const obtenerGrupos = async (id_curso_seleccionado:number) => {
-        const datosCursos = await fetch(`http://localhost:5555/grupos/curso/${id_curso_seleccionado}`)
+        const datosCursos = await fetch(`${baseUrl}/grupos/curso/${id_curso_seleccionado}`)
         const resultadoConsulta = await datosCursos.json()
         console.log(resultadoConsulta)
         setGruposAlumnos([...resultadoConsulta])
@@ -780,7 +780,7 @@ export default function ProfesoresLista() {
 
         const obtenerHorariosProfesor = async (id_profesor_seleccionado: number) => {
       
-            const datosHorario = await fetch(`http://localhost:5555/profesores/${id_profesor_seleccionado}/horarios/`)
+            const datosHorario = await fetch(`${baseUrl}/profesores/${id_profesor_seleccionado}/horarios/`)
             const resultadoConsulta = await datosHorario.json()
             console.log(resultadoConsulta)
             setHorarios([...resultadoConsulta])
@@ -789,7 +789,7 @@ export default function ProfesoresLista() {
     
         const obtenerCursosProfesor = async (id_profesor_seleccionado: number) => {
           
-            const datosCursos = await fetch(`http://localhost:5555/profesores/cursos/inscritos/${id_profesor_seleccionado}`)
+            const datosCursos = await fetch(`${baseUrl}/profesores/cursos/inscritos/${id_profesor_seleccionado}`)
             const resultadoConsulta = await datosCursos.json()
             console.log(resultadoConsulta)
             setCursosProfesor([...resultadoConsulta])
@@ -797,7 +797,7 @@ export default function ProfesoresLista() {
 
         const obtenerCursosFaltantesProfesor = async (id_profesor_seleccionado: number) => {
           
-            const datosCursos = await fetch(`http://localhost:5555/profesores/cursos/faltantes/${id_profesor_seleccionado}/datos`)
+            const datosCursos = await fetch(`${baseUrl}/profesores/cursos/faltantes/${id_profesor_seleccionado}/datos`)
             const resultadoConsulta = await datosCursos.json()
             console.log(resultadoConsulta)
             setCursosFaltantes([...resultadoConsulta])
@@ -821,7 +821,7 @@ export default function ProfesoresLista() {
     }
 
     const eliminarCursoProfesor =async (id_profesor_seleccionado: number, id_curso_seleccionado: number) => {
-        const datosHorario = await fetch(`http://localhost:5555/profesores/${id_profesor_seleccionado}/curso/${id_curso_seleccionado}/eliminar`, {
+        const datosHorario = await fetch(`${baseUrl}/profesores/${id_profesor_seleccionado}/curso/${id_curso_seleccionado}/eliminar`, {
             method: 'DELETE', // Método especificado
             mode: 'cors',   // Habilita CORS
             headers: {
@@ -837,7 +837,7 @@ export default function ProfesoresLista() {
         event.preventDefault();
         // Aquí puedes agregar la lógica para enviar tus datos con React (por ejemplo, usando fetch o axios)
 
-        const datosCursos = await fetch(`http://localhost:5555/profesores/curso`,{
+        const datosCursos = await fetch(`${baseUrl}/profesores/curso`,{
             method: 'POST', // Método especificado
             mode: 'cors',   // Habilita CORS
             headers: {
@@ -873,7 +873,7 @@ export default function ProfesoresLista() {
                 id_grupo: horarioSeleccionado.id_grupo as number
             }
             
-            const response = await fetch(`http://localhost:5555/profesores/agregar/horario/curso`, {
+            const response = await fetch(`${baseUrl}/profesores/agregar/horario/curso`, {
                 method: 'POST',
                 mode: 'cors',   // Habilita CORS
                 headers: {
@@ -892,7 +892,7 @@ export default function ProfesoresLista() {
 
             console.log("EDITANDO")
 
-            const response = await fetch(`http://localhost:5555/profesores/editar/horario/curso`, {
+            const response = await fetch(`${baseUrl}/profesores/editar/horario/curso`, {
                 method: 'PUT',
                 mode: 'cors',   // Habilita CORS
                 headers: {
@@ -936,7 +936,7 @@ export default function ProfesoresLista() {
 
     const eliminarHorarioProfesor = async (id_horario_seleccionado: number) => {
 
-        const response = await fetch(`http://localhost:5555/profesores/eliminar/horario/curso`, {
+        const response = await fetch(`${baseUrl}/profesores/eliminar/horario/curso`, {
             method: 'DELETE',
             mode: 'cors',   // Habilita CORS
             headers: {

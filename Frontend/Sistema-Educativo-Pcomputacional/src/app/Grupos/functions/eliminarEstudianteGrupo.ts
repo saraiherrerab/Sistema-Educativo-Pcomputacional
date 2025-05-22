@@ -1,5 +1,7 @@
 export default async function eliminarEstudiateDeGrupo(id_estudiante_seleccionado: number) {
-    const resultado= await fetch(`http://localhost:5555/grupos/estudiante/${id_estudiante_seleccionado}/eliminar`,{
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+  
+    const resultado= await fetch(`${baseUrl}/grupos/estudiante/${id_estudiante_seleccionado}/eliminar`,{
                 method: 'DELETE', // Método especificado
                 mode: 'cors',   // Habilita CORS
                 headers: {

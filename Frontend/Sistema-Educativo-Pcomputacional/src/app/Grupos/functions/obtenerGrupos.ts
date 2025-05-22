@@ -1,5 +1,6 @@
 export default async function obtenerGrupos() {
-    const resultado= await fetch('http://localhost:5555/grupos',{
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+    const resultado= await fetch(`${baseUrl}/grupos`,{
                 method: 'GET', // Método especificado
                 mode: 'cors',   // Habilita CORS
                 headers: {
